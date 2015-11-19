@@ -10,28 +10,49 @@ This is an R Markdown document. Markdown is a simple formatting syntax for autho
 When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
 
 ```{r}
+
+length.unique <-function(X){Y<-length(unique(X)); return(Y)}
+
 # Go get the data from the appropriate directory.
 dat <- read.csv("Data/OCNMSData_GW101615v2.csv")
 
 #Get rid of "trace"
-
 dat$Percent.cover[dat$Percent.cover =="trace"] <- 1
 dat$Percent.cover<- as.numeric(as.character(dat$Percent.cover))
 
+#QUADRAT
 dat.quad <- aggregate(dat$Percent.cover,by=list(Observer=dat$Observer,Site=dat$Site,Transect=dat$Transect,Quadrat=dat$Quadrat,Species=dat$Species), sum,na.rm=T)
 dat.quad <- dat.quad[dat.quad$x>0,]
 
-#####
+samp.size.quad <- aggregate(dat.quad$Quadrat,by=list(Site=dat.quad$Site,Transect=dat.quad$Transect,Observer=dat.quad$Observer),length.unique)
+samp.size.site.quad <- aggregate(samp.size.quad$x,by=list(Site=samp.size.quad$Site),sum) 
 
-sp.list<- list()
+#### TRANSCECT
+dat.trans <- aggregate(dat$Count,by=list(Observer=dat$Observer,Site=dat$Site,Transect=dat$Transect,Quadrat=dat$Quadrat,Species=dat$Species), sum,na.rm=T)
+dat.trans <- dat.trans[dat.trans$x>0,]
+
+samp.size.trans <- aggregate(dat.trans$Quadrat,by=list(Site=dat.trans$Site,Transect=dat.trans$Transect,Observer=dat.trans$Observer),length.unique)
+samp.size.site.trans <- aggregate(samp.size.trans$x,by=list(Site=samp.size.trans$Site),sum) 
+
+
+###  
+sp.quad.list<- list()
+sp.trans.list<- list()
 SITE<- sort(unique(dat.quad$Site))
 
 for(i in 1:length(SITE)){
-  sp.list[[i]] <- sort(unique(dat.quad$Species))
+  sp.quad.list[[i]]  <- sort(unique(dat.quad$Species[dat.quad$Site==SITE[i]]))
+  sp.trans.list[[i]] <- sort(unique(dat.trans$Species[dat.quad$Site==SITE[i]]))
 }
 
-sp.list <- aggregate(dat.quad$Species,by=list(Site=dat.quad$Site),unique)
 
+
+
+
+
+
+
+sp.trans.list <- aggregate(dat.quad$Species,by=list(Site=dat.quad$Site),unique)
 
 
 unique(dat.quad$Species)
