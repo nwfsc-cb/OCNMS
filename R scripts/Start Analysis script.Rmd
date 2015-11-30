@@ -27,8 +27,7 @@ dat <- read.csv("Data/csv files/OCNMSDataComplete_master.csv")
 dat.kvitek <- list()
 dat.kvitek$Invert.quad   <- read.csv("Data/csv files/Kvitek.Data.Summary.Invert.quadrats.csv")
 dat.kvitek$Invert.trans  <- read.csv("Data/csv files/Kvitek.Data.Summary.Invert.transects.csv")
-dat.kvitek$Veg          <- read.csv("Data/csv files/Kvitek.Data.Summary.Veg.csv")
-
+dat.kvitek$Veg           <- read.csv("Data/csv files/Kvitek.Data.Summary.Veg.csv")
 
 # Do some name fixing
 dat$Site[dat$Site == "Tatoosh"] <- "Tatoosh Island"
@@ -43,6 +42,8 @@ dat$Species[dat$Species == "styela"]     <- "Styela"
 dat$Species[dat$Species == "sponge"]     <- "Sponge"
 dat$Species[dat$Species == "epiactis prolifera"]     <- "Epiactis prolifera"
 dat$Species[dat$Species == "Balanophyllia"]     <- "orange cup coral"
+dat$Species[dat$Species == "tunicate"]     <- "Tunicate"
+
 
 ### Read in species lists for dividing species into algae, inverts, and fish.
 sp.names <- read.csv("Data/csv files/OCNMSDataComplete_sp_names.csv")
@@ -107,27 +108,23 @@ dat.trans.invert$Bivalve          <- dat.trans.1[dat.trans.1$Broad.taxonomic.cat
                                                   dat.trans.1$Broad.taxonomic.category == "Scallop" |
                                                   dat.trans.1$Broad.taxonomic.category == "Jingle" ,]
 
-
 ### samp.size.transect
   samp.size.trans <- list()
     samp.size.trans$Invert <-aggregate(dat.trans.invert$All.invert$Transect,
-                             by=list(Site=dat.trans.invert$All.invert$Site,Observer=dat.trans.invert$All.invert$Observer),length.unique)
+          by=list(Site=dat.trans.invert$All.invert$Site,Observer=dat.trans.invert$All.invert$Observer),length.unique)
     samp.size.trans$Fish <-aggregate(dat.trans.fish$All.fish$Transect,
-                             by=list(Site=dat.trans.fish$All.fish$Site,Observer=dat.trans.fish$All.fish$Observer),length.unique)
-
-
-
+          by=list(Site=dat.trans.fish$All.fish$Site,Observer=dat.trans.fish$All.fish$Observer),length.unique)
 
 ###  
 sp.quad.list<- list()
 sp.quad.count.list<- list()
-sp.trans.list<- list()
-SITE<- sort(unique(dat.quad$Site))
+sp.trans.list <- list()
+SITE          <- sort(unique(dat.quad$Site))
 
 sp.quad       <-  data.frame(sp.names = sort(unique(dat.quad$Species)))
   sp.quad$Category  <- sp.names$Broad.taxonomic.category[match(sp.quad$sp.names,sp.names$drop.down)]
-
 sp.quad.count <-  data.frame(sp.names = sort(unique(dat.quad.count$Species)))
+  sp.quad.count$Category  <- sp.names$Broad.taxonomic.category[match(sp.quad.count$sp.names,sp.names$drop.down)]
 sp.trans      <-  data.frame(sp.names = sort(unique(dat.trans$Species)))
 
 for(i in 1:length(SITE)){
