@@ -1,0 +1,214 @@
+---
+title: "OCNMS exploratory plots"
+author: "Ole Shelton"
+date: "November 30, 2015"
+output: html_document
+---
+
+This is a basic file for processing and providing basic plots for the 2015 Olympic Coast National Marine Sanctuary Dive Surveys.
+
+```{r load, message=FALSE, echo=FALSE, warning=FALSE}
+  library(rgdal)
+  library(ggplot2)
+  library(maps)
+  library(mapdata)
+  library(mapproj)
+  source("theme_acs.R")
+ # This means don't display the r results in the output file
+ # Read in the data, fix some of the data inconsistencies and make summary data.frames and lists
+
+ ## This section is for breaking the dataframe into multiple components
+  # quadrats: sessile, and algae
+  # quatrats: mobile countable inverts
+  # transects: mobile inverts
+  # transects: algae stipes
+  # transects: fish
+
+ # a useful function
+length.unique <-function(X){Y<-length(unique(X)); return(Y)}
+
+ # Go get the NOAA survey data from the appropriate directory.
+
+dat <- read.csv("Data/csv files/OCNMSDataComplete_master.csv")
+
+
+dat.kvitek <- list()
+dat.kvitek$Invert.quad   <- read.csv("Data/csv files/Kvitek.Data.Summary.Invert.quadrats.csv")
+dat.kvitek$Invert.trans  <- read.csv("Data/csv files/Kvitek.Data.Summary.Invert.transects.csv")
+dat.kvitek$Veg           <- read.csv("Data/csv files/Kvitek.Data.Summary.Veg.csv")
+
+ # Do some name fixing
+dat$Site[dat$Site == "Tatoosh"] <- "Tatoosh Island"
+dat$Species <-  as.character(dat$Species)
+dat$Species[dat$Species == "Mesocentrotus purpuratus"] <- "purple urchin"
+dat$Species[dat$Species == "Halocynthia aurantium"]     <- "sea peach"
+dat$Species[dat$Species == "Mimulus"]     <- "foliose kelp crab"
+dat$Species[dat$Species == "coralline algae"]     <- "Coralline encrusting"
+dat$Species[dat$Species == "cobble"]     <- "Cobble"
+dat$Species[dat$Species == "tegula"]     <- "Tegula"
+dat$Species[dat$Species == "styela"]     <- "Styela"
+dat$Species[dat$Species == "sponge"]     <- "Sponge"
+dat$Species[dat$Species == "epiactis prolifera"]     <- "Epiactis prolifera"
+dat$Species[dat$Species == "Balanophyllia"]     <- "orange cup coral"
+dat$Species[dat$Species == "tunicate"]     <- "Tunicate"
+
+ ### Read in species lists for dividing species into algae, inverts, and fish.
+sp.names <- read.csv("Data/csv files/OCNMSDataComplete_sp_names.csv")
+
+ #Get rid of "trace"
+dat$Percent.cover[dat$Percent.cover =="trace"] <- 1
+dat$Percent.cover<- as.numeric(as.character(dat$Percent.cover))
+
+ #QUADRAT
+dat.quad <- aggregate(dat$Percent.cover,by=list(Observer=dat$Observer,Site=dat$Site,Transect=dat$Transect,Quadrat=dat$Quadrat,Species=dat$Species), sum,na.rm=T)
+dat.quad <- dat.quad[dat.quad$x>0,]
+
+samp.size.quad <- aggregate(dat.quad$Quadrat,
+                            by=list(Site=dat.quad$Site,Transect=dat.quad$Transect,Observer=dat.quad$Observer),length.unique)
+samp.size.site.quad <- aggregate(samp.size.quad$x,by=list(Site=samp.size.quad$Site),sum) 
+samp.size.quad <- samp.size.quad[order(samp.size.quad$Site),]
+
+ #### Quadrat Counts
+dat.quad.count <- aggregate(dat$Count,by=list(Observer=dat$Observer,Site=dat$Site,Transect=dat$Transect,Quadrat=dat$Quadrat,Species=dat$Species), sum,na.rm=T)
+dat.quad.count <- dat.quad.count[dat.quad.count$x>0,]
+samp.size.quad.count <- aggregate(dat.quad.count$Quadrat,
+                             by=list(Site=dat.quad.count$Site,Transect=dat.quad.count$Transect,Observer=dat.quad.count$Observer),length.unique)
+samp.size.site.quad.count <- aggregate(samp.size.quad.count$x,by=list(Site=samp.size.quad.count$Site),sum) 
+
+ ### Transect Counts
+dat.trans <-dat[is.na(dat$Quadrat)==T,]
+    dat.trans$NUMB <- 1:nrow(dat.trans)
+    
+    #### Merge group names in with transects
+    dat.trans.1 <- merge(dat.trans,sp.names,by.x="Species",by.y="drop.down")
+    dat.trans.1 <- dat.trans.1[order(dat.trans.1$NUMB),]
+
+    temp<- dat.trans[is.na(match(dat.trans$NUMB,dat.trans.1$NUMB))==T,]
+    if(nrow(temp)>0){
+      print("ERROR ERROR: Unmatched species names")
+      stop()
+    }
+
+    qual.trans   <- dat.trans.1[is.na(dat.trans.1$Categorical.abundance)==F,]
+    dat.trans.1  <- dat.trans.1[is.na(dat.trans.1$Categorical.abundance)==T,]
+
+dat.trans.fish  <- list()
+dat.trans.fish$All.fish <- dat.trans.1[dat.trans.1$Broad.taxonomic.category == "Fish",]
+
+dat.trans.mammal.bird <- list()
+dat.trans.mammal.bird$Bird    <- dat.trans.1[dat.trans.1$Broad.taxonomic.category == "Birds",]
+dat.trans.mammal.bird$Mammal  <- dat.trans.1[dat.trans.1$Broad.taxonomic.category == "Mammals",]
+
+dat.trans.invert  <- list()
+dat.trans.invert$All.invert       <- dat.trans.1[dat.trans.1$Broad.taxonomic.category != "Fish" &
+                                           dat.trans.1$Broad.taxonomic.category != "Birds" &
+                                           dat.trans.1$Broad.taxonomic.category != "Mammals" &
+                                           dat.trans.1$Broad.taxonomic.category != "Brown algae",]
+dat.trans.invert$Urchin           <- dat.trans.1[dat.trans.1$Broad.taxonomic.category == "Urchin",]
+dat.trans.invert$Cucumber         <- dat.trans.1[dat.trans.1$Broad.taxonomic.category == "Sea cucumbers",]
+dat.trans.invert$Sea.star         <- dat.trans.1[dat.trans.1$Broad.taxonomic.category == "Seastars",]
+dat.trans.invert$Crab             <- dat.trans.1[dat.trans.1$Broad.taxonomic.category == "Crabs",]
+dat.trans.invert$Chiton           <- dat.trans.1[dat.trans.1$Broad.taxonomic.category == "Chiton",]
+dat.trans.invert$Gastropod    <- dat.trans.1[dat.trans.1$Broad.taxonomic.category == "Limpet"|
+                                                    dat.trans.1$Broad.taxonomic.category == "Gastropod",]
+dat.trans.invert$Bivalve          <- dat.trans.1[dat.trans.1$Broad.taxonomic.category == "Bivalve" ,]
+
+ ### samp.size.transect
+  samp.size.trans <- list()
+    samp.size.trans$Invert <-aggregate(dat.trans.invert$All.invert$Transect,
+          by=list(Site=dat.trans.invert$All.invert$Site,Observer=dat.trans.invert$All.invert$Observer),length.unique)
+    samp.size.trans$Fish <-aggregate(dat.trans.fish$All.fish$Transect,
+          by=list(Site=dat.trans.fish$All.fish$Site,Observer=dat.trans.fish$All.fish$Observer),length.unique)
+
+ ###  Make a Species list for each type of data.
+sp.quad.list<- list()
+sp.quad.count.list<- list()
+sp.trans.list <- list()
+SITE          <- sort(unique(dat.quad$Site))
+
+sp.quad       <-  data.frame(sp.names = sort(unique(dat.quad$Species)))
+  sp.quad$Category  <- sp.names$Broad.taxonomic.category[match(sp.quad$sp.names,sp.names$drop.down)]
+sp.quad.count <-  data.frame(sp.names = sort(unique(dat.quad.count$Species)))
+  sp.quad.count$Category  <- sp.names$Broad.taxonomic.category[match(sp.quad.count$sp.names,sp.names$drop.down)]
+sp.trans      <-  data.frame(sp.names = sort(unique(dat.trans$Species)))
+  sp.trans$Category  <- sp.names$Broad.taxonomic.category[match(sp.trans$sp.names,sp.names$drop.down)]
+
+for(i in 1:length(SITE)){
+    
+    a <- match(sp.quad$sp.names,sort(unique(dat.quad$Species[dat.quad$Site==SITE[i]])))
+    sp.quad[,as.character(SITE[i])] <- 0
+    sp.quad[which(is.na(a)==F),as.character(SITE[i])] <- 1
+
+    b <- match(sp.quad.count$sp.names,sort(unique(dat.quad.count$Species[dat.quad.count$Site==SITE[i]])))
+    sp.quad.count[,as.character(SITE[i])] <- 0
+    sp.quad.count[which(is.na(b)==F),as.character(SITE[i])] <- 1
+
+    d <- match(sp.trans$sp.names,sort(unique(dat.trans$Species[dat.trans$Site==SITE[i]])))
+    sp.trans[,as.character(SITE[i])] <- 0
+    sp.trans[which(is.na(d)==F),as.character(SITE[i])] <- 1
+}
+```
+
+All surveys were conducted on these dates:
+```{r,echo=FALSE}
+ sort(as.character(unique(dat$Date)))
+```
+Here is a map showing the approximate locations of the sites
+```{r,echo=FALSE}
+  #### READ IN WASHINGTON MARINE SHORELINES (FROM http://www.ecy.wa.gov/services/gis/data/data.htm
+  
+  #base.dir <- getwd()
+#   gis.dir<- "/Users/ole.shelton/GitHub/OCNMS/Data/PG Shore shore_thematic_UTM10/"
+#   setwd(gis.dir)
+#   # shore.poly	<-	readShapePoly("shore_thematic_UTM10.shp")
+#   
+#   shore.poly	<-	readOGR(dsn=".","shore_thematic_UTM10")
+#   shore		<-	data.frame(shore.poly)
+# 
+#   shore.dat	<-	 as(shore.poly,"data.frame")
+#   shore.dat$NEW	<- 1:nrow(shore.dat)
+#   shore.poly@data$id 	= rownames(shore.poly@data)
+#   shore.points		<-	fortify(shore.poly,region="id")
+#   shore.df			  <- merge(shore.points,shore.poly@data,by="id")
+#   write.csv(shore.df,file="shore df.csv",row.names=F)
+  shore.df        <- read.csv("Data/PG Shore shore_thematic_UTM10/shore df.csv")
+  
+  # setwd(base.dir)
+  PROJ <- "+proj=utm +zone=10 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0"
+  loc <-  read.csv("Data/csv files/OCNMSDataComplete_site_loc.csv")
+  loc.new				<- cbind(-loc$Longitude, loc$Latitude)
+  loc.new.sp		<- SpatialPoints(loc.new,CRS("+proj=longlat +ellps=WGS84 +datum=WGS84"))
+
+  loc.new.sp.NAD83	<- spTransform(loc.new.sp, CRS(PROJ))
+  new.dat			      <- as(loc.new.sp.NAD83,"data.frame")
+  colnames(new.dat)	<- c("LonUTM","LatUTM")
+  loc <- data.frame(loc,new.dat)
+  
+  
+  x.lim =c(3.5e+05,4e+05)
+  y.lim =c(52.5e+05,53.75e+05)
+  
+  #wa <- map_data('worldHires','USA')
+  quartz(width=3,height=5)
+  #wa <- map_data("state",region = c('washington'))
+  p3	<-	ggplot()+
+				theme_acs() +
+				theme(legend.key =  element_rect(fill = "white", colour = "white"),
+					panel.border = element_rect(fill = NA, colour = "black",size=1.5)) +
+		  #  geom_polygon(data=wa,aes(long,lat,group=group),fill=8,color="black")	+
+				coord_cartesian(xlim = x.lim,ylim=y.lim)     +
+        geom_polygon(data=shore.df[shore.df$POLYTYPE == "Land" | shore.df$POLYTYPE == "Island" ,], fill=grey(0.7),color=NA) +
+					aes(long,lat,group=group) +
+        xlab("Eastings (UTM)") +
+			  ylab("Northings (UTM)") 
+	print(p3)
+	#dev.off()
+  		# 	bGrid +bAxis + bBack + bTics +
+
+```
+
+
+
+
+
+

@@ -1,0 +1,352 @@
+installed.packages
+installed.packages()
+.libpaths()
+a<-rnorm(1000000,1,2)
+b=a*2
+a
+mean(a)
+a<-rnorm(1000000,1,2)
+b=a*2
+mean(b)
+var(b)
+mu=1;sig=2; a<-rnorm(1000000,mu,sig);c=3;b=c*a
+mean(b)
+var(b)
+c*mu
+c^2*sig^2
+exp(-0.5)
+exp(-0.5)*exp(-0.5)
+exp(-2*0.5)
+rnorm(1e7,2,0.2)
+A<-rnorm(1e7,2,0.2)
+par(mfrow=c(2,1))
+hist(A)
+hist(A^3)
+mean(A)
+mean(A^3)
+median(A)
+median(A^3)
+mean(c(A,A^3))
+mu=2sig=1A<-rnorm(1e7,mu,sig)par(mfrow=c(2,1))hist(A)hist(A^3)#
+mean(A)median(A)sd(A)#
+mean(A^3)median(A^3)sd(A^3)
+(7/6)^3
+7^3/6^3
+libPAths()
+.libPaths()
+load("/Users/ole.shelton/Documents/Science/Active projects/Eulachon/codeforplots/forOle.Rdata")
+library(INLA)#
+library(lattice)#
+library(PBSmapping)#
+library(date)#
+library(ncdf)#
+library(fields)#
+library(mvtnorm)#
+library(splancs)
+source("http://www.math.ntnu.no/inla/givemeINLA.R")
+?geom_map
+library(ggplot2)
+?geom_map
+p1	<-	ggplot(shore,aes(lat,long,group=group,colour=grey(0.5)))p1	<-	p1 + geom_map(map=shore,map_id=shore$id)
+update.packages()
+p2	<-	ggplot()+		geom_polygon(data=shore.df[shore.df$POLYTYPE == "Land" | shore.df$POLYTYPE == "Island" ,], fill=grey(0.5),color=NA) +			aes(long,lat,group=group) +		coord_cartesian(xlim = x.lim,ylim=y.lim) +		bGrid +bAxis + bBack + bTics +# 		scale_size_continuous(range=c(4,12))+ 		scale_colour_gradient(low = "blue",high="red", breaks = Breaks,limits=(0,1))+    	geom_point(data=Y.out,alpha=0.7,    			mapping=aes(long,lat,group,colour=Mean,size=plot.range)) p2
+x.lim	<- c(min(dat.seg.order$coords.x1)-1000,max(dat.seg.order$coords.x1)+100)y.lim	<- c(min(dat.seg.order$coords.x2)-1000,max(dat.seg.order$coords.x2)+200)z.lim	<-	c(0,1)Breaks	<-	c(0,0.25,0.5,0.75,1)#
+bGrid <-theme(panel.grid =element_blank())bBack <-theme(panel.background =element_blank())bAxis <-theme(axis.title.y =element_blank())bTics <-theme(axis.text =element_blank(), axis.text.y =element_blank(), axis.ticks =element_blank())#
+p1	<-	ggplot()+		geom_polygon(data=shore.df[shore.df$POLYTYPE == "Land" | shore.df$POLYTYPE == "Island" ,], fill=grey(0.5),color=NA) +			aes(long,lat,group=group) +		coord_cartesian(xlim = x.lim,ylim=y.lim) +		bGrid +bAxis + bBack + bTics +    	geom_point(data=dat.eel.fin)+    			aes(long,lat,group=group,colour="red")p1p2	<-	ggplot()+		geom_polygon(data=shore.df[shore.df$POLYTYPE == "Land" | shore.df$POLYTYPE == "Island" ,], fill=grey(0.5),color=NA) +			aes(long,lat,group=group) +		coord_cartesian(xlim = x.lim,ylim=y.lim) +		bGrid +bAxis + bBack + bTics +# 		scale_size_continuous(range=c(4,12))+ 		scale_colour_gradient(low = "blue",high="red",breaks=Breaks,limits=(0,1)) +    	geom_point(data=Y.out,alpha=0.7,    			mapping=aes(long,lat,group,colour=Mean,size=plot.range)) p2
+data(SPDEtoy)#
+str(SPDEtoy)#
+#
+spde5 <- inla.spde2.matern(mesh5, alpha=2)#
+coords <- as.matrix(SPDEtoy[,1:2])#
+A5 <- inla.spde.make.A(mesh5, loc=coords)#
+# We have that the SPDE approach defines a model on the mesh nodes, and usually the#
+# number of nodes are not equal to the number of locations where we have data observed.#
+# The inla.stack function allow us to work with predictors that includes terms with different#
+# dimentions. The three main inla.stack() arguments are the data vectors list, a#
+# list of projector matrices (each one related to one block effect) and the effects.#
+# We need two projector matrices, the projector matrix for the latent field and a matrix#
+# to map one-to-one the ’covariate’ and the response. This last one can be just a constant#
+# instead a diagonal matrix. So, we have#
+#
+stk5 <- inla.stack(data=list(resp=SPDEtoy$y), #
+		A=list(A5,1),#
+		effects=list(i=1:spde5$n.spde,m=rep(1,nrow(SPDEtoy))), #
+		tag='est')#
+#
+res5 <- inla(resp ~ 0 + m + f(i, model=spde5),#
+		data=inla.stack.data(stk5),#
+		control.predictor=list(A=inla.stack.A(stk5)))
+library(INLA)
+data(SPDEtoy)#
+str(SPDEtoy)#
+#
+spde5 <- inla.spde2.matern(mesh5, alpha=2)#
+coords <- as.matrix(SPDEtoy[,1:2])#
+A5 <- inla.spde.make.A(mesh5, loc=coords)#
+# We have that the SPDE approach defines a model on the mesh nodes, and usually the#
+# number of nodes are not equal to the number of locations where we have data observed.#
+# The inla.stack function allow us to work with predictors that includes terms with different#
+# dimentions. The three main inla.stack() arguments are the data vectors list, a#
+# list of projector matrices (each one related to one block effect) and the effects.#
+# We need two projector matrices, the projector matrix for the latent field and a matrix#
+# to map one-to-one the ’covariate’ and the response. This last one can be just a constant#
+# instead a diagonal matrix. So, we have#
+#
+stk5 <- inla.stack(data=list(resp=SPDEtoy$y), #
+		A=list(A5,1),#
+		effects=list(i=1:spde5$n.spde,m=rep(1,nrow(SPDEtoy))), #
+		tag='est')#
+#
+res5 <- inla(resp ~ 0 + m + f(i, model=spde5),#
+		data=inla.stack.data(stk5),#
+		control.predictor=list(A=inla.stack.A(stk5)))
+data(SPDEtoy)#
+str(SPDEtoy)#
+pl.dom <- cbind(c(0,1,1,0.7,0), c(0,0,0.7,1,1))#
+mesh5 <- inla.mesh.2d(, pl.dom, max.e=c(0.092, 0.2))#
+spde5 <- inla.spde2.matern(mesh5, alpha=2)#
+coords <- as.matrix(SPDEtoy[,1:2])#
+A5 <- inla.spde.make.A(mesh5, loc=coords)
+stk5 <- inla.stack(data=list(resp=SPDEtoy$y), #
+		A=list(A5,1),#
+		effects=list(i=1:spde5$n.spde,m=rep(1,nrow(SPDEtoy))), #
+		tag='est')#
+#
+res5 <- inla(resp ~ 0 + m + f(i, model=spde5),#
+		data=inla.stack.data(stk5),#
+		control.predictor=list(A=inla.stack.A(stk5)))
+res5$summary.hyperpar
+which(substr(rownames(result$summary.hyperpar),1,6) == "Theta2")
+plot(field.2D$marginals.range.nominal$variance.nominal.1)
+plot(field.2D$marginals.variance.nominal$variance.nominal.1)
+########################################################################################### Predicted Values##########################################################################################	output	<-	inla.spde2.result(res.2D.group.ar1,"i2D",spde2D)	obs.index = inla.stack.index(stack.2D, "2D.obs")$data	pred.index = inla.stack.index(stack.2D, "2D.pred")$data	######################################################################################	### Merge model output back to the data frame with the observations.	######################################################################################	DAT.out	<-	data.frame(cbind(DAT,				Mean =  result$summary.fitted.values$mean[obs.index],				q.025 = result$summary.fitted.values$"0.025quant"[obs.index],				q.975 = result$summary.fitted.values$"0.975quant"[obs.index]))	temp	<- 	DAT.out[is.na(DAT.out$Ntrials)==T,]	DAT.out[is.na(DAT.out$Ntrials)==T,c('Mean', 'q.025', 'q.975')]	<- ANTI.LOGIT(DAT.out[is.na(DAT.out$Ntrials)==T,c('Mean', 'q.025
+', 'q.975')])	DAT.miss.out	<-	data.frame(cbind(DAT.miss,				Mean = ANTI.LOGIT(result$summary.fitted.values$mean[pred.index]),				q.025 = ANTI.LOGIT(result$summary.fitted.values$"0.025quant"[pred.index]),				q.975 = ANTI.LOGIT(result$summary.fitted.values$"0.975quant"[pred.index])))#
+	DAT.all	<-	data.frame(rbind(DAT.out,DAT.miss.out))	DAT.all	<-	DAT.out#
+	DAT.all$Range 		<-	DAT.all$q.975- DAT.all$q.025	DAT.all$plot.range	<-	sqrt(1 / DAT.all$Range)	DAT.all$group 		<- 1 	DAT.all$long		<- DAT.all$X.loc *1000	DAT.all$lat			<- DAT.all$Y.loc *1000########################################################################################### Write Results to File and Make Plots###########################################################################################
+##########################################################################################p	<-	list()for(i in 1:nrow(Year.Group)){TEMP	<-	 DAT.all[DAT.all$year.group == Year.Group$label[i],]p2	<-	ggplot()+		geom_polygon(data=shore.df[shore.df$POLYTYPE == "Land" | shore.df$POLYTYPE == "Island" ,], fill=grey(0.5),color=NA) +			aes(long,lat,group=group) +		coord_cartesian(xlim = x.lim,ylim=y.lim) +		bGrid +bAxis + bBack + bTics +# 		scale_size_continuous(range=c(4,12))+ 		scale_colour_gradient(low = "blue",high="red",breaks=Breaks,limits=c(0,1)) +    	geom_point(data=TEMP,alpha=0.7,    			mapping=aes(long,lat,group,colour=Mean,size=plot.range))+     	ggtitle(paste("PO-PM Eelgrass\n Years: ",substr(Year.Group$label[i],3,11)))p[[i]]	<-	 p2#
+}for(i in 1:nrow(Year.Group)){	quartz()	print(p[[i]])}
+p2	<-	ggplot()+		geom_polygon(data=shore.df[shore.df$POLYTYPE == "Land" | shore.df$POLYTYPE == "Island" ,], fill=grey(0.5),color=NA) +			aes(long,lat,group=group) +		coord_cartesian(xlim = x.lim,ylim=y.lim) +		bGrid +bAxis + bBack + bTics +# 		scale_size_continuous(range=c(4,12))+ 		scale_colour_gradient(low = "blue",high="red",breaks=Breaks,limits=c(0,1), 				labels=c("A","B","C","D"))+    	geom_point(data=TEMP,alpha=0.7,    			mapping=aes(long,lat,group,colour=Mean,size=plot.range))+     	ggtitle(paste("PO-PM Eelgrass\n Years: ",substr(Year.Group$label[i],3,11)))p2
+p2	<-	ggplot()+		geom_polygon(data=shore.df[shore.df$POLYTYPE == "Land" | shore.df$POLYTYPE == "Island" ,], fill=grey(0.5),color=NA) +			aes(long,lat,group=group) +		coord_cartesian(xlim = x.lim,ylim=y.lim) +		bGrid +bAxis + bBack + bTics +# 		scale_size_continuous(range=c(4,12))+ 		scale_colour_gradient(low = "blue",high="red",breaks=Breaks,limits=c(0,1), 				labels=c("A","B","C","D","E"))+    	geom_point(data=TEMP,alpha=0.7,    			mapping=aes(long,lat,group,colour=Mean,size=plot.range))+     	ggtitle(paste("PO-PM Eelgrass\n Years: ",substr(Year.Group$label[i],3,11)))p2
+N	<- 10000B	<- rep(0,N)B2	<- rep(0,N)B[1]<- 10B2[1]<- 10SD	 = 0.5gamma.beta	<-	1/SD^2M	 = 0.2	ALP  = 2BETA = 0.001J	<-	 rep(0,1000)J2	<-	 rep(0,1000)# for(j in 1:1000){for(i in 1:(N-1)){	B[i+1]	<-	B[i] *exp(-M) + ((ALP * B[i] ) / (1 + BETA * B[i] ))* exp(rnorm(1,0,SD)-0.5*SD^2)	B2[i+1]	<-	B2[i]*exp(-M) + ((ALP * B2[i]) / (1 + BETA * B2[i]))* rgamma(1,gamma.beta,gamma.beta)}#
+# equilibriumEQUIL	<-	 (ALP / (BETA*(1-exp(-M)) )) - 1 / BETA# par(mfrow=c(2,1))# plot(B,pch=".",ylab="LOG-NORM")# abline(h=EQUIL,col=2)# plot(B2,pch=".",ylab="GAMMA")# abline(h=EQUIL,col=2)#
+SDEQUILJ[j] <- mean(B[1000:N])J2[j] <- mean(B2[1000:N])print(j)# }
+j=1
+N	<- 10000B	<- rep(0,N)B2	<- rep(0,N)B[1]<- 10B2[1]<- 10SD	 = 0.5gamma.beta	<-	1/SD^2M	 = 0.2	ALP  = 2BETA = 0.001J	<-	 rep(0,1000)J2	<-	 rep(0,1000)# for(j in 1:1000){for(i in 1:(N-1)){	B[i+1]	<-	B[i] *exp(-M) + ((ALP * B[i] ) / (1 + BETA * B[i] ))* exp(rnorm(1,0,SD)-0.5*SD^2)	B2[i+1]	<-	B2[i]*exp(-M) + ((ALP * B2[i]) / (1 + BETA * B2[i]))* rgamma(1,gamma.beta,gamma.beta)}#
+# equilibriumEQUIL	<-	 (ALP / (BETA*(1-exp(-M)) )) - 1 / BETA# par(mfrow=c(2,1))# plot(B,pch=".",ylab="LOG-NORM")# abline(h=EQUIL,col=2)# plot(B2,pch=".",ylab="GAMMA")# abline(h=EQUIL,col=2)#
+SDEQUILJ[j] <- mean(B[1000:N])J2[j] <- mean(B2[1000:N])print(j)# }
+SDEQUILJ[j] <- mean(B[1000:N])J2[j] <- mean(B2[1000:N])print(j)J[1]J2[1]
+EQUIL	<-	 (ALP / (BETA*(1-exp(-M)) )) - 1 / BETA# par(mfrow=c(2,1))# plot(B,pch=".",ylab="LOG-NORM")# abline(h=EQUIL,col=2)# plot(B2,pch=".",ylab="GAMMA")# abline(h=EQUIL,col=2)
+N	<- 10000B	<- rep(0,N)B2	<- rep(0,N)B[1]<- 10B2[1]<- 10SD	 = 0.5gamma.beta	<-	1/SD^2M	 = 0.2	ALP  = 2BETA = 0.001J	<-	 rep(0,1000)J2	<-	 rep(0,1000)# for(j in 1:1000){for(i in 1:(N-1)){	B[i+1]	<-	B[i] *exp(-M) + ((ALP * B[i] ) / (1 + BETA * B[i] ))* exp(rnorm(1,0,SD)-0.5*SD^2)	B2[i+1]	<-	B2[i]*exp(-M) + ((ALP * B2[i]) / (1 + BETA * B2[i]))* rgamma(1,gamma.beta,gamma.beta)}#
+# equilibrium# EQUIL	<-	 (ALP / (BETA*(1-exp(-M)) )) - 1 / BETA# # par(mfrow=c(2,1))# # plot(B,pch=".",ylab="LOG-NORM")# # abline(h=EQUIL,col=2)# # plot(B2,pch=".",ylab="GAMMA")# # abline(h=EQUIL,col=2)#
+SDEQUILJ[j] <- mean(B[1000:N])J2[j] <- mean(B2[1000:N])print(j)J[1]J2[1]# }
+N	<- 10000B	<- rep(0,N)B2	<- rep(0,N)B[1]<- 10B2[1]<- 10SD	 = 0.5gamma.beta	<-	1/SD^2M	 = 0.2	ALP  = 2BETA = 0.001J	<-	 rep(0,1000)J2	<-	 rep(0,1000)# for(j in 1:1000){for(i in 1:(N-1)){	B[i+1]	<-	B[i] *exp(-M) + ((ALP * B[i] ) / (1 + BETA * B[i] ))* exp(rnorm(1,0,SD)-0.5*SD^2)	B2[i+1]	<-	B2[i]*exp(-M) + ((ALP * B2[i]) / (1 + BETA * B2[i]))* rgamma(1,gamma.beta,gamma.beta)}#
+# equilibriumEQUIL	<-	 (ALP / (BETA*(1-exp(-M)) )) - 1 / BETApar(mfrow=c(2,1))plot(B,pch=".",ylab="LOG-NORM")abline(h=EQUIL,col=2)plot(B2,pch=".",ylab="GAMMA")abline(h=EQUIL,col=2)#
+SDEQUILJ[j] <- mean(B[1000:N])J2[j] <- mean(B2[1000:N])print(j)J[1]J2[1]
+N	<- 10000B	<- rep(0,N)B2	<- rep(0,N)B[1]<- 10B2[1]<- 10SD	 = 0.5gamma.beta	<-	1/SD^2M	 = 0.2	ALP  = 2BETA = 0.001J	<-	 rep(0,1000)J2	<-	 rep(0,1000)for(j in 1:1000){for(i in 1:(N-1)){	B[i+1]	<-	B[i] *exp(-M) + ((ALP * B[i] ) / (1 + BETA * B[i] ))* exp(rnorm(1,0,SD)-0.5*SD^2)	B2[i+1]	<-	B2[i]*exp(-M) + ((ALP * B2[i]) / (1 + BETA * B2[i]))* rgamma(1,gamma.beta,gamma.beta)}#
+# equilibriumEQUIL	<-	 (ALP / (BETA*(1-exp(-M)) )) - 1 / BETApar(mfrow=c(2,1))plot(B,pch=".",ylab="LOG-NORM")abline(h=EQUIL,col=2)plot(B2,pch=".",ylab="GAMMA")abline(h=EQUIL,col=2)#
+SDEQUILJ[j] <- mean(B[1000:N])J2[j] <- mean(B2[1000:N])print(j)# J[1]# J2[1] }par(mfrow=c(2,1))hist(J,breaks=50)abline(v=EQUIL,col=2)hist(J2,breaks=50)abline(v=EQUIL,col=2)
+N	<- 10000B	<- rep(0,N)B2	<- rep(0,N)B[1]<- 10B2[1]<- 10SD	 = 0.5gamma.beta	<-	1/SD^2M	 = 0.2	ALP  = 2BETA = 0.001J	<-	 rep(0,1000)J2	<-	 rep(0,1000)for(j in 1:1000){for(i in 1:(N-1)){	B[i+1]	<-	B[i] *exp(-M) + ((ALP * B[i] ) / (1 + BETA * B[i] ))* exp(rnorm(1,0,SD)-0.5*SD^2)	B2[i+1]	<-	B2[i]*exp(-M) + ((ALP * B2[i]) / (1 + BETA * B2[i]))* rgamma(1,gamma.beta,gamma.beta)}#
+# equilibriumEQUIL	<-	 (ALP / (BETA*(1-exp(-M)) )) - 1 / BETA# par(mfrow=c(2,1))# plot(B,pch=".",ylab="LOG-NORM")# abline(h=EQUIL,col=2)# plot(B2,pch=".",ylab="GAMMA")# abline(h=EQUIL,col=2)#
+SDEQUILJ[j] <- mean(B[1000:N])J2[j] <- mean(B2[1000:N])print(j)# J[1]# J2[1] }
+par(mfrow=c(2,1))hist(J,breaks=50)abline(v=EQUIL,col=2)hist(J2,breaks=50)abline(v=EQUIL,col=2)
+X<-rgamma(100000,gamma.beta,gamma.beta)hist(X)mean(X)
+X<-rgamma(100000,gamma.beta,gamma.beta)hist(X)mean(X)var(X)sd(X)
+N	<- 10000B	<- rep(0,N)B2	<- rep(0,N)B[1]<- 10B2[1]<- 10SD	 = 0.000001gamma.beta	<-	1/SD^2M	 = 0.2	ALP  = 2BETA = 0.001J	<-	 rep(0,1000)J2	<-	 rep(0,1000)for(j in 1:1000){for(i in 1:(N-1)){	B[i+1]	<-	B[i] *exp(-M) + ((ALP * B[i]  * exp(rnorm(1,0,SD)-0.5*SD^2) )    / (1 + BETA * B[i] ))	B2[i+1]	<-	B2[i]*exp(-M) + ((ALP * B2[i] * rgamma(1,gamma.beta,gamma.beta)) / (1 + BETA * B2[i]))}#
+# equilibriumEQUIL	<-	 (ALP / (BETA*(1-exp(-M)) )) - 1 / BETApar(mfrow=c(2,1))plot(B,pch=".",ylab="LOG-NORM")abline(h=EQUIL,col=2)plot(B2,pch=".",ylab="GAMMA")abline(h=EQUIL,col=2)
+N	<- 10000B	<- rep(0,N)B2	<- rep(0,N)B[1]<- 10B2[1]<- 10SD	 = 0.000001gamma.beta	<-	1/SD^2M	 = 0.2	ALP  = 2BETA = 0.001J	<-	 rep(0,1000)J2	<-	 rep(0,1000)# for(j in 1:1000){for(i in 1:(N-1)){	B[i+1]	<-	B[i] *exp(-M) + ((ALP * B[i]  * exp(rnorm(1,0,SD)-0.5*SD^2) )    / (1 + BETA * B[i] ))	B2[i+1]	<-	B2[i]*exp(-M) + ((ALP * B2[i] * rgamma(1,gamma.beta,gamma.beta)) / (1 + BETA * B2[i]))}#
+# equilibriumEQUIL	<-	 (ALP / (BETA*(1-exp(-M)) )) - 1 / BETApar(mfrow=c(2,1))plot(B,pch=".",ylab="LOG-NORM")abline(h=EQUIL,col=2)plot(B2,pch=".",ylab="GAMMA")abline(h=EQUIL,col=2)
+N	<- 10000B	<- rep(0,N)B2	<- rep(0,N)B[1]<- 10000B2[1]<- 10000SD	 = 0.000001gamma.beta	<-	1/SD^2M	 = 0.2	ALP  = 2BETA = 0.001J	<-	 rep(0,1000)J2	<-	 rep(0,1000)# for(j in 1:1000){for(i in 1:(N-1)){	B[i+1]	<-	B[i] *exp(-M) + ((ALP * B[i]  * exp(rnorm(1,0,SD)-0.5*SD^2) )    / (1 + BETA * B[i] ))	B2[i+1]	<-	B2[i]*exp(-M) + ((ALP * B2[i] * rgamma(1,gamma.beta,gamma.beta)) / (1 + BETA * B2[i]))}#
+# equilibriumEQUIL	<-	 (ALP / (BETA*(1-exp(-M)) )) - 1 / BETApar(mfrow=c(2,1))plot(B,pch=".",ylab="LOG-NORM")abline(h=EQUIL,col=2)plot(B2,pch=".",ylab="GAMMA")abline(h=EQUIL,col=2)
+N	<- 10000B	<- rep(0,N)B2	<- rep(0,N)B[1]<- 100030B2[1]<- 10030SD	 = 0.000001gamma.beta	<-	1/SD^2M	 = 0.2	ALP  = 2BETA = 0.001J	<-	 rep(0,1000)J2	<-	 rep(0,1000)# for(j in 1:1000){for(i in 1:(N-1)){	B[i+1]	<-	B[i] *exp(-M) + ((ALP * B[i]  * exp(rnorm(1,0,SD)-0.5*SD^2) )    / (1 + BETA * B[i] ))	B2[i+1]	<-	B2[i]*exp(-M) + ((ALP * B2[i] * rgamma(1,gamma.beta,gamma.beta)) / (1 + BETA * B2[i]))}#
+# equilibriumEQUIL	<-	 (ALP / (BETA*(1-exp(-M)) )) - 1 / BETApar(mfrow=c(2,1))plot(B,pch=".",ylab="LOG-NORM")abline(h=EQUIL,col=2)plot(B2,pch=".",ylab="GAMMA")abline(h=EQUIL,col=2)
+N	<- 10000B	<- rep(0,N)B2	<- rep(0,N)B[1]<- 10030B2[1]<- 10030SD	 = 0.000001gamma.beta	<-	1/SD^2M	 = 0.2	ALP  = 2BETA = 0.001J	<-	 rep(0,1000)J2	<-	 rep(0,1000)# for(j in 1:1000){for(i in 1:(N-1)){	B[i+1]	<-	B[i] *exp(-M) + ((ALP * B[i]  * exp(rnorm(1,0,SD)-0.5*SD^2) )    / (1 + BETA * B[i] ))	B2[i+1]	<-	B2[i]*exp(-M) + ((ALP * B2[i] * rgamma(1,gamma.beta,gamma.beta)) / (1 + BETA * B2[i]))}#
+# equilibriumEQUIL	<-	 (ALP / (BETA*(1-exp(-M)) )) - 1 / BETApar(mfrow=c(2,1))plot(B,pch=".",ylab="LOG-NORM")abline(h=EQUIL,col=2)plot(B2,pch=".",ylab="GAMMA")abline(h=EQUIL,col=2)
+N	<- 10000B	<- rep(0,N)B2	<- rep(0,N)B[1]<- 10030B2[1]<- 10030SD	 = 0.1gamma.beta	<-	1/SD^2M	 = 0.2	ALP  = 2BETA = 0.001J	<-	 rep(0,1000)J2	<-	 rep(0,1000)# for(j in 1:1000){for(i in 1:(N-1)){	B[i+1]	<-	B[i] *exp(-M) + ((ALP * B[i]  * exp(rnorm(1,0,SD)-0.5*SD^2) )    / (1 + BETA * B[i] ))	B2[i+1]	<-	B2[i]*exp(-M) + ((ALP * B2[i] * rgamma(1,gamma.beta,gamma.beta)) / (1 + BETA * B2[i]))}#
+# equilibriumEQUIL	<-	 (ALP / (BETA*(1-exp(-M)) )) - 1 / BETApar(mfrow=c(2,1))plot(B,pch=".",ylab="LOG-NORM")abline(h=EQUIL,col=2)plot(B2,pch=".",ylab="GAMMA")abline(h=EQUIL,col=2)
+EQUIL	<-	 (ALP / (BETA*(1-exp(-M)) )) - 1 / BETApar(mfrow=c(2,1))plot(B,pch=".",ylab="LOG-NORM")abline(h=EQUIL,col=2)plot(B2,pch=".",ylab="GAMMA")abline(h=EQUIL,col=2)#
+SDEQUILJ[j] <- mean(B[1000:N])J2[j] <- mean(B2[1000:N])print(j) J[1] J2[1]
+j=1
+N	<- 10000B	<- rep(0,N)B2	<- rep(0,N)B[1]<- 10030B2[1]<- 10030SD	 = 0.1gamma.beta	<-	1/SD^2M	 = 0.2	ALP  = 2BETA = 0.001J	<-	 rep(0,1000)J2	<-	 rep(0,1000)# for(j in 1:1000){for(i in 1:(N-1)){	B[i+1]	<-	B[i] *exp(-M) + ((ALP * B[i]  * exp(rnorm(1,0,SD)-0.5*SD^2) )    / (1 + BETA * B[i] ))	B2[i+1]	<-	B2[i]*exp(-M) + ((ALP * B2[i] * rgamma(1,gamma.beta,gamma.beta)) / (1 + BETA * B2[i]))}#
+# equilibriumEQUIL	<-	 (ALP / (BETA*(1-exp(-M)) )) - 1 / BETApar(mfrow=c(2,1))plot(B,pch=".",ylab="LOG-NORM")abline(h=EQUIL,col=2)plot(B2,pch=".",ylab="GAMMA")abline(h=EQUIL,col=2)#
+SDEQUILJ[j] <- mean(B[1000:N])J2[j] <- mean(B2[1000:N])print(j) J[1] J2[1]#  }
+N	<- 10000B	<- rep(0,N)B2	<- rep(0,N)B[1]<- 10030B2[1]<- 10030SD	 = 0.1gamma.beta	<-	1/SD^2M	 = 0.2	ALP  = 2BETA = 0.001J	<-	 rep(0,1000)J2	<-	 rep(0,1000)  for(j in 1:1000){for(i in 1:(N-1)){	B[i+1]	<-	B[i] *exp(-M) + ((ALP * B[i]  * exp(rnorm(1,0,SD)-0.5*SD^2) )    / (1 + BETA * B[i] ))	B2[i+1]	<-	B2[i]*exp(-M) + ((ALP * B2[i] * rgamma(1,gamma.beta,gamma.beta)) / (1 + BETA * B2[i]))}#
+# equilibriumEQUIL	<-	 (ALP / (BETA*(1-exp(-M)) )) - 1 / BETApar(mfrow=c(2,1))plot(B,pch=".",ylab="LOG-NORM")abline(h=EQUIL,col=2)plot(B2,pch=".",ylab="GAMMA")abline(h=EQUIL,col=2)#
+SDEQUILJ[j] <- mean(B[1000:N])J2[j] <- mean(B2[1000:N])print(j)#  J[1]#  J2[1]  }par(mfrow=c(2,1))hist(J,breaks=50)abline(v=EQUIL,col=2)hist(J2,breaks=50)abline(v=EQUIL,col=2)
+N	<- 10000B	<- rep(0,N)B2	<- rep(0,N)B[1]<- 10030B2[1]<- 10030SD	 = 0.1gamma.beta	<-	1/SD^2M	 = 0.2	ALP  = 2BETA = 0.001J	<-	 rep(0,1000)J2	<-	 rep(0,1000)  for(j in 1:1000){for(i in 1:(N-1)){	B[i+1]	<-	B[i] *exp(-M) + ((ALP * B[i]  * exp(rnorm(1,0,SD)-0.5*SD^2) )    / (1 + BETA * B[i] ))	B2[i+1]	<-	B2[i]*exp(-M) + ((ALP * B2[i] * rgamma(1,gamma.beta,gamma.beta)) / (1 + BETA * B2[i]))}#
+# equilibriumEQUIL	<-	 (ALP / (BETA*(1-exp(-M)) )) - 1 / BETA# par(mfrow=c(2,1))# plot(B,pch=".",ylab="LOG-NORM")# abline(h=EQUIL,col=2)# plot(B2,pch=".",ylab="GAMMA")# abline(h=EQUIL,col=2)#
+SDEQUILJ[j] <- mean(B[1000:N])J2[j] <- mean(B2[1000:N])print(j)#  J[1]#  J2[1]  }par(mfrow=c(2,1))hist(J,breaks=50)abline(v=EQUIL,col=2)hist(J2,breaks=50)abline(v=EQUIL,col=2)
+par(mfrow=c(2,1))hist(J,breaks=50)abline(v=EQUIL,col=2)abline(v=mean(J),col=4,lwd=2)hist(J2,breaks=50)abline(v=EQUIL,col=2,lwd=2)abline(v=mean(J2),col=4,lwd=2)
+N	<- 10000#
+B	<- rep(0,N)#
+B2	<- rep(0,N)#
+B[1]<- 10030#
+B2[1]<- 10030#
+#
+SD	 = 0.5#
+gamma.beta	<-	1/SD^2#
+#
+M	 = 0.2	#
+ALP  = 2#
+BETA = 0.001#
+#
+J	<-	 rep(0,1000)#
+J2	<-	 rep(0,1000)#
+#
+  for(j in 1:1000){#
+for(i in 1:(N-1)){#
+	B[i+1]	<-	B[i] *exp(-M) + ((ALP * B[i]  * exp(rnorm(1,0,SD)-0.5*SD^2) )    / (1 + BETA * B[i] ))#
+	B2[i+1]	<-	B2[i]*exp(-M) + ((ALP * B2[i] * rgamma(1,gamma.beta,gamma.beta)) / (1 + BETA * B2[i]))#
+}#
+# equilibrium#
+#
+EQUIL	<-	 (ALP / (BETA*(1-exp(-M)) )) - 1 / BETA#
+# par(mfrow=c(2,1))#
+# plot(B,pch=".",ylab="LOG-NORM")#
+# abline(h=EQUIL,col=2)#
+# plot(B2,pch=".",ylab="GAMMA")#
+# abline(h=EQUIL,col=2)#
+SD#
+EQUIL#
+J[j] <- mean(B[1000:N])#
+J2[j] <- mean(B2[1000:N])#
+print(j)#
+#  J[1]#
+#  J2[1]#
+  }#
+#
+par(mfrow=c(2,1))#
+hist(J,breaks=50)#
+abline(v=EQUIL,col=2)#
+abline(v=mean(J),col=4,lwd=2)#
+hist(J2,breaks=50)#
+abline(v=EQUIL,col=2,lwd=2)#
+abline(v=mean(J2),col=4,lwd=2)
+EQUIL - mean(J)EQUIL - mean(J2)
+N	<- 10000B	<- rep(0,N)B2	<- rep(0,N)B[1]<- 10030B2[1]<- 10030SD	 = 0.5gamma.beta	<-	1/SD^2M	 = 0.2	ALP  = 2BETA = 0.001J	<-	 rep(0,1000)J2	<-	 rep(0,1000)  for(j in 1:1000){for(i in 1:(N-1)){	B[i+1]	<-	B[i] *exp(-M) + ((ALP * B[i]  * exp(rnorm(1,0,SD)-0.5*SD^2) )    / (1 + BETA * B[i] ))	B2[i+1]	<-	B2[i]*exp(-M) + ((ALP * B2[i] * rgamma(1,gamma.beta,gamma.beta)) / (1 + BETA * B2[i]))}#
+# equilibriumEQUIL	<-	 (ALP / (BETA*(1-exp(-M)) )) - 1 / BETA# par(mfrow=c(2,1))# plot(B,pch=".",ylab="LOG-NORM")# abline(h=EQUIL,col=2)# plot(B2,pch=".",ylab="GAMMA")# abline(h=EQUIL,col=2)#
+SDEQUILJ[j] <- mean(B[1000:N])J2[j] <- mean(B2[1000:N])print(j)#  J[1]#  J2[1]  }par(mfrow=c(2,1))hist(J,breaks=50)abline(v=EQUIL,col=2)abline(v=mean(J),col=4,lwd=2)hist(J2,breaks=50)abline(v=EQUIL,col=2,lwd=2)abline(v=mean(J2),col=4,lwd=2)EQUIL - mean(J)EQUIL - mean(J2)
+load("/Users/ole.shelton/Documents/Science/Active projects/Herring/Puget Sound Herring/_WDFW data/historical data entry/_CP code/_OUTPUT FITS/2014-11-07 ;CP Eel.Grass ; A08 ; ;Time = Grouped , five.year ;Space = 1D ;AR = Constant ;Int.only = TRUE.RData")
+ls()
+Output
+names(Output)
+log(5)
+log(3)
+log(1000)
+log(995)
+jags.model.rand
+samps <- coda.samples(jags.model.rand, jags.params)
+samps <- coda.samples(jags.model.rand, jags.params,Niter)
+######################################################################################################################################################################################### FIXED for the match between the tags + primer and the substrate#####	+ RANDOM EFFECT shared for each species nd ##########################################################################################N.gammas	<-	1#length(COVAR)jagsscript = cat("model {	for(l in 1:N.t){	  	for(k in 1:N.tag){		  	for(j in 1:N.sp){	  			for(i in 1:N.rep){  					DATA[i,j,k,l] ~ dpois(exp(lambda[i,j,k,l]))				}			} 		} 	}#
+	for(l in 1:N.t){		for(k in 1:N.tag){				for(i in 1:N.rep){					lambda[i,1,k,l]		<- betas[1,l] 				+ gammas*COVAR.F[i,1,k,l] + eta[i,1,k,l] + phi[i,1,k,l] #+ gammas[2]*COVAR.R[i,1,k,l] 				}  			for(j in 2:N.sp){				for(i in 1:N.rep){					lambda[i,j,k,l]		<- betas[1,l] + betas[j,l] 	+ gammas*COVAR.F[i,j,k,l] + eta[i,1,k,l] + phi[i,1,k,l] #+ gammas[2]*COVAR.R[i,j,k,l] + eta[i,j,k,l] + phi[i,j,k,l]				}			}			}	}	for(l in 1:N.t){		for(k in 1:N.tag){	  		for(j in 1:N.sp){	  			for(i in 1:N.rep){  					eta[i,j,k,l] ~ dnorm(0, 1/sigma2)  					phi[i,j,k,l] ~ dnorm(0, 1/tau2[j])				} 			} 		}	}	### Derived Quantities		for(l in 1:N.t){		p[1,l] <- exp(betas[1,l])		for(j in 2:N.sp){			p[j,l]	<-	exp(betas[1,l] + betas[j,l])			}	}		for(l in 1:N.t){		for(j in 1:N.sp){			P[j,l]	<-	p[j,l] / sum(p[,l])		}	  	}#
+  	### Priors	for(l in 1:N.t){	  	for(j in 1:N.sp){		 	betas[j,l] ~ dunif(-1000,1000)     	}	}#   	for(i in 1:N.gammas){		 gammas ~ dnorm(0,0.001) #    	}#
+ 	sigma2 ~ dunif(0,10000) 	for(j in 1:N.sp){	 	tau2[j] ~ dunif(0,10000)	}#
+}", file="jags_dummy1.txt")  jags.data     = list("DATA","N.t","N.sp","N.tag","N.rep","COVAR.F") #,"COVAR.R","N.gammas"  jags.params   = c("betas","gammas","sigma2","tau2","P")  model.loc		= c("jags_dummy1.txt")	Nburn = 10000	Niter = 10000	Nchain=	3	Inits = NULL	for(i in 1:Nchain){		Inits[[i]]	<- list("betas"=matrix(runif(N.t*N.sp,-10,10),N.sp,N.t), 						"gammas"=runif(N.gammas,-10,10),						"sigma2"=runif(1,1,10),						"tau2"=runif(N.sp,1,10))	}  	jags.model.rand = jags(jags.data, inits = Inits, parameters.to.save= jags.params, model.file=model.loc,   						n.chains = Nchain, n.burnin = Nburn, n.thin = 1, n.iter = Nburn+Niter, DIC = TRUE)
+##########################################################################################N.gammas	<-	1#length(COVAR)jagsscript = cat("model {	for(l in 1:N.t){	  	for(k in 1:N.tag){		  	for(j in 1:N.sp){	  			for(i in 1:N.rep){  					DATA[i,j,k,l] ~ dpois(exp(lambda[i,j,k,l]))				}			} 		} 	}#
+	for(l in 1:N.t){		for(k in 1:N.tag){				for(i in 1:N.rep){					lambda[i,1,k,l]		<- betas[1,l] 				+ gammas*COVAR.F[i,1,k,l] + eta[i,1,k,l] #+ phi[i,1,k,l] #+ gammas[2]*COVAR.R[i,1,k,l] 				}  			for(j in 2:N.sp){				for(i in 1:N.rep){					lambda[i,j,k,l]		<- betas[1,l] + betas[j,l] 	+ gammas*COVAR.F[i,j,k,l] + eta[i,1,k,l] #+ phi[i,1,k,l] #+ gammas[2]*COVAR.R[i,j,k,l] + eta[i,j,k,l] + phi[i,j,k,l]				}			}			}	}	for(l in 1:N.t){		for(k in 1:N.tag){	  		for(j in 1:N.sp){# 					phi.temp[j,k,l]	~ dnorm(0, 1/tau2[j])	  			for(i in 1:N.rep){  					eta[i,j,k,l] ~ dnorm(0, 1/sigma2)				} 			} 		}	}	### Derived Quantities		for(l in 1:N.t){		p[1,l] <- exp(betas[1,l])		for(j in 2:N.sp){			p[j,l]	<-	exp(betas[1,l] + betas[j,l])			}	}		for(l in 1:N.t){		for(j in 1:N.sp){			P[j,l]	<-	p[j,l] / sum(p[,l])		}	  	}#
+  	### Priors	for(l in 1:N.t){	  	for(j in 1:N.sp){		 	betas[j,l] ~ dunif(-30,1000)     	}	}#   	for(i in 1:N.gammas){		 gammas ~ dnorm(0,0.001) #    	}#
+ 	sigma2 ~ dunif(0,100)#  	for(j in 1:N.sp){# 	 	tau2[j] ~ dunif(0,100)# 	}#
+}", file="jags_dummy1.txt")  jags.data     = list("DATA","N.t","N.sp","N.tag","N.rep","COVAR.F") #,"COVAR.R","N.gammas"  jags.params   = c("betas","gammas","sigma2","P") #"tau2"  model.loc		= c("jags_dummy1.txt")	Nburn = 10000	Niter = 10000	Nchain=	3	Inits = NULL	for(i in 1:Nchain){		Inits[[i]]	<- list("betas"=matrix(runif(N.t*N.sp,-10,10),N.sp,N.t), 						"gammas"=runif(N.gammas,-10,10),						"sigma2"=runif(1,1,10),						"tau2"=runif(N.sp,1,10))	}  	jags.model.rand = jags(jags.data, inits = Inits, parameters.to.save= jags.params, model.file=model.loc,   						n.chains = Nchain, n.burnin = Nburn, n.thin = 1, n.iter = Nburn+Niter, DIC = TRUE)
+1/1000
+Quad/100000
+# A stochastic exponential growth model, where ln(lambda(t)) ~ N(0,q), and lambda(t) = N(t+1)/N(t) #
+# ln(N(t+1)/N(t)) is normal; a 10x increase is as likely as a 1/10 decrease#
+# we assume no density dependence#
+# this version adds temporal autocorrelation to the growth rates#
+#
+library(boot) # required for corr function = weighted correlation, with weights inversely proportional to variance#
+nsim=100000 #number of simulations#
+T=20 #10 yrs assessment and 10 year response period#
+u= 0 # long-term (parametric) population growth rate, in log space#
+q = 0.02 #some reasonable vertebrate process standard deviation.#
+n0=1000  # initial N#
+rho = 0 # autocorrelation parameter; -1 < rho < 1#
+#
+Step=matrix(rnorm(T*nsim,u - 0.5*q^2,q),nsim,T)  # fill a dummy matrix#
+# for each simulation, use the first random growth rate to re-calculate the rest#
+# the mean for each random draw is the product of rho and the growth rate in the previous time period#
+# for (j in 1:nsim){ #
+  	for (i in 2:T){#
+   		Step[,i] <- rnorm(nsim,Step[,i-1]*rho - 0.5*q^2,q)#
+#    	Step[,i] <- rnorm(nsim,Step[,i-1]*rho ,q)#
+	}#
+# }#
+# each row of Step is a replicate simulation of t temporally-autocorrelated growth rates#
+simts = log(n0)+apply(Step, 1, cumsum)#
+# apply changed each simulation to appear in columns with cumulative sums of log-space growth rates#
+# each column is a replicate simulation of log(N(t))#
+# now to make this just like real data, convert back to non-log scale#
+N = exp(simts)#
+mean(N[T,])#
+#
+# N has t rows and nsim columns#
+# each column is a random walk of N values#
+#
+# you can plot some of the simulations#
+par(mfrow=c(2,4))#
+    for(i in 1:8)#
+ plot(N[,i],ylab="N", xlab="years", main=paste("simulation",i))#
+Quad = seq(1:4)#
+grow1 = seq(1:nsim)#
+grow2 = seq(1:nsim)#
+time1 = seq(1:10)#
+time2 = seq(1:10)#
+W = seq(1:nsim)#
+#
+for (j in 1:nsim) {  #
+  firstdata = N[1:10,j]#
+  firstdata = log(firstdata)#
+  Adata = data.frame(time1,firstdata)#
+  colnames(Adata)<- c("time","LogN")#
+  secondata = N[11:20,j]#
+  secondata = log(secondata)#
+  Bdata = data.frame(time2,secondata)#
+  colnames(Bdata)<- c("time","LogN")#
+  A1 <- lm(LogN ~ time, data = Adata)#
+  A <- A1$coef[2]#
+  W1 <- summary(A1)$coefficients[2,2]#
+  grow1[j] = exp(A) - 1#
+  B1 <- lm(LogN ~ time, data = Bdata)#
+  B <- B1$coef[2]#
+  W2 <- summary(B1)$coefficients[2,2]#
+  grow2[j] = exp(B) - 1#
+  W[j] = 2/(W1+W2)#
+}  #
+#
+# get the standard and weighted correlations of grow1, grow2#
+cor(grow2,grow1)#
+AB <- cbind(grow1,grow2)#
+corr(AB,W)#
+#
+# the Quad routine places each time series in one of the 4 quadrants, based on growth rates in time1 and time2#
+Quad[1] = 0#
+Quad[2] = 0#
+Quad[3] = 0#
+Quad[4] = 0#
+for (i in 1:nsim) {#
+if(grow2[i]>0) {#
+   if(grow1[i]>0)    {#
+   Quad[1] = Quad[1] + 1}#
+   else          {#
+   Quad[2] = Quad[2] + 1}#
+   }#
+else if(grow1[i]>0)  {#
+   Quad[3] = Quad[3] + 1}#
+else {#
+   Quad[4] = Quad[4] + 1}#
+}  #
+Quad
+Quad/100000
+?seq
+log(6)
+log(3+3)
+log(3)+log(3)
+1e5
+1e5+1
+## DECLARE SITE OF INTEREST#
+SITE = "QB"#
+# read in required packages  #
+QQQ="TRUE" # MAKE THIS TRUE FOR A NEW R SESSION.#
+if( QQQ=="TRUE"){#
+	setwd("/Users/ole.shelton/Documents/Science/Active projects/Herring/Puget Sound Herring/_WDFW data/Historical Analysis 4-2015/")#
+	source("General Starter.r")#
+}
