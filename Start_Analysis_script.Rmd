@@ -96,6 +96,9 @@ dat.trans <-dat[is.na(dat$Quadrat)==T,]
 dat.trans.fish  <- list()
 dat.trans.fish$All.fish <- dat.trans.1[dat.trans.1$Broad.taxonomic.category == "Fish",]
 
+dat.trans.algae  <- list()
+dat.trans.algae$All.algae <- dat.trans.1[dat.trans.1$Broad.taxonomic.category == "Brown algae",]
+
 dat.trans.mammal.bird <- list()
 dat.trans.mammal.bird$Bird    <- dat.trans.1[dat.trans.1$Broad.taxonomic.category == "Birds",]
 dat.trans.mammal.bird$Mammal  <- dat.trans.1[dat.trans.1$Broad.taxonomic.category == "Mammals",]
@@ -151,11 +154,28 @@ for(i in 1:length(SITE)){
 }
 ```
 
+## The important data.frames and lists for 2015 data are these:
+
+* "dat.quad" has all of the pecent cover data associated with quadrat counts
+* "dat.quad.count" has all of the count data of mobile and countable inverts from the quadrat surveys
+* "dat.trans.alge" has all the transect observations for algae an
+* "dat.trans.mammal.bird" has all the mammal and bird observations
+* "dat.trans.fish" has all of the transect observations for fish species.
+* "dat.trans.invert" has all of the transect observations for invertebrates.  I made this into a list that has multiple entries for species folk are likely interested in
+```{r}
+names(dat.trans.invert)
+```
+* "dat.kvitek" is a list with the historical data available from the 1987,1995, and 1999 surveys.  There are a couple of different kinds of surveys.
+```{r}
+names(dat.kvitek)
+```
+
 All surveys were conducted on these dates:
 ```{r,echo=FALSE}
  sort(as.character(unique(dat$Date)))
 ```
 
+\newpage
 Here is a map showing the approximate locations of the sites
 
 ```{r, echo=FALSE}
@@ -375,13 +395,15 @@ Data from all sites in all years.  I include only data from 6m and shallower fro
     dat.mob.invert$Site <- dat.mob.invert$match.2015.name
     dat.mob.invert  <- merge(dat.mob.invert,loc[,c("Site.name","Number")],by.x="Site",by.y="Site.name",all=T)
 
-  
+    dat.mob.invert$Site.numb <- factor(paste(dat.mob.invert$Number-1,dat.mob.invert$Site,sep="."))
+    dat.mob.invert <- dat.mob.invert[order(dat.mob.invert$Site.numb),]
+    
   FIG.WIDTH  <- 8
   FIG.HEIGHT <- 9   
   COL <- grey(0.7)
 ```
 
-
+\newpage
 ### Urchins (Mean +/- SD).
 Zeros shown as thin lines, missing data shown as blank
 
@@ -393,7 +415,7 @@ Zeros shown as thin lines, missing data shown as blank
         ylab(expression("Sea Urchins per m"^2))+
         geom_bar(stat="identity",fill=COL,colour=1) +
         geom_errorbar(limits,width=0.2)+
-        facet_wrap(~Site,nrow=5,ncol=2)
+        facet_wrap(~Site.numb,nrow=5,ncol=2)
       print(p1)
 ```
 
@@ -408,7 +430,7 @@ Zeros shown as thin lines, missing data shown as blank
         ylab(expression("Sea Cucumbers per m"^2))+
         geom_bar(stat="identity",fill=COL,colour=1) +
         geom_errorbar(limits,width=0.2)+
-        facet_wrap(~Site,nrow=5,ncol=2)
+        facet_wrap(~Site.numb,nrow=5,ncol=2)
 ```
 
 \newpage
@@ -423,7 +445,7 @@ Zeros shown as thin lines, missing data shown as blank
         ylab(expression("Scallops per m"^2))+
         geom_bar(stat="identity",fill=COL,colour=1) +
         geom_errorbar(limits,width=0.2)+
-        facet_wrap(~Site,nrow=5,ncol=2)
+        facet_wrap(~Site.numb,nrow=5,ncol=2)
 ```
 
 \newpage
@@ -438,7 +460,7 @@ Zeros shown as thin lines, missing data shown as blank
         ylab(expression("Crab per m"^2))+
         geom_bar(stat="identity",fill=COL,colour=1) +
         geom_errorbar(limits,width=0.2)+
-        facet_wrap(~Site,nrow=5,ncol=2)
+        facet_wrap(~Site.numb,nrow=5,ncol=2)
 ```
 
 \newpage
@@ -453,7 +475,7 @@ Zeros shown as thin lines, missing data shown as blank
         ylab(expression("Limpets per m"^2))+
         geom_bar(stat="identity",fill=COL,colour=1) +
         geom_errorbar(limits,width=0.2)+
-        facet_wrap(~Site,nrow=5,ncol=2)
+        facet_wrap(~Site.numb,nrow=5,ncol=2)
 ```
 
 \newpage
@@ -468,6 +490,6 @@ Zeros shown as thin lines, missing data shown as blank
         ylab(expression("Gastropods per m"^2))+
         geom_bar(stat="identity",fill=COL,colour=1) +
         geom_errorbar(limits,width=0.2)+
-        facet_wrap(~Site,nrow=5,ncol=2)
+        facet_wrap(~Site.numb,nrow=5,ncol=2)
 ```
 
