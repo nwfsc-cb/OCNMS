@@ -242,7 +242,7 @@ Four divers conducted dive surveys at each site (two teams of two). Each diver p
 
 I've focused on summarizing the species observed in at each site (for the quadrats, invertebrate transects, and fish transects)
 
-### Sessile creatures (and some benthic categories)
+### Sessile creatures (and some benthic categories) in quadrats
 ```{r,echo=FALSE,warning=F,message=F} 
   quad.tile        <- melt(sp.quad)
     colnames(quad.tile)[3] <- "Site"
@@ -284,15 +284,19 @@ I've focused on summarizing the species observed in at each site (for the quadra
   #print(quad.count.p)
 ```
 
+
+### Sessile Invertebrates on Transects
 ```{r,fig.width=7, fig.height= 8, echo=FALSE,warning=F} 
-  trans.p <- ggplot(data = trans.tile, aes(x=Number, y=sp.names, fill=value)) +    
-   scale_fill_gradient(low="white",high=COL,guide="none")+
+  trans.p <- ggplot(data = trans.tile[trans.tile$Category=="Tunicate" | trans.tile$Category=="Anemone"  | trans.tile$Category=="Barnacle" |
+                                            trans.tile$Category=="Bivalve" | trans.tile$Category=="Bryozoan" | trans.tile$Category=="Polychaete",] ,
+                                          aes(x=Number, y=sp.names, fill=value)) +    
+    scale_fill_gradient(low="white",high=COL,guide="none")+
     geom_tile(color="white") +
     xlab("Site") +
 	  ylab("Species") +
     scale_x_discrete( breaks=1:nrow(loc),labels= loc$Site.name[order(loc$Number)]) +
     theme(axis.text.x = element_text(angle = 90, hjust = 1))
-  #print(trans.p)
+  print(trans.p)
 ```
 
 ### Fish species on transects
@@ -310,7 +314,7 @@ I've focused on summarizing the species observed in at each site (for the quadra
 ### Mobile invertebrate species on transects
 ```{r,fig.width=7, fig.height= 8, echo=FALSE,warning=F} 
   trans.p <- ggplot(data = trans.tile[trans.tile$Category=="Crabs" | trans.tile$Category=="Urchin"  | trans.tile$Category=="Chiton" |
-                                            trans.tile$Category=="Sea cucumbers" | trans.tile$Category=="Seastars" |
+                                            trans.tile$Category=="Sea cucumbers" | trans.tile$Category=="Seastars" | trans.tile$Category=="Nudi" |
                                             trans.tile$Category=="Limpet" |trans.tile$Category=="Gastropod" ,], 
                     aes(x=Number, y=sp.names, fill=value)) +    
    scale_fill_gradient(low="white",high=COL,guide="none")+
