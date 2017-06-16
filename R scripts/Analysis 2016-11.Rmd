@@ -2,20 +2,21 @@
 title: "OCNMS exploratory plots"
 author: "Ole Shelton"
 date: "November 30, 2015"
-output: pdf_document
+output: html_document
 ---
 
 This is a basic file for processing and providing basic plots for the 2015 Olympic Coast National Marine Sanctuary Dive Surveys.
 
 ```{r load, message=FALSE, echo=FALSE, warning=FALSE}
   library(rgdal)
+  library(dplyr)
   library(ggplot2)
   library(maps)
   library(mapdata)
   library(mapproj)
   library(reshape2)
   library(RColorBrewer)
-  source("theme_acs.R")
+ # source("theme_bw.R")
  # This means don't display the r results in the output file
  # Read in the data, fix some of the data inconsistencies and make summary data.frames and lists
 
@@ -27,16 +28,16 @@ This is a basic file for processing and providing basic plots for the 2015 Olymp
   # transects: fish
 
  # a useful function
-length.unique <-function(X){Y<-length(unique(X)); return(Y)}
+  length.unique <-function(X){Y<-length(unique(X)); return(Y)}
 
  # Go get the NOAA survey data from the appropriate directory.
-
-dat <- read.csv("Data/csv files/OCNMSDataComplete_master.csv")
+  base.dir <- "/Users/ole.shelton/GitHub/OCNMS/"
+  dat <- read.csv(paste(base.dir,"Data/csv files/OCNMSDataComplete_master.csv",sep=""))
 
 dat.kvitek <- list()
-dat.kvitek$Invert.quad   <- read.csv("Data/csv files/Kvitek.Data.Summary.Invert.quadrats.csv")
-dat.kvitek$Invert.trans  <- read.csv("Data/csv files/Kvitek.Data.Summary.Invert.transects.csv")
-dat.kvitek$Veg           <- read.csv("Data/csv files/Kvitek.Data.Summary.Veg.csv")
+dat.kvitek$Invert.quad   <- read.csv(paste(base.dir,"Data/csv files/Kvitek.Data.Summary.Invert.quadrats.csv",sep=""))
+dat.kvitek$Invert.trans  <- read.csv(paste(base.dir,"Data/csv files/Kvitek.Data.Summary.Invert.transects.csv",sep=""))
+dat.kvitek$Veg           <- read.csv(paste(base.dir,"Data/csv files/Kvitek.Data.Summary.Veg.csv",sep=""))
 
  # Do some name fixing
 dat$Site[dat$Site == "Tatoosh"] <- "Tatoosh Island"
@@ -54,7 +55,7 @@ dat$Species[dat$Species == "Balanophyllia"]     <- "orange cup coral"
 dat$Species[dat$Species == "tunicate"]     <- "Tunicate"
 
  ### Read in species lists for dividing species into algae, inverts, and fish.
-sp.names <- read.csv("Data/csv files/OCNMSDataComplete_sp_names.csv")
+sp.names <- read.csv(paste(base.dir,"Data/csv files/OCNMSDataComplete_sp_names.csv",sep=""))
 
  #Get rid of "trace"
 dat$Percent.cover[dat$Percent.cover =="trace"] <- 1
@@ -195,11 +196,11 @@ Here is a map showing the approximate locations of the sites
 #   shore.points		<-	fortify(shore.poly,region="id")
 #   shore.df			  <- merge(shore.points,shore.poly@data,by="id")
 #   write.csv(shore.df,file="shore df.csv",row.names=F)
-  shore.df        <- read.csv("Data/PG Shore shore_thematic_UTM10/shore df.csv")
+  shore.df        <- read.csv(paste(base.dir,"Data/PG Shore shore_thematic_UTM10/shore df.csv",sep=""))
   
   # setwd(base.dir)
   PROJ <- "+proj=utm +zone=10 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0"
-  loc <-  read.csv("Data/csv files/OCNMSDataComplete_site_loc.csv")
+  loc <-  read.csv(paste(base.dir,"Data/csv files/OCNMSDataComplete_site_loc.csv",sep=""))
   loc.new				<- cbind(-loc$Longitude, loc$Latitude)
   loc.new.sp		<- SpatialPoints(loc.new,CRS("+proj=longlat +ellps=WGS84 +datum=WGS84"))
 
@@ -221,7 +222,7 @@ Here is a map showing the approximate locations of the sites
   #wa <- map_data('worldHires','USA')
   #wa <- map_data("state",region = c('washington'))
   p3	<-	ggplot()+
-				theme_acs() +
+				theme_bw() +
 				theme(legend.key =  element_rect(fill = "white", colour = "white"),
 					panel.border = element_rect(fill = NA, colour = "black",size=1.5)) +
 		  #  geom_polygon(data=wa,aes(long,lat,group=group),fill=8,color="black")	+
@@ -415,7 +416,7 @@ Zeros shown as thin lines, missing data shown as blank
     
     limits <- aes(ymax = urchins.n.per.m2 + urchins.n.per.m2.sd , ymin=urchins.n.per.m2 )
       p1 <- ggplot(dat.mob.invert, aes(x=factor(Year),y=urchins.n.per.m2)) + 
-        theme_acs()+
+        theme_bw()+
         ylab(expression("Sea Urchins per m"^2))+
         geom_bar(stat="identity",fill=COL,colour=1) +
         geom_errorbar(limits,width=0.2)+
@@ -430,7 +431,7 @@ Zeros shown as thin lines, missing data shown as blank
 ```{r,echo=F,fig.width=FIG.WIDTH,fig.height=FIG.HEIGHT,warning=F,message=F}
     limits <- aes(ymax = sea.cucs.n.per.m2 + sea.cucs.n.per.m2.sd , ymin=sea.cucs.n.per.m2 )
       ggplot(dat.mob.invert, aes(x=factor(Year),y=sea.cucs.n.per.m2)) + 
-        theme_acs()+
+        theme_bw()+
         ylab(expression("Sea Cucumbers per m"^2))+
         geom_bar(stat="identity",fill=COL,colour=1) +
         geom_errorbar(limits,width=0.2)+
@@ -445,7 +446,7 @@ Zeros shown as thin lines, missing data shown as blank
 
     limits <- aes(ymax = scallops.n.per.m2 + scallops.n.per.m2.sd , ymin=scallops.n.per.m2 )
       ggplot(dat.mob.invert, aes(x=factor(Year),y=scallops.n.per.m2)) + 
-        theme_acs()+
+        theme_bw()+
         ylab(expression("Scallops per m"^2))+
         geom_bar(stat="identity",fill=COL,colour=1) +
         geom_errorbar(limits,width=0.2)+
@@ -460,7 +461,7 @@ Zeros shown as thin lines, missing data shown as blank
 
     limits <- aes(ymax = crabs.n.per.m2 + crabs.n.per.m2.sd , ymin=crabs.n.per.m2 )
       ggplot(dat.mob.invert, aes(x=factor(Year),y=crabs.n.per.m2)) + 
-        theme_acs()+
+        theme_bw()+
         ylab(expression("Crab per m"^2))+
         geom_bar(stat="identity",fill=COL,colour=1) +
         geom_errorbar(limits,width=0.2)+
@@ -475,7 +476,7 @@ Zeros shown as thin lines, missing data shown as blank
 
     limits <- aes(ymax = limpets.n.per.m2 + limpets.n.per.m2.sd , ymin=limpets.n.per.m2 )
       ggplot(dat.mob.invert, aes(x=factor(Year),y=limpets.n.per.m2)) + 
-        theme_acs()+
+        theme_bw()+
         ylab(expression("Limpets per m"^2))+
         geom_bar(stat="identity",fill=COL,colour=1) +
         geom_errorbar(limits,width=0.2)+
@@ -490,7 +491,7 @@ Zeros shown as thin lines, missing data shown as blank
     
     limits <- aes(ymax = gastropod.n.per.m2 + gastropod.n.per.m2.sd , ymin=gastropod.n.per.m2 )
       ggplot(dat.mob.invert, aes(x=factor(Year),y=gastropod.n.per.m2)) + 
-        theme_acs()+
+        theme_bw()+
         ylab(expression("Gastropods per m"^2))+
         geom_bar(stat="identity",fill=COL,colour=1) +
         geom_errorbar(limits,width=0.2)+
