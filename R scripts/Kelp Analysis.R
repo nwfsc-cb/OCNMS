@@ -3,21 +3,23 @@ options(max.print=99999)
 library(dplyr)
 library(ggplot2)
 
+base.dir <- "/Users/ole.shelton/GitHub/OCNMS"
+source(paste(base.dir,"/R scripts/multiplot.r",sep=""))
+
 ##################################################################################
 ##################################################################################
 ######-------------- KELP ANALYSIS ---------------------------------##############
 ##################################################################################
 ##################################################################################
 
-base.dir <- "/Users/ole.shelton/GitHub/OCNMS"
 setwd(paste(base.dir,"/Data/csv files",sep=""))
 
 kelp.dat    <- read.csv("kelp_area.csv")
 area.dat    <- read.csv("site_area_by_depth.csv")
 
 kelp.dat$ID <- "kelp"
-kelp.dat$REF[kelp.dat$Year.surveyed <=1991] <- 1991
-kelp.dat$REF[kelp.dat$Year.surveyed > 1991] <- kelp.dat$Year.surveyed[kelp.dat$Year.surveyed > 1991]
+# kelp.dat$REF[kelp.dat$Year.surveyed <=1991] <- 1991
+# kelp.dat$REF[kelp.dat$Year.surveyed > 1991] <- kelp.dat$Year.surveyed[kelp.dat$Year.surveyed > 1991]
 
 #Summarise area 
 area.dat$area.less.than.20 <- (area.dat$m.20.to.15 + area.dat$m.15.to.10 + area.dat$m.10.to.5 +area.dat$m.5.to.0) *0.0001
@@ -25,18 +27,24 @@ area.dat$area.less.than.15 <- (area.dat$m.15.to.10 + area.dat$m.10.to.5  + area.
 area.dat$area.less.than.10 <- (area.dat$m.10.to.5  + area.dat$m.5.to.0) * 0.0001
 area.dat$area.less.than.5  <- (area.dat$m.5.to.0 ) * 0.0001
 
-kelp.area <- group_by(kelp.dat,Year.surveyed,ID,REF,ESP.site.name,Buffer.radius) %>%
+ggplot(area.dat) +
+  geom_bar(aes(x=Site,y=area.less.than.15,fill=Buffer.radius),position="dodge",stat="identity")
+
+
+kelp.area <- group_by(kelp.dat,Year.surveyed,ESP.site.name,Buffer.radius) %>%
                 summarise(.,tot.area=sum(Polygon.area.m2) * 0.0001) %>%
                 as.data.frame()
-kelp.area.ref <- group_by(kelp.area,REF,ID,ESP.site.name,Buffer.radius) %>%
-                    summarise(.,tot.area=mean(tot.area) ) %>%
-                    as.data.frame()
 
-temp <- kelp.area.ref[kelp.area.ref$REF == 1991,]
-colnames(temp)[which(colnames(temp)=="tot.area")] <- "ref.area"
-kelp.area.ref <- merge(kelp.area.ref,temp,by=c("ID","ESP.site.name","Buffer.radius"),all=T)
-kelp.area.ref$rel.area <- kelp.area.ref$tot.area / kelp.area.ref$ref.area
-kelp.area.ref$Year <- kelp.area.ref$REF.x
+
+kelp.area <- merge(kelp.area,area.dat[,c("Site","Buffer.radius","area.less.than.20","area.less.than.15")],
+                   by.x=c("ESP.site.name","Buffer.radius"),by.y=c("Site","Buffer.radius"))
+
+#temp <- kelp.area.ref[kelp.area.ref$REF == 1991,]
+#colnames(temp)[which(colnames(temp)=="tot.area")] <- "ref.area"
+#kelp.area.ref <- merge(kelp.area.ref,temp,by=c("ID","ESP.site.name","Buffer.radius"),all=T)
+kelp.area$rel.area <- kelp.area$tot.area / kelp.area$area.less.than.20
+
+
 
 ### Make time-series plot for each site
   # Make site order from north to south
@@ -56,14 +64,14 @@ site.order <- c(
 
 kelp.area$ESP.site.name <-  factor(kelp.area$ESP.site.name, 
                                levels = site.order)
-kelp.area.ref$ESP.site.name <-  factor(kelp.area.ref$ESP.site.name, 
-                               levels = site.order)
+# kelp.area.ref$ESP.site.name <-  factor(kelp.area.ref$ESP.site.name, 
+#                                levels = site.order)
 
 ### START PLOT
 
 pdf(file = paste(base.dir,"/Plots/Kelp trends.pdf",sep=""),onefile=T, width=4,height=10)
 
-  temp.dat <- kelp.area[kelp.area$ID =="kelp" & kelp.area$Buffer.radius == "1000 m",]
+  temp.dat <- kelp.area[kelp.area$Buffer.radius == "1000 m",]
   p <- ggplot(temp.dat,aes(y=tot.area,x=Year.surveyed)) +
         geom_point() +
         geom_smooth(span=0.5,color="black",method="loess") +
@@ -73,7 +81,7 @@ pdf(file = paste(base.dir,"/Plots/Kelp trends.pdf",sep=""),onefile=T, width=4,he
         theme_bw() 
   print(p)
 
-  temp.dat <- kelp.area[kelp.area$ID =="kelp" & kelp.area$Buffer.radius == "500 m",]
+  temp.dat <- kelp.area[kelp.area$Buffer.radius == "500 m",]
   p <- ggplot(temp.dat,aes(y=tot.area,x=Year.surveyed)) +
         geom_point() +
         geom_smooth(span=0.5,color="black",method="loess") +
@@ -84,59 +92,182 @@ pdf(file = paste(base.dir,"/Plots/Kelp trends.pdf",sep=""),onefile=T, width=4,he
   print(p)
 
   #### Repeat time-series for standardization relative to the average of the first 3 year of the time series (1989-91)
-  temp.dat <- kelp.area.ref[kelp.area.ref$ID =="kelp" & kelp.area.ref$Buffer.radius == "1000 m" &
-                            kelp.area.ref$ESP.site.name != "Teahwhit Head",]
-  p <- ggplot(temp.dat,aes(y=rel.area,x=Year)) +
+  temp.dat <- kelp.area[kelp.area$Buffer.radius == "1000 m",]
+  p <- ggplot(temp.dat,aes(y=rel.area,x=Year.surveyed)) +
     geom_point() +
-    geom_hline(yintercept=1,linetype=2) +
+    #geom_hline(yintercept=1,linetype=2) +
     geom_smooth(span=0.5,color="black",method="loess") +
     facet_wrap(~ESP.site.name,ncol=2) +
     labs(y="relative kelp area") +
-    ggtitle("Area relative to 89-91 avg (1000m buffer)") +
+    ggtitle("Area relative to total area < 20m (1000m buffer)") +
     theme_bw() 
   print(p)
 
   #### Repeat time-series for standardization relative to the average of the first 3 year of the time series (1989-91)
-  temp.dat <- kelp.area.ref[kelp.area.ref$ID =="kelp" & kelp.area.ref$Buffer.radius == "500 m" &
-                              kelp.area.ref$ESP.site.name != "Teahwhit Head",]
-  p <- ggplot(temp.dat,aes(y=rel.area,x=Year)) +
+  temp.dat <- kelp.area[ kelp.area$Buffer.radius == "500 m" ,]
+  p <- ggplot(temp.dat,aes(y=rel.area,x=Year.surveyed)) +
     geom_point() +
     geom_smooth(span=0.5,color="black",method="loess") +
-    geom_hline(yintercept=1,linetype=2) +
+    #geom_hline(yintercept=1,linetype=2) +
     facet_wrap(~ESP.site.name,ncol=2) +
     labs(y="relative kelp area") +
-    ggtitle("Area relative to 89-91 avg (500m buffer)") +
+    ggtitle("Area relative to total area < 20m (500m buffer)") +
     theme_bw() 
   print(p)
 
-  temp.dat <- kelp.area.ref[kelp.area.ref$ID =="kelp" & kelp.area.ref$Buffer.radius == "500 m" &
-                              kelp.area.ref$ESP.site.name != "Teahwhit Head",]
-  p <- ggplot(temp.dat,aes(y=rel.area,x=Year,color=ESP.site.name)) +
-    geom_point() +
-    geom_line() +
-    geom_smooth(span=0.5,color="black",method="loess") +
-    geom_hline(yintercept=1,linetype=2) +
-#    facet_wrap(~ESP.site.name,ncol=2) +
-    labs(y="relative kelp area") +
-    ggtitle("Area relative to 89-91 avg (500m buffer)") +
-    theme_bw() 
-  print(p)
+#   temp.dat <- kelp.area.ref[kelp.area.ref$ID =="kelp" & kelp.area.ref$Buffer.radius == "500 m" &
+#                               kelp.area.ref$ESP.site.name != "Teahwhit Head",]
+#   p <- ggplot(temp.dat,aes(y=rel.area,x=Year,color=ESP.site.name)) +
+#     geom_point() +
+#     geom_line() +
+#     geom_smooth(span=0.5,color="black",method="loess") +
+#     geom_hline(yintercept=1,linetype=2) +
+# #    facet_wrap(~ESP.site.name,ncol=2) +
+#     labs(y="relative kelp area") +
+#     ggtitle("Area relative to 89-91 avg (500m buffer)") +
+#     theme_bw() 
+#   print(p)
 dev.off()
 
 
+kelp.combined <- kelp.area %>% filter(!ESP.site.name %in% c("Teahwhit Head","Anderson Point")) %>%
+                        group_by(Year.surveyed,Buffer.radius) %>% summarise(Area =sum(tot.area))
 
 
+tot.kelp.area.plot <- ggplot(kelp.combined %>% filter(Buffer.radius == "500 m"),aes(y=Area,x=Year.surveyed)) +
+  lims(x=c(1978,2015),y=c(0,200)) +
+  geom_point() +
+  geom_smooth(span=0.5,color="black",method="loess") +
+  #geom_hline(yintercept=1,linetype=2) +
+  #facet_wrap(~ESP.site.name,ncol=2) +
+  labs(y=expression("Kelp Area (ha)"),x="Year") +
+  ggtitle("Total area at index sites (500m buffer)") +
+  theme_bw() 
 
+quartz(file = paste(base.dir,"/Plots/Total Kelp area 500m buffer.pdf",sep=""), width=5,height=3.5,dpi=300,type="pdf")
+  print(tot.kelp.area.plot)
+dev.off()
 
+tot.kelp.area.plot <- ggplot(kelp.combined %>% filter(Buffer.radius == "1000 m"),aes(y=Area,x=Year.surveyed)) +
+  lims(x=c(1978,2015),y=c(0,400)) +
+  geom_point() +
+  geom_smooth(span=0.5,color="black",method="loess") +
+  #geom_hline(yintercept=1,linetype=2) +
+  #facet_wrap(~ESP.site.name,ncol=2) +
+  labs(y=expression("Kelp Area (ha)"),x="Year") +
+  ggtitle("Total area at index sites (1000m buffer)") +
+  theme_bw() 
 
+quartz(file = paste(base.dir,"/Plots/Total Kelp area 1000m buffer.pdf",sep=""), width=5,height=3.5,dpi=300,type="pdf")
+  print(tot.kelp.area.plot)
+dev.off()
 
+####################################################################################
+####################################################################################
+### Derive summaries of Kelp at each site
+####################################################################################
+####################################################################################
 
+## Raw area data. 500m buffer
+kelp.summary <- kelp.area %>% group_by(ESP.site.name,Buffer.radius) %>% summarise(Mean=mean(tot.area),SD=sd(tot.area),N=length(tot.area)) %>%
+                  mutate(SE.mean = SD/sqrt(N),CV=SD/Mean)
+kelp.summary$ESP.site.name <-  factor(kelp.summary$ESP.site.name, 
+                                   levels = site.order)
 
+X.AX <- element_text(angle=45,size=8,hjust=1)
 
+A.1 <- ggplot(kelp.summary %>% filter(Buffer.radius=="500 m")) +
+    geom_bar(aes(y=Mean,x=ESP.site.name),stat="identity") +
+    geom_errorbar(aes(x=ESP.site.name,ymax=Mean+SD,ymin=Mean-SD),width=0) +
+    labs(y="Mean Area (ha)",x="Site") +
+    theme_bw()  +
+    theme(axis.text.x = X.AX) 
 
+A.2 <- ggplot(kelp.summary %>% filter(Buffer.radius=="500 m")) +
+    geom_bar(aes(y=CV,x=ESP.site.name),stat="identity") +
+    labs(x="Site") +
+    scale_y_continuous(expand = c(0, 0),limits=c(0,0.85)) +
+    theme_bw()  +
+    theme(axis.text.x = X.AX) 
 
+# Proportional cover data
+kelp.summary.prop <- kelp.area %>% group_by(ESP.site.name,Buffer.radius) %>% 
+  summarise(Mean=mean(rel.area),SD=sd(rel.area),N=length(rel.area)) %>%
+  mutate(SE.mean = SD/sqrt(N),CV=SD/Mean)
+kelp.summary.prop$ESP.site.name <-  factor(kelp.summary.prop$ESP.site.name, 
+                                      levels = site.order)
 
+B.1 <- ggplot(kelp.summary.prop %>% filter(Buffer.radius=="500 m")) +
+  geom_bar(aes(y=Mean,x=ESP.site.name),stat="identity") +
+  geom_errorbar(aes(x=ESP.site.name,ymax=Mean+SE.mean,ymin=Mean-SE.mean),width=0) +
+  labs(y="Mean Proportion",x=NULL) +
+  scale_y_continuous(limits=c(0,0.7),expand = c(0, 0)) +
+  theme_bw()  +
+  theme(axis.text.x = element_blank()) 
 
+B.2 <- ggplot(kelp.summary.prop %>% filter(Buffer.radius=="500 m")) +
+  geom_point(aes(y=CV,x=Mean),stat="identity")+
+  labs(x="Mean Proportion",y="CV") +
+  scale_x_continuous(limits=c(0,0.7),expand = c(0, 0)) +
+  scale_y_continuous(limits=c(0,0.85),expand = c(0, 0)) +
+  theme_bw()  
 
+quartz(file = paste(base.dir,"/Plots/Kelp Area, CV 500m buffer.pdf",sep=""),type="pdf",dpi=300,height=6,width=7 )
+  Layout= matrix(c(1,1,2,2,2,3,3,3,4,4),nrow=5,ncol=2,byrow=F)
+  QQ <- list(B.1,A.2,B.2)
+  multiplot(plotlist=QQ ,layout= Layout)
+dev.off()
 
+################################################################################################
+################################################################################################
+################################################################################################
+################################################################################################
+
+## Raw area data. 1000m buffer
+kelp.summary <- kelp.area %>% group_by(ESP.site.name,Buffer.radius) %>% summarise(Mean=mean(tot.area),SD=sd(tot.area),N=length(tot.area)) %>%
+  mutate(SE.mean = SD/sqrt(N),CV=SD/Mean)
+kelp.summary$ESP.site.name <-  factor(kelp.summary$ESP.site.name, 
+                                      levels = site.order)
+
+X.AX <- element_text(angle=45,size=8,hjust=1)
+
+A.1 <- ggplot(kelp.summary %>% filter(Buffer.radius=="1000 m")) +
+  geom_bar(aes(y=Mean,x=ESP.site.name),stat="identity") +
+  labs(y="Mean Area (ha)",x="Site") +
+  theme_bw()  +
+  theme(axis.text.x = X.AX) 
+
+A.2 <- ggplot(kelp.summary %>% filter(Buffer.radius=="1000 m")) +
+  geom_bar(aes(y=CV,x=ESP.site.name),stat="identity") +
+  labs(x="Site") +
+  lims(ylim=c(0,0.85))+
+  scale_y_continuous(expand = c(0, 0)) +
+  theme_bw()  +
+  theme(axis.text.x = X.AX) 
+
+# Proportional cover data
+kelp.summary.prop <- kelp.area %>% group_by(ESP.site.name,Buffer.radius) %>% 
+  summarise(Mean=mean(rel.area),SD=sd(rel.area),N=length(rel.area)) %>%
+  mutate(SE.mean = SD/sqrt(N),CV=SD/Mean)
+kelp.summary.prop$ESP.site.name <-  factor(kelp.summary.prop$ESP.site.name, 
+                                           levels = site.order)
+
+B.1 <- ggplot(kelp.summary.prop %>% filter(Buffer.radius=="1000 m")) +
+  geom_bar(aes(y=Mean,x=ESP.site.name),stat="identity") +
+  labs(y="Mean Prop",x=NULL) +
+  scale_y_continuous(limits=c(0,0.7),expand = c(0, 0)) +
+  theme_bw()  +
+  theme(axis.text.x = element_blank()) 
+B.2 <- ggplot(kelp.summary.prop %>% filter(Buffer.radius=="1000 m")) +
+  geom_point(aes(y=CV,x=Mean),stat="identity")+
+  labs(x="Mean Prop",y="CV") +
+  scale_x_continuous(limits=c(0,0.7),expand = c(0, 0)) +
+  scale_y_continuous(limits=c(0,0.85),expand = c(0, 0)) +
+  theme_bw()  
+
+quartz(file = paste(base.dir,"/Plots/Kelp Area, CV 1000m buffer.pdf",sep=""),type="pdf",dpi=300,height=6,width=7 )
+  Layout= matrix(c(1,1,2,2,2,3,3,3,4,4),nrow=5,ncol=2,byrow=F)
+  QQ <- list(B.1,A.2,B.2)
+  multiplot(plotlist=QQ ,layout= Layout)
+dev.off()
 

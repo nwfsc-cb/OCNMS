@@ -3,7 +3,13 @@ library(reshape2)
 library(dplyr)
 library(tidyr)
 
-setwd("~/Documents/Github/OCNMS/Data/csv files")
+
+#setwd("~/Documents/Github/OCNMS/Data/csv files")
+
+# for OLE:
+setwd("~Github/OCNMS/Data/csv files")
+
+
 otter.dat <- read.csv("WDFW sea otter survey data 1977-2015.csv")
 head(otter.dat)
 
