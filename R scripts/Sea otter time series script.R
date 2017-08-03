@@ -8,10 +8,14 @@ library(tidyr)
 
 # for OLE:
 setwd("~Github/OCNMS/Data/csv files")
+# for OLE Laptop
+setwd("/Users/ole.shelton/GitHub/OCNMS/Data/csv files")
 
 
 otter.dat <- read.csv("WDFW sea otter survey data 1977-2015.csv")
 head(otter.dat)
+
+A <- otter.dat %>% group_by(Site,Year) %>% summarise(length(Site)) %>% as.data.frame()
 
 
 #######################################
