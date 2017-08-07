@@ -29,7 +29,7 @@ otter.dat <- merge(otter.dat,linear.shore[,c("common.name","distance.miles")],al
 
 # IMPORTANT VALUES FOR KERNEL DENSITY ESTIMATION
 
-KERN <- 35/(1.96*2) # Standard deviation of the normal kernel density in km 
+KERN <- 40/(1.96*2) # Standard deviation of the normal kernel density in km 
           # equivalent to ~8.9 km using an average home range size of 35km from Laidre et al. 2009 J Mammology
 DIAM <- 10 # buffer diameter used for calculating the number of otters around a focal site (in km)
 
@@ -249,6 +249,9 @@ otters_by_site_facet2_kern <- ggplot(kern.pop.est.trim,aes(x=Year,y=tot.pop, col
   ggtitle(paste("Kernel population estimates, kernel=",round(KERN,2),";",DIAM,"km buffer"))
 otters_by_site_facet2_kern
 
+## Write to file
+write.csv(kern.pop.est.trim,file=paste(base.dir,"Data/csv files/Kernel otter abundances; kern=",round(KERN,1),".csv",sep=""))
+
 ######################################## 
 ##REPEAT ANALYSES USING smaller kernel for the home range (half of original)
 ########################################
@@ -340,11 +343,6 @@ otters_by_site_facet2_kern2 <- ggplot(kern.pop.est.trim,aes(x=Year,y=tot.pop, co
   ggtitle(paste("Kernel population estimates, kernel=",round(KERN,2),";",DIAM,"km buffer"))
 ##############################################################################
 
-
-
-
-
-
 pdf(file="Otter time-series plots.pdf",onefile=T,width=11,height=8.5)
   print(otters_by_site)
   print(otters_stacked)
@@ -362,95 +360,97 @@ pdf(file="Otter time-series plots.pdf",onefile=T,width=11,height=8.5)
   
 dev.off()  
 
+################# Write Otter abundances by site to file that can be called in other scripts
 
+write.csv(kern.pop.est.trim,file=paste(base.dir,"Data/csv files/Kernel otter abundances; kern=",round(KERN,1),".csv",sep=""))
 
 
 
 ##### JAMEAL's CODE STARTS HERE:
-
-
-#######################################
-### sum otters by NWFSC study sites ###
-#######################################
-unique(otter.dat$Site.code.for.analysis)
-
-nwfsc.otter.dat <- otter.dat %>%
-  filter(Site.code.for.analysis != "Other_South" & Site.code.for.analysis != "Other_Central" & Site.code.for.analysis != "Other_North") %>%
-  #droplevels() %>%
-  group_by(Year, Site.code.for.analysis) %>%
-  summarise(
-    Total.Otters = sum(Count.Total,na.rm=TRUE)
-  )
-dim(nwfsc.otter.dat)
-head(nwfsc.otter.dat,10)
-
-nwfsc.otter.dat <- data.frame(nwfsc.otter.dat)
-
-nwfsc.otter.dat$Site.Name <- as.character(nwfsc.otter.dat$Site.code.for.analysis)
-nwfsc.otter.dat$Site.Name[nwfsc.otter.dat$Site.code.for.analysis == "AP"] <- "2.Anderson Point"
-nwfsc.otter.dat$Site.Name[nwfsc.otter.dat$Site.code.for.analysis == "CA"] <- "4.Cape Alava"
-nwfsc.otter.dat$Site.Name[nwfsc.otter.dat$Site.code.for.analysis == "CJR3"] <- "5.Cape Johnson / Rock 305"
-nwfsc.otter.dat$Site.Name[nwfsc.otter.dat$Site.code.for.analysis == "DI"] <- "7.Destruction Island"
-nwfsc.otter.dat$Site.Name[nwfsc.otter.dat$Site.code.for.analysis == "PA"] <- "3.Point of the Arches"
-nwfsc.otter.dat$Site.Name[nwfsc.otter.dat$Site.code.for.analysis == "TH"] <- "6.Teawhit Head"
-nwfsc.otter.dat$Site.Name[nwfsc.otter.dat$Site.code.for.analysis == "TI"] <- "1.Tatoosh Island"
-
-head(nwfsc.otter.dat,10)
-#######################################
-#######################################
-
-#######################################
-### plot otters by NWFSC study sites ###
-#######################################
-theme_js <- function(base_size = 12, base_family = "") {
-  theme_bw()+
-  theme(
-    text=element_text(size=16),
-    legend.title=element_blank(),
-    legend.text = element_text(size=14),
-    #legend.background =  element_rect(colour = NA),
-    #legend.key =         element_rect(fill = "white", colour = "black"),
-    panel.background =   element_rect(fill = "white", colour = "black",size=1.5),
-    panel.border =       element_blank(),
-    panel.grid.major =   element_blank(),
-    panel.grid.minor =   element_blank(),
-    panel.spacing =       unit(0.25, "lines"),
-    strip.background =   element_rect(fill = "black", colour = "black"),
-    strip.text.x =       element_text(colour="white",size=12),
-    strip.text.y =       element_text(angle = -90,colour="white",size=12),
-    plot.background =    element_rect(colour = "white"),
-    plot.title =         element_text(size = rel(1.2)),
-    plot.margin =        unit(c(1, 1, 0.5, 0.5), "lines")
-  )
-}
-
-#setwd("~/Documents/Github/OCNMS/Figures/")
-
-setwd(paste(base.dir,"Plots",sep=""))
-
-
-otters_by_site <- ggplot(nwfsc.otter.dat,aes(x=Year,y=Total.Otters, colour=Site.Name)) +
-  geom_point(aes(colour=Site.Name)) +
-  geom_line(aes(colour=Site.Name)) +
-  ylab("Number of Sea Otters") +
-  theme_js() +
-  theme(legend.position=c(0.3,0.7))
-otters_by_site
-
-ggsave("Sea otter abundance at NWFSC sites 1977-2015 single plot.pdf")
-
-
-otters_by_site_facet <- ggplot(nwfsc.otter.dat,aes(x=Year,y=Total.Otters, colour=Site.Name)) +
-  geom_point(aes(colour=Site.Name)) +
-  geom_line(aes(colour=Site.Name)) +
-  facet_wrap(~Site.Name,scales="free_y",nrow=2) +
-  ylab("Number of Sea Otters") +
-  theme_js() +
-  theme(legend.position="none")
-otters_by_site_facet
-
-ggsave("Sea otter abundance at NWFSC sites 1977-2015 facet plot.pdf")
-
+# 
+# 
+# #######################################
+# ### sum otters by NWFSC study sites ###
+# #######################################
+# unique(otter.dat$Site.code.for.analysis)
+# 
+# nwfsc.otter.dat <- otter.dat %>%
+#   filter(Site.code.for.analysis != "Other_South" & Site.code.for.analysis != "Other_Central" & Site.code.for.analysis != "Other_North") %>%
+#   #droplevels() %>%
+#   group_by(Year, Site.code.for.analysis) %>%
+#   summarise(
+#     Total.Otters = sum(Count.Total,na.rm=TRUE)
+#   )
+# dim(nwfsc.otter.dat)
+# head(nwfsc.otter.dat,10)
+# 
+# nwfsc.otter.dat <- data.frame(nwfsc.otter.dat)
+# 
+# nwfsc.otter.dat$Site.Name <- as.character(nwfsc.otter.dat$Site.code.for.analysis)
+# nwfsc.otter.dat$Site.Name[nwfsc.otter.dat$Site.code.for.analysis == "AP"] <- "2.Anderson Point"
+# nwfsc.otter.dat$Site.Name[nwfsc.otter.dat$Site.code.for.analysis == "CA"] <- "4.Cape Alava"
+# nwfsc.otter.dat$Site.Name[nwfsc.otter.dat$Site.code.for.analysis == "CJR3"] <- "5.Cape Johnson / Rock 305"
+# nwfsc.otter.dat$Site.Name[nwfsc.otter.dat$Site.code.for.analysis == "DI"] <- "7.Destruction Island"
+# nwfsc.otter.dat$Site.Name[nwfsc.otter.dat$Site.code.for.analysis == "PA"] <- "3.Point of the Arches"
+# nwfsc.otter.dat$Site.Name[nwfsc.otter.dat$Site.code.for.analysis == "TH"] <- "6.Teawhit Head"
+# nwfsc.otter.dat$Site.Name[nwfsc.otter.dat$Site.code.for.analysis == "TI"] <- "1.Tatoosh Island"
+# 
+# head(nwfsc.otter.dat,10)
+# #######################################
+# #######################################
+# 
+# #######################################
+# ### plot otters by NWFSC study sites ###
+# #######################################
+# theme_js <- function(base_size = 12, base_family = "") {
+#   theme_bw()+
+#   theme(
+#     text=element_text(size=16),
+#     legend.title=element_blank(),
+#     legend.text = element_text(size=14),
+#     #legend.background =  element_rect(colour = NA),
+#     #legend.key =         element_rect(fill = "white", colour = "black"),
+#     panel.background =   element_rect(fill = "white", colour = "black",size=1.5),
+#     panel.border =       element_blank(),
+#     panel.grid.major =   element_blank(),
+#     panel.grid.minor =   element_blank(),
+#     panel.spacing =       unit(0.25, "lines"),
+#     strip.background =   element_rect(fill = "black", colour = "black"),
+#     strip.text.x =       element_text(colour="white",size=12),
+#     strip.text.y =       element_text(angle = -90,colour="white",size=12),
+#     plot.background =    element_rect(colour = "white"),
+#     plot.title =         element_text(size = rel(1.2)),
+#     plot.margin =        unit(c(1, 1, 0.5, 0.5), "lines")
+#   )
+# }
+# 
+# #setwd("~/Documents/Github/OCNMS/Figures/")
+# 
+# setwd(paste(base.dir,"Plots",sep=""))
+# 
+# 
+# otters_by_site <- ggplot(nwfsc.otter.dat,aes(x=Year,y=Total.Otters, colour=Site.Name)) +
+#   geom_point(aes(colour=Site.Name)) +
+#   geom_line(aes(colour=Site.Name)) +
+#   ylab("Number of Sea Otters") +
+#   theme_js() +
+#   theme(legend.position=c(0.3,0.7))
+# otters_by_site
+# 
+# ggsave("Sea otter abundance at NWFSC sites 1977-2015 single plot.pdf")
+# 
+# 
+# otters_by_site_facet <- ggplot(nwfsc.otter.dat,aes(x=Year,y=Total.Otters, colour=Site.Name)) +
+#   geom_point(aes(colour=Site.Name)) +
+#   geom_line(aes(colour=Site.Name)) +
+#   facet_wrap(~Site.Name,scales="free_y",nrow=2) +
+#   ylab("Number of Sea Otters") +
+#   theme_js() +
+#   theme(legend.position="none")
+# otters_by_site_facet
+# 
+# ggsave("Sea otter abundance at NWFSC sites 1977-2015 facet plot.pdf")
+# 
 
 #######################################
 #######################################
