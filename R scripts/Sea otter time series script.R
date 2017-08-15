@@ -88,5 +88,7 @@ otters_by_site_facet
 ggsave("Sea otter abundance at NWFSC sites 1977-2015 facet plot.pdf")
 
 
+
+
 #######################################
 #######################################
