@@ -2,14 +2,22 @@ library(ggplot2)
 library(reshape2)
 library(dplyr)
 library(tidyr)
+library(stringr)
+library(ks)
 
 
-#setwd("~/Documents/Github/OCNMS/Data/csv files")
-
+# for OLE 
 
 setwd("~Github/OCNMS/Data/csv files")
-# for OLE 
 base.dir <- "/Users/ole.shelton/GitHub/OCNMS/"
+
+# for JAMEAL
+setwd("~/Documents/Github/OCNMS/Data/csv files")
+base.dir <- "~/Documents/Github/OCNMS/"
+
+
+# for EVERYBODY
+
 source(paste(base.dir,"R scripts/integral.kde.R",sep=""))
 setwd(paste(base.dir,"Data/csv files",sep=""))
 
@@ -69,6 +77,9 @@ nwfsc.otter.dat$location <- factor(nwfsc.otter.dat$location,levels=NOM)
 nwfsc.otter.dat <- merge(nwfsc.otter.dat,expand.grid(location=NOM,Year=sort(unique(otter.dat$Year))),all=T)
 nwfsc.otter.dat$Total.Adults[is.na(nwfsc.otter.dat$Total.Adults)==T] <- 0
 nwfsc.otter.dat$Total.Otters[is.na(nwfsc.otter.dat$Total.Otters)==T] <- 0
+
+
+
 #### PLOT@
 #######################################
 ### plot otters by NWFSC study sites ###
@@ -195,7 +206,8 @@ otter.dist.timeseries<- ggplot(otter.kern.dat,aes(x=dens.plus,y=loc,group=year))
                        limits=c(0,180))+
     ggtitle(paste("Proportional Distribution; kernel =",round(KERN,2))) 
   
-  
+otter.dist.timeseries
+
 #########################################
 ##########################################
 ## Calculate Kernel smoothed total abundance for sections of the coast
@@ -217,6 +229,34 @@ for(i in 1:length(YEARS)){
 }
 kern.pop.est.trim     <- kern.pop.est %>% filter(location %in% NOM)
 kern.pop.est.trim$location <- factor(kern.pop.est.trim$location,levels=NOM)
+
+### 08142017:: Jameal adds regions
+
+kern.pop.est.trim$Region <- NA
+northern <- c(as.character(unique(kern.pop.est.trim$location)[8]),as.character(unique(kern.pop.est.trim$location)[4]), as.character(unique(kern.pop.est.trim$location)[6]))
+central <- c(as.character(unique(kern.pop.est.trim$location)[1:2]),as.character(unique(kern.pop.est.trim$location)[7]))
+southern <- c(as.character(unique(kern.pop.est.trim$location)[5]),as.character(unique(kern.pop.est.trim$location)[9]),as.character(unique(kern.pop.est.trim$location)[3]))
+
+head(kern.pop.est.trim)
+kern.pop.est.trim$Region[grep(paste(northern,collapse="|"), 
+                              kern.pop.est.trim$location)] <- "Northern"
+kern.pop.est.trim$Region[grep(paste(central,collapse="|"), 
+                              kern.pop.est.trim$location)] <- "Central"
+kern.pop.est.trim$Region[grep(paste(southern,collapse="|"), 
+                              kern.pop.est.trim$location)] <- "Southern"
+View(kern.pop.est.trim)
+
+# head(
+#   kern.pop.est.trim %>%
+#     filter(str_detect(location, paste(northern, collapse="|"))) %>%
+#     mutate(Region = "Northern")
+# )
+
+kern.pop.est.trim <- transform(
+  kern.pop.est.trim,
+  Region=factor(Region,levels=c("Northern","Central","Southern"))
+)
+
 #### POPULATION TIME SERIES USING kernel smoothed density estimate and fixed diameters around
  ## the study sites.
 
@@ -248,6 +288,20 @@ otters_by_site_facet2_kern <- ggplot(kern.pop.est.trim,aes(x=Year,y=tot.pop, col
   theme(legend.position="none") +
   ggtitle(paste("Kernel population estimates, kernel=",round(KERN,2),";",DIAM,"km buffer"))
 otters_by_site_facet2_kern
+
+### 08142017:: Jameal adds facet plots by region
+
+otters_by_site_facet3_kern <- ggplot(kern.pop.est.trim,aes(x=Year,y=tot.pop, colour=location)) +
+  geom_point(aes(colour=location)) +
+  geom_line(aes(colour=location)) +
+  facet_wrap(~Region,scales="free_y",nrow=3) +
+  ylab("Number of Sea Otters") +
+  theme_js() +
+  #theme(legend.position="none") +
+  ggtitle(paste("Kernel population estimates, kernel=",round(KERN,2),";",DIAM,"km buffer"))
+otters_by_site_facet3_kern
+
+ggsave("3 Regions Otter Plots.pdf")
 
 ## Write to file
 write.csv(kern.pop.est.trim,file=paste(base.dir,"Data/csv files/Kernel otter abundances; kern=",round(KERN,1),".csv",sep=""))
@@ -352,6 +406,7 @@ pdf(file="Otter time-series plots.pdf",onefile=T,width=11,height=8.5)
   print(otters_by_site_kern)
   print(otters_by_site_facet_kern)
   print(otters_by_site_facet2_kern)
+  print(otters_by_site_facet3_kern)
 
   print(otter.dist.timeseries2)
   print(otters_by_site_kern2)
