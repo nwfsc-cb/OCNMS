@@ -2,6 +2,7 @@ rm(list=ls())
 options(max.print=99999)
 library(dplyr)
 library(ggplot2)
+library(reshape2)
 
 base.dir <- "/Users/ole.shelton/GitHub/OCNMS"
 source(paste(base.dir,"/R scripts/multiplot.r",sep=""))
@@ -11,6 +12,55 @@ source(paste(base.dir,"/R scripts/multiplot.r",sep=""))
 ######-------------- KELP ANALYSIS ---------------------------------##############
 ##################################################################################
 ##################################################################################
+
+# Use discrete areas for 
+setwd(paste(base.dir,"/Data/csv files",sep=""))
+
+kelp.dat      <- read.csv("annual canopy area by index.csv")
+weight.dat    <- read.csv("Kelp area index weights.csv")
+
+kelp.dat <- melt(kelp.dat,id.vars = "kelp.map.index")
+
+kelp.dat <- kelp.dat %>% rename(year=variable)
+kelp.dat$year <- substr(kelp.dat$year,2,5)
+
+weight.dat <- weight.dat %>% rename(Site = Site.100m.radius)
+           
+kelp.ts <- merge(kelp.dat,weight.dat)
+kelp.ts$Area <- kelp.ts$value * kelp.ts$weight
+
+kelp.ts.all <- kelp.ts %>% group_by(Site,year) %>% summarise(total.area = sum(Area))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 setwd(paste(base.dir,"/Data/csv files",sep=""))
 
@@ -43,7 +93,6 @@ kelp.area <- merge(kelp.area,area.dat[,c("Site","Buffer.radius","area.less.than.
 #colnames(temp)[which(colnames(temp)=="tot.area")] <- "ref.area"
 #kelp.area.ref <- merge(kelp.area.ref,temp,by=c("ID","ESP.site.name","Buffer.radius"),all=T)
 kelp.area$rel.area <- kelp.area$tot.area / kelp.area$area.less.than.20
-
 
 
 ### Make time-series plot for each site
