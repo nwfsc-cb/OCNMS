@@ -7,7 +7,6 @@ library(ks)
 
 
 # for OLE 
-
 setwd("~Github/OCNMS/Data/csv files")
 base.dir <- "/Users/ole.shelton/GitHub/OCNMS/"
 
@@ -17,10 +16,8 @@ base.dir <- "~/Documents/Github/OCNMS/"
 
 
 # for EVERYBODY
-
 source(paste(base.dir,"R scripts/integral.kde.R",sep=""))
 setwd(paste(base.dir,"Data/csv files",sep=""))
-
 
 otter.dat <- read.csv("WDFW sea otter survey data 1977-2015.csv")
 # Mapping for location names to discrete sites from 2015 surveys/ Kvitek surveys
@@ -38,7 +35,7 @@ otter.dat <- merge(otter.dat,linear.shore[,c("common.name","distance.miles")],al
 # IMPORTANT VALUES FOR KERNEL DENSITY ESTIMATION
 
 KERN <- 40/(1.96*2) # Standard deviation of the normal kernel density in km 
-          # equivalent to ~8.9 km using an average home range size of 35km from Laidre et al. 2009 J Mammology
+          # equivalent to ~8.9 km using an average home range size of 40km from Laidre et al. 2009 J Mammology
 DIAM <- 10 # buffer diameter used for calculating the number of otters around a focal site (in km)
 
 
@@ -170,7 +167,7 @@ nwfsc.otter.by.year <- otter.dat %>% group_by(Year) %>%
 #### Kernel density function for each year. 
 library(ks)
 
-Eval.Points <- seq(-20,max(otter.dat$distance.km)*1.1,by=0.5)
+Eval.Points <- seq(-20,max(otter.dat$distance.km)*1.1,by=0.1)
 
 YEARS <-  sort(unique(nwfsc.otter.kernel$Year))
 otter.kern <- list()
@@ -191,13 +188,26 @@ for(i in 1:length(YEARS)){
   otter.kern.dat <- rbind(otter.kern.dat,temp)
 }
 
+#### CALCULATE A CENTER OF GRAVITY FOR THE DISTRIBUTION OF OTTERS.
+points <- seq(1,max(linear.shore$distance.km),length.out=1000)
+midpoint <- NULL
+for(i in 1:length(YEARS)){
+  temp  <- c(YEARS[i],points[min(which(integral.kde(points,otter.kern[[i]],density=T)>=0.5))])
+  midpoint <- rbind(midpoint,temp)
+}
+midpoint <- data.frame(midpoint)
+colnames(midpoint) <- c("Years","Center")
+
+###########
 MULT <- 40 # Multiple for making the density larger and easier to see.
 otter.kern.dat$dens.plus <- otter.kern.dat$dens * MULT + otter.kern.dat$year
 y.labels <- survey.locations.linear.shore 
 
 
-otter.dist.timeseries<- ggplot(otter.kern.dat,aes(x=dens.plus,y=loc,group=year)) +
-    geom_polygon(fill=grey(0.5),alpha=0.7) + 
+otter.dist.timeseries<- ggplot() +
+    geom_polygon(data=otter.kern.dat,aes(x=dens.plus,y=loc,group=year),fill=grey(0.5),alpha=0.7) + 
+    geom_point(data=midpoint,aes(x=Years,y=Center)) +
+    geom_smooth(data=midpoint,aes(x=Years,y=Center),se=F,span=0.5,color="black",linetype="dashed") +
     theme_js() +
     xlab("Year") +
     ylab("Location") +
@@ -230,8 +240,8 @@ for(i in 1:length(YEARS)){
 kern.pop.est.trim     <- kern.pop.est %>% filter(location %in% NOM)
 kern.pop.est.trim$location <- factor(kern.pop.est.trim$location,levels=NOM)
 
-### 08142017:: Jameal adds regions
 
+### 08142017:: Jameal adds regions
 kern.pop.est.trim$Region <- NA
 northern <- c(as.character(unique(kern.pop.est.trim$location)[8]),as.character(unique(kern.pop.est.trim$location)[4]), as.character(unique(kern.pop.est.trim$location)[6]))
 central <- c(as.character(unique(kern.pop.est.trim$location)[1:2]),as.character(unique(kern.pop.est.trim$location)[7]))
@@ -244,7 +254,7 @@ kern.pop.est.trim$Region[grep(paste(central,collapse="|"),
                               kern.pop.est.trim$location)] <- "Central"
 kern.pop.est.trim$Region[grep(paste(southern,collapse="|"), 
                               kern.pop.est.trim$location)] <- "Southern"
-View(kern.pop.est.trim)
+#View(kern.pop.est.trim)
 
 # head(
 #   kern.pop.est.trim %>%
@@ -291,6 +301,23 @@ otters_by_site_facet2_kern
 
 ### 08142017:: Jameal adds facet plots by region
 
+
+NOM2 <- c(
+  "Neah Bay",
+  "Chibadehl Rock",
+  "Tatoosh Island",
+  "Anderson Point",
+  "Point of the Arches",
+  "Cape Alava",
+  "Cape Johnson",
+  "Teahwhit Head",
+  "Destruction Island",
+  "Quinault",
+  "East Juan De Fuca"
+)
+kern.pop.est.trim$location <- factor(kern.pop.est.trim$location,levels=NOM2)
+
+
 otters_by_site_facet3_kern <- ggplot(kern.pop.est.trim,aes(x=Year,y=tot.pop, colour=location)) +
   geom_point(aes(colour=location)) +
   geom_line(aes(colour=location)) +
@@ -301,7 +328,13 @@ otters_by_site_facet3_kern <- ggplot(kern.pop.est.trim,aes(x=Year,y=tot.pop, col
   ggtitle(paste("Kernel population estimates, kernel=",round(KERN,2),";",DIAM,"km buffer"))
 otters_by_site_facet3_kern
 
-ggsave("3 Regions Otter Plots.pdf")
+#ggsave("3 Regions Otter Plots.pdf")
+
+
+quartz(file="3 Regions Otter Plots.pdf",width=8,height=7,type="pdf")
+  print(otters_by_site_facet3_kern)
+dev.off()
+
 
 ## Write to file
 write.csv(kern.pop.est.trim,file=paste(base.dir,"Data/csv files/Kernel otter abundances; kern=",round(KERN,1),".csv",sep=""))
