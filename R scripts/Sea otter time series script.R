@@ -7,12 +7,12 @@ library(ks)
 
 
 # for OLE 
-setwd("~Github/OCNMS/Data/csv files")
+#setwd("~Github/OCNMS/Data/csv files")
 base.dir <- "/Users/ole.shelton/GitHub/OCNMS/"
 
 # for JAMEAL
-setwd("~/Documents/Github/OCNMS/Data/csv files")
-base.dir <- "~/Documents/Github/OCNMS/"
+# setwd("~/Documents/Github/OCNMS/Data/csv files")
+# base.dir <- "~/Documents/Github/OCNMS/"
 
 
 # for EVERYBODY
@@ -337,7 +337,7 @@ dev.off()
 
 
 ## Write to file
-write.csv(kern.pop.est.trim,file=paste(base.dir,"Data/csv files/Kernel otter abundances; kern=",round(KERN,1),".csv",sep=""))
+write.csv(kern.pop.est.trim,file=paste(base.dir,"Data/csv files/Kernel otter abundances; kern=",round(KERN,1),".csv",sep=""),row.names=F)
 
 ######################################## 
 ##REPEAT ANALYSES USING smaller kernel for the home range (half of original)
@@ -450,8 +450,7 @@ dev.off()
 
 ################# Write Otter abundances by site to file that can be called in other scripts
 
-write.csv(kern.pop.est.trim,file=paste(base.dir,"Data/csv files/Kernel otter abundances; kern=",round(KERN,1),".csv",sep=""))
-
+write.csv(kern.pop.est.trim,file=paste(base.dir,"Data/csv files/Kernel otter abundances; kern=",round(KERN,1),".csv",sep=""),row.names=F)
 
 
 ##### JAMEAL's CODE STARTS HERE:
