@@ -71,11 +71,14 @@ kelp.ts.all$Site <-  factor(kelp.ts.all$Site,
 kelp.ts.all <- kelp.ts.all %>% mutate(Region = as.character(Site)) %>%
   mutate(Region = replace(Region,Site%in%c("Neah Bay","Chibadehl Rocks","Tatoosh Island"), "Northern")) %>%
   mutate(Region = replace(Region,Site%in%c("Anderson Point","Point of the Arches","Cape Alava"), "Central")) %>%                                                                  
-  mutate(Region = replace(Region,Site%in%c("Cape Johnson","Teahwhit Head","Destruction Island SW"), "Southern")) %>%
+  mutate(Region = replace(Region,Site%in%c("Cape Johnson","Rock 305","Teahwhit Head","Destruction Island SW"), "Southern")) %>%
   as.data.frame()
 kelp.ts.all$Region <- as.factor(kelp.ts.all$Region)
 
 kelp.ts.all$year <- as.numeric(as.character(kelp.ts.all$year))
+
+kelp.ts.site <- kelp.ts.all %>% group_by(Site) %>% summarise(Mean=mean(total.area),SD=sd(total.area)) %>%
+                as.data.frame()
 
 kelp.ts.all <- kelp.ts.all %>% group_by(Site) %>% summarise(Mean=mean(total.area),SD=sd(total.area)) %>%
                 as.data.frame() %>% merge(.,kelp.ts.all) %>% mutate(Dev = (total.area - Mean) / SD)
@@ -131,6 +134,58 @@ pdf(file=paste(base.dir,"/Plots/Kelp time-series plots.pdf",sep=""),onefile=T,wi
 dev.off()
 
 
+############
+
+
+#################################################################################################
+### MEAN, CV at each site.
+
+## Raw area data. 1000m buffer
+
+kelp.ts.site$Site <-  factor(kelp.ts.site$Site,
+                             levels = site.order)
+kelp.ts.site$CV <- kelp.ts.site$SD / kelp.ts.site$Mean
+
+X.AX <- element_text(angle=45,size=8,hjust=1)
+
+A.1 <- ggplot(kelp.ts.site) +
+  geom_bar(aes(y=Mean,x=Site),stat="identity") +
+  labs(y="Mean Area (ha)",x="Site") +
+  theme_bw()  +
+  theme(axis.text.x = X.AX)
+
+A.2 <- ggplot(kelp.ts.site) +
+  geom_bar(aes(y=CV,x=Site),stat="identity") +
+  labs(x="Site") +
+  scale_y_continuous(expand = c(0, 0),limits = c(0,1)) +
+  theme_bw()  +
+  theme(axis.text.x = X.AX)
+
+# Proportional cover data
+kelp.summary.prop <- kelp.area %>% group_by(ESP.site.name,Buffer.radius) %>%
+  summarise(Mean=mean(rel.area),SD=sd(rel.area),N=length(rel.area)) %>%
+  mutate(SE.mean = SD/sqrt(N),CV=SD/Mean)
+kelp.summary.prop$ESP.site.name <-  factor(kelp.summary.prop$ESP.site.name,
+                                           levels = site.order)
+
+# B.1 <- ggplot(kelp.ts.site) +
+#   geom_bar(aes(y=Mean,x=Site),stat="identity") +
+#   labs(y="Area",x=NULL) +
+#   scale_y_continuous(limits=c(0,0.7),expand = c(0, 0)) +
+#   theme_bw()  +
+#   theme(axis.text.x = element_blank())
+B.2 <- ggplot(kelp.ts.site) +
+  geom_point(aes(y=CV,x=Mean),stat="identity")+
+  labs(x="Mean Prop",y="CV") +
+ # scale_x_continuous(limits=c(0,0.7),expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0)) + #limits=c(0,0.85),
+  theme_bw()
+
+quartz(file = paste(base.dir,"/Plots/Kelp Area, CV 1000m buffer.pdf",sep=""),type="pdf",dpi=300,height=6,width=7 )
+  Layout= matrix(c(1,1,2,2,2,3,3,3,4,4),nrow=5,ncol=2,byrow=F)
+  QQ <- list(A.1,A.2,B.2)
+  multiplot(plotlist=QQ ,layout= Layout)
+dev.off()
 
 
 

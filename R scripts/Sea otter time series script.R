@@ -59,6 +59,7 @@ NOM <- c(
   "Quinault",
   "Destruction Island",
   "Teahwhit Head",
+  "Rock 305",
   "Cape Johnson",
   "Cape Alava",
   "Point of the Arches",
@@ -243,9 +244,10 @@ kern.pop.est.trim$location <- factor(kern.pop.est.trim$location,levels=NOM)
 
 ### 08142017:: Jameal adds regions
 kern.pop.est.trim$Region <- NA
-northern <- c(as.character(unique(kern.pop.est.trim$location)[8]),as.character(unique(kern.pop.est.trim$location)[4]), as.character(unique(kern.pop.est.trim$location)[6]))
-central <- c(as.character(unique(kern.pop.est.trim$location)[1:2]),as.character(unique(kern.pop.est.trim$location)[7]))
-southern <- c(as.character(unique(kern.pop.est.trim$location)[5]),as.character(unique(kern.pop.est.trim$location)[9]),as.character(unique(kern.pop.est.trim$location)[3]))
+northern <- c(as.character(unique(kern.pop.est.trim$location)[9]),as.character(unique(kern.pop.est.trim$location)[5]), as.character(unique(kern.pop.est.trim$location)[7]))
+central <- c(as.character(unique(kern.pop.est.trim$location)[1:2]),as.character(unique(kern.pop.est.trim$location)[8]))
+southern <- c(as.character(unique(kern.pop.est.trim$location)[6]),as.character(unique(kern.pop.est.trim$location)[10]),
+              as.character(unique(kern.pop.est.trim$location)[3]),as.character(unique(kern.pop.est.trim$location)[4]))
 
 head(kern.pop.est.trim)
 kern.pop.est.trim$Region[grep(paste(northern,collapse="|"), 
@@ -301,7 +303,6 @@ otters_by_site_facet2_kern
 
 ### 08142017:: Jameal adds facet plots by region
 
-
 NOM2 <- c(
   "Neah Bay",
   "Chibadehl Rock",
@@ -310,6 +311,7 @@ NOM2 <- c(
   "Point of the Arches",
   "Cape Alava",
   "Cape Johnson",
+  "Rock 305",
   "Teahwhit Head",
   "Destruction Island",
   "Quinault",
