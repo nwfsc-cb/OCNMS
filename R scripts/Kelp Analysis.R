@@ -150,9 +150,10 @@ X.AX <- element_text(angle=45,size=8,hjust=1)
 
 A.1 <- ggplot(kelp.ts.site) +
   geom_bar(aes(y=Mean,x=Site),stat="identity") +
-  labs(y="Mean Area (ha)",x="Site") +
+  labs(y="Mean Area (ha)") +
   theme_bw()  +
-  theme(axis.text.x = X.AX)
+  theme(axis.text.x = element_blank(),axis.title.x = element_blank()) 
+  
 
 A.2 <- ggplot(kelp.ts.site) +
   geom_bar(aes(y=CV,x=Site),stat="identity") +
@@ -162,11 +163,11 @@ A.2 <- ggplot(kelp.ts.site) +
   theme(axis.text.x = X.AX)
 
 # Proportional cover data
-kelp.summary.prop <- kelp.area %>% group_by(ESP.site.name,Buffer.radius) %>%
-  summarise(Mean=mean(rel.area),SD=sd(rel.area),N=length(rel.area)) %>%
-  mutate(SE.mean = SD/sqrt(N),CV=SD/Mean)
-kelp.summary.prop$ESP.site.name <-  factor(kelp.summary.prop$ESP.site.name,
-                                           levels = site.order)
+# kelp.summary.prop <- kelp.area %>% group_by(ESP.site.name,Buffer.radius) %>%
+#   summarise(Mean=mean(rel.area),SD=sd(rel.area),N=length(rel.area)) %>%
+#   mutate(SE.mean = SD/sqrt(N),CV=SD/Mean)
+# kelp.summary.prop$ESP.site.name <-  factor(kelp.summary.prop$ESP.site.name,
+#                                            levels = site.order)
 
 # B.1 <- ggplot(kelp.ts.site) +
 #   geom_bar(aes(y=Mean,x=Site),stat="identity") +
@@ -181,7 +182,7 @@ B.2 <- ggplot(kelp.ts.site) +
   scale_y_continuous(expand = c(0, 0)) + #limits=c(0,0.85),
   theme_bw()
 
-quartz(file = paste(base.dir,"/Plots/Kelp Area, CV 1000m buffer.pdf",sep=""),type="pdf",dpi=300,height=6,width=7 )
+quartz(file = paste(base.dir,"/Plots/Kelp Area, CV.pdf",sep=""),type="pdf",dpi=300,height=6,width=7 )
   Layout= matrix(c(1,1,2,2,2,3,3,3,4,4),nrow=5,ncol=2,byrow=F)
   QQ <- list(A.1,A.2,B.2)
   multiplot(plotlist=QQ ,layout= Layout)
@@ -191,11 +192,89 @@ dev.off()
 
 
 
+###### MAKE PLOT OF KELP TIME SERIES RELATIVE TO mean of values during first three years (89-91)
+
+kelp.start <- kelp.ts.all %>% filter(year <=1991) %>% group_by(Site) %>% summarise(mean.init= mean(total.area))
+kelp.ts.all <- merge(kelp.ts.all,kelp.start)
+kelp.ts.all$abund.ratio <- kelp.ts.all$total.area / kelp.ts.all$mean.init
+kelp.ts.all$log.ratio <- log(kelp.ts.all$abund.ratio)
+
+theme_os <- function(base_size = 12, base_family = "") {
+  theme_bw()+
+    theme(
+      text=element_text(size=11),
+      legend.title = element_blank(),
+      legend.text  = element_text(size=7.5),
+      legend.justification = c("left", "top"),
+      #legend.key   = element_blank(),
+      legend.key.size = unit(0.7, 'lines'),
+      # legend.background =  element_rect(colour = "white"),
+      legend.position   = c(0.02,0.98),
+      # #legend.text.align = 0,
+      legend.key =         element_rect(fill = "white", color="white",size=0.5),
+      panel.background =   element_rect(fill = "white", colour = "black",size=1.5),
+      panel.border =       element_blank(),
+      panel.grid.major =   element_blank(),
+      panel.grid.minor =   element_blank(),
+      # panel.spacing =       unit(0.25, "lines"),
+      #strip.background =   element_rect(fill = "black", colour = "black"),
+      strip.text.x = element_blank(),
+      strip.background = element_blank(),
+      plot.background =    element_rect(colour = "white"),
+      plot.title =         element_text(size = rel(0.9),hjust = 0),
+      plot.margin =        unit(c(0.2, 0.1, -0.7, 0.1), "lines")
+    )
+}  
 
 
+COL   <- viridis(3,begin=0,end=0.7)
+COL.2 <- viridis(4,begin=0,end=0.8)
+y.lim=c(0,7.86)
 
+K.index1 <- ggplot(kelp.ts.all %>% filter(Region =="Northern"),aes(x=year,y=abund.ratio,color=Site)) +
+  geom_line(linetype="dashed") +
+  geom_point() +
+  geom_hline(yintercept = 1,linetype="dotted") +
+  scale_colour_manual(name="Site",values=COL) +
+  #scale_x_continuous(limits = x.lim) +
+  scale_y_continuous(limits=y.lim)  +
+  #ylab("Sea otters") +
+  xlab("")+
+  ylab("") +
+  ggtitle("a) Northern") +
+  theme_os() #+ theme(legend.position="none")
+K.index2 <- ggplot(kelp.ts.all %>% filter(Region =="Central"),aes(x=year,y=abund.ratio,color=Site)) +
+  geom_line(linetype="dashed") +
+  geom_point() +
+  geom_hline(yintercept = 1,linetype="dotted") +
+  scale_colour_manual(name="Site",values=COL) +
+  #scale_x_continuous(limits = x.lim) +
+  scale_y_continuous(limits=y.lim)  +
+  #ylab("Sea otters") +
+  xlab("")+
+  ylab("") +
+  ggtitle("b) Central") +
+  theme_os() #+ theme(legend.position="none")
+K.index3 <- ggplot(kelp.ts.all %>% filter(Region =="Southern"),aes(x=year,y=abund.ratio,color=Site)) +
+  geom_line(linetype="dashed") +
+  geom_point() +
+  geom_hline(yintercept = 1,linetype="dotted") +
+  scale_colour_manual(name="Site",values=COL.2) +
+  #scale_x_continuous(limits = x.lim) +
+  scale_y_continuous(limits=y.lim)  +
+  #ylab("Sea otters") +
+  xlab("")+
+  ylab("") +
+  ggtitle("c) Southern") +
+  theme_os() #+ theme(legend.position="none")
 
-
+quartz(file = paste(base.dir,"/Plots/Kelp Index by region.pdf",sep=""),type="pdf",dpi=300,height=6,width=4 )
+Layout= matrix(c(1,2,3),nrow=3,ncol=1,byrow=F)
+QQ <- list(K.index1,
+           K.index2,
+           K.index3)
+multiplot(plotlist=QQ ,layout= Layout)
+dev.off()
 
 
 # setwd(paste(base.dir,"/Data/csv files",sep=""))

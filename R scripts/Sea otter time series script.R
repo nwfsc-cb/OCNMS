@@ -241,13 +241,23 @@ for(i in 1:length(YEARS)){
 kern.pop.est.trim     <- kern.pop.est %>% filter(location %in% NOM)
 kern.pop.est.trim$location <- factor(kern.pop.est.trim$location,levels=NOM)
 
+# Index Standardize to 89-91
+kern.pop.est.start <- kern.pop.est.trim %>% filter(Year >= 1989, Year <=1991) %>% group_by(location) %>% summarise(mean.init= mean(tot.pop))
+kern.pop.est.trim <- merge(kern.pop.est.trim,kern.pop.est.start)
+kern.pop.est.trim$abund.ratio <- kern.pop.est.trim$tot.pop / kern.pop.est.trim$mean.init
+kern.pop.est.trim$log.ratio <- log(kern.pop.est.trim$abund.ratio)
+
+
 
 ### 08142017:: Jameal adds regions
 kern.pop.est.trim$Region <- NA
-northern <- c(as.character(unique(kern.pop.est.trim$location)[9]),as.character(unique(kern.pop.est.trim$location)[5]), as.character(unique(kern.pop.est.trim$location)[7]))
-central <- c(as.character(unique(kern.pop.est.trim$location)[1:2]),as.character(unique(kern.pop.est.trim$location)[8]))
-southern <- c(as.character(unique(kern.pop.est.trim$location)[6]),as.character(unique(kern.pop.est.trim$location)[10]),
-              as.character(unique(kern.pop.est.trim$location)[3]),as.character(unique(kern.pop.est.trim$location)[4]))
+northern <- c("Neah Bay","Chibadehl Rock","Tatoosh Island")
+central  <- c("Anderson Point","Point of the Arches","Cape Alava")
+southern <- c("Cape Johnson","Rock 305","Teahwhit Head","Destruction Island")
+# northern <- c(as.character(unique(kern.pop.est.trim$location)[9]),as.character(unique(kern.pop.est.trim$location)[5]), as.character(unique(kern.pop.est.trim$location)[7]))
+# central <- c(as.character(unique(kern.pop.est.trim$location)[1:2]),as.character(unique(kern.pop.est.trim$location)[8]))
+# southern <- c(as.character(unique(kern.pop.est.trim$location)[6]),as.character(unique(kern.pop.est.trim$location)[10]),
+#               as.character(unique(kern.pop.est.trim$location)[3]),as.character(unique(kern.pop.est.trim$location)[4]))
 
 head(kern.pop.est.trim)
 kern.pop.est.trim$Region[grep(paste(northern,collapse="|"), 
@@ -280,7 +290,7 @@ otters_by_site_kern <- ggplot(kern.pop.est.trim,aes(x=Year,y=tot.pop, colour=loc
   theme(legend.position=c(0.3,0.7)) +
   ggtitle(paste("Kernel population estimates, kernel=",round(KERN,2),";",DIAM,"km buffer"))
 otters_by_site_kern
-
+ 
 otters_by_site_facet_kern <- ggplot(kern.pop.est.trim,aes(x=Year,y=tot.pop, colour=location)) +
   geom_point(aes(colour=location)) +
   geom_line(aes(colour=location)) +
@@ -401,6 +411,15 @@ for(i in 1:length(YEARS)){
 }
 kern.pop.est.trim     <- kern.pop.est %>% filter(location %in% NOM)
 kern.pop.est.trim$location <- factor(kern.pop.est.trim$location,levels=NOM)
+
+# Index Standardize to 89-91
+kern.pop.est.start <- kern.pop.est.trim %>% filter(Year >= 1989, Year <=1991) %>% group_by(location) %>% summarise(mean.init= mean(tot.pop))
+kern.pop.est.trim <- merge(kern.pop.est.trim,kern.pop.est.start)
+kern.pop.est.trim$abund.ratio <- kern.pop.est.trim$tot.pop / kern.pop.est.trim$mean.init
+kern.pop.est.trim$log.ratio <- log(kern.pop.est.trim$abund.ratio)
+
+
+
 #### POPULATION TIME SERIES USING kernel smoothed density estimate and fixed diameters around
 ## the study sites.
 

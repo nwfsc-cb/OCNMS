@@ -19,6 +19,8 @@ otter.kern.dat<- read.csv(paste(base.dir,"Data/csv files/Kernel otter abundances
   nwfsc.otter.by.year$Year <- as.numeric(nwfsc.otter.by.year$Year)
 
 # Start with making cumulative totals for the entire Olympic coast of WA
+otter.kern.dat$location <- as.character(otter.kern.dat$location)
+otter.kern.dat$location[otter.kern.dat$location=="Chibadehl Rock"] <- "Chibadehl Rocks"
 
   NOM <- c(
     "Neah Bay",
@@ -66,19 +68,21 @@ COL.2 <- viridis(4,begin=0,end=0.8)
   }  
 
   x.lim <- c(min(otter.kern.dat$Year)-1,max(otter.kern.dat$Year))
-    
+   
+SPAN = 0.25  
+   
 O.1 <- ggplot(nwfsc.otter.by.year,aes(x=Year,y=Total)) +
-        geom_point() +
         geom_line(linetype="dashed") +
-        geom_smooth(span=0.5,method="loess",se=F,color=grey(0.4) )+
+        geom_smooth(span=SPAN,method="loess",se=F,color=grey(0.4) )+
+        geom_point() +        
         ylab("Sea otters") +
         xlab("")+ 
         scale_x_continuous(limits = x.lim) +
         theme_os() 
 O.2 <- ggplot(otter.kern.dat %>% filter(Region=="Northern"),aes(x=Year,y=tot.pop,color=location)) +
-          geom_point() +
           geom_line(linetype="dashed") +
-          geom_smooth(span=0.25,method="loess",se=F) +
+          geom_smooth(span=SPAN,method="loess",se=F) +
+          geom_point() +
           scale_colour_manual(name="location",values=COL) +
           scale_x_continuous(limits = x.lim) +      
           #ylab("Sea otters") +
@@ -87,9 +91,9 @@ O.2 <- ggplot(otter.kern.dat %>% filter(Region=="Northern"),aes(x=Year,y=tot.pop
           ggtitle("a) Northern") +
           theme_os() #+ theme(legend.position="none")
 O.3 <- ggplot(otter.kern.dat %>% filter(Region=="Central"),aes(x=Year,y=tot.pop,color=location)) +
-            geom_point() +
             geom_line(linetype="dashed") +
-            geom_smooth(span=0.25,method="loess",se=F) +
+            geom_smooth(span=SPAN,method="loess",se=F) +
+            geom_point() +        
             scale_colour_manual(name="location",values=COL) +
             scale_x_continuous(limits = x.lim) +        
             ylab("Sea otters (individuals)") +
@@ -99,9 +103,9 @@ O.3 <- ggplot(otter.kern.dat %>% filter(Region=="Central"),aes(x=Year,y=tot.pop,
             theme_os() #+ theme(legend.position="none")
           
 O.4 <- ggplot(otter.kern.dat %>% filter(Region=="Southern"),aes(x=Year,y=tot.pop,color=location)) +
-            geom_point() +
             geom_line(linetype="dashed") +
-            geom_smooth(span=0.25,method="loess",se=F) +
+            geom_smooth(span=SPAN,method="loess",se=F) +
+            geom_point() +        
             scale_colour_manual(name="location",values=COL.2) +
             scale_x_continuous(limits = x.lim) +          
             #ylab("Sea otters") +
@@ -110,55 +114,159 @@ O.4 <- ggplot(otter.kern.dat %>% filter(Region=="Southern"),aes(x=Year,y=tot.pop
             ylab("")  +
             theme_os()
 
+y.lim=c(-4,4)
+
+Otter.index2 <- ggplot(otter.kern.dat %>% filter(Region=="Northern"),aes(x=Year,y=log.ratio,color=location)) +
+  geom_line(linetype="dashed") +
+  geom_smooth(span=SPAN,method="loess",se=F) +
+  geom_point() +
+  geom_hline(yintercept = 0,linetype="dotted")+ 
+  scale_colour_manual(name="location",values=COL) +
+  scale_x_continuous(limits = x.lim) +
+  coord_cartesian(ylim = y.lim)  +
+    #ylab("Sea otters") +
+  xlab("")+
+  ylab("") +
+  ggtitle("a) Northern") +
+  theme_os() #+ theme(legend.position="none")
+Otter.index3 <- ggplot(otter.kern.dat %>% filter(Region=="Central"),aes(x=Year,y=log.ratio,color=location)) +
+  geom_line(linetype="dashed") +
+  geom_smooth(span=SPAN,method="loess",se=F) +
+  geom_point() +        
+  geom_hline(yintercept = 0,linetype="dotted")+
+  scale_colour_manual(name="location",values=COL) +
+  scale_x_continuous(limits = x.lim) +        
+  coord_cartesian(ylim = y.lim)  +
+  ylab("Sea otters (log index)") +
+  ggtitle("b) Central") +
+  xlab("")+
+  #ylab("") +
+  theme_os() #+ theme(legend.position="none")
+Otter.index4 <- ggplot(otter.kern.dat %>% filter(Region=="Southern"),aes(x=Year,y=log.ratio,color=location)) +
+  geom_line(linetype="dashed") +
+  geom_smooth(span=SPAN,method="loess",se=F) +
+  geom_point() +
+  geom_hline(yintercept = 0,linetype="dotted")+
+  scale_colour_manual(name="location",values=COL.2) +
+  scale_x_continuous(limits = x.lim) +          
+  coord_cartesian(ylim = y.lim)  +
+  #ylab("Sea otters") +
+  ggtitle("c) Southern") +
+  xlab("") + #+ theme(legend.position="none")
+  ylab("")  +
+  theme_os()
+
+###########################################################
+###########################################################
+###########################################################
+###########################################################
 y.lim <- c(-2.5,2.5)
 
 K.1 <- ggplot(kelp.coastwide.dat,aes(x=year,y=total.area)) +
          geom_point() +
          geom_line(linetype="dashed") +
-          geom_smooth(span=0.5,method="loess",se=F,color=grey(0.4) )+
+          geom_smooth(span=SPAN,method="loess",se=F,color=grey(0.4) )+
          scale_x_continuous(limits = x.lim) +
          ylab("Kelp canopy area (ha)") +
          xlab("Year")+
-         theme_os() + theme(legend.position="none")
+        theme_os() +
+        theme(plot.title=element_text(color="white")) +
+        theme(legend.position="none")
 
 K.2 <- ggplot(kelp.ts.all %>% filter(Region=="Northern"),aes(x=year,y=Dev,color=Site)) +
-          geom_point() +
           geom_line(linetype="dashed") +
           geom_hline(yintercept = 0,linetype="dotted",color="black") +
-          geom_smooth(span=0.25,method="loess",se=F) +
+          geom_smooth(span=SPAN,method="loess",se=F) +
+          geom_point() +        
           scale_colour_manual(name="Site",values=COL) +
           scale_x_continuous(limits = x.lim) +
           scale_y_continuous(limits = y.lim) +
           xlab("")+
           ylab("") +
           ggtitle(" ") +       
-          theme_os() + theme(legend.position="none")
+          theme_os() +
+          theme(plot.title=element_text(color="white")) +
+          theme(legend.position="none")
 K.3 <- ggplot(kelp.ts.all %>% filter(Region=="Central"),aes(x=year,y=Dev,color=Site)) +
-          geom_point() +
           geom_hline(yintercept = 0,linetype="dotted",color="black") +
           geom_line(linetype="dashed") +
-          geom_smooth(span=0.25,method="loess",se=F) +
+          geom_smooth(span=SPAN,method="loess",se=F) +
+          geom_point() +
           scale_colour_manual(name="Site",values=COL) +
           scale_x_continuous(limits = x.lim) +
           scale_y_continuous(limits = y.lim) +
           xlab("")+
-          ylab("Kelp Deviation") +        
-          ggtitle(" ") +
-          theme_os() + theme(legend.position="none")
+          ylab("Kelp Deviation") +
+          theme_os() +
+          theme(plot.title=element_text(color="white")) +
+          theme(legend.position="none")
+ 
 K.4 <- ggplot(kelp.ts.all %>% filter(Region=="Southern"),aes(x=year,y=Dev,color=Site)) +
-          geom_point() +
           geom_hline(yintercept = 0,linetype="dotted",color="black") +
           geom_line(linetype="dashed") +
-          geom_smooth(span=0.25,method="loess",se=F) +
+          geom_smooth(span=SPAN,method="loess",se=F) +
+          geom_point() +
           scale_colour_manual(name="Site",values=COL.2) +
           scale_x_continuous(limits = x.lim) +
           scale_y_continuous(limits = y.lim) +
           ylab("") +
           xlab("")+
-          ggtitle(" ") +        
-          theme_os() + theme(legend.position="none")
+          theme_os()+
+          ggtitle("b) Central") + 
+          theme(plot.title=element_text(color="white")) +
+           theme(legend.position="none")
+##### ALTERNATE KELP TREND PLOTTING 
 
-# print(K.2)
+y.lim=c(-2,2)
+
+K.index1 <- ggplot(kelp.ts.all %>% filter(Region =="Northern"),aes(x=year,y=log.ratio,color=Site)) +
+  geom_smooth(span=SPAN,method="loess",se=F) +
+  geom_line(linetype="dashed") +
+  geom_point() +
+  geom_hline(yintercept = 0,linetype="dotted") +
+  scale_colour_manual(name="Site",values=COL) +
+  scale_x_continuous(limits = x.lim) +
+  scale_y_continuous(limits=y.lim)  +
+  #ylab("Sea otters") +
+  xlab("")+
+  ylab("") +
+  theme_os() +
+  ggtitle("a) Northern") + 
+  theme(plot.title=element_text(color="white")) +
+  theme(legend.position="none")
+K.index2 <- ggplot(kelp.ts.all %>% filter(Region =="Central"),aes(x=year,y=log.ratio,color=Site)) +
+  geom_smooth(span=SPAN,method="loess",se=F) +
+  geom_line(linetype="dashed") +
+  geom_point() +
+  geom_hline(yintercept = 0,linetype="dotted") +
+  scale_colour_manual(name="Site",values=COL) +
+  scale_x_continuous(limits = x.lim) +
+  scale_y_continuous(limits=y.lim)  +
+  #ylab("Sea otters") +
+  xlab("")+
+  ylab("Kelp area (log index)") +
+  ggtitle(" ") +        
+  theme_os() +
+  ggtitle("b) Central") + 
+  theme(plot.title=element_text(color="white")) +
+  theme(legend.position="none")
+K.index3 <- ggplot(kelp.ts.all %>% filter(Region =="Southern"),aes(x=year,y=log.ratio,color=Site)) +
+  geom_smooth(span=SPAN,method="loess",se=F) +
+  geom_line(linetype="dashed") +
+  geom_point() +
+  geom_hline(yintercept = 0,linetype="dotted") +
+  scale_colour_manual(name="Site",values=COL.2) +
+  scale_x_continuous(limits = x.lim) +
+  scale_y_continuous(limits=y.lim)  +
+  #ylab("Sea otters") +
+  xlab("")+
+  ylab("") +
+  ggtitle(" ") +        
+  theme_os() +
+  ggtitle("c) Southern") + 
+  theme(plot.title=element_text(color="white")) +
+  theme(legend.position="none")
+
 
 
 quartz(file = paste(base.dir,"/Plots/Otters and Kelp coastwide.pdf",sep=""),type="pdf",dpi=300,height=6,width=4 )
@@ -169,11 +277,25 @@ multiplot(plotlist=QQ ,layout= Layout)
 dev.off()
 
 
-quartz(file = paste(base.dir,"/Plots/Otters and Kelp by region.pdf",sep=""),type="pdf",dpi=300,height=8,width=7 )
+quartz(file = paste(base.dir,"/Plots/Otters and Kelp centered by region.pdf",sep=""),type="pdf",dpi=300,height=8,width=7 )
   Layout= matrix(c(1,2,3,4,5,6),nrow=3,ncol=2,byrow=F)
   QQ <- list(O.2,O.3,O.4,
              K.2,K.3,K.4)
   multiplot(plotlist=QQ ,layout= Layout)
+dev.off()
+
+quartz(file = paste(base.dir,"/Plots/Otters and Kelp index by region.pdf",sep=""),type="pdf",dpi=300,height=8,width=7 )
+Layout= matrix(c(1,2,3,4,5,6),nrow=3,ncol=2,byrow=F)
+QQ <- list(O.2,O.3,O.4,
+           K.index1,K.index2,K.index3)
+multiplot(plotlist=QQ ,layout= Layout)
+dev.off()
+
+quartz(file = paste(base.dir,"/Plots/Otters index and Kelp index by region.pdf",sep=""),type="pdf",dpi=300,height=8,width=7 )
+Layout= matrix(c(1,2,3,4,5,6),nrow=3,ncol=2,byrow=F)
+QQ <- list(Otter.index2,Otter.index3,Otter.index4,
+           K.index1,K.index2,K.index3)
+multiplot(plotlist=QQ ,layout= Layout)
 dev.off()
 
 
