@@ -2,8 +2,10 @@ rm(list=ls())
 options(max.print=99999)
 library(dplyr)
 library(ggplot2)
+library(plyr)
 #### Script for importing historical Kviteck data and our OCNMS data
 base.dir <- "/Users/ole.shelton/GitHub/OCNMS"
+base.dir <- "/Users/jamealsamhouri/Documents/GitHub/OCNMS"
 setwd(paste(base.dir,"/Data/csv files",sep=""))
 
 #### FUNCTION
@@ -47,6 +49,13 @@ site.order <- read.csv("site.order.csv") # ordering useful for plotting.
 
 # import directly the otter food rules:
 otter.food <- read.csv("otter_food_categories.csv")
+otter.food$otter.food.long <-NA
+otter.food$otter.food.long [which(otter.food$otter.food=="N")] <- "Not Otter Food"
+otter.food$otter.food.long [which(otter.food$otter.food=="C")] <- "Common"
+otter.food$otter.food.long [which(otter.food$otter.food=="O")] <- "Occassional"
+otter.food$otter.food.long [which(otter.food$otter.food=="R")] <- "Rare"
+
+
 
 
 ## Cull 2015 data to only include swath data
@@ -58,7 +67,7 @@ dat.2015$Transect.area..inverts. <- as.numeric(as.character(dat.2015$Transect.ar
 dat.2015$Count.m2 <- dat.2015$Count / dat.2015$Transect.area..inverts.
 
 output        <- dat.2015 %>% 
-  group_by(Site,Transect,Observer,PISCO.Classcode,otter.food,group) %>% 
+  group_by(Site,Transect,Observer,PISCO.Classcode,otter.food,otter.food.long,group) %>% 
   summarise(.,N = sum(Count.m2,na.rm=T)) %>%
   as.data.frame()
 ref          <- output %>% group_by(.,Site,Transect,Observer) %>% summarise(.,length(Observer)) %>% as.data.frame()
@@ -67,6 +76,7 @@ output2  <-       merge(
   merge(
     expand.grid(Site=unique(output$Site),PISCO.Classcode=unique(output$PISCO.Classcode)),
     otter.food,
+    otter.food.long,
     by.x="PISCO.Classcode",by.y="PISCO.sp",all=T),
   ref,all=T)
 
@@ -76,7 +86,7 @@ output$N[is.na(output$N)==T] <- 0
 output$ID <- paste(output$Transect,output$Observer,sep=".")
 output <- output[is.na(output$Site)==F,]  
 
-out.by.sp     <- data.frame(summarise(group_by(output,Site,PISCO.Classcode,otter.food,group,Sp.name),
+out.by.sp     <- data.frame(summarise(group_by(output,Site,PISCO.Classcode,otter.food,otter.food.long,group,Sp.name),
                                       MEAN= mean(N),SD=sd(N),N.obs=length(N),SE=sd(N)/sqrt(length(N))))
 
 out.by.group  <- output %>% group_by(.,Site,ID,group) %>% 
@@ -84,6 +94,12 @@ out.by.group  <- output %>% group_by(.,Site,ID,group) %>%
   summarise(MEAN=mean(SUM),SD=sd(SUM),SE=sd(SUM)/sqrt(length(unique(ID)))) %>%
   as.data.frame()
 out.by.group$Year <- 2015
+
+out.by.otter.food  <- output %>% group_by(.,Site,ID,otter.food,otter.food.long) %>% 
+  summarise(SUM= sum(N)) %>% group_by(.,Site,otter.food,otter.food.long) %>%
+  summarise(MEAN=mean(SUM),SD=sd(SUM),SE=sd(SUM)/sqrt(length(unique(ID)))) %>%
+  as.data.frame()
+out.by.otter.food$Year <- 2015
 
 ##################################################################################################
 ##################################################################################################
@@ -146,6 +162,48 @@ colnames(dat.trim)[4:5] <- c("MEAN","SE")
 dat.trim[is.nan(dat.trim[,c("MEAN")])==T,c("MEAN","SE")] <- 0            
 
 dat.trim <- merge(dat.trim,dat.seastar,all=T)
+
+# add otter food categories. problematic because not all bivalves are common diet items etc etc
+unique(otter.food$group)
+# need to decide on a single prey category
+table(otter.food[which(otter.food$group == "bivalve"),]$otter.food.long) # change to common, Kvitek 1988 focused on scallops
+table(otter.food[which(otter.food$group == "gastropod"),]$otter.food.long) # change to occassional, depends on the species
+table(otter.food[which(otter.food$group == "seastar"),]$otter.food.long) # change to rare, depends on the species
+table(otter.food[which(otter.food$group == "crab"),]$otter.food.long) # change to occassional, depends on the species
+table(otter.food[which(otter.food$group == "chiton"),]$otter.food.long) # change to rare
+table(otter.food[which(otter.food$group == "cucumber"),]$otter.food.long) # change to rare
+table(otter.food[which(otter.food$group == "urchin"),]$otter.food.long) # change to common
+
+# no changes needed
+table(otter.food[which(otter.food$group == "nudibranch"),]$otter.food.long)
+table(otter.food[which(otter.food$group == "anenome"),]$otter.food.long) 
+table(otter.food[which(otter.food$group == "sponge"),]$otter.food.long) 
+table(otter.food[which(otter.food$group == "tunicate"),]$otter.food.long)
+
+otter.food2 <- otter.food %>%
+  select(group,otter.food,otter.food.long) %>%
+  distinct(group,.keep_all=TRUE)
+
+otter.food2$otter.food <- c(
+  "N","O","N","R","C","O","R","N","R","C","N","N"
+  )
+
+otter.food2$otter.food.long <- c(
+  "Not Otter Food",
+  "Occassional",
+  "Not Otter Food",
+  "Rare",
+  "Common",
+  "Occassional",
+  "Rare",
+  "Not Otter Food",
+  "Rare",
+  "Common",
+  "Not Otter Food",
+  "Not Otter Food"
+)
+
+head(left_join(dat.trim,otter.food2,by="group"))
 
 #### COMBINE THE 2015 and pre-2000 data
 dat.group <- merge(out.by.group,dat.trim,all=T)
