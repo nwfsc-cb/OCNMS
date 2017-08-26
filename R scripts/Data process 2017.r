@@ -203,10 +203,20 @@ otter.food2$otter.food.long <- c(
   "Not Otter Food"
 )
 
-head(left_join(dat.trim,otter.food2,by="group"))
+unique(otter.food2$group) 
+unique(dat.trim$group)
+
+
+#make new merged df for pre-2000 data
+dat.trim <- merge(dat.trim,otter.food2,by="group")
+#head(left_join(dat.trim,otter.food2,by="group"),10)
+
 
 #### COMBINE THE 2015 and pre-2000 data
 dat.group <- merge(out.by.group,dat.trim,all=T)
+dat.group <- dat.group[,-c('otter.food','otter.food.long')]
+dat.otter.food <- merge(out.by.otter.food,dat.trim,all=T)
+dat.otter.food <- dat.otter.food[,-c('group')]
 
 # Unify Merge the site names
 dat.group$Site <- as.character(dat.group$Site)
@@ -217,6 +227,18 @@ dat.group$Site[dat.group$Site =="Teawhit Head"] = "Teahwhit Head"
 dat.group$Site[grep("Chiba",dat.group$Site)] <- "Chibahdehl"
 dat.group$Site[grep("Destruct",dat.group$Site)] <- "Destruction Is."
 dat.group$Site[grep("Tatoosh",dat.group$Site)] <- "Tatoosh Is."
+### Exclude a few sites that lack surveys in multiple time periods
+
+# repeat for otter food df
+# Unify Merge the site names
+dat.otter.food$Site <- as.character(dat.otter.food$Site)
+dat.otter.food$Site[dat.otter.food$Site =="Anderson Point"] = "Anderson Pt."
+dat.otter.food$Site[dat.otter.food$Site =="Rock #305"] = "Rock 305"
+dat.otter.food$Site[dat.otter.food$Site =="Point of the Arches"] = "Pt. of the Arches"
+dat.otter.food$Site[dat.otter.food$Site =="Teawhit Head"] = "Teahwhit Head"
+dat.otter.food$Site[grep("Chiba",dat.otter.food$Site)] <- "Chibahdehl"
+dat.otter.food$Site[grep("Destruct",dat.otter.food$Site)] <- "Destruction Is."
+dat.otter.food$Site[grep("Tatoosh",dat.otter.food$Site)] <- "Tatoosh Is."
 ### Exclude a few sites that lack surveys in multiple time periods
 
 site.order <- c(
@@ -239,6 +261,24 @@ dat.group$Site.plot <-  factor(dat.group$Site.plot,
 dat.group <- dat.group[is.na(dat.group$Site.plot)==F,]
 dat.group$year.plot <- as.Date(as.character(dat.group$Year),"%Y")
 #dat.group <- merge(dat.group,expand.grid(unique(dat.group$Site),unique(dat.group$Year),unique(dat.group$group)),all=T)
+
+
+food.order <- c(
+  "Common",
+  "Occassional",
+  "Rare",
+  "Not Otter Food"
+)
+
+dat.otter.food$Site.plot <- dat.otter.food$Site
+dat.otter.food$Site.plot <-  factor(dat.otter.food$Site.plot, 
+                               levels = site.order)
+dat.otter.food <- dat.otter.food[is.na(dat.otter.food$Site.plot)==F,]
+dat.otter.food$year.plot <- as.Date(as.character(dat.otter.food$Year),"%Y")
+dat.otter.food$otter.food.plot <- dat.otter.food$otter.food.long
+dat.otter.food$otter.food.plot <-  factor(dat.otter.food$otter.food.plot,
+                                    levels = food.order)
+
 
 ########################################################################
 ########################################################################
