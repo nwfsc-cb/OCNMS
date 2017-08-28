@@ -2,7 +2,7 @@ rm(list=ls())
 options(max.print=99999)
 library(dplyr)
 library(ggplot2)
-library(plyr)
+#library(plyr)
 #### Script for importing historical Kviteck data and our OCNMS data
 base.dir <- "/Users/ole.shelton/GitHub/OCNMS"
 base.dir <- "/Users/jamealsamhouri/Documents/GitHub/OCNMS"
@@ -214,9 +214,16 @@ dat.trim <- merge(dat.trim,otter.food2,by="group")
 
 #### COMBINE THE 2015 and pre-2000 data
 dat.group <- merge(out.by.group,dat.trim,all=T)
-dat.group <- dat.group[,-c('otter.food','otter.food.long')]
+dat.group <- subset(dat.group,select=-c(otter.food,otter.food.long))
 dat.otter.food <- merge(out.by.otter.food,dat.trim,all=T)
-dat.otter.food <- dat.otter.food[,-c('group')]
+dat.otter.food <- subset(dat.otter.food, select=-c(group))
+
+#### MAKE BINARY OTTER FOOD COLUMN
+dat.otter.food$otter.food.binary <- ifelse(
+  dat.otter.food$otter.food == "N",
+  "Not Sea Otter Prey",
+  "Sea Otter Prey"
+)
 
 # Unify Merge the site names
 dat.group$Site <- as.character(dat.group$Site)
