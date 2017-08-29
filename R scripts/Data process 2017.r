@@ -95,11 +95,23 @@ out.by.group  <- output %>% group_by(.,Site,ID,group) %>%
   as.data.frame()
 out.by.group$Year <- 2015
 
+out.by.group.coastwide  <- output %>% group_by(.,ID,group) %>% 
+  summarise(SUM= sum(N)) %>% group_by(.,group) %>%
+  summarise(MEAN=mean(SUM),SD=sd(SUM),SE=sd(SUM)/sqrt(length(unique(ID)))) %>%
+  as.data.frame()
+out.by.group.coastwide$Year <- 2015
+
 out.by.otter.food  <- output %>% group_by(.,Site,ID,otter.food,otter.food.long) %>% 
   summarise(SUM= sum(N)) %>% group_by(.,Site,otter.food,otter.food.long) %>%
   summarise(MEAN=mean(SUM),SD=sd(SUM),SE=sd(SUM)/sqrt(length(unique(ID)))) %>%
   as.data.frame()
 out.by.otter.food$Year <- 2015
+
+out.by.otter.food.coastwide  <- output %>% group_by(.,ID,otter.food,otter.food.long) %>% 
+  summarise(SUM= sum(N)) %>% group_by(.,otter.food,otter.food.long) %>%
+  summarise(MEAN=mean(SUM),SD=sd(SUM),SE=sd(SUM)/sqrt(length(unique(ID)))) %>%
+  as.data.frame()
+out.by.otter.food.coastwide$Year <- 2015
 
 ##################################################################################################
 ##################################################################################################
@@ -112,10 +124,11 @@ N.assume <- 20
 dat.kvitek <- dat.kvitek %>% filter(.,depth.m.simple <= 15) %>% 
   select(.,-matches("Source"))
 
-# summarise the 1987 seastars
+# summarise the 1987 seastars for each site
 dat.seastar87 <- dat.kvitek %>% filter(.,group =="seastar" & Year == 1987) %>% 
   group_by(.,SITE,Site,Year,n.quad) %>%
   summarise(MEAN=sum(mean),SD = sqrt(sum(sd^2)))
+# summarise the 1999 seastars for each site
 dat.seastar99 <- dat.kvitek %>% filter(.,group =="seastar" & Year == 1999) %>% 
   group_by(.,SITE,Site,Year,n.quad) %>%
   summarise(MEAN=sum(mean),SD = sqrt(sum(sd^2)))
@@ -138,7 +151,36 @@ dat.seastar$depth.m.simple <- 4
 
 dat.seastar <- dat.seastar[,c("Site","Year","group","MEAN","SE")]
 
-# Do the remaining species  
+# repeat the seastar nonsense at the coastwide scale
+# summarise the 1987 seastars
+dat.seastar87.coastwide <- dat.kvitek %>% filter(.,group =="seastar" & Year == 1987) %>% 
+  group_by(.,Year,n.quad) %>%
+  summarise(MEAN=sum(mean),SD = sqrt(sum(sd^2)))
+# summarise the 1999 seastars
+dat.seastar99.coastwide <- dat.kvitek %>% filter(.,group =="seastar" & Year == 1999) %>% 
+  group_by(.,Year,n.quad) %>%
+  summarise(MEAN=sum(mean),SD = sqrt(sum(sd^2)))
+
+dat.seastar.coastwide <-rbind(dat.seastar87.coastwide,dat.seastar99.coastwide)
+dat.seastar.coastwide$n.quad[dat.seastar.coastwide$Year == 1987] <- N.assume
+dat.seastar.coastwide$SE <- dat.seastar.coastwide$SD / sqrt(dat.seastar.coastwide$n.quad)
+
+#dat.seastar$N <- N.assume
+#dat.seastar$SE <- dat.seastar$SD / sqrt(dat.seastar$N)
+dat.seastar.coastwide   <- dat.seastar.coastwide %>%
+  group_by(.,Year) %>%
+  summarise(MEAN=sum(MEAN),SD = sqrt(sum(SD^2)), N.QUAD = sum(n.quad)) %>%
+  as.data.frame()
+
+#colnames(dat.seastar)[grep("w",colnames(dat.seastar))] <- c("MEAN","SE")
+dat.seastar.coastwide$SE <- dat.seastar.coastwide$SD / sqrt(dat.seastar.coastwide$N.QUAD)
+dat.seastar.coastwide$group <- "seastar"
+dat.seastar.coastwide$Survey <- "Quadrat"
+dat.seastar.coastwide$depth.m.simple <- 4
+
+dat.seastar.coastwide <- dat.seastar.coastwide[,c("Year","group","MEAN","SE")]
+
+# Do the remaining species - site by site  
 dat.trim <- dat.kvitek[,c("Site","Year","Survey","depth.m.simple","group","mean","sd","n.quad")]
 dat.trim <- filter(dat.trim,group !="seastar")
 dat.trim$SE <- dat.trim$sd / sqrt(dat.trim$n.quad)
@@ -149,7 +191,32 @@ dat.trim$n.quad[dat.trim$Year == 1987] <- N.assume
 dat.trim <- dat.trim %>% group_by(.,Site,Year,Survey,depth.m.simple,group,n.quad) %>%
   summarise(Mean=sum(mean),se=  sqrt(sum((sd/sqrt(n.quad))^2))) %>%
   group_by(.,Site,Year,depth.m.simple,group) %>%
-  summarise(.,MEAN=WMean(Mean,se), SE=WSD(Mean,se)) %>%
+  summarise(.,MEAN=WMean(Mean,se), SE=WSD(Mean,se)) %>% 
+  as.data.frame()
+
+dat.trim[is.nan(dat.trim[,c("MEAN")])==T,c("MEAN","SE")] <- 0
+
+# Combine the multiple depths (less than 15m deep) into on value for each site
+dat.trim <- dat.trim %>% group_by(.,Site,Year,group) %>%
+  summarise(Mean=WMean(MEAN,SE),se=WSD(MEAN,SE),n.obs.check=length(MEAN)) %>%
+  as.data.frame
+colnames(dat.trim)[4:5] <- c("MEAN","SE")
+dat.trim[is.nan(dat.trim[,c("MEAN")])==T,c("MEAN","SE")] <- 0            
+
+dat.trim <- merge(dat.trim,dat.seastar,all=T)
+
+# Do the remaining species - coastwide  
+dat.trim.coastwide <- dat.kvitek[,c("Site","Year","Survey","depth.m.simple","group","mean","sd","n.quad")]
+dat.trim.coastwide <- filter(dat.trim.coastwide,group !="seastar")
+dat.trim.coastwide$SE <- dat.trim.coastwide$sd / sqrt(dat.trim.coastwide$n.quad)
+dat.trim.coastwide$n.quad[dat.trim.coastwide$Year == 1987] <- N.assume
+#dat.trim$N <- N.assume   # this is the assumed sample size for each observation 
+
+# Calculate the MEAN and SE for each type (quadrat, transect) then combine into a weighted average
+dat.trim.coastwide <- dat.trim.coastwide %>% group_by(.,Year,Survey,depth.m.simple,group,n.quad) %>%
+  summarise(Mean=sum(mean),se=  sqrt(sum((sd/sqrt(n.quad))^2))) %>%
+  group_by(.,Year,depth.m.simple,group) %>%
+  summarise(.,MEAN=mean(Mean), SE=WSD(Mean,se)) %>%
   as.data.frame()
 
 dat.trim[is.nan(dat.trim[,c("MEAN")])==T,c("MEAN","SE")] <- 0
