@@ -86,7 +86,7 @@ theme_js <- function(base_size = 12, base_family = "") {
   theme_bw()+
     theme(
       text=element_text(size=16),
-      legend.title=element_blank(),
+      #legend.title=element_blank(),
       legend.text = element_text(size=14),
       #legend.background =  element_rect(colour = NA),
       #legend.key =         element_rect(fill = "white", colour = "black"),
@@ -106,7 +106,6 @@ theme_js <- function(base_size = 12, base_family = "") {
 
 #setwd("~/Documents/Github/OCNMS/Figures/")
 
-setwd(paste(base.dir,"Plots",sep=""))
 
 otters_by_site <- ggplot(nwfsc.otter.dat,aes(x=Year,y=Total.Otters, colour=location)) +
   geom_point(aes(colour=location)) +
@@ -178,6 +177,7 @@ for(i in 1:length(YEARS)){
         x = rep(temp$distance.km,temp$Total.Otters),
         h =KERN, # Standard deviation of normal distribution
         eval.points = Eval.Points
+setwd(paste(base.dir,"Plots",sep=""))
         )
 }
 
@@ -346,6 +346,74 @@ otters_by_site_facet3_kern
 quartz(file="3 Regions Otter Plots.pdf",width=8,height=7,type="pdf")
   print(otters_by_site_facet3_kern)
 dev.off()
+
+
+
+########################################################################
+########################################################################
+########################################################################
+########################################################################
+## Calculate the year(s) at which the abundance of otters exceeds a series of thresholds
+
+THRESH <- c(2,5,10,25,50)
+
+# Fit spline to each location independently.
+SITES <- unique(kern.pop.est.trim$location)
+all.fit <- NULL
+for(i in 1:length(SITES)){
+  temp <- kern.pop.est.trim[kern.pop.est.trim$location ==SITES[i],] 
+  SP.fit <- spline(x=temp$Year,y=temp$tot.pop,n=2015-1977+1)
+  all.fit <- rbind(all.fit,data.frame(Site=SITES[i],
+                        Region=unique(temp$Region),
+                        pop.sp = SP.fit$y,year= SP.fit$x))
+}
+
+
+for(i in 1:length(THRESH)){
+  all.fit[,paste("thresh",THRESH[i],sep=".")] <- 0
+  all.fit[all.fit$pop.sp > THRESH[i] ,paste("thresh",THRESH[i],sep=".")] <- 1
+}
+
+all.fit$plot.numb <- 0
+for(i in 1:length(NOM2)){
+  all.fit$plot.numb[all.fit$Site == NOM2[i]] <- i
+}
+
+all.fit <- all.fit %>% mutate(count = thresh.2 + thresh.5 + thresh.10 + thresh.25 + thresh.50)
+all.fit$count <- factor(all.fit$count)
+
+COL <- colorRampPalette(c("white",grey(0.8),grey(0.6),grey(0.4),grey(0.2),"black"))(length(THRESH)+1)
+
+LABS <- c(paste("<",THRESH[1]),
+          paste(THRESH[1],"-",THRESH[2]),
+          paste(THRESH[2],"-",THRESH[3]),
+          paste(THRESH[3],"-",THRESH[4]),
+          paste(THRESH[4],"-",THRESH[5]),
+          paste(">",THRESH[5]))
+
+p.occupancy <- ggplot(all.fit,aes(x=year,y=plot.numb,fill=count)) +
+  geom_tile() +
+  scale_y_reverse( lim=c(10.6,0.4),expand=c(0,0),breaks=1:10,labels=NOM2[1:10]) +
+  scale_x_continuous(lim=c(min(all.fit$year)-0.7,max(all.fit$year)+0.7),expand=c(0,0),
+                      breaks=seq(1980,2015,by=5))+
+  scale_fill_manual(values=COL,labels=LABS,name = "Otter Pop")+
+  ylab("")+
+  xlab("Year")+
+  theme_js() +
+  theme(text=element_text(size=11),
+  legend.text = element_text(size=9))
+  
+
+quartz(file="Otter density thresholds.pdf",width=6,height=4,type="pdf")
+  print(p.occupancy)
+dev.off()
+
+
+
+########################################################################
+########################################################################
+########################################################################
+########################################################################
 
 
 ## Write to file
