@@ -23,21 +23,20 @@ otter.dat <- read.csv("WDFW sea otter survey data 1977-2015.csv")
 # Mapping for location names to discrete sites from 2015 surveys/ Kvitek surveys
 location.names <- read.csv("Otter location names.csv")
 # Linking sundry names to particular locations for kernel density estimates
-linear.shore <- read.csv("OCNMS linear shoreline.csv")
-linear.shore$distance.km <- linear.shore$distance.miles * 1.60934
+linear.shore <- read.csv("Distance 1d shore otters.csv")
+linear.shore$distance.km <- linear.shore$Simplified.Distance..m. / 1000
 survey.locations.linear.shore <- read.csv("Survey locations linear shore.csv")
-survey.locations.linear.shore$distance.km <- survey.locations.linear.shore$distance.miles *1.60934
+survey.locations.linear.shore$distance.km <- survey.locations.linear.shore$Simplified.Distance..m. / 1000
 ##### MERGE CSV files
 
 otter.dat <- merge(otter.dat,location.names[,c("Site","Category","common.name")],all=T)
-otter.dat <- merge(otter.dat,linear.shore[,c("common.name","distance.miles")],all=F)
+otter.dat <- merge(otter.dat,linear.shore[,c("Name","distance.km")],by.x="common.name",by.y="Name",all=F)
 
 # IMPORTANT VALUES FOR KERNEL DENSITY ESTIMATION
 
 KERN <- 40/(1.96*2) # Standard deviation of the normal kernel density in km 
           # equivalent to ~8.9 km using an average home range size of 40km from Laidre et al. 2009 J Mammology
 DIAM <- 10 # buffer diameter used for calculating the number of otters around a focal site (in km)
-
 
 
 #######################################
@@ -75,8 +74,6 @@ nwfsc.otter.dat$location <- factor(nwfsc.otter.dat$location,levels=NOM)
 nwfsc.otter.dat <- merge(nwfsc.otter.dat,expand.grid(location=NOM,Year=sort(unique(otter.dat$Year))),all=T)
 nwfsc.otter.dat$Total.Adults[is.na(nwfsc.otter.dat$Total.Adults)==T] <- 0
 nwfsc.otter.dat$Total.Otters[is.na(nwfsc.otter.dat$Total.Otters)==T] <- 0
-
-
 
 #### PLOT@
 #######################################
@@ -131,7 +128,6 @@ otters_by_site_facet <- ggplot(nwfsc.otter.dat,aes(x=Year,y=Total.Otters, colour
   theme_js() +
   theme(legend.position="none") +
   ggtitle(paste("Raw population estimates, discrete areas"))
-
 otters_by_site_facet
 
 otters_by_site_facet2 <- ggplot(nwfsc.otter.dat,aes(x=Year,y=Total.Otters, colour=location)) +
@@ -148,7 +144,7 @@ otters_by_site_facet2
 #######################################################################
 ##### CONSTRUCT KERNEL DENSITIES USING SIMPLIFIED 1-D SHORELINE LOCATIONS.
 #######################################################################
-otter.dat$distance.km <- otter.dat$distance.miles * 1.60934 # Convert miles to km
+#otter.dat$distance.km <- otter.dat$distance.miles * 1.60934 # Convert miles to km
 
 nwfsc.otter.kernel <- otter.dat %>%
   group_by(Year, Category,distance.km) %>%
@@ -204,7 +200,6 @@ MULT <- 40 # Multiple for making the density larger and easier to see.
 otter.kern.dat$dens.plus <- otter.kern.dat$dens * MULT + otter.kern.dat$year
 y.labels <- survey.locations.linear.shore 
 
-
 otter.dist.timeseries<- ggplot() +
     geom_polygon(data=otter.kern.dat,aes(x=dens.plus,y=loc,group=year),fill=grey(0.5),alpha=0.7) + 
     geom_point(data=midpoint,aes(x=Years,y=Center)) +
@@ -213,7 +208,7 @@ otter.dist.timeseries<- ggplot() +
     xlab("Year") +
     ylab("Location") +
     geom_hline(yintercept = (y.labels %>% filter(Area=="Tatoosh Island"))$distance.km,linetype="dashed" ) + 
-    scale_y_continuous(breaks=y.labels$distance.km, labels=y.labels$Area,
+    scale_y_continuous(breaks=y.labels$distance.km[y.labels$Area!="Rock 305"], labels=y.labels$Area[y.labels$Area!="Rock 305"],
                        limits=c(0,180))+
     ggtitle(paste("Proportional Distribution; kernel =",round(KERN,2))) 
   
