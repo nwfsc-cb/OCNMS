@@ -560,19 +560,26 @@ dev.off()
 ###################################################
 ###################################################
 ## Change in kelp CV with change in otter numbers.
-COL=viridis(2,begin=0,end=0.8)
-y.lim=c(0,1)
-ggplot(reg.coef,aes(y=kelp.cv,x=otter,group=Site,shape=Region,fill=as.factor(Start))) +
+COL=viridis(2,begin=0,end=0.6)
+y.lim=c(-0.005,1.01)
+x.lim=c(-1,max(reg.coef$otter)+8)
+A <- ggplot(reg.coef,aes(y=kelp.cv,x=otter,group=Site,shape=Region,fill=as.factor(Start))) +
   geom_point(size=4)+
   scale_fill_manual(name = "Period",values = COL,labels=c("1989-2001","2002-2014"), 
                     guide = guide_legend(override.aes = list(shape = c(21, 21),fill=COL))) +
   scale_shape_manual(values=c(21,22,23),name = "Region")+
   geom_line(color="black",linetype="dashed") +
-  scale_y_continuous(limits=y.lim,name = "Kelp CV")+
-  scale_x_continuous(name = "Otters")+
+  scale_y_continuous(limits=y.lim,name = "Kelp CV",expand=c(0,0))+
+  scale_x_continuous(limits=x.lim,name = "Otters",expand=c(0,0))+
   theme_os2 () +
-  theme(legend.justification = c("right", "top"))
+  theme(legend.justification = c("right", "top"),
+        legend.position   = c(0.98,0.98),
+        plot.margin =        unit(c(0.2, 0.2, 0.2, 0.2), "lines"))
   
+
+quartz(file = paste(base.dir,"/Plots/Otters vs. Kelp CV change.pdf",sep=""),type="pdf",dpi=300,height=4,width=5 )
+  print(A)
+dev.off()
 
   
 
