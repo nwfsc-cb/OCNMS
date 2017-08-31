@@ -173,7 +173,6 @@ for(i in 1:length(YEARS)){
         x = rep(temp$distance.km,temp$Total.Otters),
         h =KERN, # Standard deviation of normal distribution
         eval.points = Eval.Points
-setwd(paste(base.dir,"Plots",sep=""))
         )
 }
 

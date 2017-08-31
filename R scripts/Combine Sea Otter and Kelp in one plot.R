@@ -444,30 +444,44 @@ for(i in 1:length(NOM)){
   temp$log.diff.kelp[1:(nrow(temp)-1)] <- log(temp$kelp.area[2:nrow(temp)] / temp$kelp.area[1:(nrow(temp)-1)])
   k.o.dat <- rbind(k.o.dat,temp)
 
-  temp <- kelp.otter.dat %>% filter(location == NOM[i],Year >= 1989) 
+  
+  BREAK <- 2001
+  temp <- kelp.otter.dat %>% filter(location == NOM[i],Year >= 1989,Year<= BREAK) 
   
   mod <- lm(log.otter~Year,data=temp)  
-  reg.coef1 <- rbind(reg.coef1,data.frame(Site=NOM[i],slope.otter=coef(summary(mod))["Year","Estimate"],slope.otter.se=coef(summary(mod))["Year","Std. Error"]))
+  reg.coef1 <- rbind(reg.coef1,data.frame(Site=NOM[i],Start=1989,slope.otter=coef(summary(mod))["Year","Estimate"],slope.otter.se=coef(summary(mod))["Year","Std. Error"]))
   
   mod <- lm(log.kelp~Year,data=temp)  
-  reg.coef2 <- rbind(reg.coef2,data.frame(Site=NOM[i],slope.kelp=coef(summary(mod))["Year","Estimate"],slope.kelp.se=coef(summary(mod))["Year","Std. Error"]))
+  reg.coef2 <- rbind(reg.coef2,data.frame(Site=NOM[i],Start=1989,slope.kelp=coef(summary(mod))["Year","Estimate"],slope.kelp.se=coef(summary(mod))["Year","Std. Error"]))
   
-  sign         <- floor(mod$residuals) + ceiling(mod$residuals)
-  sign[sign>1] <- 1
-  sign[sign<1] <- -1
-  
-  
-  temp <- temp %>% filter(Year<=2014)
-  kelp.cv <- rbind(kelp.cv,data.frame(Site=NOM[i], 
+  temp <- temp %>% filter(Year<=BREAK)
+  kelp.cv <- rbind(kelp.cv,data.frame(Site=NOM[i],Start=1989, 
                                       kelp.cv= sd(as.numeric(na.omit(temp$kelp.area)) - exp(mod$fitted.values)) / mean(temp$kelp.area,na.rm=T),
                                       kelp.mean= mean(temp$kelp.area,na.rm=T)))
-                
+  
+  
+  temp <- kelp.otter.dat %>% filter(location == NOM[i],Year >= BREAK+1,Year<= 2015) 
+  
+  mod <- lm(log.otter~Year,data=temp)  
+  reg.coef1 <- rbind(reg.coef1,data.frame(Site=NOM[i],Start=BREAK+1,slope.otter=coef(summary(mod))["Year","Estimate"],slope.otter.se=coef(summary(mod))["Year","Std. Error"]))
+  
+  mod <- lm(log.kelp~Year,data=temp)  
+  reg.coef2 <- rbind(reg.coef2,data.frame(Site=NOM[i],Start=BREAK+1,slope.kelp=coef(summary(mod))["Year","Estimate"],slope.kelp.se=coef(summary(mod))["Year","Std. Error"]))
+  
+  temp <- temp %>% filter(Year>=BREAK+1)
+  kelp.cv <- rbind(kelp.cv,data.frame(Site=NOM[i], Start=BREAK+1, 
+                                      kelp.cv= sd(as.numeric(na.omit(temp$kelp.area)) - exp(mod$fitted.values)) / mean(temp$kelp.area,na.rm=T),
+                                      kelp.mean= mean(temp$kelp.area,na.rm=T)))
 }
 
 reg.coef <- merge(reg.coef1,reg.coef2)
 reg.coef <- merge(reg.coef,kelp.cv)
-reg.coef <- merge(reg.coef,kelp.otter.dat %>% filter(Year>=1989,Year<=1991) %>% group_by(location,Region) %>% summarise(otter.1990=mean(otter.n))%>%as.data.frame(),
-                  by.x="Site",by.y="location")
+
+A <-  merge(kelp.otter.dat %>% filter(Year>=1989,Year<=1991) %>% group_by(location,Region) %>% summarise(otter=mean(otter.n))%>%mutate(Start=1989)%>%as.data.frame(),
+            kelp.otter.dat %>% filter(Year>=BREAK+1,Year<=BREAK+3) %>% group_by(location,Region) %>% summarise(otter=mean(otter.n))%>%mutate(Start=BREAK+1)%>%as.data.frame(),all=T)
+reg.coef <- merge(reg.coef,A,by.x=c("Site","Start"),by.y=c("location","Start"),all=T)
+# reg.coef <- merge(reg.coef,kelp.otter.dat %>% filter(Year>=BREAK+1,Year<=BREAK+3) %>% group_by(location,Region) %>% summarise(otter.2003=mean(otter.n))%>%as.data.frame(),
+#                   by.x=c("Site","Region"),by.y=c("location","Region"))
 reg.coef$Region <- factor(reg.coef$Region, levels=c("Northern","Central","Southern"))
 #################
 ## Plotting
@@ -478,11 +492,11 @@ theme_os2 <- function(base_size = 12, base_family = "") {
       text=element_text(size=11),
      # legend.title = element_blank(),
       legend.text  = element_text(size=7.5),
-      legend.justification = c("left", "top"),
+      #legend.justification = c("left", "top"),
       #legend.key   = element_blank(),
       legend.key.size = unit(0.7, 'lines'),
       # legend.background =  element_rect(colour = "white"),
-      legend.position   = c(0.02,0.98),
+      #legend.position   = c(0.02,0.98),
       # #legend.text.align = 0,
       legend.key =         element_rect(fill = "white", color="white",size=0.5),
       panel.background =   element_rect(fill = "white", colour = "black",size=1.5),
@@ -494,34 +508,73 @@ theme_os2 <- function(base_size = 12, base_family = "") {
       strip.text.x = element_blank(),
       strip.background = element_blank(),
       plot.background =    element_rect(colour = "white"),
-      plot.title =         element_text(size = rel(0.9),hjust = 0),
-      plot.margin =        unit(c(0.2, 0.1, 0.7, 0.1), "lines")
+      plot.title =         element_text(size = rel(0.9),hjust = 0,vjust=-1),
+      plot.margin =        unit(c(0, -0.1, 0.1, 0.1), "lines")
     )
 }  
 
-
+x.lim=c(-0.06,0.22)
+y.lim=c(-0.12,0.165)
 
 COL   <- viridis(32,begin=0,end=0.8)
 
-A<-  ggplot(reg.coef ,aes(y=slope.kelp,x=slope.otter)) +
+A.1989 <-  ggplot(reg.coef %>% filter(Start ==1989),aes(y=slope.kelp,x=slope.otter)) +
   geom_errorbarh(aes(xmin=slope.otter-slope.otter.se, xmax=slope.otter+slope.otter.se)) +
   geom_errorbar(aes(ymin=slope.kelp-slope.kelp.se, ymax=slope.kelp+slope.kelp.se)) +
-  geom_point(aes(fill=otter.1990,shape=Region),size=3) + 
+  geom_point(aes(fill=otter,shape=Region),size=3) + 
   scale_shape_manual(values=c(21,22,23),name = "Region")+
-  scale_fill_gradientn(name = "Otters 1990",colors = COL,breaks=seq(0,100,by=25),labels=as.character(seq(0,100,by=25)),limits=c(0,max(reg.coef$otter.1990))) +
+  scale_fill_gradientn(name = "Otters",colors = COL,breaks=seq(0,200,by=50),labels=as.character(seq(0,200,by=50)),limits=c(0,max(reg.coef$otter))) +
   geom_hline(yintercept = 0,linetype="dotted")+
   geom_vline(xintercept = 0,linetype="dotted")+
-  xlab("Otter growth rate") + #+ theme(legend.position="none")
-  ylab("Kelp growth rate")  +
+  #xlab("Otter growth rate") + #+ theme(legend.position="none")
+  scale_y_continuous(limits=y.lim,name = "Kelp growth rate")+
+  scale_x_continuous(limits=x.lim,name = " ")+
+  ggtitle("a) 1989-2001") +
   theme_os2 ()
 
-quartz(file = paste(base.dir,"/Plots/Otters vs. Kelp growth.pdf",sep=""),type="pdf",dpi=300,height=4,width=5.5 )
-  print(A)
+A.2002 <-  ggplot(reg.coef %>% filter(Start ==2002),aes(y=slope.kelp,x=slope.otter)) +
+  geom_errorbarh(aes(xmin=slope.otter-slope.otter.se, xmax=slope.otter+slope.otter.se)) +
+  geom_errorbar(aes(ymin=slope.kelp-slope.kelp.se, ymax=slope.kelp+slope.kelp.se)) +
+  geom_point(aes(fill=otter,shape=Region),size=3) + 
+  scale_shape_manual(values=c(21,22,23),name = "Region")+
+  scale_fill_gradientn(name = "Otters",colors = COL,breaks=seq(0,200,by=50),labels=as.character(seq(0,200,by=50)),limits=c(0,max(reg.coef$otter))) +
+  geom_hline(yintercept = 0,linetype="dotted")+
+  geom_vline(xintercept = 0,linetype="dotted")+
+  scale_y_continuous(limits=y.lim,name = "Kelp growth rate")+
+  scale_x_continuous(limits=x.lim,name = "Otter growth rate")+
+  ggtitle("b) 2002-2014") +
+  theme_os2 ()
+
+
+quartz(file = paste(base.dir,"/Plots/Otters vs. Kelp growth 2 halves.pdf",sep=""),type="pdf",dpi=300,height=7,width=5 )
+  Layout= matrix(c(1,2),nrow=2,ncol=1,byrow=F)
+  QQ <- list(A.1989,
+           A.2002)
+  multiplot(plotlist=QQ ,layout= Layout)
 dev.off()
   #facet_wrap(~location)
 
+###################################################
+###################################################
+###################################################
+###################################################
+###################################################
+## Change in kelp CV with change in otter numbers.
+COL=viridis(2,begin=0,end=0.8)
+y.lim=c(0,1)
+ggplot(reg.coef,aes(y=kelp.cv,x=otter,group=Site,shape=Region,fill=as.factor(Start))) +
+  geom_point(size=4)+
+  scale_fill_manual(name = "Period",values = COL,labels=c("1989-2001","2002-2014"), 
+                    guide = guide_legend(override.aes = list(shape = c(21, 21),fill=COL))) +
+  scale_shape_manual(values=c(21,22,23),name = "Region")+
+  geom_line(color="black",linetype="dashed") +
+  scale_y_continuous(limits=y.lim,name = "Kelp CV")+
+  scale_x_continuous(name = "Otters")+
+  theme_os2 () +
+  theme(legend.justification = c("right", "top"))
+  
 
-
+  
 
 
 
