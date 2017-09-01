@@ -13,6 +13,8 @@ source(paste(base.dir,"/R scripts/multiplot.r",sep=""))
 ##################################################################################
 ##################################################################################
 
+# FILTER TO INCLUDE ONLY year <= 2015.
+
 # Use discrete areas for 
 setwd(paste(base.dir,"/Data/csv files",sep=""))
 
@@ -20,9 +22,11 @@ kelp.dat      <- read.csv("annual canopy area by index.csv")
 weight.dat    <- read.csv("Kelp area index weights.csv")
 kelp.coastwide.dat <- read.csv("kelp canopy all sites.csv")
 
+
+
 ## Coastwide summary of kelp
 kelp.coastwide.dat <- kelp.coastwide.dat %>% filter(map_index >=15.1 & map_index <= 25.2) %>% 
-         rename(year = year_) %>% group_by(year) %>% summarise(total.area = sum(tot_can)) %>% as.data.frame()
+         rename(year = year_) %>% filter(year<=2015) %>% group_by(year) %>% summarise(total.area = sum(tot_can)) %>% as.data.frame()
 
 p <- ggplot(kelp.coastwide.dat,aes(y=total.area,x=year)) +
   geom_point() +
@@ -34,13 +38,18 @@ p <- ggplot(kelp.coastwide.dat,aes(y=total.area,x=year)) +
   theme_bw() 
 print(p)
 
-
+A <- kelp.coastwide.dat %>% filter(year <= 2001) 
+B <- kelp.coastwide.dat %>% filter(year >= 2002) 
+sd(A$total.area)
+sd(B$total.area)
 #####
 
 
 kelp.dat <- melt(kelp.dat,id.vars = "kelp.map.index")
 kelp.dat <- kelp.dat %>% rename(year=variable)
 kelp.dat$year <- substr(kelp.dat$year,2,5)
+kelp.dat$year <- as.numeric(kelp.dat$year)
+kelp.dat <- kelp.dat %>% filter(year<=2015)
 
 weight.dat <- weight.dat %>% rename(Site = Site.100m.radius)
            

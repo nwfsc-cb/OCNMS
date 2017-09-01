@@ -73,7 +73,7 @@ SPAN = 0.25
    
 O.1 <- ggplot(nwfsc.otter.by.year,aes(x=Year,y=Total)) +
         geom_line(linetype="dashed") +
-        geom_smooth(span=SPAN,method="loess",se=F,color=grey(0.4) )+
+    #    geom_smooth(span=SPAN,method="loess",se=F,color=grey(0.4) )+
         geom_point() +        
         ylab("Sea otters") +
         xlab("")+ 
@@ -214,7 +214,7 @@ y.lim <- c(-2.5,2.5)
 K.1 <- ggplot(kelp.coastwide.dat,aes(x=year,y=total.area)) +
          geom_point() +
          geom_line(linetype="dashed") +
-          geom_smooth(span=SPAN,method="loess",se=F,color=grey(0.4) )+
+        #  geom_smooth(span=SPAN,method="loess",se=F,color=grey(0.4) )+
          scale_x_continuous(limits = x.lim) +
          ylab("Kelp canopy area (ha)") +
          xlab("Year")+
@@ -459,7 +459,22 @@ for(i in 1:length(NOM)){
                                       kelp.cv= sd(as.numeric(na.omit(temp$kelp.area)) - exp(mod$fitted.values)) / mean(temp$kelp.area,na.rm=T),
                                       kelp.mean= mean(temp$kelp.area,na.rm=T)))
   
+  ### middle 13 years
+  temp <- kelp.otter.dat %>% filter(location == NOM[i],Year >= 1996,Year<= 2008) 
   
+  mod <- lm(log.otter~Year,data=temp)  
+  reg.coef1 <- rbind(reg.coef1,data.frame(Site=NOM[i],Start=1996,slope.otter=coef(summary(mod))["Year","Estimate"],slope.otter.se=coef(summary(mod))["Year","Std. Error"]))
+  
+  mod <- lm(log.kelp~Year,data=temp)  
+  reg.coef2 <- rbind(reg.coef2,data.frame(Site=NOM[i],Start=1996,slope.kelp=coef(summary(mod))["Year","Estimate"],slope.kelp.se=coef(summary(mod))["Year","Std. Error"]))
+  
+  temp <- temp %>% filter(Year >= 1996,Year<= 2008)
+  kelp.cv <- rbind(kelp.cv,data.frame(Site=NOM[i], Start=1996, 
+                                      kelp.cv= sd(as.numeric(na.omit(temp$kelp.area)) - exp(mod$fitted.values)) / mean(temp$kelp.area,na.rm=T),
+                                      kelp.mean= mean(temp$kelp.area,na.rm=T)))
+  
+  
+  ### last 13 years
   temp <- kelp.otter.dat %>% filter(location == NOM[i],Year >= BREAK+1,Year<= 2015) 
   
   mod <- lm(log.otter~Year,data=temp)  
@@ -472,13 +487,16 @@ for(i in 1:length(NOM)){
   kelp.cv <- rbind(kelp.cv,data.frame(Site=NOM[i], Start=BREAK+1, 
                                       kelp.cv= sd(as.numeric(na.omit(temp$kelp.area)) - exp(mod$fitted.values)) / mean(temp$kelp.area,na.rm=T),
                                       kelp.mean= mean(temp$kelp.area,na.rm=T)))
+
 }
 
 reg.coef <- merge(reg.coef1,reg.coef2)
 reg.coef <- merge(reg.coef,kelp.cv)
 
 A <-  merge(kelp.otter.dat %>% filter(Year>=1989,Year<=1991) %>% group_by(location,Region) %>% summarise(otter=mean(otter.n))%>%mutate(Start=1989)%>%as.data.frame(),
-            kelp.otter.dat %>% filter(Year>=BREAK+1,Year<=BREAK+3) %>% group_by(location,Region) %>% summarise(otter=mean(otter.n))%>%mutate(Start=BREAK+1)%>%as.data.frame(),all=T)
+            kelp.otter.dat %>% filter(Year>=1996,Year<=1998) %>% group_by(location,Region) %>% summarise(otter=mean(otter.n))%>%mutate(Start=1996)%>%as.data.frame(),all=T)
+A <- merge(A,
+           kelp.otter.dat %>% filter(Year>=BREAK+1,Year<=BREAK+3) %>% group_by(location,Region) %>% summarise(otter=mean(otter.n))%>%mutate(Start=BREAK+1)%>%as.data.frame(),all=T)
 reg.coef <- merge(reg.coef,A,by.x=c("Site","Start"),by.y=c("location","Start"),all=T)
 # reg.coef <- merge(reg.coef,kelp.otter.dat %>% filter(Year>=BREAK+1,Year<=BREAK+3) %>% group_by(location,Region) %>% summarise(otter.2003=mean(otter.n))%>%as.data.frame(),
 #                   by.x=c("Site","Region"),by.y=c("location","Region"))
@@ -532,6 +550,20 @@ A.1989 <-  ggplot(reg.coef %>% filter(Start ==1989),aes(y=slope.kelp,x=slope.ott
   ggtitle("a) 1989-2001") +
   theme_os2 ()
 
+A.1996 <-  ggplot(reg.coef %>% filter(Start ==1996),aes(y=slope.kelp,x=slope.otter)) +
+  geom_errorbarh(aes(xmin=slope.otter-slope.otter.se, xmax=slope.otter+slope.otter.se)) +
+  geom_errorbar(aes(ymin=slope.kelp-slope.kelp.se, ymax=slope.kelp+slope.kelp.se)) +
+  geom_point(aes(fill=otter,shape=Region),size=3) + 
+  scale_shape_manual(values=c(21,22,23),name = "Region")+
+  scale_fill_gradientn(name = "Otters",colors = COL,breaks=seq(0,200,by=50),labels=as.character(seq(0,200,by=50)),limits=c(0,max(reg.coef$otter))) +
+  geom_hline(yintercept = 0,linetype="dotted")+
+  geom_vline(xintercept = 0,linetype="dotted")+
+  scale_y_continuous(limits=y.lim,name = "Kelp growth rate")+
+  scale_x_continuous(limits=x.lim,name = "Otter growth rate")+
+  ggtitle("b) 2002-2015") +
+  theme_os2 ()
+
+
 A.2002 <-  ggplot(reg.coef %>% filter(Start ==2002),aes(y=slope.kelp,x=slope.otter)) +
   geom_errorbarh(aes(xmin=slope.otter-slope.otter.se, xmax=slope.otter+slope.otter.se)) +
   geom_errorbar(aes(ymin=slope.kelp-slope.kelp.se, ymax=slope.kelp+slope.kelp.se)) +
@@ -542,9 +574,8 @@ A.2002 <-  ggplot(reg.coef %>% filter(Start ==2002),aes(y=slope.kelp,x=slope.ott
   geom_vline(xintercept = 0,linetype="dotted")+
   scale_y_continuous(limits=y.lim,name = "Kelp growth rate")+
   scale_x_continuous(limits=x.lim,name = "Otter growth rate")+
-  ggtitle("b) 2002-2014") +
+  ggtitle("b) 2002-2015") +
   theme_os2 ()
-
 
 quartz(file = paste(base.dir,"/Plots/Otters vs. Kelp growth 2 halves.pdf",sep=""),type="pdf",dpi=300,height=7,width=5 )
   Layout= matrix(c(1,2),nrow=2,ncol=1,byrow=F)
@@ -552,7 +583,7 @@ quartz(file = paste(base.dir,"/Plots/Otters vs. Kelp growth 2 halves.pdf",sep=""
            A.2002)
   multiplot(plotlist=QQ ,layout= Layout)
 dev.off()
-  #facet_wrap(~location)
+
 
 ###################################################
 ###################################################
@@ -563,10 +594,10 @@ dev.off()
 COL=viridis(2,begin=0,end=0.6)
 y.lim=c(-0.005,1.01)
 x.lim=c(-1,max(reg.coef$otter)+8)
-A <- ggplot(reg.coef,aes(y=kelp.cv,x=otter,group=Site,shape=Region,fill=as.factor(Start))) +
+A <- ggplot(reg.coef %>% filter(Start!=1996),aes(y=kelp.cv,x=otter,group=Site,shape=Region,fill=as.factor(Start))) +
   geom_point(size=4)+
-  scale_fill_manual(name = "Period",values = COL,labels=c("1989-2001","2002-2014"), 
-                    guide = guide_legend(override.aes = list(shape = c(21, 21),fill=COL))) +
+  scale_fill_manual(name = "Period",values = COL,labels=c("1989-2001","2002-2015"), 
+                    guide = guide_legend(override.aes = list(shape = c(21,21),fill=COL))) +
   scale_shape_manual(values=c(21,22,23),name = "Region")+
   geom_line(color="black",linetype="dashed") +
   scale_y_continuous(limits=y.lim,name = "Kelp CV",expand=c(0,0))+

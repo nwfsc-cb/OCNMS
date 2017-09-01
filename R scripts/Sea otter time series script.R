@@ -101,7 +101,7 @@ theme_js <- function(base_size = 12, base_family = "") {
     )
 }
 
-#setwd("~/Documents/Github/OCNMS/Figures/")
+#
 
 
 otters_by_site <- ggplot(nwfsc.otter.dat,aes(x=Year,y=Total.Otters, colour=location)) +
@@ -341,6 +341,35 @@ quartz(file="3 Regions Otter Plots.pdf",width=8,height=7,type="pdf")
   print(otters_by_site_facet3_kern)
 dev.off()
 
+#####
+
+##########
+MULT <- 40 # Multiple for making the density larger and easier to see.
+otter.kern.dat$dens.plus <- otter.kern.dat$dens * MULT + otter.kern.dat$year
+y.labels <- survey.locations.linear.shore 
+
+otter.dist.timeseries.pub<- ggplot() +
+  geom_polygon(data=otter.kern.dat,aes(x=dens.plus,y=loc,group=year),fill=grey(0.5),alpha=0.7) + 
+  geom_point(data=midpoint,aes(x=Years,y=Center)) +
+  geom_smooth(data=midpoint,aes(x=Years,y=Center),se=F,span=0.5,color="black",linetype="dashed") +
+  theme_js() +
+  xlab("Year") +
+  ylab("") +
+  geom_hline(yintercept = (y.labels %>% filter(Area=="Tatoosh Island"))$distance.km,linetype="dashed" ) + 
+  scale_x_continuous(breaks=seq(1905,2015,by=5)) +
+  scale_y_continuous(breaks=y.labels$distance.km[y.labels$Area!="Rock 305" & y.labels$Area!="Chibadehl Rock"],
+                     labels=y.labels$Area[y.labels$Area!="Rock 305" &  y.labels$Area!="Chibadehl Rock"]
+                     )+
+ coord_cartesian(ylim = c(5,145))
+  #ggtitle(paste("Proportional Distribution; kernel =",round(KERN,2))) 
+
+otter.dist.timeseries.pub
+
+
+quartz(file=paste(base.dir,"Plots/Otter kernel time-series plots.pdf",sep=""),type="pdf",dpi=300,width=8,height=6)
+  print(otter.dist.timeseries.pub)
+dev.off()
+
 
 
 ########################################################################
@@ -401,6 +430,23 @@ p.occupancy <- ggplot(all.fit,aes(x=year,y=plot.numb,fill=count)) +
 quartz(file="Otter density thresholds.pdf",width=6,height=4,type="pdf")
   print(p.occupancy)
 dev.off()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -530,6 +576,10 @@ pdf(file="Otter time-series plots.pdf",onefile=T,width=11,height=8.5)
   print(otters_by_site_facet2_kern2)
   
 dev.off()  
+
+
+
+
 
 ################# Write Otter abundances by site to file that can be called in other scripts
 
