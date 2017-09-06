@@ -455,8 +455,17 @@ for(i in 1:length(NOM)){
   reg.coef2 <- rbind(reg.coef2,data.frame(Site=NOM[i],Start=1989,slope.kelp=coef(summary(mod))["Year","Estimate"],slope.kelp.se=coef(summary(mod))["Year","Std. Error"]))
   
   temp <- temp %>% filter(Year<=BREAK)
+  A<- matrix(sample(as.numeric(na.omit(temp$kelp.area)) - exp(mod$fitted.values),10000,replace = T),10,1000)
+  B<- c(quantile(apply(A,1,sd),probs=c(0.025,0.975)))
+  lower.95.sd <- B[1]
+  upper.95.sd <- B[2]
+  C <- mean(apply(A,1,sd),na.rm=T)
+
   kelp.cv <- rbind(kelp.cv,data.frame(Site=NOM[i],Start=1989, 
                                       kelp.cv= sd(as.numeric(na.omit(temp$kelp.area)) - exp(mod$fitted.values)) / mean(temp$kelp.area,na.rm=T),
+                                      kelp.cv.boot= C/ mean(temp$kelp.area,na.rm=T),
+                                      kelp.cv.lower = lower.95.sd/ mean(temp$kelp.area,na.rm=T),
+                                      kelp.cv.upper = upper.95.sd/ mean(temp$kelp.area,na.rm=T),                                  
                                       kelp.mean= mean(temp$kelp.area,na.rm=T)))
   
   ### middle 13 years
@@ -469,8 +478,17 @@ for(i in 1:length(NOM)){
   reg.coef2 <- rbind(reg.coef2,data.frame(Site=NOM[i],Start=1996,slope.kelp=coef(summary(mod))["Year","Estimate"],slope.kelp.se=coef(summary(mod))["Year","Std. Error"]))
   
   temp <- temp %>% filter(Year >= 1996,Year<= 2008)
-  kelp.cv <- rbind(kelp.cv,data.frame(Site=NOM[i], Start=1996, 
+  A<- matrix(sample(as.numeric(na.omit(temp$kelp.area)) - exp(mod$fitted.values),10000,replace = T),10,1000)
+  B<- c(quantile(apply(A,1,sd),probs=c(0.025,0.975)))
+  lower.95.sd <- B[1]
+  upper.95.sd <- B[2]
+  C <- mean(apply(A,1,sd),na.rm=T)
+  
+  kelp.cv <- rbind(kelp.cv,data.frame(Site=NOM[i],Start=1996, 
                                       kelp.cv= sd(as.numeric(na.omit(temp$kelp.area)) - exp(mod$fitted.values)) / mean(temp$kelp.area,na.rm=T),
+                                      kelp.cv.boot= C/ mean(temp$kelp.area,na.rm=T),
+                                      kelp.cv.lower = lower.95.sd/ mean(temp$kelp.area,na.rm=T),
+                                      kelp.cv.upper = upper.95.sd/ mean(temp$kelp.area,na.rm=T),                                  
                                       kelp.mean= mean(temp$kelp.area,na.rm=T)))
   
   
@@ -484,10 +502,18 @@ for(i in 1:length(NOM)){
   reg.coef2 <- rbind(reg.coef2,data.frame(Site=NOM[i],Start=BREAK+1,slope.kelp=coef(summary(mod))["Year","Estimate"],slope.kelp.se=coef(summary(mod))["Year","Std. Error"]))
   
   temp <- temp %>% filter(Year>=BREAK+1)
-  kelp.cv <- rbind(kelp.cv,data.frame(Site=NOM[i], Start=BREAK+1, 
+  A<- matrix(sample(as.numeric(na.omit(temp$kelp.area)) - exp(mod$fitted.values),10000,replace = T),10,1000)
+  B<- c(quantile(apply(A,1,sd),probs=c(0.025,0.975)))
+  lower.95.sd <- B[1]
+  upper.95.sd <- B[2]
+  C <- mean(apply(A,1,sd),na.rm=T)
+  
+  kelp.cv <- rbind(kelp.cv,data.frame(Site=NOM[i],Start=BREAK+1, 
                                       kelp.cv= sd(as.numeric(na.omit(temp$kelp.area)) - exp(mod$fitted.values)) / mean(temp$kelp.area,na.rm=T),
+                                      kelp.cv.boot= C / mean(temp$kelp.area,na.rm=T),
+                                      kelp.cv.lower = lower.95.sd/ mean(temp$kelp.area,na.rm=T),
+                                      kelp.cv.upper = upper.95.sd/ mean(temp$kelp.area,na.rm=T),                                  
                                       kelp.mean= mean(temp$kelp.area,na.rm=T)))
-
 }
 
 reg.coef <- merge(reg.coef1,reg.coef2)
@@ -594,9 +620,10 @@ dev.off()
 COL=viridis(2,begin=0,end=0.6)
 y.lim=c(-0.005,1.01)
 x.lim=c(-1,max(reg.coef$otter)+8)
-A <- ggplot(reg.coef %>% filter(Start!=1996),aes(y=kelp.cv,x=otter,group=Site,shape=Region,fill=as.factor(Start))) +
+A <- ggplot(reg.coef %>% filter(Start!=1996),aes(y=kelp.cv.boot,x=otter,group=Site,shape=Region,fill=as.factor(Start))) +
   geom_point(size=4)+
-  scale_fill_manual(name = "Period",values = COL,labels=c("1989-2001","2002-2015"), 
+  geom_errorbar(aes(ymin= kelp.cv.lower, ymax=kelp.cv.upper)) +
+    scale_fill_manual(name = "Period",values = COL,labels=c("1989-2001","2002-2015"),
                     guide = guide_legend(override.aes = list(shape = c(21,21),fill=COL))) +
   scale_shape_manual(values=c(21,22,23),name = "Region")+
   geom_line(color="black",linetype="dashed") +
@@ -607,7 +634,6 @@ A <- ggplot(reg.coef %>% filter(Start!=1996),aes(y=kelp.cv,x=otter,group=Site,sh
         legend.position   = c(0.98,0.98),
         plot.margin =        unit(c(0.2, 0.2, 0.2, 0.2), "lines"))
   
-
 quartz(file = paste(base.dir,"/Plots/Otters vs. Kelp CV change.pdf",sep=""),type="pdf",dpi=300,height=4,width=5 )
   print(A)
 dev.off()
@@ -635,6 +661,23 @@ ggplot(kelp.otter.dat %>% filter(Year >= 1989),aes(y=log.diff.otter,x=Year)) +
   geom_point(aes(color=log.otter)) + 
   scale_color_gradientn(colors = COL) +
   facet_wrap(~location)
+
+
+
+
+
+
+
+####  Calculate some statistics
+  A <- reg.coef %>% filter(Start ==1989) 
+  cor.test(A$slope.otter,A$slope.kelp)
+
+  A <- reg.coef %>% filter(Start ==2002) 
+  cor.test(A$slope.otter,A$slope.kelp)
+  
+
+
+
 
 
 
