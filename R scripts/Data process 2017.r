@@ -212,6 +212,8 @@ dat.trim.coastwide$SE <- dat.trim.coastwide$sd / sqrt(dat.trim.coastwide$n.quad)
 dat.trim.coastwide$n.quad[dat.trim.coastwide$Year == 1987] <- N.assume
 #dat.trim$N <- N.assume   # this is the assumed sample size for each observation 
 
+ ####JAMEAL NEEDS TO PICK UP HERE
+
 # Calculate the MEAN and SE for each type (quadrat, transect) then combine into a weighted average
 dat.trim.coastwide <- dat.trim.coastwide %>% group_by(.,Year,Survey,depth.m.simple,group,n.quad) %>%
   summarise(Mean=sum(mean),se=  sqrt(sum((sd/sqrt(n.quad))^2))) %>%
