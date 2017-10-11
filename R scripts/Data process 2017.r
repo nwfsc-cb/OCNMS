@@ -1,28 +1,30 @@
-rm(list=ls())
+
+
 options(max.print=99999)
 library(dplyr)
 library(ggplot2)
 #library(plyr)
 #### Script for importing historical Kviteck data and our OCNMS data
 base.dir <- "/Users/ole.shelton/GitHub/OCNMS"
-base.dir <- "/Users/jamealsamhouri/Documents/GitHub/OCNMS"
+#base.dir <- "/Users/jamealsamhouri/Documents/GitHub/OCNMS"
 setwd(paste(base.dir,"/Data/csv files",sep=""))
 
 #### FUNCTION
 WMean <- function(MEAN,SD){
-  if(length(MEAN)==2){
-    w <- SD[1]^2 / sum(SD^2)  
-    mean.out <- w*MEAN[1] + (1-w)*MEAN[2]
+  if(length(MEAN)>=2){
+    w <- (1/SD^2) / sum(1/SD^2)
+    mean.out <- sum(w*MEAN)
     return(mean.out)
-  }else{
+  }
+  else{
     return(MEAN)
   }
 }
-WSD <- function(MEAN,SD){
-  if(length(MEAN)==2){
-    w <- SD[1]^2 / sum(SD^2)                
-    var.out  <- w^2*SD[1]^2 + (1-w)^2*SD[2]^2
-    return(sqrt(var.out))
+WSD <- function(MEAN,SD,MIN.SD){
+  if(length(MEAN)>=2){
+      w <- (1/SD^2) / sum(1/SD^2)                
+      var.out  <- sum(w^2*SD^2)
+      return(sqrt(var.out))
   }else{
     return(SD)
   }
@@ -55,9 +57,6 @@ otter.food$otter.food.long [which(otter.food$otter.food=="C")] <- "Common"
 otter.food$otter.food.long [which(otter.food$otter.food=="O")] <- "Occassional"
 otter.food$otter.food.long [which(otter.food$otter.food=="R")] <- "Rare"
 
-
-
-
 ## Cull 2015 data to only include swath data
 dat.2015 <- filter(dat.2015,data.type == "swath",!is.na(Transect),PISCO.Classcode !="",PISCO.Classcode !="NO_ORG")
 dat.2015 <- merge(dat.2015,otter.food,by.x="PISCO.Classcode",by.y="PISCO.sp")
@@ -89,16 +88,18 @@ output <- output[is.na(output$Site)==F,]
 out.by.sp     <- data.frame(summarise(group_by(output,Site,PISCO.Classcode,otter.food,otter.food.long,group,Sp.name),
                                       MEAN= mean(N),SD=sd(N),N.obs=length(N),SE=sd(N)/sqrt(length(N))))
 
+
+#### ASSUME A MINIMUM PRECISION FOR 0 observations - based on the smallest observed SE for non-0 observations.
+MIN.SE <- 1 ### THIS IS FUCKED, DON'T USE IT
+
 out.by.group  <- output %>% group_by(.,Site,ID,group) %>% 
   summarise(SUM= sum(N)) %>% group_by(.,Site,group) %>%
   summarise(MEAN=mean(SUM),SD=sd(SUM),SE=sd(SUM)/sqrt(length(unique(ID)))) %>%
   as.data.frame()
 out.by.group$Year <- 2015
 
-out.by.group.coastwide  <- output %>% group_by(.,ID,group) %>% 
-  summarise(SUM= sum(N)) %>% group_by(.,group) %>%
-  summarise(MEAN=mean(SUM),SD=sd(SUM),SE=sd(SUM)/sqrt(length(unique(ID)))) %>%
-  as.data.frame()
+out.by.group.coastwide  <- out.by.group %>% group_by(.,group) %>% 
+  summarise(simp.mean=mean(MEAN),simp.se=sd(MEAN)/sqrt(length(MEAN))) 
 out.by.group.coastwide$Year <- 2015
 
 out.by.otter.food  <- output %>% group_by(.,Site,ID,otter.food,otter.food.long) %>% 
@@ -107,21 +108,20 @@ out.by.otter.food  <- output %>% group_by(.,Site,ID,otter.food,otter.food.long) 
   as.data.frame()
 out.by.otter.food$Year <- 2015
 
-out.by.otter.food.coastwide  <- output %>% group_by(.,ID,otter.food,otter.food.long) %>% 
-  summarise(SUM= sum(N)) %>% group_by(.,otter.food,otter.food.long) %>%
-  summarise(MEAN=mean(SUM),SD=sd(SUM),SE=sd(SUM)/sqrt(length(unique(ID)))) %>%
+out.by.otter.food.coastwide  <- out.by.otter.food %>% group_by(.,otter.food,otter.food.long) %>% 
+  summarise(simp.mean=mean(MEAN),simp.se=sd(MEAN)/sqrt(length(MEAN))) %>%
   as.data.frame()
 out.by.otter.food.coastwide$Year <- 2015
-
+out.by.otter.food.coastwide
 ##################################################################################################
 ##################################################################################################
 ##################################################################################################
 
 # Make comparable data file for historical data
-# Trim out deeper surveys (get rid of everything deep than 15m)
+# Trim out deeper surveys (get rid of everything deep than 10m)
 N.assume <- 20
 
-dat.kvitek <- dat.kvitek %>% filter(.,depth.m.simple <= 15) %>% 
+dat.kvitek <- dat.kvitek %>% filter(.,depth.m.simple <= 10) %>% 
   select(.,-matches("Source"))
 
 # summarise the 1987 seastars for each site
@@ -136,12 +136,13 @@ dat.seastar99 <- dat.kvitek %>% filter(.,group =="seastar" & Year == 1999) %>%
 dat.seastar <-rbind(dat.seastar87,dat.seastar99)
 dat.seastar$n.quad[dat.seastar$Year == 1987] <- N.assume
 dat.seastar$SE <- dat.seastar$SD / sqrt(dat.seastar$n.quad)
-  
+dat.seastar <- as.data.frame(dat.seastar)
+
 #dat.seastar$N <- N.assume
 #dat.seastar$SE <- dat.seastar$SD / sqrt(dat.seastar$N)
 dat.seastar   <- dat.seastar %>%
   group_by(.,Site,Year) %>%
-  summarise(wMEAN= WMean(MEAN,SD),wSE = WSD(MEAN,SE)) %>%
+  summarise(wMEAN= WMean(MEAN,SE),wSE = WSD(MEAN,SE)) %>%
   as.data.frame()
 
 colnames(dat.seastar)[grep("w",colnames(dat.seastar))] <- c("MEAN","SE")
@@ -151,40 +152,55 @@ dat.seastar$depth.m.simple <- 4
 
 dat.seastar <- dat.seastar[,c("Site","Year","group","MEAN","SE")]
 
-# repeat the seastar nonsense at the coastwide scale
-# summarise the 1987 seastars
-dat.seastar87.coastwide <- dat.kvitek %>% filter(.,group =="seastar" & Year == 1987) %>% 
-  group_by(.,Year,n.quad) %>%
-  summarise(MEAN=sum(mean),SD = sqrt(sum(sd^2)))
-# summarise the 1999 seastars
-dat.seastar99.coastwide <- dat.kvitek %>% filter(.,group =="seastar" & Year == 1999) %>% 
-  group_by(.,Year,n.quad) %>%
-  summarise(MEAN=sum(mean),SD = sqrt(sum(sd^2)))
-
-dat.seastar.coastwide <-rbind(dat.seastar87.coastwide,dat.seastar99.coastwide)
-dat.seastar.coastwide$n.quad[dat.seastar.coastwide$Year == 1987] <- N.assume
-dat.seastar.coastwide$SE <- dat.seastar.coastwide$SD / sqrt(dat.seastar.coastwide$n.quad)
-
-#dat.seastar$N <- N.assume
-#dat.seastar$SE <- dat.seastar$SD / sqrt(dat.seastar$N)
-dat.seastar.coastwide   <- dat.seastar.coastwide %>%
+# Seastars coastwide - treat each site as a replicate, pretend no measurement error at each site.
+dat.seastar.coastwide <- dat.seastar %>% filter(.,group =="seastar" ) %>% 
   group_by(.,Year) %>%
-  summarise(MEAN=sum(MEAN),SD = sqrt(sum(SD^2)), N.QUAD = sum(n.quad)) %>%
-  as.data.frame()
+  summarise(simp.mean=mean(MEAN),simp.se=sqrt(sd(MEAN)))
 
-#colnames(dat.seastar)[grep("w",colnames(dat.seastar))] <- c("MEAN","SE")
-dat.seastar.coastwide$SE <- dat.seastar.coastwide$SD / sqrt(dat.seastar.coastwide$N.QUAD)
-dat.seastar.coastwide$group <- "seastar"
-dat.seastar.coastwide$Survey <- "Quadrat"
-dat.seastar.coastwide$depth.m.simple <- 4
+dat.seastar$group = "seastar"
+dat.seastar.coastwide$group = "seastar"
 
-dat.seastar.coastwide <- dat.seastar.coastwide[,c("Year","group","MEAN","SE")]
+# #dat.seastar$N <- N.assume
+# #dat.seastar$SE <- dat.seastar$SD / sqrt(dat.seastar$N)
+# dat.seastar.coastwide   <- dat.seastar.coastwide %>%
+#   group_by(.,Year) %>%
+#   summarise(MEAN=sum(MEAN),SD = sqrt(sum(SD^2)), N.QUAD = sum(n.quad)) %>%
+#   as.data.frame()
+# 
+# #colnames(dat.seastar)[grep("w",colnames(dat.seastar))] <- c("MEAN","SE")
+# dat.seastar.coastwide$SE <- dat.seastar.coastwide$SD / sqrt(dat.seastar.coastwide$N.QUAD)
+# dat.seastar.coastwide$group <- "seastar"
+# dat.seastar.coastwide$Survey <- "Quadrat"
+# dat.seastar.coastwide$depth.m.simple <- 4
+# 
+# dat.seastar.coastwide <- dat.seastar.coastwide[,c("Year","group","MEAN","SE")]
+
+
+##### THERE IS A PROBLEM WITH THE WEIGHTED AVERAGE... ZEROS SCREW IT UP.
+
 
 # Do the remaining species - site by site  
 dat.trim <- dat.kvitek[,c("Site","Year","Survey","depth.m.simple","group","mean","sd","n.quad")]
 dat.trim <- filter(dat.trim,group !="seastar")
 dat.trim$SE <- dat.trim$sd / sqrt(dat.trim$n.quad)
 dat.trim$n.quad[dat.trim$Year == 1987] <- N.assume
+dat.trim$area.for.w <- 0
+dat.trim$area.for.w[dat.trim$Survey=="Transect"] <- dat.trim$n.quad[dat.trim$Survey=="Transect"] * 25
+dat.trim$area.for.w[dat.trim$Survey=="Quadrat"] <- dat.trim$n.quad[dat.trim$Survey=="Quadrat"] * 0.25
+dat.trim$area.for.w[dat.trim$Survey=="Quadrat" & dat.trim$Year==1987] <- dat.trim$n.quad[dat.trim$Survey=="Quadrat"& dat.trim$Year==1987] 
+
+
+
+### OLE STOPPED HERE.  NEED TO FIX MUCH BELOW HERE.
+
+
+
+
+
+
+
+
+
 #dat.trim$N <- N.assume   # this is the assumed sample size for each observation 
 
 # Calculate the MEAN and SE for each type (quadrat, transect) then combine into a weighted average
@@ -215,8 +231,8 @@ dat.trim.coastwide$n.quad[dat.trim.coastwide$Year == 1987] <- N.assume
  ####JAMEAL NEEDS TO PICK UP HERE
 
 # Calculate the MEAN and SE for each type (quadrat, transect) then combine into a weighted average
-dat.trim.coastwide <- dat.trim.coastwide %>% group_by(.,Year,Survey,depth.m.simple,group,n.quad) %>%
-  summarise(Mean=sum(mean),se=  sqrt(sum((sd/sqrt(n.quad))^2))) %>%
+dat.trim.coastwide <- dat.trim.coastwide %>% group_by(.,Year,Survey,depth.m.simple,group) %>%
+  summarise(Mean=sum(mean),se=  sqrt(sum((sd/sqrt(n.quad))^2))) %>% as.data.frame()
   group_by(.,Year,depth.m.simple,group) %>%
   summarise(.,MEAN=mean(Mean), SE=WSD(Mean,se)) %>%
   as.data.frame()
@@ -355,6 +371,10 @@ dat.otter.food$otter.food.plot <- dat.otter.food$otter.food.long
 dat.otter.food$otter.food.plot <-  factor(dat.otter.food$otter.food.plot,
                                     levels = food.order)
 
+########################################################################
+########################################################################
+
+## Data frames of interest are "dat.group" and "dat.otter.food"
 
 ########################################################################
 ########################################################################

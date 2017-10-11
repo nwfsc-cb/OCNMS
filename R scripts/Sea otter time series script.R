@@ -23,21 +23,20 @@ otter.dat <- read.csv("WDFW sea otter survey data 1977-2015.csv")
 # Mapping for location names to discrete sites from 2015 surveys/ Kvitek surveys
 location.names <- read.csv("Otter location names.csv")
 # Linking sundry names to particular locations for kernel density estimates
-linear.shore <- read.csv("OCNMS linear shoreline.csv")
-linear.shore$distance.km <- linear.shore$distance.miles * 1.60934
+linear.shore <- read.csv("Distance 1d shore otters.csv")
+linear.shore$distance.km <- linear.shore$Simplified.Distance..m. / 1000
 survey.locations.linear.shore <- read.csv("Survey locations linear shore.csv")
-survey.locations.linear.shore$distance.km <- survey.locations.linear.shore$distance.miles *1.60934
+survey.locations.linear.shore$distance.km <- survey.locations.linear.shore$Simplified.Distance..m. / 1000
 ##### MERGE CSV files
 
 otter.dat <- merge(otter.dat,location.names[,c("Site","Category","common.name")],all=T)
-otter.dat <- merge(otter.dat,linear.shore[,c("common.name","distance.miles")],all=F)
+otter.dat <- merge(otter.dat,linear.shore[,c("Name","distance.km")],by.x="common.name",by.y="Name",all=F)
 
 # IMPORTANT VALUES FOR KERNEL DENSITY ESTIMATION
 
 KERN <- 40/(1.96*2) # Standard deviation of the normal kernel density in km 
           # equivalent to ~8.9 km using an average home range size of 40km from Laidre et al. 2009 J Mammology
 DIAM <- 10 # buffer diameter used for calculating the number of otters around a focal site (in km)
-
 
 
 #######################################
@@ -76,8 +75,6 @@ nwfsc.otter.dat <- merge(nwfsc.otter.dat,expand.grid(location=NOM,Year=sort(uniq
 nwfsc.otter.dat$Total.Adults[is.na(nwfsc.otter.dat$Total.Adults)==T] <- 0
 nwfsc.otter.dat$Total.Otters[is.na(nwfsc.otter.dat$Total.Otters)==T] <- 0
 
-
-
 #### PLOT@
 #######################################
 ### plot otters by NWFSC study sites ###
@@ -86,7 +83,7 @@ theme_js <- function(base_size = 12, base_family = "") {
   theme_bw()+
     theme(
       text=element_text(size=16),
-      legend.title=element_blank(),
+      #legend.title=element_blank(),
       legend.text = element_text(size=14),
       #legend.background =  element_rect(colour = NA),
       #legend.key =         element_rect(fill = "white", colour = "black"),
@@ -104,9 +101,8 @@ theme_js <- function(base_size = 12, base_family = "") {
     )
 }
 
-#setwd("~/Documents/Github/OCNMS/Figures/")
+#
 
-setwd(paste(base.dir,"Plots",sep=""))
 
 otters_by_site <- ggplot(nwfsc.otter.dat,aes(x=Year,y=Total.Otters, colour=location)) +
   geom_point(aes(colour=location)) +
@@ -131,7 +127,6 @@ otters_by_site_facet <- ggplot(nwfsc.otter.dat,aes(x=Year,y=Total.Otters, colour
   theme_js() +
   theme(legend.position="none") +
   ggtitle(paste("Raw population estimates, discrete areas"))
-
 otters_by_site_facet
 
 otters_by_site_facet2 <- ggplot(nwfsc.otter.dat,aes(x=Year,y=Total.Otters, colour=location)) +
@@ -148,7 +143,7 @@ otters_by_site_facet2
 #######################################################################
 ##### CONSTRUCT KERNEL DENSITIES USING SIMPLIFIED 1-D SHORELINE LOCATIONS.
 #######################################################################
-otter.dat$distance.km <- otter.dat$distance.miles * 1.60934 # Convert miles to km
+#otter.dat$distance.km <- otter.dat$distance.miles * 1.60934 # Convert miles to km
 
 nwfsc.otter.kernel <- otter.dat %>%
   group_by(Year, Category,distance.km) %>%
@@ -204,7 +199,6 @@ MULT <- 40 # Multiple for making the density larger and easier to see.
 otter.kern.dat$dens.plus <- otter.kern.dat$dens * MULT + otter.kern.dat$year
 y.labels <- survey.locations.linear.shore 
 
-
 otter.dist.timeseries<- ggplot() +
     geom_polygon(data=otter.kern.dat,aes(x=dens.plus,y=loc,group=year),fill=grey(0.5),alpha=0.7) + 
     geom_point(data=midpoint,aes(x=Years,y=Center)) +
@@ -213,7 +207,7 @@ otter.dist.timeseries<- ggplot() +
     xlab("Year") +
     ylab("Location") +
     geom_hline(yintercept = (y.labels %>% filter(Area=="Tatoosh Island"))$distance.km,linetype="dashed" ) + 
-    scale_y_continuous(breaks=y.labels$distance.km, labels=y.labels$Area,
+    scale_y_continuous(breaks=y.labels$distance.km[y.labels$Area!="Rock 305"], labels=y.labels$Area[y.labels$Area!="Rock 305"],
                        limits=c(0,180))+
     ggtitle(paste("Proportional Distribution; kernel =",round(KERN,2))) 
   
@@ -347,6 +341,120 @@ quartz(file="3 Regions Otter Plots.pdf",width=8,height=7,type="pdf")
   print(otters_by_site_facet3_kern)
 dev.off()
 
+#####
+
+##########
+MULT <- 40 # Multiple for making the density larger and easier to see.
+otter.kern.dat$dens.plus <- otter.kern.dat$dens * MULT + otter.kern.dat$year
+y.labels <- survey.locations.linear.shore 
+
+otter.dist.timeseries.pub<- ggplot() +
+  geom_polygon(data=otter.kern.dat,aes(x=dens.plus,y=loc,group=year),fill=grey(0.5),alpha=0.7) + 
+  geom_point(data=midpoint,aes(x=Years,y=Center)) +
+  geom_smooth(data=midpoint,aes(x=Years,y=Center),se=F,span=0.5,color="black",linetype="dashed") +
+  theme_js() +
+  xlab("Year") +
+  ylab("") +
+  geom_hline(yintercept = (y.labels %>% filter(Area=="Tatoosh Island"))$distance.km,linetype="dashed" ) + 
+  scale_x_continuous(breaks=seq(1905,2015,by=5)) +
+  scale_y_continuous(breaks=y.labels$distance.km[y.labels$Area!="Rock 305" & y.labels$Area!="Chibadehl Rock"],
+                     labels=y.labels$Area[y.labels$Area!="Rock 305" &  y.labels$Area!="Chibadehl Rock"]
+                     )+
+ coord_cartesian(ylim = c(5,145))
+  #ggtitle(paste("Proportional Distribution; kernel =",round(KERN,2))) 
+
+otter.dist.timeseries.pub
+
+
+quartz(file=paste(base.dir,"Plots/Otter kernel time-series plots.pdf",sep=""),type="pdf",dpi=300,width=8,height=6)
+  print(otter.dist.timeseries.pub)
+dev.off()
+
+
+
+########################################################################
+########################################################################
+########################################################################
+########################################################################
+## Calculate the year(s) at which the abundance of otters exceeds a series of thresholds
+
+THRESH <- c(2,5,10,25,50)
+
+# Fit spline to each location independently.
+SITES <- unique(kern.pop.est.trim$location)
+all.fit <- NULL
+for(i in 1:length(SITES)){
+  temp <- kern.pop.est.trim[kern.pop.est.trim$location ==SITES[i],] 
+  SP.fit <- spline(x=temp$Year,y=temp$tot.pop,n=2015-1977+1)
+  all.fit <- rbind(all.fit,data.frame(Site=SITES[i],
+                        Region=unique(temp$Region),
+                        pop.sp = SP.fit$y,year= SP.fit$x))
+}
+
+
+for(i in 1:length(THRESH)){
+  all.fit[,paste("thresh",THRESH[i],sep=".")] <- 0
+  all.fit[all.fit$pop.sp > THRESH[i] ,paste("thresh",THRESH[i],sep=".")] <- 1
+}
+
+all.fit$plot.numb <- 0
+for(i in 1:length(NOM2)){
+  all.fit$plot.numb[all.fit$Site == NOM2[i]] <- i
+}
+
+all.fit <- all.fit %>% mutate(count = thresh.2 + thresh.5 + thresh.10 + thresh.25 + thresh.50)
+all.fit$count <- factor(all.fit$count)
+
+COL <- colorRampPalette(c("white",grey(0.8),grey(0.6),grey(0.4),grey(0.2),"black"))(length(THRESH)+1)
+
+LABS <- c(paste("<",THRESH[1]),
+          paste(THRESH[1],"-",THRESH[2]),
+          paste(THRESH[2],"-",THRESH[3]),
+          paste(THRESH[3],"-",THRESH[4]),
+          paste(THRESH[4],"-",THRESH[5]),
+          paste(">",THRESH[5]))
+
+p.occupancy <- ggplot(all.fit,aes(x=year,y=plot.numb,fill=count)) +
+  geom_tile() +
+  scale_y_reverse( lim=c(10.6,0.4),expand=c(0,0),breaks=1:10,labels=NOM2[1:10]) +
+  scale_x_continuous(lim=c(min(all.fit$year)-0.7,max(all.fit$year)+0.7),expand=c(0,0),
+                      breaks=seq(1980,2015,by=5))+
+  scale_fill_manual(values=COL,labels=LABS,name = "Otter Pop")+
+  ylab("")+
+  xlab("Year")+
+  theme_js() +
+  theme(text=element_text(size=11),
+  legend.text = element_text(size=9))
+  
+
+quartz(file="Otter density thresholds.pdf",width=6,height=4,type="pdf")
+  print(p.occupancy)
+dev.off()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+########################################################################
+########################################################################
+########################################################################
+########################################################################
+
 
 ## Write to file
 write.csv(kern.pop.est.trim,file=paste(base.dir,"Data/csv files/Kernel otter abundances; kern=",round(KERN,1),".csv",sep=""),row.names=F)
@@ -468,6 +576,10 @@ pdf(file="Otter time-series plots.pdf",onefile=T,width=11,height=8.5)
   print(otters_by_site_facet2_kern2)
   
 dev.off()  
+
+
+
+
 
 ################# Write Otter abundances by site to file that can be called in other scripts
 

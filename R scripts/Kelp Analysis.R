@@ -13,16 +13,21 @@ source(paste(base.dir,"/R scripts/multiplot.r",sep=""))
 ##################################################################################
 ##################################################################################
 
+# FILTER TO INCLUDE ONLY year <= 2015.
+
 # Use discrete areas for 
 setwd(paste(base.dir,"/Data/csv files",sep=""))
 
 kelp.dat      <- read.csv("annual canopy area by index.csv")
 weight.dat    <- read.csv("Kelp area index weights.csv")
 kelp.coastwide.dat <- read.csv("kelp canopy all sites.csv")
+area.available <- read.csv("WADNR kelp index map bathymetry, kelp & substrate data table.csv")
+area.available[,2:ncol(area.available)] <- area.available[,2:ncol(area.available)] * 0.0001
+
 
 ## Coastwide summary of kelp
 kelp.coastwide.dat <- kelp.coastwide.dat %>% filter(map_index >=15.1 & map_index <= 25.2) %>% 
-         rename(year = year_) %>% group_by(year) %>% summarise(total.area = sum(tot_can)) %>% as.data.frame()
+         rename(year = year_) %>% filter(year<=2015) %>% group_by(year) %>% summarise(total.area = sum(tot_can)) %>% as.data.frame()
 
 p <- ggplot(kelp.coastwide.dat,aes(y=total.area,x=year)) +
   geom_point() +
@@ -34,18 +39,30 @@ p <- ggplot(kelp.coastwide.dat,aes(y=total.area,x=year)) +
   theme_bw() 
 print(p)
 
-
+A <- kelp.coastwide.dat %>% filter(year <= 2001) 
+B <- kelp.coastwide.dat %>% filter(year >= 2002) 
+sd(A$total.area)
+sd(B$total.area)
 #####
 
 
 kelp.dat <- melt(kelp.dat,id.vars = "kelp.map.index")
 kelp.dat <- kelp.dat %>% rename(year=variable)
 kelp.dat$year <- substr(kelp.dat$year,2,5)
+kelp.dat$year <- as.numeric(kelp.dat$year)
+kelp.dat <- kelp.dat %>% filter(year<=2015)
 
 weight.dat <- weight.dat %>% rename(Site = Site.100m.radius)
            
 kelp.ts <- merge(kelp.dat,weight.dat)
 kelp.ts$Area <- kelp.ts$value * kelp.ts$weight
+
+A<- area.available %>% select(Index.Map.ID,Area.0to20m,Area.20to30m,Total.area.0to30m,Rock.area.0to20m,Rock.area.20to30m,Total.Rock.area0to30m) %>% as.data.frame()
+kelp.ts <- merge(kelp.ts,A,
+                 by.x=c("kelp.map.index"),by.y=c("Index.Map.ID"))
+
+kelp.ts$area.avail.rock <- kelp.ts$weight * kelp.ts$Rock.area.0to20m
+kelp.ts$area.avail.tot  <- kelp.ts$weight * kelp.ts$Area.0to20m
 
 kelp.ts.all <- kelp.ts %>% group_by(Site,year) %>% summarise(total.area = sum(Area))
 
