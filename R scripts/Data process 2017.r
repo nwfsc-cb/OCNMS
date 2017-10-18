@@ -181,10 +181,46 @@ dat.trim <- dat.trim %>% group_by(.,Site,Year,Survey,depth.m.simple,group,n.quad
 
 dat.trim[is.nan(dat.trim[,c("MEAN")])==T,c("MEAN","SE")] <- 0
 
+<<<<<<< HEAD
 # # Do the remaining species coastwide - treat each site as a replicate, pretend no measurement error at each site.
 dat.trim.coastwide <- dat.trim %>% filter(group !="seastar") %>%
   group_by(.,Year,group) %>%
   summarise(simp.mean=mean(MEAN),simp.se=sqrt(sd(MEAN)))
+=======
+# Combine the multiple depths (less than 15m deep) into on value for each site
+dat.trim <- dat.trim %>% group_by(.,Site,Year,group) %>%
+  summarise(Mean=WMean(MEAN,SE),se=WSD(MEAN,SE),n.obs.check=length(MEAN)) %>%
+  as.data.frame
+colnames(dat.trim)[4:5] <- c("MEAN","SE")
+dat.trim[is.nan(dat.trim[,c("MEAN")])==T,c("MEAN","SE")] <- 0            
+
+dat.trim <- merge(dat.trim,dat.seastar,all=T)
+
+# Do the remaining species - coastwide  
+dat.trim.coastwide <- dat.kvitek[,c("Site","Year","Survey","depth.m.simple","group","mean","sd","n.quad")]
+dat.trim.coastwide <- filter(dat.trim.coastwide,group !="seastar")
+dat.trim.coastwide$SE <- dat.trim.coastwide$sd / sqrt(dat.trim.coastwide$n.quad)
+dat.trim.coastwide$n.quad[dat.trim.coastwide$Year == 1987] <- N.assume
+#dat.trim$N <- N.assume   # this is the assumed sample size for each observation 
+
+ ####JAMEAL NEEDS TO PICK UP HERE
+
+# Calculate the MEAN and SE for each type (quadrat, transect) then combine into a weighted average
+dat.trim.coastwide <- dat.trim.coastwide %>% group_by(.,Year,Survey,depth.m.simple,group) %>%
+  summarise(Mean=sum(mean),se=  sqrt(sum((sd/sqrt(n.quad))^2))) %>% as.data.frame()
+  group_by(.,Year,depth.m.simple,group) %>%
+  summarise(.,MEAN=mean(Mean), SE=WSD(Mean,se)) %>%
+  as.data.frame()
+
+dat.trim[is.nan(dat.trim[,c("MEAN")])==T,c("MEAN","SE")] <- 0
+
+# Combine the multiple depths (less than 15m deep) into on value for each site
+dat.trim <- dat.trim %>% group_by(.,Site,Year,group) %>%
+  summarise(Mean=WMean(MEAN,SE),se=WSD(MEAN,SE),n.obs.check=length(MEAN)) %>%
+  as.data.frame
+colnames(dat.trim)[4:5] <- c("MEAN","SE")
+dat.trim[is.nan(dat.trim[,c("MEAN")])==T,c("MEAN","SE")] <- 0            
+>>>>>>> 1016d4e004feb6e1693b57627488ef51d396449f
 
 # Combine Seastar and non-seastar data into two data.frames
 dat.trim <- merge(dat.trim,dat.seastar,all=T)
