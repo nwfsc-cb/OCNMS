@@ -47,7 +47,7 @@ dat.trim <- dat.trim %>% filter(Region != "")
 
 # Groups of interest
 GROUP <-  c("urchin","gastropod","bivalve","crab","seastar","cucumber")
-GROUP.NAME <-  c("a) Sea Urchins", ,"b) Gastropods","c) Bivalves","d) Crabs","e) Seastars","f) Sea cucumbers")
+GROUP.NAME <-  c("a) Sea Urchins", "b) Gastropods","c) Bivalves","d) Crabs","e) Seastars","f) Sea cucumbers")
 
 theme_os2 <- function(base_size = 12, base_family = "") {
   theme_bw()+
@@ -120,10 +120,14 @@ for( i in 1: length(GROUP)){
 
 
 
-quartz(file = paste(base.dir,"/Plots/Invertebrate panels.pdf",sep=""),type="pdf",dpi=300,height=8,width=7 )
+quartz(file = paste(base.dir,"/Plots/Invertebrate panels v1.pdf",sep=""),type="pdf",dpi=300,height=8,width=7 )
   Layout= matrix(c(1,2,3,4,5,6),nrow=3,ncol=2,byrow=T)
   multiplot(plotlist=A ,layout= Layout)
 dev.off()
 
+quartz(file = paste(base.dir,"/Plots/Invertebrate panels v2.pdf",sep=""),type="pdf",dpi=300,height=5,width=9 )
+Layout= matrix(c(1,2,3,4,5,6),nrow=2,ncol=3,byrow=T)
+multiplot(plotlist=A ,layout= Layout)
+dev.off()
 
 
