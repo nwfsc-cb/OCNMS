@@ -245,9 +245,6 @@ unique(otter.food2$group)
 unique(dat.trim$group)
 
 
-#head(left_join(dat.trim,otter.food2,by="group"),10)
-
-
 #### COMBINE THE 2015 and pre-2000 data
 dat.trim <- merge(out.by.group,dat.trim,all=T)
 #make new merged df for pre-2000 data
@@ -327,6 +324,37 @@ dat.otter.food$year.plot <- as.Date(as.character(dat.otter.food$Year),"%Y")
 dat.otter.food$otter.food.plot <- dat.otter.food$otter.food.long
 dat.otter.food$otter.food.plot <-  factor(dat.otter.food$otter.food.plot,
                                     levels = food.order)
+
+
+###########
+
+# Rename Sites for consistency with otter and kelp plots
+dat.trim$Site <- as.character(dat.trim$Site)
+dat.trim$Site[dat.trim$Site == "Anderson Pt."] <- "Anderson Point"
+dat.trim$Site[dat.trim$Site == "Destruction Island SW"] <- "Destruction Island"
+dat.trim$Site[dat.trim$Site == "Pt. of the Arches"] <- "Point of the Arches"
+dat.trim$Site[dat.trim$Site == "Chibahdel"] <- "Chibadehl Rocks"
+dat.trim$Site[dat.trim$Site == "Teawhit Head"] <- "Teahwhit Head"
+
+
+# Add regional Groupings
+dat.trim$Region <- ""
+dat.trim$Region[dat.trim$Site %in% c("Neah Bay", "Chibadehl Rocks","Tatoosh Island")] <- "Northern"
+dat.trim$Region[dat.trim$Site %in% c("Anderson Point","Point of the Arches","Cape Alava")] <- "Central"
+dat.trim$Region[dat.trim$Site %in% c("Cape Johnson","Rock 305","Teahwhit Head","Destruction Island")] <- "Southern"
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ########################################################################
 ########################################################################
