@@ -5,8 +5,8 @@ library(dplyr)
 library(ggplot2)
 #library(plyr)
 #### Script for importing historical Kviteck data and our OCNMS data
-base.dir <- "/Users/ole.shelton/GitHub/OCNMS"
-#base.dir <- "/Users/jamealsamhouri/Documents/GitHub/OCNMS"
+#base.dir <- "/Users/ole.shelton/GitHub/OCNMS"
+base.dir <- "~/Documents/GitHub/OCNMS"
 setwd(paste(base.dir,"/Data/csv files",sep=""))
 
 #### FUNCTION
@@ -181,7 +181,19 @@ dat.trim <- dat.trim %>% group_by(.,Site,Year,Survey,depth.m.simple,group,n.quad
 
 dat.trim[is.nan(dat.trim[,c("MEAN")])==T,c("MEAN","SE")] <- 0
 
-# Merge seastar and other invert data.
+<<<<<<< HEAD
+# # Do the remaining species coastwide - treat each site as a replicate, pretend no measurement error at each site.
+dat.trim.coastwide <- dat.trim %>% filter(group !="seastar") %>%
+  group_by(.,Year,group) %>%
+  summarise(simp.mean=mean(MEAN),simp.se=sqrt(sd(MEAN)))
+=======
+# Combine the multiple depths (less than 15m deep) into on value for each site
+dat.trim <- dat.trim %>% group_by(.,Site,Year,group) %>%
+  summarise(Mean=WMean(MEAN,SE),se=WSD(MEAN,SE),n.obs.check=length(MEAN)) %>%
+  as.data.frame
+colnames(dat.trim)[4:5] <- c("MEAN","SE")
+dat.trim[is.nan(dat.trim[,c("MEAN")])==T,c("MEAN","SE")] <- 0            
+
 dat.trim <- merge(dat.trim,dat.seastar,all=T)
 
 # Do the remaining species - coastwide  
@@ -191,6 +203,8 @@ dat.trim.coastwide$SE <- dat.trim.coastwide$sd / sqrt(dat.trim.coastwide$n.quad)
 dat.trim.coastwide$n.quad[dat.trim.coastwide$Year == 1987] <- N.assume
 #dat.trim$N <- N.assume   # this is the assumed sample size for each observation 
 
+ ####JAMEAL NEEDS TO PICK UP HERE
+
 # Calculate the MEAN and SE for each type (quadrat, transect) then combine into a weighted average
 dat.trim.coastwide <- dat.trim.coastwide %>% group_by(.,Year,Survey,depth.m.simple,group) %>%
   summarise(Mean=sum(mean),se=  sqrt(sum((sd/sqrt(n.quad))^2))) %>% as.data.frame()
@@ -198,7 +212,18 @@ dat.trim.coastwide <- dat.trim.coastwide %>% group_by(.,Year,Survey,depth.m.simp
   summarise(.,MEAN=mean(Mean), SE=WSD(Mean,se)) %>%
   as.data.frame()
 
+dat.trim[is.nan(dat.trim[,c("MEAN")])==T,c("MEAN","SE")] <- 0
+
+# Combine the multiple depths (less than 15m deep) into on value for each site
+dat.trim <- dat.trim %>% group_by(.,Site,Year,group) %>%
+  summarise(Mean=WMean(MEAN,SE),se=WSD(MEAN,SE),n.obs.check=length(MEAN)) %>%
+  as.data.frame
+colnames(dat.trim)[4:5] <- c("MEAN","SE")
+dat.trim[is.nan(dat.trim[,c("MEAN")])==T,c("MEAN","SE")] <- 0            
+>>>>>>> 1016d4e004feb6e1693b57627488ef51d396449f
+
 # Combine Seastar and non-seastar data into two data.frames
+dat.trim <- merge(dat.trim,dat.seastar,all=T)
 dat.trim.coastwide <- merge(dat.trim.coastwide,dat.seastar.coastwide,all=T)
 
 # add otter food categories. problematic because not all bivalves are common diet items etc etc
@@ -243,6 +268,9 @@ otter.food2$otter.food.long <- c(
 
 unique(otter.food2$group) 
 unique(dat.trim$group)
+
+
+#head(left_join(dat.trim,otter.food2,by="group"),10)
 
 
 #### COMBINE THE 2015 and pre-2000 data
@@ -324,37 +352,6 @@ dat.otter.food$year.plot <- as.Date(as.character(dat.otter.food$Year),"%Y")
 dat.otter.food$otter.food.plot <- dat.otter.food$otter.food.long
 dat.otter.food$otter.food.plot <-  factor(dat.otter.food$otter.food.plot,
                                     levels = food.order)
-
-
-###########
-
-# Rename Sites for consistency with otter and kelp plots
-dat.trim$Site <- as.character(dat.trim$Site)
-dat.trim$Site[dat.trim$Site == "Anderson Pt."] <- "Anderson Point"
-dat.trim$Site[dat.trim$Site == "Destruction Island SW"] <- "Destruction Island"
-dat.trim$Site[dat.trim$Site == "Pt. of the Arches"] <- "Point of the Arches"
-dat.trim$Site[dat.trim$Site == "Chibahdel"] <- "Chibadehl Rocks"
-dat.trim$Site[dat.trim$Site == "Teawhit Head"] <- "Teahwhit Head"
-
-
-# Add regional Groupings
-dat.trim$Region <- ""
-dat.trim$Region[dat.trim$Site %in% c("Neah Bay", "Chibadehl Rocks","Tatoosh Island")] <- "Northern"
-dat.trim$Region[dat.trim$Site %in% c("Anderson Point","Point of the Arches","Cape Alava")] <- "Central"
-dat.trim$Region[dat.trim$Site %in% c("Cape Johnson","Rock 305","Teahwhit Head","Destruction Island")] <- "Southern"
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 ########################################################################
 ########################################################################

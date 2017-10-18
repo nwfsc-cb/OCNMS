@@ -24,19 +24,6 @@ NOM <- c(
   "Destruction Island"
 )
 
-# Rename Sites for consistency with otter and kelp plots
-dat.trim$Site <- as.character(dat.trim$Site)
-dat.trim$Site[dat.trim$Site == "Anderson Pt."] <- "Anderson Point"
-dat.trim$Site[dat.trim$Site == "Destruction Island SW"] <- "Destruction Island"
-dat.trim$Site[dat.trim$Site == "Pt. of the Arches"] <- "Point of the Arches"
-dat.trim$Site[dat.trim$Site == "Chibahdel"] <- "Chibadehl Rocks"
-
-# Add regional Groupings
-dat.trim$Region <- ""
-dat.trim$Region[dat.trim$Site %in% c("Neah Bay", "Chibadehl Rocks","Tatoosh Island")] <- "Northern"
-dat.trim$Region[dat.trim$Site %in% c("Anderson Point","Point of the Arches","Cape Alava")] <- "Central"
-dat.trim$Region[dat.trim$Site %in% c("Cape Johnson","Rock 305","Teahwhit Head","Destruction Island")] <- "Southern"
-
 # Indicator for Before otter invasion
 dat.trim$otter.absence.indicator <- "N"
 dat.trim$otter.absence.indicator[dat.trim$Year==1987 & dat.trim$Site %in% c("Neah Bay","Anderson Point","Point of the Arches")] <- "Y" 
