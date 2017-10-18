@@ -10,9 +10,9 @@ base.dir <- "/Users/ole.shelton/GitHub/OCNMS"
 setwd(paste(base.dir,"/Data/csv files",sep=""))
 
 #### FUNCTION
-WMean <- function(MEAN,SD){
+WMean <- function(MEAN,W){
   if(length(MEAN)>=2){
-    w <- (1/SD^2) / sum(1/SD^2)
+    w <- W / sum(W)
     mean.out <- sum(w*MEAN)
     return(mean.out)
   }
@@ -20,9 +20,9 @@ WMean <- function(MEAN,SD){
     return(MEAN)
   }
 }
-WSD <- function(MEAN,SD,MIN.SD){
+WSD <- function(MEAN,W,SD){
   if(length(MEAN)>=2){
-      w <- (1/SD^2) / sum(1/SD^2)                
+      w <- (W) / sum(W)                
       var.out  <- sum(w^2*SD^2)
       return(sqrt(var.out))
   }else{
@@ -138,12 +138,11 @@ dat.seastar$n.quad[dat.seastar$Year == 1987] <- N.assume
 dat.seastar$SE <- dat.seastar$SD / sqrt(dat.seastar$n.quad)
 dat.seastar <- as.data.frame(dat.seastar)
 
-#dat.seastar$N <- N.assume
-#dat.seastar$SE <- dat.seastar$SD / sqrt(dat.seastar$N)
+# Combine multiple measurements within a given site using a weighted mean based on 
 dat.seastar   <- dat.seastar %>%
-  group_by(.,Site,Year) %>%
-  summarise(wMEAN= WMean(MEAN,SE),wSE = WSD(MEAN,SE)) %>%
-  as.data.frame()
+   group_by(.,Site,Year) %>%
+   summarise(wMEAN= WMean(MEAN,n.quad),wSE = WSD(MEAN,n.quad,SE)) %>%
+   as.data.frame()
 
 colnames(dat.seastar)[grep("w",colnames(dat.seastar))] <- c("MEAN","SE")
 dat.seastar$group <- "seastar"
@@ -160,25 +159,6 @@ dat.seastar.coastwide <- dat.seastar %>% filter(.,group =="seastar" ) %>%
 dat.seastar$group = "seastar"
 dat.seastar.coastwide$group = "seastar"
 
-# #dat.seastar$N <- N.assume
-# #dat.seastar$SE <- dat.seastar$SD / sqrt(dat.seastar$N)
-# dat.seastar.coastwide   <- dat.seastar.coastwide %>%
-#   group_by(.,Year) %>%
-#   summarise(MEAN=sum(MEAN),SD = sqrt(sum(SD^2)), N.QUAD = sum(n.quad)) %>%
-#   as.data.frame()
-# 
-# #colnames(dat.seastar)[grep("w",colnames(dat.seastar))] <- c("MEAN","SE")
-# dat.seastar.coastwide$SE <- dat.seastar.coastwide$SD / sqrt(dat.seastar.coastwide$N.QUAD)
-# dat.seastar.coastwide$group <- "seastar"
-# dat.seastar.coastwide$Survey <- "Quadrat"
-# dat.seastar.coastwide$depth.m.simple <- 4
-# 
-# dat.seastar.coastwide <- dat.seastar.coastwide[,c("Year","group","MEAN","SE")]
-
-
-##### THERE IS A PROBLEM WITH THE WEIGHTED AVERAGE... ZEROS SCREW IT UP.
-
-
 # Do the remaining species - site by site  
 dat.trim <- dat.kvitek[,c("Site","Year","Survey","depth.m.simple","group","mean","sd","n.quad")]
 dat.trim <- filter(dat.trim,group !="seastar")
@@ -189,62 +169,26 @@ dat.trim$area.for.w[dat.trim$Survey=="Transect"] <- dat.trim$n.quad[dat.trim$Sur
 dat.trim$area.for.w[dat.trim$Survey=="Quadrat"] <- dat.trim$n.quad[dat.trim$Survey=="Quadrat"] * 0.25
 dat.trim$area.for.w[dat.trim$Survey=="Quadrat" & dat.trim$Year==1987] <- dat.trim$n.quad[dat.trim$Survey=="Quadrat"& dat.trim$Year==1987] 
 
-
-
-### OLE STOPPED HERE.  NEED TO FIX MUCH BELOW HERE.
-
-
-
-
-
-
-
-
-
-#dat.trim$N <- N.assume   # this is the assumed sample size for each observation 
+dat.trim <- dat.trim[order(dat.trim$group,dat.trim$Site,dat.trim$Year),]
 
 # Calculate the MEAN and SE for each type (quadrat, transect) then combine into a weighted average
-dat.trim <- dat.trim %>% group_by(.,Site,Year,Survey,depth.m.simple,group,n.quad) %>%
-  summarise(Mean=sum(mean),se=  sqrt(sum((sd/sqrt(n.quad))^2))) %>%
+# Weight values by the area searched.
+dat.trim <- dat.trim %>% group_by(.,Site,Year,Survey,depth.m.simple,group,n.quad,area.for.w,sd) %>%
+  summarise(Mean=WMean(mean,n.quad),se=  WSD(mean,n.quad,sd/sqrt(n.quad))) %>%
   group_by(.,Site,Year,depth.m.simple,group) %>%
-  summarise(.,MEAN=WMean(Mean,se), SE=WSD(Mean,se)) %>% 
+  summarise(.,MEAN=WMean(Mean,area.for.w), SE=WSD(Mean,area.for.w,se)) %>% 
   as.data.frame()
 
 dat.trim[is.nan(dat.trim[,c("MEAN")])==T,c("MEAN","SE")] <- 0
 
-# Combine the multiple depths (less than 15m deep) into on value for each site
-dat.trim <- dat.trim %>% group_by(.,Site,Year,group) %>%
-  summarise(Mean=WMean(MEAN,SE),se=WSD(MEAN,SE),n.obs.check=length(MEAN)) %>%
-  as.data.frame
-colnames(dat.trim)[4:5] <- c("MEAN","SE")
-dat.trim[is.nan(dat.trim[,c("MEAN")])==T,c("MEAN","SE")] <- 0            
+# # Do the remaining species coastwide - treat each site as a replicate, pretend no measurement error at each site.
+dat.trim.coastwide <- dat.trim %>% filter(group !="seastar") %>%
+  group_by(.,Year,group) %>%
+  summarise(simp.mean=mean(MEAN),simp.se=sqrt(sd(MEAN)))
 
+# Combine Seastar and non-seastar data into two data.frames
 dat.trim <- merge(dat.trim,dat.seastar,all=T)
-
-# Do the remaining species - coastwide  
-dat.trim.coastwide <- dat.kvitek[,c("Site","Year","Survey","depth.m.simple","group","mean","sd","n.quad")]
-dat.trim.coastwide <- filter(dat.trim.coastwide,group !="seastar")
-dat.trim.coastwide$SE <- dat.trim.coastwide$sd / sqrt(dat.trim.coastwide$n.quad)
-dat.trim.coastwide$n.quad[dat.trim.coastwide$Year == 1987] <- N.assume
-#dat.trim$N <- N.assume   # this is the assumed sample size for each observation 
-
-# Calculate the MEAN and SE for each type (quadrat, transect) then combine into a weighted average
-dat.trim.coastwide <- dat.trim.coastwide %>% group_by(.,Year,Survey,depth.m.simple,group) %>%
-  summarise(Mean=sum(mean),se=  sqrt(sum((sd/sqrt(n.quad))^2))) %>% as.data.frame()
-  group_by(.,Year,depth.m.simple,group) %>%
-  summarise(.,MEAN=mean(Mean), SE=WSD(Mean,se)) %>%
-  as.data.frame()
-
-dat.trim[is.nan(dat.trim[,c("MEAN")])==T,c("MEAN","SE")] <- 0
-
-# Combine the multiple depths (less than 15m deep) into on value for each site
-dat.trim <- dat.trim %>% group_by(.,Site,Year,group) %>%
-  summarise(Mean=WMean(MEAN,SE),se=WSD(MEAN,SE),n.obs.check=length(MEAN)) %>%
-  as.data.frame
-colnames(dat.trim)[4:5] <- c("MEAN","SE")
-dat.trim[is.nan(dat.trim[,c("MEAN")])==T,c("MEAN","SE")] <- 0            
-
-dat.trim <- merge(dat.trim,dat.seastar,all=T)
+dat.trim.coastwide <- merge(dat.trim.coastwide,dat.seastar.coastwide,all=T)
 
 # add otter food categories. problematic because not all bivalves are common diet items etc etc
 unique(otter.food$group)
@@ -290,16 +234,20 @@ unique(otter.food2$group)
 unique(dat.trim$group)
 
 
-#make new merged df for pre-2000 data
-dat.trim <- merge(dat.trim,otter.food2,by="group")
 #head(left_join(dat.trim,otter.food2,by="group"),10)
 
 
 #### COMBINE THE 2015 and pre-2000 data
-dat.group <- merge(out.by.group,dat.trim,all=T)
-dat.group <- subset(dat.group,select=-c(otter.food,otter.food.long))
+dat.trim <- merge(out.by.group,dat.trim,all=T)
+#make new merged df for pre-2000 data
+dat.trim <- merge(dat.trim,otter.food2,by="group")
+dat.trim <- subset(dat.group,select=-c(otter.food,otter.food.long))
+
 dat.otter.food <- merge(out.by.otter.food,dat.trim,all=T)
 dat.otter.food <- subset(dat.otter.food, select=-c(group))
+
+dat.trim.coastwide <- merge(dat.trim.coastwide, out.by.group.coastwide,all=T) 
+
 
 #### MAKE BINARY OTTER FOOD COLUMN
 dat.otter.food$otter.food.binary <- ifelse(
