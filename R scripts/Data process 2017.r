@@ -5,8 +5,8 @@ library(dplyr)
 library(ggplot2)
 #library(plyr)
 #### Script for importing historical Kviteck data and our OCNMS data
-base.dir <- "/Users/ole.shelton/GitHub/OCNMS"
-#base.dir <- "/Users/jamealsamhouri/Documents/GitHub/OCNMS"
+#base.dir <- "/Users/ole.shelton/GitHub/OCNMS"
+base.dir <- "~/Documents/GitHub/OCNMS"
 setwd(paste(base.dir,"/Data/csv files",sep=""))
 
 #### FUNCTION
@@ -191,142 +191,154 @@ dat.trim.coastwide$SE <- dat.trim.coastwide$sd / sqrt(dat.trim.coastwide$n.quad)
 dat.trim.coastwide$n.quad[dat.trim.coastwide$Year == 1987] <- N.assume
 #dat.trim$N <- N.assume   # this is the assumed sample size for each observation 
 
+dat.trim.coastwide$area.for.w <- 0
+dat.trim.coastwide$area.for.w[dat.trim.coastwide$Survey=="Transect"] <- dat.trim.coastwide$n.quad[dat.trim.coastwide$Survey=="Transect"] * 25
+dat.trim.coastwide$area.for.w[dat.trim.coastwide$Survey=="Quadrat"] <- dat.trim.coastwide$n.quad[dat.trim.coastwide$Survey=="Quadrat"] * 0.25
+dat.trim.coastwide$area.for.w[dat.trim.coastwide$Survey=="Quadrat" & dat.trim.coastwide$Year==1987] <- dat.trim.coastwide$n.quad[dat.trim.coastwide$Survey=="Quadrat"& dat.trim.coastwide$Year==1987] 
+
 # Calculate the MEAN and SE for each type (quadrat, transect) then combine into a weighted average
-dat.trim.coastwide <- dat.trim.coastwide %>% group_by(.,Year,Survey,depth.m.simple,group) %>%
-  summarise(Mean=sum(mean),se=  sqrt(sum((sd/sqrt(n.quad))^2))) %>% as.data.frame()
+dat.trim.coastwide <- dat.trim.coastwide %>% group_by(.,Year,Survey,depth.m.simple,group,area.for.w) %>%
+  summarise(Mean=WMean(mean,n.quad),se=  WSD(mean,n.quad,sd/sqrt(n.quad))) %>% as.data.frame() %>%
   group_by(.,Year,depth.m.simple,group) %>%
-  summarise(.,MEAN=mean(Mean), SE=WSD(Mean,se)) %>%
+  summarise(.,MEAN=WMean(Mean,area.for.w), SE=WSD(Mean,area.for.w,se)) %>%
   as.data.frame()
 
 # Combine Seastar and non-seastar data into two data.frames
 dat.trim.coastwide <- merge(dat.trim.coastwide,dat.seastar.coastwide,all=T)
 
+
+################ JAMEAL DEALING WITH OTTER FOOD CATEGORIES  ################
+################ IGNORE FOR NOW
 # add otter food categories. problematic because not all bivalves are common diet items etc etc
-unique(otter.food$group)
-# need to decide on a single prey category
-table(otter.food[which(otter.food$group == "bivalve"),]$otter.food.long) # change to common, Kvitek 1988 focused on scallops
-table(otter.food[which(otter.food$group == "gastropod"),]$otter.food.long) # change to occassional, depends on the species
-table(otter.food[which(otter.food$group == "seastar"),]$otter.food.long) # change to rare, depends on the species
-table(otter.food[which(otter.food$group == "crab"),]$otter.food.long) # change to occassional, depends on the species
-table(otter.food[which(otter.food$group == "chiton"),]$otter.food.long) # change to rare
-table(otter.food[which(otter.food$group == "cucumber"),]$otter.food.long) # change to rare
-table(otter.food[which(otter.food$group == "urchin"),]$otter.food.long) # change to common
+# unique(otter.food$group)
+# # need to decide on a single prey category
+# table(otter.food[which(otter.food$group == "bivalve"),]$otter.food.long) # change to common, Kvitek 1988 focused on scallops
+# table(otter.food[which(otter.food$group == "gastropod"),]$otter.food.long) # change to occassional, depends on the species
+# table(otter.food[which(otter.food$group == "seastar"),]$otter.food.long) # change to rare, depends on the species
+# table(otter.food[which(otter.food$group == "crab"),]$otter.food.long) # change to occassional, depends on the species
+# table(otter.food[which(otter.food$group == "chiton"),]$otter.food.long) # change to rare
+# table(otter.food[which(otter.food$group == "cucumber"),]$otter.food.long) # change to rare
+# table(otter.food[which(otter.food$group == "urchin"),]$otter.food.long) # change to common
+# 
+# # no changes needed
+# table(otter.food[which(otter.food$group == "nudibranch"),]$otter.food.long)
+# table(otter.food[which(otter.food$group == "anenome"),]$otter.food.long) 
+# table(otter.food[which(otter.food$group == "sponge"),]$otter.food.long) 
+# table(otter.food[which(otter.food$group == "tunicate"),]$otter.food.long)
 
-# no changes needed
-table(otter.food[which(otter.food$group == "nudibranch"),]$otter.food.long)
-table(otter.food[which(otter.food$group == "anenome"),]$otter.food.long) 
-table(otter.food[which(otter.food$group == "sponge"),]$otter.food.long) 
-table(otter.food[which(otter.food$group == "tunicate"),]$otter.food.long)
+# otter.food2 <- otter.food %>%
+#   select(group,otter.food,otter.food.long) %>%
+#   distinct(group,.keep_all=TRUE)
+# 
+# otter.food2$otter.food <- c(
+#   "N","O","N","R","C","O","R","N","R","C","N","N"
+#   )
+# 
+# otter.food2$otter.food.long <- c(
+#   "Not Otter Food",
+#   "Occassional",
+#   "Not Otter Food",
+#   "Rare",
+#   "Common",
+#   "Occassional",
+#   "Rare",
+#   "Not Otter Food",
+#   "Rare",
+#   "Common",
+#   "Not Otter Food",
+#   "Not Otter Food"
+# )
+# 
+# # unique(otter.food2$group) 
+# # unique(dat.trim$group)
+# 
+# 
 
-otter.food2 <- otter.food %>%
-  select(group,otter.food,otter.food.long) %>%
-  distinct(group,.keep_all=TRUE)
+# #### MAKE BINARY OTTER FOOD COLUMN
+# dat.otter.food$otter.food.binary <- ifelse(
+#   dat.otter.food$otter.food == "N",
+#   "Not Sea Otter Prey",
+#   "Sea Otter Prey"
+# )
+# 
+# # Unify Merge the site names
+# dat.group$Site <- as.character(dat.group$Site)
+# dat.group$Site[dat.group$Site =="Anderson Point"] = "Anderson Pt."
+# dat.group$Site[dat.group$Site =="Rock #305"] = "Rock 305"
+# dat.group$Site[dat.group$Site =="Point of the Arches"] = "Pt. of the Arches"
+# dat.group$Site[dat.group$Site =="Teawhit Head"] = "Teahwhit Head"
+# dat.group$Site[grep("Chiba",dat.group$Site)] <- "Chibahdehl"
+# dat.group$Site[grep("Destruct",dat.group$Site)] <- "Destruction Is."
+# dat.group$Site[grep("Tatoosh",dat.group$Site)] <- "Tatoosh Is."
+# ### Exclude a few sites that lack surveys in multiple time periods
+# 
+# # repeat for otter food df
+# # Unify Merge the site names
+# dat.otter.food$Site <- as.character(dat.otter.food$Site)
+# dat.otter.food$Site[dat.otter.food$Site =="Anderson Point"] = "Anderson Pt."
+# dat.otter.food$Site[dat.otter.food$Site =="Rock #305"] = "Rock 305"
+# dat.otter.food$Site[dat.otter.food$Site =="Point of the Arches"] = "Pt. of the Arches"
+# dat.otter.food$Site[dat.otter.food$Site =="Teawhit Head"] = "Teahwhit Head"
+# dat.otter.food$Site[grep("Chiba",dat.otter.food$Site)] <- "Chibahdehl"
+# dat.otter.food$Site[grep("Destruct",dat.otter.food$Site)] <- "Destruction Is."
+# dat.otter.food$Site[grep("Tatoosh",dat.otter.food$Site)] <- "Tatoosh Is."
+# ### Exclude a few sites that lack surveys in multiple time periods
+# 
+# site.order <- c(
+#   "Neah Bay",
+#   "Chibahdehl",
+#   "Tatoosh Is.",
+#   #"Cape Flattery",
+#   "Anderson Pt.",
+#   "Makah Bay",
+#   "Pt. of the Arches",
+#   "Cape Alava",
+#   "Cape Johnson",
+#   "Rock 305",
+#   "Teahwhit Head",
+#   "Destruction Is.")
+# 
+# dat.group$Site.plot <- dat.group$Site
+# dat.group$Site.plot <-  factor(dat.group$Site.plot, 
+#                                levels = site.order)
+# dat.group <- dat.group[is.na(dat.group$Site.plot)==F,]
+# dat.group$year.plot <- as.Date(as.character(dat.group$Year),"%Y")
+# #dat.group <- merge(dat.group,expand.grid(unique(dat.group$Site),unique(dat.group$Year),unique(dat.group$group)),all=T)
+# 
+# 
+# food.order <- c(
+#   "Common",
+#   "Occassional",
+#   "Rare",
+#   "Not Otter Food"
+# )
+# 
+# dat.otter.food$Site.plot <- dat.otter.food$Site
+# dat.otter.food$Site.plot <-  factor(dat.otter.food$Site.plot, 
+#                                levels = site.order)
+# dat.otter.food <- dat.otter.food[is.na(dat.otter.food$Site.plot)==F,]
+# dat.otter.food$year.plot <- as.Date(as.character(dat.otter.food$Year),"%Y")
+# dat.otter.food$otter.food.plot <- dat.otter.food$otter.food.long
+# dat.otter.food$otter.food.plot <-  factor(dat.otter.food$otter.food.plot,
+#                                     levels = food.order)
 
-otter.food2$otter.food <- c(
-  "N","O","N","R","C","O","R","N","R","C","N","N"
-  )
 
-otter.food2$otter.food.long <- c(
-  "Not Otter Food",
-  "Occassional",
-  "Not Otter Food",
-  "Rare",
-  "Common",
-  "Occassional",
-  "Rare",
-  "Not Otter Food",
-  "Rare",
-  "Common",
-  "Not Otter Food",
-  "Not Otter Food"
-)
+################ END JAMEAL DEALING WITH OTTER FOOD CATEGORIES  ################
 
-unique(otter.food2$group) 
-unique(dat.trim$group)
-
+###########
 
 #### COMBINE THE 2015 and pre-2000 data
 dat.trim <- merge(out.by.group,dat.trim,all=T)
 #make new merged df for pre-2000 data
-dat.trim <- merge(dat.trim,otter.food2,by="group")
-dat.trim <- subset(dat.group,select=-c(otter.food,otter.food.long))
+# dat.trim <- merge(dat.trim,otter.food2,by="group")
+# dat.trim <- subset(dat.group,select=-c(otter.food,otter.food.long))
 
-dat.otter.food <- merge(out.by.otter.food,dat.trim,all=T)
-dat.otter.food <- subset(dat.otter.food, select=-c(group))
+# dat.otter.food <- merge(out.by.otter.food,dat.trim,all=T)
+# dat.otter.food <- subset(dat.otter.food, select=-c(group))
 
-dat.trim.coastwide <- merge(dat.trim.coastwide, out.by.group.coastwide,all=T) 
-
-
-#### MAKE BINARY OTTER FOOD COLUMN
-dat.otter.food$otter.food.binary <- ifelse(
-  dat.otter.food$otter.food == "N",
-  "Not Sea Otter Prey",
-  "Sea Otter Prey"
-)
-
-# Unify Merge the site names
-dat.group$Site <- as.character(dat.group$Site)
-dat.group$Site[dat.group$Site =="Anderson Point"] = "Anderson Pt."
-dat.group$Site[dat.group$Site =="Rock #305"] = "Rock 305"
-dat.group$Site[dat.group$Site =="Point of the Arches"] = "Pt. of the Arches"
-dat.group$Site[dat.group$Site =="Teawhit Head"] = "Teahwhit Head"
-dat.group$Site[grep("Chiba",dat.group$Site)] <- "Chibahdehl"
-dat.group$Site[grep("Destruct",dat.group$Site)] <- "Destruction Is."
-dat.group$Site[grep("Tatoosh",dat.group$Site)] <- "Tatoosh Is."
-### Exclude a few sites that lack surveys in multiple time periods
-
-# repeat for otter food df
-# Unify Merge the site names
-dat.otter.food$Site <- as.character(dat.otter.food$Site)
-dat.otter.food$Site[dat.otter.food$Site =="Anderson Point"] = "Anderson Pt."
-dat.otter.food$Site[dat.otter.food$Site =="Rock #305"] = "Rock 305"
-dat.otter.food$Site[dat.otter.food$Site =="Point of the Arches"] = "Pt. of the Arches"
-dat.otter.food$Site[dat.otter.food$Site =="Teawhit Head"] = "Teahwhit Head"
-dat.otter.food$Site[grep("Chiba",dat.otter.food$Site)] <- "Chibahdehl"
-dat.otter.food$Site[grep("Destruct",dat.otter.food$Site)] <- "Destruction Is."
-dat.otter.food$Site[grep("Tatoosh",dat.otter.food$Site)] <- "Tatoosh Is."
-### Exclude a few sites that lack surveys in multiple time periods
-
-site.order <- c(
-  "Neah Bay",
-  "Chibahdehl",
-  "Tatoosh Is.",
-  #"Cape Flattery",
-  "Anderson Pt.",
-  "Makah Bay",
-  "Pt. of the Arches",
-  "Cape Alava",
-  "Cape Johnson",
-  "Rock 305",
-  "Teahwhit Head",
-  "Destruction Is.")
-
-dat.group$Site.plot <- dat.group$Site
-dat.group$Site.plot <-  factor(dat.group$Site.plot, 
-                               levels = site.order)
-dat.group <- dat.group[is.na(dat.group$Site.plot)==F,]
-dat.group$year.plot <- as.Date(as.character(dat.group$Year),"%Y")
-#dat.group <- merge(dat.group,expand.grid(unique(dat.group$Site),unique(dat.group$Year),unique(dat.group$group)),all=T)
+dat.trim.coastwide <- merge(dat.trim.coastwide, out.by.group.coastwide,all=T)
 
 
-food.order <- c(
-  "Common",
-  "Occassional",
-  "Rare",
-  "Not Otter Food"
-)
-
-dat.otter.food$Site.plot <- dat.otter.food$Site
-dat.otter.food$Site.plot <-  factor(dat.otter.food$Site.plot, 
-                               levels = site.order)
-dat.otter.food <- dat.otter.food[is.na(dat.otter.food$Site.plot)==F,]
-dat.otter.food$year.plot <- as.Date(as.character(dat.otter.food$Year),"%Y")
-dat.otter.food$otter.food.plot <- dat.otter.food$otter.food.long
-dat.otter.food$otter.food.plot <-  factor(dat.otter.food$otter.food.plot,
-                                    levels = food.order)
-
-
-###########
 
 # Rename Sites for consistency with otter and kelp plots
 dat.trim$Site <- as.character(dat.trim$Site)

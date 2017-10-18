@@ -1,10 +1,17 @@
 
 # for OLE 
-base.dir <- "/Users/ole.shelton/GitHub/OCNMS/"
+# base.dir <- "/Users/ole.shelton/GitHub/OCNMS/"
+# source(paste(base.dir,"R scripts/Combine Sea Otter and Kelp in one plot.R",sep=""))
+# base.dir <- "/Users/ole.shelton/GitHub/OCNMS/"
+# source(paste(base.dir,"R scripts/Data process 2017.R",sep=""))
+# base.dir <- "/Users/ole.shelton/GitHub/OCNMS/"
+
+# for JAMEAL
+base.dir <- "~/Documents/GitHub/OCNMS/"
 source(paste(base.dir,"R scripts/Combine Sea Otter and Kelp in one plot.R",sep=""))
-base.dir <- "/Users/ole.shelton/GitHub/OCNMS/"
+base.dir <- "~/Documents/GitHub/OCNMS/"
 source(paste(base.dir,"R scripts/Data process 2017.R",sep=""))
-base.dir <- "/Users/ole.shelton/GitHub/OCNMS/"
+base.dir <- "~/Documents/GitHub/OCNMS/"
 
 # Important data frames are 
 # dat.trim 
