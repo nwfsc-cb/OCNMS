@@ -8,11 +8,11 @@ library(ks)
 
 # for OLE 
 #setwd("~Github/OCNMS/Data/csv files")
-base.dir <- "/Users/ole.shelton/GitHub/OCNMS/"
+# base.dir <- "/Users/ole.shelton/GitHub/OCNMS/"
 
 # for JAMEAL
-# setwd("~/Documents/Github/OCNMS/Data/csv files")
-# base.dir <- "~/Documents/Github/OCNMS/"
+setwd("~/Documents/Github/OCNMS/Data/csv files")
+base.dir <- "~/Documents/Github/OCNMS/"
 
 
 # for EVERYBODY

@@ -3,11 +3,19 @@ library(grid)
 ### Combining Kelp and Sea otter data for publication plots
 
 # for OLE 
-base.dir <- "/Users/ole.shelton/GitHub/OCNMS/"
+# base.dir <- "/Users/ole.shelton/GitHub/OCNMS/"
+# source(paste(base.dir,"R scripts/Kelp Analysis.R",sep=""))
+# base.dir <- "/Users/ole.shelton/GitHub/OCNMS/"
+# source(paste(base.dir,"R scripts/Sea otter time series script.R",sep=""))
+# base.dir <- "/Users/ole.shelton/GitHub/OCNMS/"
+
+# for JAMEAL
+base.dir <- "~/Documents/GitHub/OCNMS/"
 source(paste(base.dir,"R scripts/Kelp Analysis.R",sep=""))
-base.dir <- "/Users/ole.shelton/GitHub/OCNMS/"
+base.dir <- "~/Documents/GitHub/OCNMS/"
 source(paste(base.dir,"R scripts/Sea otter time series script.R",sep=""))
-base.dir <- "/Users/ole.shelton/GitHub/OCNMS/"
+base.dir <- "~/Documents/GitHub/OCNMS/"
+
 
 otter.kern.dat<- read.csv(paste(base.dir,"Data/csv files/Kernel otter abundances; kern=10.2.csv",sep=""))
 

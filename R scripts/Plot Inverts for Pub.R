@@ -1,10 +1,17 @@
 
 # for OLE 
-base.dir <- "/Users/ole.shelton/GitHub/OCNMS/"
+# base.dir <- "/Users/ole.shelton/GitHub/OCNMS/"
+# source(paste(base.dir,"R scripts/Combine Sea Otter and Kelp in one plot.R",sep=""))
+# base.dir <- "/Users/ole.shelton/GitHub/OCNMS/"
+# source(paste(base.dir,"R scripts/Data process 2017.R",sep=""))
+# base.dir <- "/Users/ole.shelton/GitHub/OCNMS/"
+
+# for JAMEAL
+base.dir <- "~/Documents/GitHub/OCNMS/"
 source(paste(base.dir,"R scripts/Combine Sea Otter and Kelp in one plot.R",sep=""))
-base.dir <- "/Users/ole.shelton/GitHub/OCNMS/"
+base.dir <- "~/Documents/GitHub/OCNMS/"
 source(paste(base.dir,"R scripts/Data process 2017.R",sep=""))
-base.dir <- "/Users/ole.shelton/GitHub/OCNMS/"
+base.dir <- "~/Documents/GitHub/OCNMS/"
 
 # Important data frames are 
 # dat.trim 
@@ -23,19 +30,6 @@ NOM <- c(
   "Teahwhit Head",
   "Destruction Island"
 )
-
-# Rename Sites for consistency with otter and kelp plots
-dat.trim$Site <- as.character(dat.trim$Site)
-dat.trim$Site[dat.trim$Site == "Anderson Pt."] <- "Anderson Point"
-dat.trim$Site[dat.trim$Site == "Destruction Island SW"] <- "Destruction Island"
-dat.trim$Site[dat.trim$Site == "Pt. of the Arches"] <- "Point of the Arches"
-dat.trim$Site[dat.trim$Site == "Chibahdel"] <- "Chibadehl Rocks"
-
-# Add regional Groupings
-dat.trim$Region <- ""
-dat.trim$Region[dat.trim$Site %in% c("Neah Bay", "Chibadehl Rocks","Tatoosh Island")] <- "Northern"
-dat.trim$Region[dat.trim$Site %in% c("Anderson Point","Point of the Arches","Cape Alava")] <- "Central"
-dat.trim$Region[dat.trim$Site %in% c("Cape Johnson","Rock 305","Teahwhit Head","Destruction Island")] <- "Southern"
 
 # Indicator for Before otter invasion
 dat.trim$otter.absence.indicator <- "N"
