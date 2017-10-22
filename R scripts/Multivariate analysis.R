@@ -17,12 +17,12 @@ library(plyr)
 # base.dir <- "/Users/ole.shelton/GitHub/OCNMS/"
 
 # for JAMEAL
-base.dir <- "~/Documents/GitHub/OCNMS/"
-source(paste(base.dir,"R scripts/Combine Sea Otter and Kelp in one plot.R",sep=""))
+# base.dir <- "~/Documents/GitHub/OCNMS/"
+# source(paste(base.dir,"R scripts/Combine Sea Otter and Kelp in one plot.R",sep=""))
 base.dir <- "~/Documents/GitHub/OCNMS/"
 source(paste(base.dir,"R scripts/Data process 2017.R",sep=""))
 base.dir <- "~/Documents/GitHub/OCNMS/"
-source(paste0(base.dir,"R scripts/theme_acs.R"))
+source(paste0(base.dir,"R scripts/theme_Publication.R"))
 
 # Important data frames are 
 # dat.trim 
@@ -89,12 +89,11 @@ find_hull <- function(df) df[chull(df$MDS1, df$MDS2),]
 # hulls_u_j <- ddply(NMDS_j,"Category", find_hull)
 # hulls_u_j$dist<-c("Jaccard")
 hulls_u_bc_region <- ddply(NMDS_bc,"Region", find_hull)
-hulls_u_bc_region$dist<-c("BrayCurtis")
 # hulls_u_g <- ddply(NMDS_g,"Category", find_hull)
 # hulls_u_g$dist<-c("modGower")
 
 hulls_u_bc_year <- ddply(NMDS_bc,"Year", find_hull)
-hulls_u_bc_year$dist<-c("BrayCurtis")
+
 
 #bind together urban and less urban 
 #df_jg_h<-rbind(hulls_u_j,hulls_u_g)
@@ -112,11 +111,45 @@ hulls_u_bc_year$dist<-c("BrayCurtis")
 # vec.sp.df$rank <- ifelse(abs(vec.sp.df$MDS1)>abs(vec.sp.df$MDS2),rank(abs(vec.sp.df$MDS1)),rank(abs(vec.sp.df$MDS2)) )
 # vec.sp.df <- vec.sp.df[which(vec.sp.df$rank > 36),]
 
-mds_plot1 <- ggplot(data=NMDS_bc,aes(x=MDS1,y=MDS2,fill=factor(Region),colour=factor(Region),group=factor(Region)))+
-  geom_point(aes(colour=factor(Region),pch=factor(Year)),size=3)+
+mds_plot_byRegion <- ggplot(data=NMDS_bc,aes(x=MDS1,y=MDS2,fill=factor(Region),colour=factor(Region),group=factor(Region)))+
+  geom_point(aes(colour=factor(Region),pch=factor(Region)),size=3)+
   geom_polygon(data = hulls_u_bc_region , alpha = 0.2,aes(fill=factor(Region),colour=factor(Region),group=factor(Region))) +
   ggtitle("Regional similarities all years") +
-  theme_acs()
+  guides(fill=guide_legend(title="Region"),colour=guide_legend(title="Region"),group=guide_legend(title="Region"),pch=guide_legend(title="Region")) +
+  theme_Publication()
+  # theme_bw() +
+  # theme(
+  #   text=element_text(size=14),
+  #   panel.grid.major = element_blank(),
+  #   panel.grid.minor = element_blank(),
+  #   panel.background = element_rect(fill = NA,colour = "black",size=2),
+  #   plot.title = element_text(hjust = 0.5)
+  # )
 
-mds_plot1
+mds_plot_byRegion
+
+quartz(file = paste(base.dir,"/Plots/MDS invert community gruped by region",sep=""),type="pdf",dpi=300,height=4,width=5 )
+print(mds_plot_byRegion)
+dev.off()
+
+mds_plot_byYear <- ggplot(data=NMDS_bc,aes(x=MDS1,y=MDS2,fill=factor(Year),colour=factor(Year),group=factor(Year)))+
+  geom_point(aes(colour=factor(Year),pch=factor(Year)),size=3)+
+  geom_polygon(data = hulls_u_bc_year , alpha = 0.2,aes(fill=factor(Year),colour=factor(Year),group=factor(Year))) +
+  ggtitle("Year similarities all regions") +
+  guides(fill=guide_legend(title="Year"),colour=guide_legend(title="Year"),group=guide_legend(title="Year"),pch=guide_legend(title="Year")) +
+  theme_Publication()
+# theme_bw() +
+# theme(
+#   text=element_text(size=14),
+#   panel.grid.major = element_blank(),
+#   panel.grid.minor = element_blank(),
+#   panel.background = element_rect(fill = NA,colour = "black",size=2),
+#   plot.title = element_text(hjust = 0.5)
+# )
+
+mds_plot_byYear
+
+quartz(file = paste(base.dir,"/Plots/MDS invert community gruped by year.pdf",sep=""),type="pdf",dpi=300,height=4,width=5 )
+print(mds_plot_byYear)
+dev.off()
 
