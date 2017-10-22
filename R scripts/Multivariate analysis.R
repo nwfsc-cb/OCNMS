@@ -128,7 +128,7 @@ mds_plot_byRegion <- ggplot(data=NMDS_bc,aes(x=MDS1,y=MDS2,fill=factor(Region),c
 
 mds_plot_byRegion
 
-quartz(file = paste(base.dir,"/Plots/MDS invert community gruped by region",sep=""),type="pdf",dpi=300,height=4,width=5 )
+quartz(file = paste(base.dir,"/Plots/MDS invert community grouped by region.pdf",sep=""),type="pdf",dpi=300,height=4,width=5 )
 print(mds_plot_byRegion)
 dev.off()
 
@@ -149,7 +149,7 @@ mds_plot_byYear <- ggplot(data=NMDS_bc,aes(x=MDS1,y=MDS2,fill=factor(Year),colou
 
 mds_plot_byYear
 
-quartz(file = paste(base.dir,"/Plots/MDS invert community gruped by year.pdf",sep=""),type="pdf",dpi=300,height=4,width=5 )
+quartz(file = paste(base.dir,"/Plots/MDS invert community grouped by year.pdf",sep=""),type="pdf",dpi=300,height=4,width=5 )
 print(mds_plot_byYear)
 dev.off()
 
