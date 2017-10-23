@@ -167,6 +167,7 @@ mds_plot_byRegion_vectors <- ggplot(data=NMDS_bc)+
   ggtitle("Regional similarities all years")+
   #scale_colour_manual(values = c("#0bb2dd","#ec2035"))+
   #scale_fill_manual(values = c("#0bb2dd","#ec2035"))+
+  guides(fill=guide_legend(title="Region"),colour=guide_legend(title="Region"),group=guide_legend(title="Region"),pch=guide_legend(title="Region")) +
   theme_Publication()+
   theme(strip.background = element_rect(fill = "white", color = "white"))
 mds_plot_byRegion_vectors
@@ -183,6 +184,7 @@ mds_plot_byYear_vectors <- ggplot(data=NMDS_bc)+
   ggtitle("Year similarities all regions")+
   #scale_colour_manual(values = c("#0bb2dd","#ec2035"))+
   #scale_fill_manual(values = c("#0bb2dd","#ec2035"))+
+  guides(fill=guide_legend(title="Year"),colour=guide_legend(title="Year"),group=guide_legend(title="Year"),pch=guide_legend(title="Year")) +
   theme_Publication()+
   theme(strip.background = element_rect(fill = "white", color = "white"))
 mds_plot_byYear_vectors
