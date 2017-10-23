@@ -6,6 +6,7 @@ library(vegan)
 # library(mclust)
 # library(cluster)
 library(plyr)
+library(ggrepel)
 # library(zoo)
 # library(fpc)
 
@@ -153,3 +154,59 @@ quartz(file = paste(base.dir,"/Plots/MDS invert community grouped by year.pdf",s
 print(mds_plot_byYear)
 dev.off()
 
+vectors.df<-envfit(bestnmds_bc, dat.trim.wide[,4:9], perm=1000, na.rm=TRUE)
+vectors.df<-as.data.frame(vectors.df$vectors$arrows*sqrt(vectors.df$vectors$r))
+vectors.df$groups<-rownames(vectors.df)
+names(vectors.df) <- c("MDS1","MDS2","group")
+
+mds_plot_byRegion_vectors <- ggplot(data=NMDS_bc)+ 
+  geom_point(aes(x=MDS1,y=MDS2,fill=factor(Region),colour=factor(Region),group=factor(Region),pch=factor(Region)),size=3)+
+  geom_polygon(data = hulls_u_bc_region, alpha = 0.2,aes(x=MDS1,y=MDS2,fill=factor(Region),colour=factor(Region),group=factor(Region)))+
+  geom_segment(data=vectors.df,aes(x=0,xend=MDS1,y=0,yend=MDS2),arrow = arrow(length = unit(0.5, "cm")),colour="grey")+
+  geom_text_repel(data=vectors.df,aes(x=MDS1,y=MDS2,label=group),size=5)+
+  ggtitle("Regional similarities all years")+
+  #scale_colour_manual(values = c("#0bb2dd","#ec2035"))+
+  #scale_fill_manual(values = c("#0bb2dd","#ec2035"))+
+  theme_Publication()+
+  theme(strip.background = element_rect(fill = "white", color = "white"))
+mds_plot_byRegion_vectors
+
+quartz(file = paste(base.dir,"/Plots/MDS invert community grouped by region wth vectors.pdf",sep=""),type="pdf",dpi=300,height=4,width=5 )
+print(mds_plot_byRegion_vectors)
+dev.off()
+
+mds_plot_byYear_vectors <- ggplot(data=NMDS_bc)+ 
+  geom_point(aes(x=MDS1,y=MDS2,fill=factor(Year),colour=factor(Year),group=factor(Year),pch=factor(Year)),size=3)+
+  geom_polygon(data = hulls_u_bc_year, alpha = 0.2,aes(x=MDS1,y=MDS2,fill=factor(Year),colour=factor(Year),group=factor(Year)))+
+  geom_segment(data=vectors.df,aes(x=0,xend=MDS1,y=0,yend=MDS2),arrow = arrow(length = unit(0.5, "cm")),colour="grey")+
+  geom_text_repel(data=vectors.df,aes(x=MDS1,y=MDS2,label=group),size=5)+
+  ggtitle("Year similarities all regions")+
+  #scale_colour_manual(values = c("#0bb2dd","#ec2035"))+
+  #scale_fill_manual(values = c("#0bb2dd","#ec2035"))+
+  theme_Publication()+
+  theme(strip.background = element_rect(fill = "white", color = "white"))
+mds_plot_byYear_vectors
+
+quartz(file = paste(base.dir,"/Plots/MDS invert community grouped by year wth vectors.pdf",sep=""),type="pdf",dpi=300,height=4,width=5 )
+print(mds_plot_byYear_vectors)
+dev.off()
+
+#####
+#Analysis to look at full permanova and permadisp results
+#### 
+
+# PERMANOVA test for effect of region
+write.csv(adonis(dbc~dat.trim.wide$Region,strata=dat.trim.wide$Year)$aov.tab,paste(base.dir,"Plots/PERMANOVA invert community grouped by region.csv",sep=""),row.names=TRUE)
+# PERMANOVA test for effect of year
+write.csv(adonis(dbc~dat.trim.wide$Year,strata=dat.trim.wide$Region)$aov.tab,paste(base.dir,"Plots/PERMANOVA invert community grouped by year.csv",sep=""),row.names=TRUE)
+
+
+# TEST FOR DIFFERENCESIN VARIANCE IN COMMUNITY STRUCTURE AMONG REGIONS - NS
+m1 <- betadisper(dbc,dat.trim.wide$Region)
+permutest(m1)
+# TEST FOR DIFFERENCESIN VARIANCE IN COMMUNITY STRUCTURE AMONG YEARS - NS
+m2 <- betadisper(dbc,dat.trim.wide$Year)
+permutest(m2)
+
+
+# #write.csv(permutest(m3)[1],"Betadisper nomud year.all.csv",row.names=FALSE)
