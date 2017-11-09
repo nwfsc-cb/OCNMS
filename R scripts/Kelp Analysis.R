@@ -5,10 +5,10 @@ library(ggplot2)
 library(reshape2)
 
 # for OLE
-# base.dir <- "/Users/ole.shelton/GitHub/OCNMS"
+ base.dir <- "/Users/ole.shelton/GitHub/OCNMS"
 
 # for JAMEAL
-base.dir <- "~/Documents/GitHub/OCNMS/"
+#base.dir <- "~/Documents/GitHub/OCNMS/"
 
 source(paste(base.dir,"/R scripts/multiplot.r",sep=""))
 

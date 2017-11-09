@@ -7,13 +7,12 @@ library(ks)
 
 
 # for OLE 
-#setwd("~Github/OCNMS/Data/csv files")
-# base.dir <- "/Users/ole.shelton/GitHub/OCNMS/"
+setwd("/Users/ole.shelton/GitHub/OCNMS/Data/csv files")
+base.dir <- "/Users/ole.shelton/GitHub/OCNMS/"
 
 # for JAMEAL
-setwd("~/Documents/Github/OCNMS/Data/csv files")
-base.dir <- "~/Documents/Github/OCNMS/"
-
+# setwd("~/Documents/Github/OCNMS/Data/csv files")
+# base.dir <- "~/Documents/Github/OCNMS/"
 
 # for EVERYBODY
 source(paste(base.dir,"R scripts/integral.kde.R",sep=""))
