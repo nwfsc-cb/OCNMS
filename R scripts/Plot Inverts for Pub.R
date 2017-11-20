@@ -1,17 +1,17 @@
 
 # for OLE 
-# base.dir <- "/Users/ole.shelton/GitHub/OCNMS/"
-# source(paste(base.dir,"R scripts/Combine Sea Otter and Kelp in one plot.R",sep=""))
-# base.dir <- "/Users/ole.shelton/GitHub/OCNMS/"
-# source(paste(base.dir,"R scripts/Data process 2017.R",sep=""))
-# base.dir <- "/Users/ole.shelton/GitHub/OCNMS/"
+base.dir <- "/Users/ole.shelton/GitHub/OCNMS/"
+source(paste(base.dir,"R scripts/Combine Sea Otter and Kelp in one plot.R",sep=""))
+base.dir <- "/Users/ole.shelton/GitHub/OCNMS/"
+source(paste(base.dir,"R scripts/Data process 2017.R",sep=""))
+base.dir <- "/Users/ole.shelton/GitHub/OCNMS/"
 
 # for JAMEAL
-base.dir <- "~/Documents/GitHub/OCNMS/"
-source(paste(base.dir,"R scripts/Combine Sea Otter and Kelp in one plot.R",sep=""))
-base.dir <- "~/Documents/GitHub/OCNMS/"
-source(paste(base.dir,"R scripts/Data process 2017.R",sep=""))
-base.dir <- "~/Documents/GitHub/OCNMS/"
+# base.dir <- "~/Documents/GitHub/OCNMS/"
+# source(paste(base.dir,"R scripts/Combine Sea Otter and Kelp in one plot.R",sep=""))
+# base.dir <- "~/Documents/GitHub/OCNMS/"
+# source(paste(base.dir,"R scripts/Data process 2017.R",sep=""))
+# base.dir <- "~/Documents/GitHub/OCNMS/"
 
 # Important data frames are 
 # dat.trim 
@@ -40,8 +40,8 @@ dat.trim <- dat.trim %>% filter(Region != "")
 # unique(dat.trim$Region)
 
 # Groups of interest
-GROUP <-  c("urchin","gastropod","bivalve","crab","seastar","cucumber")
-GROUP.NAME <-  c("a) Sea Urchins", "b) Gastropods","c) Bivalves","d) Crabs","e) Seastars","f) Sea cucumbers")
+GROUP <-  c("urchin","bivalve","crab","seastar","cucumber")
+GROUP.NAME <-  c("a) Sea Urchins", "b) Bivalves","c) Crabs","d) Seastars","e) Sea cucumbers")
 
 theme_os2 <- function(base_size = 12, base_family = "") {
   theme_bw()+
@@ -79,7 +79,7 @@ STROKE <- 1.25
 A<- list()
 for( i in 1: length(GROUP)){
   if(i==1){
-  A[[i]] <- ggplot(dat.trim %>% filter(group == GROUP[i]) ,aes(y=MEAN,x=Year.jit,group=Site,shape=Region,fill=otter.absence.indicator)) +
+A[[i]] <- ggplot(dat.trim %>% filter(group == GROUP[i]) ,aes(y=MEAN,x=Year.jit,group=Site,shape=Region,fill=otter.absence.indicator)) +
     geom_line(linetype="dashed",color="black") +
     geom_point(size=PT.SIZE,alpha=ALP,stroke=STROKE) +
     scale_shape_manual(values=c(21,22,23),name = "Region") +
@@ -115,7 +115,7 @@ for( i in 1: length(GROUP)){
 
 
 quartz(file = paste(base.dir,"/Plots/Invertebrate panels v1.pdf",sep=""),type="pdf",dpi=300,height=8,width=7 )
-  Layout= matrix(c(1,2,3,4,5,6),nrow=3,ncol=2,byrow=T)
+  Layout= matrix(c(1,6,2,3,4,5),nrow=3,ncol=2,byrow=T)
   multiplot(plotlist=A ,layout= Layout)
 dev.off()
 
@@ -123,5 +123,15 @@ quartz(file = paste(base.dir,"/Plots/Invertebrate panels v2.pdf",sep=""),type="p
 Layout= matrix(c(1,2,3,4,5,6),nrow=2,ncol=3,byrow=T)
 multiplot(plotlist=A ,layout= Layout)
 dev.off()
+
+
+################
+#### Proportional Decline FOR ALL OCNMS
+
+coastwide.prop <- dat.trim.coastwide %>% filter(Year==1987) %>% mutate(start=simp.mean) %>% dplyr::select(group,start)
+coastwide.prop <- merge(dat.trim.coastwide,coastwide.prop,all=T)
+
+coastwide.prop <- coastwide.prop %>% mutate(prop.decline = simp.mean / start) %>% arrange(group,Year)
+coastwide.prop <- coastwide.prop %>% mutate(simp.sd = simp.se * sqrt(N),CV=simp.sd/simp.mean)
 
 
