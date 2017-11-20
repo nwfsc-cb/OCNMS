@@ -20,8 +20,8 @@ library(ggrepel)
 # for JAMEAL
 # base.dir <- "~/Documents/GitHub/OCNMS/"
 # source(paste(base.dir,"R scripts/Combine Sea Otter and Kelp in one plot.R",sep=""))
-base.dir <- "~/Documents/GitHub/OCNMS/"
-source(paste(base.dir,"R scripts/Data process 2017.R",sep=""))
+# base.dir <- "~/Documents/GitHub/OCNMS/"
+# source(paste(base.dir,"R scripts/Data process 2017.R",sep=""))
 base.dir <- "~/Documents/GitHub/OCNMS/"
 source(paste0(base.dir,"R scripts/theme_Publication.R"))
 
@@ -36,22 +36,28 @@ GROUP <-  c("urchin","gastropod","bivalve","crab","seastar","cucumber")
   # 1995 is missing data for seastars, gastropods
 FOCAL_YEARS <- c(1987, 1999, 2015)
 
-head(dat.trim)
-dim(dat.trim)
+# head(dat.trim)
+# dim(dat.trim)
+# 
+# # Get rid of non-focal sites.
+# dat.trim <- dat.trim %>% filter(Region != "")
+# dim(dat.trim)
+# # Get rid of non-focal years.
+# dat.trim <- dat.trim %>% filter(Year != 1995)
+# dim(dat.trim)
+# # Get rid of non-focal groups.
+# dat.trim <- dat.trim %>% filter(group != "anenome" &
+#                                   group != "chiton" &
+#                                   group != "nudibranch" &
+#                                   group != "tunicate"
+# )
+# dim(dat.trim)
+# 
+# write.csv(dat.trim, paste0(base.dir,"/Data/csv files/Annual mean, SD, and SE invert densities by site and region.csv"), row.names=FALSE)
 
-# Get rid of non-focal sites.
-dat.trim <- dat.trim %>% filter(Region != "")
-dim(dat.trim)
-# Get rid of non-focal years.
-dat.trim <- dat.trim %>% filter(Year != 1995)
-dim(dat.trim)
-# Get rid of non-focal groups.
-dat.trim <- dat.trim %>% filter(group != "anenome" &
-                                  group != "chiton" &
-                                  group != "nudibranch" &
-                                  group != "tunicate"
-)
-dim(dat.trim)
+
+### READ IN DATA
+dat.trim <- read.csv(paste0(base.dir,"/Data/csv files/Annual mean, SD, and SE invert densities by site and region.csv"), header=TRUE)
 
 #format group densities for nMDS
 dat.trim.wide <- dcast(dat.trim, Year + Site + Region ~ group, value.var="MEAN")
@@ -181,7 +187,11 @@ mds_plot_byYear_vectors <- ggplot(data=NMDS_bc)+
   geom_polygon(data = hulls_u_bc_year, alpha = 0.2,aes(x=MDS1,y=MDS2,fill=factor(Year),colour=factor(Year),group=factor(Year)))+
   geom_segment(data=vectors.df,aes(x=0,xend=MDS1,y=0,yend=MDS2),arrow = arrow(length = unit(0.5, "cm")),colour="grey")+
   geom_text_repel(data=vectors.df,aes(x=MDS1,y=MDS2,label=group),size=5)+
-  ggtitle("Year similarities all regions")+
+  #geom_segment(aes(x=MDS1,y=MDS2, group=Site))+
+  # 
+  # geom_line(data=NMDS_bc,aes(group=Site))+
+  # 
+ggtitle("Year similarities all regions")+
   #scale_colour_manual(values = c("#0bb2dd","#ec2035"))+
   #scale_fill_manual(values = c("#0bb2dd","#ec2035"))+
   guides(fill=guide_legend(title="Year"),colour=guide_legend(title="Year"),group=guide_legend(title="Year"),pch=guide_legend(title="Year")) +
