@@ -63,10 +63,15 @@ dat.trim <- read.csv(paste0(base.dir,"/Data/csv files/Annual mean, SD, and SE in
 dat.trim.wide <- dcast(dat.trim, Year + Site + Region ~ group, value.var="MEAN")
 
 
-#Calculate distance matrix
-#dj <- vegdist(dat.trim.wide[,4:9],method = "jaccard",binary=TRUE, na.rm=TRUE)
-#dg <- vegdist(sqrt(dat.trim.wide[,4:9]),method = "altGower")
-dbc <- vegdist(dat.trim.wide[,4:9],method = "bray", na.rm=TRUE)
+## COMPARE 1987, 1995, 2015. DROP GASTROPODS.
+dat.trim.wide.allyears <- subset(dat.trim.wide, select = -c(gastropod))
+
+#Calculate distance matrix. Jaccard is for pres-abs, excludes joint absences, and similarity should decay across space. Bray-Curtis also excludes joint absences, but relies on abundance information to consider compositional differences. Modified Gower is similar to BC, but considers log abundance. Euclidean or Manhattan include joint absences, which can be appropriate for predation studies, best to log x+1 transform first.
+
+dj <- vegdist(dat.trim.wide.allyears[,4:8],method = "jaccard",binary=TRUE, na.rm=TRUE)
+# dg <- vegdist(sqrt(dat.trim.wide[,4:8]),method = "altGower")
+dbc <- vegdist(dat.trim.wide.allyears[,4:8],method = "bray", na.rm=TRUE)
+dm <- vegdist(log10(dat.trim.wide.allyears[,4:8]+1), method = "manhattan")
 
 
 #### NMDS Jaccard
