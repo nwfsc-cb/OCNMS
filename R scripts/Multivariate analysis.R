@@ -9,6 +9,7 @@ library(plyr)
 library(ggrepel)
 # library(zoo)
 # library(fpc)
+library(gridExtra)
 
 # for OLE 
 # base.dir <- "/Users/ole.shelton/GitHub/OCNMS/"
@@ -153,7 +154,7 @@ mds_plot_byRegion <- ggplot(data=NMDS_bc,aes(x=MDS1,y=MDS2,fill=factor(Region),c
 
 mds_plot_byRegion
 
-quartz(file = paste(base.dir,"/Plots/MDS invert community 1987-1995-2015 BrayCurtis grouped by region.pdf",sep=""),type="pdf",dpi=300,height=4,width=5 )
+quartz(file = paste(base.dir,"/Plots/_Multivariate/MDS invert community 1987-1995-2015 BrayCurtis grouped by region.pdf",sep=""),type="pdf",dpi=300,height=4,width=5 )
 print(mds_plot_byRegion)
 dev.off()
 
@@ -175,7 +176,7 @@ mds_plot_byYear <- ggplot(data=NMDS_bc,aes(x=MDS1,y=MDS2,fill=factor(Year),colou
 
 mds_plot_byYear
 
-quartz(file = paste(base.dir,"/Plots/MDS invert community 1987-1995-2015 BrayCurtis grouped by year.pdf",sep=""),type="pdf",dpi=300,height=4,width=5 )
+quartz(file = paste(base.dir,"/Plots/_Multivariate/MDS invert community 1987-1995-2015 BrayCurtis grouped by year.pdf",sep=""),type="pdf",dpi=300,height=4,width=5 )
 print(mds_plot_byYear)
 dev.off()
 
@@ -193,7 +194,7 @@ mds_plot_byRegion_vectors <- ggplot(data=NMDS_bc)+
   theme(strip.background = element_rect(fill = "white", color = "white"))
 mds_plot_byRegion_vectors
 
-quartz(file = paste(base.dir,"/Plots/MDS invert community 1987-1995-2015 BrayCurtis grouped by region wth vectors.pdf",sep=""),type="pdf",dpi=300,height=4,width=5 )
+quartz(file = paste(base.dir,"/Plots/_Multivariate/MDS invert community 1987-1995-2015 BrayCurtis grouped by region with vectors.pdf",sep=""),type="pdf",dpi=300,height=4,width=5 )
 print(mds_plot_byRegion_vectors)
 dev.off()
 
@@ -215,7 +216,7 @@ ggtitle("Year similarities all regions")+
   theme(strip.background = element_rect(fill = "white", color = "white"))
 mds_plot_byYear_vectors
 
-quartz(file = paste(base.dir,"/Plots/MDS invert community 1987-1995-2015 BrayCurtis grouped by year wth vectors.pdf",sep=""),type="pdf",dpi=300,height=4,width=5 )
+quartz(file = paste(base.dir,"/Plots/_Multivariate/MDS invert community 1987-1995-2015 BrayCurtis grouped by year with vectors.pdf",sep=""),type="pdf",dpi=300,height=4,width=5 )
 print(mds_plot_byYear_vectors)
 dev.off()
 
@@ -240,7 +241,7 @@ mds_plot_byRegion_m <- ggplot(data=NMDS_m,aes(x=MDS1,y=MDS2,fill=factor(Region),
 
 mds_plot_byRegion_m
 
-quartz(file = paste(base.dir,"/Plots/MDS invert community 1987-1995-2015 Manhattan grouped by region.pdf",sep=""),type="pdf",dpi=300,height=4,width=5 )
+quartz(file = paste(base.dir,"/Plots/_Multivariate/MDS invert community 1987-1995-2015 Manhattan grouped by region.pdf",sep=""),type="pdf",dpi=300,height=4,width=5 )
 print(mds_plot_byRegion_m)
 dev.off()
 
@@ -262,7 +263,7 @@ mds_plot_byYear_m <- ggplot(data=NMDS_m,aes(x=MDS1,y=MDS2,fill=factor(Year),colo
 
 mds_plot_byYear_m
 
-quartz(file = paste(base.dir,"/Plots/MDS invert community 1987-1995-2015 Manhattan grouped by year.pdf",sep=""),type="pdf",dpi=300,height=4,width=5 )
+quartz(file = paste(base.dir,"/Plots/_Multivariate/MDS invert community 1987-1995-2015 Manhattan grouped by year.pdf",sep=""),type="pdf",dpi=300,height=4,width=5 )
 print(mds_plot_byYear_m)
 dev.off()
 
@@ -275,12 +276,12 @@ mds_plot_byRegion_vectors_m <- ggplot(data=NMDS_m)+
   #scale_colour_manual(values = c("#0bb2dd","#ec2035"))+
   #scale_fill_manual(values = c("#0bb2dd","#ec2035"))+
   guides(fill=guide_legend(title="Region"),colour=guide_legend(title="Region"),group=guide_legend(title="Region"),pch=guide_legend(title="Region")) +
-  annotate("text", x=max(vectors.df.m$MDS1), y=min(vectors.df.m$MDS2), label=paste('Stress =',round(min(allits_m$stress),3)), hjust=0)+
+  annotate("text", x=max(vectors.df.m$MDS1), y=max(NMDS_m$MDS2), label=paste('Stress =',round(min(allits_m$stress),3)), hjust=1)+
   theme_Publication()+
   theme(strip.background = element_rect(fill = "white", color = "white"))
 mds_plot_byRegion_vectors_m
 
-quartz(file = paste(base.dir,"/Plots/MDS invert community 1987-1995-2015 Manhattan grouped by region with vectors.pdf",sep=""),type="pdf",dpi=300,height=4,width=5 )
+quartz(file = paste(base.dir,"/Plots/_Multivariate/MDS invert community 1987-1995-2015 Manhattan grouped by region with vectors.pdf",sep=""),type="pdf",dpi=300,height=4,width=5 )
 print(mds_plot_byRegion_vectors_m)
 dev.off()
 
@@ -297,12 +298,12 @@ mds_plot_byYear_vectors_m <- ggplot(data=NMDS_m)+
   #scale_colour_manual(values = c("#0bb2dd","#ec2035"))+
   #scale_fill_manual(values = c("#0bb2dd","#ec2035"))+
   guides(fill=guide_legend(title="Year"),colour=guide_legend(title="Year"),group=guide_legend(title="Year"),pch=guide_legend(title="Year")) +
-  annotate("text", x=max(vectors.df.m$MDS1), y=min(vectors.df.m$MDS2), label=paste('Stress =',round(min(allits_m$stress),3)), hjust=0)+
+  annotate("text", x=max(vectors.df.m$MDS1), y=max(NMDS_m$MDS2), label=paste('Stress =',round(min(allits_m$stress),3)), hjust=1)+
   theme_Publication()+
   theme(strip.background = element_rect(fill = "white", color = "white"))
 mds_plot_byYear_vectors_m
 
-quartz(file = paste(base.dir,"/Plots/MDS invert community 1987-1995-2015 Manhattan grouped by year with vectors.pdf",sep=""),type="pdf",dpi=300,height=4,width=5 )
+quartz(file = paste(base.dir,"/Plots/_Multivariate/MDS invert community 1987-1995-2015 Manhattan grouped by year with vectors.pdf",sep=""),type="pdf",dpi=300,height=4,width=5 )
 print(mds_plot_byYear_vectors_m)
 dev.off()
 
@@ -314,17 +315,19 @@ dev.off()
 ################################################################################ 
 
 # PERMANOVA test for effect of region
-write.csv(adonis(dbc~dat.trim.wide.allyears$Region,strata=dat.trim.wide$Year)$aov.tab,paste(base.dir,"Plots/PERMANOVA invert community 1987-1995-2015 BrayCurtis grouped by region.csv",sep=""),row.names=TRUE)
+write.csv(adonis(dbc~dat.trim.wide.allyears$Region,strata=dat.trim.wide$Year)$aov.tab,paste(base.dir,"Plots/_Multivariate/PERMANOVA invert community 1987-1995-2015 BrayCurtis grouped by region.csv",sep=""),row.names=TRUE)
 # PERMANOVA test for effect of year
-write.csv(adonis(dbc~dat.trim.wide.allyears$Year,strata=dat.trim.wide$Region)$aov.tab,paste(base.dir,"Plots/PERMANOVA invert community 1987-1995-2015 BrayCurtis grouped by year.csv",sep=""),row.names=TRUE)
+write.csv(adonis(dbc~dat.trim.wide.allyears$Year,strata=dat.trim.wide$Region)$aov.tab,paste(base.dir,"Plots/_Multivariate/PERMANOVA invert community 1987-1995-2015 BrayCurtis grouped by year.csv",sep=""),row.names=TRUE)
 
 
 # TEST FOR DIFFERENCESIN VARIANCE IN COMMUNITY STRUCTURE AMONG REGIONS - NS
 m1 <- betadisper(dbc,dat.trim.wide.allyears$Region)
 permutest(m1)
+write.csv(permutest(m1)[1],paste(base.dir,"Plots/_Multivariate/Betadisper invert community 1987-1995-2015 BrayCurtis grouped by region.csv",sep=""),row.names=FALSE)
 # TEST FOR DIFFERENCESIN VARIANCE IN COMMUNITY STRUCTURE AMONG YEARS - NS
 m2 <- betadisper(dbc,dat.trim.wide.allyears$Year)
 permutest(m2)
+write.csv(permutest(m2)[1],paste(base.dir,"Plots/_Multivariate/Betadisper invert community 1987-1995-2015 BrayCurtis grouped by year.csv",sep=""),row.names=FALSE)
 
 
 # #write.csv(permutest(m3)[1],"Betadisper nomud year.all.csv",row.names=FALSE)
@@ -334,20 +337,23 @@ permutest(m2)
 ################################################################################ 
 
 # PERMANOVA test for effect of region
-write.csv(adonis(dm~dat.trim.wide.allyears$Region,strata=dat.trim.wide$Year)$aov.tab,paste(base.dir,"Plots/PERMANOVA invert community 1987-1995-2015 Manhattan grouped by region.csv",sep=""),row.names=TRUE)
+write.csv(adonis(dm~dat.trim.wide.allyears$Region,strata=dat.trim.wide$Year)$aov.tab,paste(base.dir,"Plots/_Multivariate/PERMANOVA invert community 1987-1995-2015 Manhattan grouped by region.csv",sep=""),row.names=TRUE)
 # PERMANOVA test for effect of year
-write.csv(adonis(dm~dat.trim.wide.allyears$Year,strata=dat.trim.wide$Region)$aov.tab,paste(base.dir,"Plots/PERMANOVA invert community 1987-1995-2015 Manhattan grouped by year.csv",sep=""),row.names=TRUE)
+write.csv(adonis(dm~dat.trim.wide.allyears$Year,strata=dat.trim.wide$Region)$aov.tab,paste(base.dir,"Plots/_Multivariate/PERMANOVA invert community 1987-1995-2015 Manhattan grouped by year.csv",sep=""),row.names=TRUE)
 
 
 # TEST FOR DIFFERENCESIN VARIANCE IN COMMUNITY STRUCTURE AMONG REGIONS - NS
 m3 <- betadisper(dm,dat.trim.wide.allyears$Region)
 permutest(m3)
+write.csv(permutest(m3)[1],paste(base.dir,"Plots/_Multivariate/Betadisper invert community 1987-1995-2015 Manhattan grouped by region.csv",sep=""),row.names=FALSE)
+
 # TEST FOR DIFFERENCESIN VARIANCE IN COMMUNITY STRUCTURE AMONG YEARS - NS
 m4 <- betadisper(dm,dat.trim.wide.allyears$Year)
 permutest(m4)
+write.csv(permutest(m4)[1],paste(base.dir,"Plots/_Multivariate/Betadisper invert community 1987-1995-2015 Manhattan grouped by year.csv",sep=""),row.names=FALSE)
 
 
-# #write.csv(permutest(m3)[1],"Betadisper nomud year.all.csv",row.names=FALSE)
+
 
 ################################################################################
 
@@ -441,7 +447,7 @@ mds_plot_byRegion_87_15 <- ggplot(data=NMDS_bc_87_15,aes(x=MDS1,y=MDS2,fill=fact
 
 mds_plot_byRegion_87_15
 
-quartz(file = paste(base.dir,"/Plots/MDS invert community 1987-2015 BrayCurtis grouped by region.pdf",sep=""),type="pdf",dpi=300,height=4,width=5 )
+quartz(file = paste(base.dir,"/Plots/_Multivariate/MDS invert community 1987-2015 BrayCurtis grouped by region.pdf",sep=""),type="pdf",dpi=300,height=4,width=5 )
 print(mds_plot_byRegion_87_15)
 dev.off()
 
@@ -463,7 +469,7 @@ mds_plot_byYear_87_15 <- ggplot(data=NMDS_bc_87_15,aes(x=MDS1,y=MDS2,fill=factor
 
 mds_plot_byYear_87_15
 
-quartz(file = paste(base.dir,"/Plots/MDS invert community 1987-2015 BrayCurtis grouped by year.pdf",sep=""),type="pdf",dpi=300,height=4,width=5 )
+quartz(file = paste(base.dir,"/Plots/_Multivariate/MDS invert community 1987-2015 BrayCurtis grouped by year.pdf",sep=""),type="pdf",dpi=300,height=4,width=5 )
 print(mds_plot_byYear_87_15)
 dev.off()
 
@@ -476,12 +482,12 @@ mds_plot_byRegion_87_15_vectors <- ggplot(data=NMDS_bc_87_15)+
   #scale_colour_m_87_15anual(values = c("#0bb2dd","#ec2035"))+
   #scale_fill_manual(values = c("#0bb2dd","#ec2035"))+
   guides(fill=guide_legend(title="Region"),colour=guide_legend(title="Region"),group=guide_legend(title="Region"),pch=guide_legend(title="Region")) +
-  annotate("text", x=min(NMDS_bc_87_15$MDS1), y=min(NMDS_bc_87_15$MDS2), label=paste('Stress =',round(min(allits_bc_87_15$stress),3)), hjust=0)+
+  annotate("text", x=max(NMDS_bc_87_15$MDS1), y=min(vectors.df_87_15$MDS2), label=paste('Stress =',round(min(allits_bc_87_15$stress),3)), hjust=1)+
   theme_Publication()+
   theme(strip.background = element_rect(fill = "white", color = "white"))
 mds_plot_byRegion_87_15_vectors
 
-quartz(file = paste(base.dir,"/Plots/MDS invert community 1987-2015 BrayCurtis grouped by region wth vectors.pdf",sep=""),type="pdf",dpi=300,height=4,width=5 )
+quartz(file = paste(base.dir,"/Plots/_Multivariate/MDS invert community 1987-2015 BrayCurtis grouped by region with vectors.pdf",sep=""),type="pdf",dpi=300,height=4,width=5 )
 print(mds_plot_byRegion_87_15_vectors)
 dev.off()
 
@@ -498,12 +504,12 @@ mds_plot_byYear_87_15_vectors <- ggplot(data=NMDS_bc_87_15)+
   #scale_colour_manual(values = c("#0bb2dd","#ec2035"))+
   #scale_fill_manual(values = c("#0bb2dd","#ec2035"))+
   guides(fill=guide_legend(title="Year"),colour=guide_legend(title="Year"),group=guide_legend(title="Year"),pch=guide_legend(title="Year")) +
-  annotate("text", x=min(NMDS_bc_87_15$MDS1), y=min(NMDS_bc_87_15$MDS2), label=paste('Stress =',round(min(allits_bc_87_15$stress),3)), hjust=0)+
+  annotate("text", x=max(vectors.df_87_15$MDS1), y=min(vectors.df_87_15$MDS2), label=paste('Stress =',round(min(allits_bc_87_15$stress),3)), hjust=1)+
   theme_Publication()+
   theme(strip.background = element_rect(fill = "white", color = "white"))
 mds_plot_byYear_87_15_vectors
 
-quartz(file = paste(base.dir,"/Plots/MDS invert community 1987-2015 BrayCurtis grouped by year wth vectors.pdf",sep=""),type="pdf",dpi=300,height=4,width=5 )
+quartz(file = paste(base.dir,"/Plots/_Multivariate/MDS invert community 1987-2015 BrayCurtis grouped by year with vectors.pdf",sep=""),type="pdf",dpi=300,height=4,width=5 )
 print(mds_plot_byYear_87_15_vectors)
 dev.off()
 
@@ -515,7 +521,7 @@ mds_plot_byRegion_m_87_15 <- ggplot(data=NMDS_m_87_15,aes(x=MDS1,y=MDS2,fill=fac
   geom_polygon(data = hulls_u_m_87_15_region , alpha = 0.2,aes(fill=factor(Region),colour=factor(Region),group=factor(Region))) +
   ggtitle("Regional similarities all years") +
   guides(fill=guide_legend(title="Region"),colour=guide_legend(title="Region"),group=guide_legend(title="Region"),pch=guide_legend(title="Region")) +
-  annotate("text", x=min(NMDS_m_87_15$MDS1), y=min(NMDS_m_87_15$MDS2), label=paste('Stress =',round(min(allits_m_87_15$stress),3)), hjust=0)+
+  annotate("text", x=max(NMDS_m_87_15$MDS1), y=max(NMDS_m_87_15$MDS2), label=paste('Stress =',round(min(allits_m_87_15$stress),3)), hjust=1)+
   theme_Publication()
 # theme_bw() +
 # theme(
@@ -528,7 +534,7 @@ mds_plot_byRegion_m_87_15 <- ggplot(data=NMDS_m_87_15,aes(x=MDS1,y=MDS2,fill=fac
 
 mds_plot_byRegion_m_87_15
 
-quartz(file = paste(base.dir,"/Plots/MDS invert community 1987-2015 Manhattan grouped by region.pdf",sep=""),type="pdf",dpi=300,height=4,width=5 )
+quartz(file = paste(base.dir,"/Plots/_Multivariate/MDS invert community 1987-2015 Manhattan grouped by region.pdf",sep=""),type="pdf",dpi=300,height=4,width=5 )
 print(mds_plot_byRegion_m_87_15)
 dev.off()
 
@@ -537,7 +543,7 @@ mds_plot_byYear_m_87_15 <- ggplot(data=NMDS_m_87_15,aes(x=MDS1,y=MDS2,fill=facto
   geom_polygon(data = hulls_u_m_87_15_year , alpha = 0.2,aes(fill=factor(Year),colour=factor(Year),group=factor(Year))) +
   ggtitle("Year similarities all regions") +
   guides(fill=guide_legend(title="Year"),colour=guide_legend(title="Year"),group=guide_legend(title="Year"),pch=guide_legend(title="Year")) +
-  annotate("text", x=min(NMDS_m_87_15$MDS1), y=min(NMDS_m_87_15$MDS2), label=paste('Stress =',round(min(allits_m_87_15$stress),3)), hjust=0)+
+  annotate("text", x=max(NMDS_m_87_15$MDS1), y=max(NMDS_m_87_15$MDS2), label=paste('Stress =',round(min(allits_m_87_15$stress),3)), hjust=1)+
   theme_Publication()
 # theme_bw() +
 # theme(
@@ -550,7 +556,7 @@ mds_plot_byYear_m_87_15 <- ggplot(data=NMDS_m_87_15,aes(x=MDS1,y=MDS2,fill=facto
 
 mds_plot_byYear_m_87_15
 
-quartz(file = paste(base.dir,"/Plots/MDS invert community 1987-2015 Manhattan grouped by year.pdf",sep=""),type="pdf",dpi=300,height=4,width=5 )
+quartz(file = paste(base.dir,"/Plots/_Multivariate/MDS invert community 1987-2015 Manhattan grouped by year.pdf",sep=""),type="pdf",dpi=300,height=4,width=5 )
 print(mds_plot_byYear_m_87_15)
 dev.off()
 
@@ -563,12 +569,12 @@ mds_plot_byRegion_vectors_m_87_15 <- ggplot(data=NMDS_m_87_15)+
   #scale_colour_m_87_15anual(values = c("#0bb2dd","#ec2035"))+
   #scale_fill_manual(values = c("#0bb2dd","#ec2035"))+
   guides(fill=guide_legend(title="Region"),colour=guide_legend(title="Region"),group=guide_legend(title="Region"),pch=guide_legend(title="Region")) +
-  annotate("text", x=min(vectors.df.m_87_15$MDS1), y=min(hulls_u_m_87_15_region$MDS2), label=paste('Stress =',round(min(allits_m_87_15$stress),3)), hjust=0)+
+  annotate("text", x=max(vectors.df.m_87_15$MDS1), y=max(NMDS_m_87_15$MDS2), label=paste('Stress =',round(min(allits_m_87_15$stress),3)), hjust=0.4)+
   theme_Publication()+
   theme(strip.background = element_rect(fill = "white", color = "white"))
 mds_plot_byRegion_vectors_m_87_15
 
-quartz(file = paste(base.dir,"/Plots/MDS invert community 1987-2015 Manhattan grouped by region with vectors.pdf",sep=""),type="pdf",dpi=300,height=4,width=5 )
+quartz(file = paste(base.dir,"/Plots/_Multivariate/MDS invert community 1987-2015 Manhattan grouped by region with vectors.pdf",sep=""),type="pdf",dpi=300,height=4,width=5 )
 print(mds_plot_byRegion_vectors_m_87_15)
 dev.off()
 
@@ -585,12 +591,12 @@ mds_plot_byYear_vectors_m_87_15 <- ggplot(data=NMDS_m_87_15)+
   #scale_colour_m_87_15anual(values = c("#0bb2dd","#ec2035"))+
   #scale_fill_manual(values = c("#0bb2dd","#ec2035"))+
   guides(fill=guide_legend(title="Year"),colour=guide_legend(title="Year"),group=guide_legend(title="Year"),pch=guide_legend(title="Year")) +
-  annotate("text", x=min(vectors.df.m_87_15$MDS1), y=min(hulls_u_m_87_15_region$MDS2), label=paste('Stress =',round(min(allits_m_87_15$stress),3)), hjust=0)+
+  annotate("text", x=max(NMDS_m_87_15$MDS1), y=max(NMDS_m_87_15$MDS2), label=paste('Stress =',round(min(allits_m_87_15$stress),3)), hjust=1)+
   theme_Publication()+
   theme(strip.background = element_rect(fill = "white", color = "white"))
 mds_plot_byYear_vectors_m_87_15
 
-quartz(file = paste(base.dir,"/Plots/MDS invert community 1987-2015 Manhattan grouped by year with vectors.pdf",sep=""),type="pdf",dpi=300,height=4,width=5 )
+quartz(file = paste(base.dir,"/Plots/_Multivariate/MDS invert community 1987-2015 Manhattan grouped by year with vectors.pdf",sep=""),type="pdf",dpi=300,height=4,width=5 )
 print(mds_plot_byYear_vectors_m_87_15)
 dev.off()
 
@@ -602,41 +608,70 @@ dev.off()
 ################################################################################ 
 
 # PERMANOVA test for effect of region
-write.csv(adonis(dbc_87_15~dat.trim.wide.1987_2015$Region,strata=dat.trim.wide.1987_2015$Year)$aov.tab,paste(base.dir,"Plots/PERMANOVA invert community 1987-2015 BrayCurtis grouped by region.csv",sep=""),row.names=TRUE)
+write.csv(adonis(dbc_87_15~dat.trim.wide.1987_2015$Region,strata=dat.trim.wide.1987_2015$Year)$aov.tab,paste(base.dir,"Plots/_Multivariate/PERMANOVA invert community 1987-2015 BrayCurtis grouped by region.csv",sep=""),row.names=TRUE)
 # PERMANOVA test for effect of year
-write.csv(adonis(dbc_87_15~dat.trim.wide.1987_2015$Year,strata=dat.trim.wide.1987_2015$Region)$aov.tab,paste(base.dir,"Plots/PERMANOVA invert community 1987-2015 BrayCurtis grouped by year.csv",sep=""),row.names=TRUE)
+write.csv(adonis(dbc_87_15~dat.trim.wide.1987_2015$Year,strata=dat.trim.wide.1987_2015$Region)$aov.tab,paste(base.dir,"Plots/_Multivariate/PERMANOVA invert community 1987-2015 BrayCurtis grouped by year.csv",sep=""),row.names=TRUE)
 
 
 # TEST FOR DIFFERENCESIN VARIANCE IN COMMUNITY STRUCTURE AMONG REGIONS - 
 m5 <- betadisper(dbc_87_15,dat.trim.wide.1987_2015$Region)
 permutest(m5)
-write.csv(permutest(m5)
-          $aov.tab,paste(base.dir,"Plots/PERMANOVA invert community 1987-2015 BrayCurtis grouped by year.csv",sep=""),row.names=TRUE)
+write.csv(permutest(m5)[1],paste(base.dir,"Plots/_Multivariate/Betadisper invert community 1987-2015 BrayCurtis grouped by region.csv",sep=""),row.names=FALSE)
+
 # TEST FOR DIFFERENCESIN VARIANCE IN COMMUNITY STRUCTURE AMONG YEARS - 
 m6 <- betadisper(dbc_87_15,dat.trim.wide.1987_2015$Year)
 permutest(m6)
+write.csv(permutest(m6)[1],paste(base.dir,"Plots/_Multivariate/Betadisper invert community 1987-2015 BrayCurtis grouped by year.csv",sep=""),row.names=FALSE)
 
-
-write.csv(permutest(m3)[1],"Betadisper nomud year.all.csv",row.names=FALSE)
 
 ################################################################################
 #Analysis to look at full permanova and permadisp results - MANHATTAN
 ################################################################################ 
 
 # PERMANOVA test for effect of region
-write.csv(adonis(dm_87_15~dat.trim.wide.1987_2015$Region,strata=dat.trim.wide.1987_2015$Year)$aov.tab,paste(base.dir,"Plots/PERMANOVA invert community 1987-1995-2015 Manhattan grouped by region.csv",sep=""),row.names=TRUE)
+write.csv(adonis(dm_87_15~dat.trim.wide.1987_2015$Region,strata=dat.trim.wide.1987_2015$Year)$aov.tab,paste(base.dir,"Plots/_Multivariate/PERMANOVA invert community 1987-2015 Manhattan grouped by region.csv",sep=""),row.names=TRUE)
 # PERMANOVA test for effect of year
-write.csv(adonis(dm_87_15~dat.trim.wide.1987_2015$Year,strata=dat.trim.wide.1987_2015$Region)$aov.tab,paste(base.dir,"Plots/PERMANOVA invert community 1987-1995-2015 Manhattan grouped by year.csv",sep=""),row.names=TRUE)
+write.csv(adonis(dm_87_15~dat.trim.wide.1987_2015$Year,strata=dat.trim.wide.1987_2015$Region)$aov.tab,paste(base.dir,"Plots/_Multivariate/PERMANOVA invert community 1987-2015 Manhattan grouped by year.csv",sep=""),row.names=TRUE)
 
 
 # TEST FOR DIFFERENCESIN VARIANCE IN COMMUNITY STRUCTURE AMONG REGIONS - NS
 m7 <- betadisper(dm_87_15,dat.trim.wide.1987_2015$Region)
 permutest(m7)
+write.csv(permutest(m7)[1],paste(base.dir,"Plots/_Multivariate/Betadisper invert community 1987-2015 Manhattan grouped by region.csv",sep=""),row.names=FALSE)
 # TEST FOR DIFFERENCESIN VARIANCE IN COMMUNITY STRUCTURE AMONG YEARS - NS
 m8 <- betadisper(dm_87_15,dat.trim.wide.1987_2015$Year)
 permutest(m8)
+write.csv(permutest(m8)[1],paste(base.dir,"Plots/_Multivariate/Betadisper invert community 1987-2015 Manhattan grouped by year.csv",sep=""),row.names=FALSE)
 
-
-# #write.csv(permutest(m3)[1],"Betadisper nomud year.all.csv",row.names=FALSE)
 
 ################################################################################
+
+### FIGS FOR PUBLICATION
+
+grid.arrange(mds_plot_byYear_vectors_m,mds_plot_byRegion_vectors_m,ncol=2)
+p1 <- arrangeGrob(mds_plot_byYear_vectors_m, top = textGrob("(a)", x = unit(0, "npc"),
+                                    y  = unit(1, "npc"), just=c("left","top"),
+                                    gp=gpar(col="black", fontsize=18, fontfamily="Times Roman")))
+
+p2 <- arrangeGrob(mds_plot_byRegion_vectors_m, top = textGrob("(b)", x = unit(0, "npc"),
+                                                                  y  = unit(1, "npc"), just=c("left","top"),
+                                                                  gp=gpar(col="black", fontsize=18, fontfamily="Times Roman")))
+#grid.arrange(p1,p2, ncol=2, heights=unit(0.5, "npc") )
+
+quartz(file = paste(base.dir,"/Plots/_Multivariate/MDS invert community 1987-1995-2015 Manhattan for pub.pdf",sep=""),type="pdf",dpi=300,height=6,width=12 )
+print(grid.arrange(p1,p2, ncol=2 ))
+dev.off()
+
+p3 <- arrangeGrob(mds_plot_byYear_vectors_m_87_15, top = textGrob("(a)", x = unit(0, "npc"),
+                                                                  y  = unit(1, "npc"), just=c("left","top"),
+                                                                  gp=gpar(col="black", fontsize=18, fontfamily="Times Roman")))
+
+p4 <- arrangeGrob(mds_plot_byRegion_vectors_m_87_15, top = textGrob("(b)", x = unit(0, "npc"),
+                                                                    y  = unit(1, "npc"), just=c("left","top"),
+                                                                    gp=gpar(col="black", fontsize=18, fontfamily="Times Roman")))
+#grid.arrange(p1,p2, ncol=2, heights=unit(0.5, "npc") )
+
+quartz(file = paste(base.dir,"/Plots/_Multivariate/MDS invert community 1987-2015 Manhattan for pub.pdf",sep=""),type="pdf",dpi=300,height=6,width=12 )
+print(grid.arrange(p3,p4, ncol=2 ))
+dev.off()
+
