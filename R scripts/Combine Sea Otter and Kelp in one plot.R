@@ -253,7 +253,7 @@ K.2 <- ggplot(kelp.ts.all %>% filter(Region=="Northern"),aes(x=year,y=Dev,color=
           scale_y_continuous(limits = y.lim) +
           xlab("")+
           ylab("") +
-          ggtitle(" ") +       
+          ggtitle("d)") +
           theme_os() +
           theme(plot.title=element_text(color="white")) +
           theme(legend.position="none")
@@ -267,6 +267,7 @@ K.3 <- ggplot(kelp.ts.all %>% filter(Region=="Central"),aes(x=year,y=Dev,color=S
           scale_y_continuous(limits = y.lim) +
           xlab("")+
           ylab("Kelp Deviation") +
+          ggtitle("e)") +
           theme_os() +
           theme(plot.title=element_text(color="white")) +
           theme(legend.position="none")
@@ -282,7 +283,7 @@ K.4 <- ggplot(kelp.ts.all %>% filter(Region=="Southern"),aes(x=year,y=Dev,color=
           ylab("") +
           xlab("")+
           theme_os()+
-          ggtitle("b) Central") + 
+          ggtitle("f)") + 
           theme(plot.title=element_text(color="white")) +
            theme(legend.position="none")
 ##### ALTERNATE KELP TREND PLOTTING 
@@ -352,11 +353,11 @@ K.index1.no.s <- ggplot() +
   scale_x_continuous(limits = x.lim) +
   scale_y_continuous(limits=y.lim)  +
   #ylab("Sea otters") +
+  ggtitle("d) ") + 
   xlab("")+
   ylab("") +
   theme_os() +
-  ggtitle("a) Northern") + 
-  theme(plot.title=element_text(color="white")) +
+  #theme(plot.title=element_text(color="white")) +
   theme(legend.position="none") +
   geom_line(mapping=aes(x=year,y=log.ratio),data=kelp.coastwide.dat)  
 
@@ -371,10 +372,9 @@ K.index2.no.s <- ggplot() +
   #ylab("Sea otters") +
   xlab("")+
   ylab("Kelp area (log index)") +
-  ggtitle(" ") +        
   theme_os() +
-  ggtitle("b) Central") + 
-  theme(plot.title=element_text(color="white")) +
+  ggtitle("e) ") + 
+  #theme(plot.title=element_text(color="white")) +
   theme(legend.position="none") +
   geom_line(mapping=aes(x=year,y=log.ratio),data=kelp.coastwide.dat)  
 
@@ -390,10 +390,9 @@ K.index3.no.s <- ggplot() +
   #ylab("Sea otters") +
   xlab("")+
   ylab("") +
-  ggtitle(" ") +        
   theme_os() +
-  ggtitle("c) Southern") + 
-  theme(plot.title=element_text(color="white")) +
+  ggtitle("f) ") + 
+  #theme(plot.title=element_text(color="white")) +
   theme(legend.position="none") +
   geom_line(mapping=aes(x=year,y=log.ratio),data=kelp.coastwide.dat)  
 
