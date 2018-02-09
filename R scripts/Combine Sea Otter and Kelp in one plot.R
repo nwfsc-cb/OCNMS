@@ -684,7 +684,7 @@ exposure.dat$expose.value <- as.numeric(as.character(exposure.dat$expose.value))
 
 exposure.dat$expose.value.short <- exposure.dat$expose.value/1e4
 
-#### Sundry analyses for kelp CV.
+#### Sundry analyses for change in kelp CV.
 cv.diff.89 <- reg.coef %>% filter(Start==1989) %>% dplyr::select(Site,Start,kelp.cv.boot,kelp.mean,otter,otter.mean,Region)
 cv.diff.02 <- reg.coef %>% filter(Start==2002) %>% dplyr::select(Site,Start,kelp.cv.boot,kelp.mean,otter,otter.mean,Region)
 
@@ -776,9 +776,15 @@ AICc(M.3)
 AICc(M.3b)
 #AICc(M.5)
 
+#########################################################################################
+#########################################################################################
+#########################################################################################
 
+# Analyses of kelp CV for the entire time period
 
+kelp.cv.all <- reg.coef %>% filter(Start=="All", Site != "All")
 
+plot(kelp.cv~expose.value.short,data= kelp.cv.all)
 
 
 #########################################################################################
