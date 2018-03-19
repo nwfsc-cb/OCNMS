@@ -17,7 +17,6 @@ base.dir <- "/Users/ole.shelton/GitHub/OCNMS/"
 # source(paste(base.dir,"R scripts/Sea otter time series script.R",sep=""))
 # base.dir <- "~/Documents/GitHub/OCNMS/"
 
-
 otter.kern.dat<- read.csv(paste(base.dir,"Data/csv files/Kernel otter abundances; kern=10.2.csv",sep=""))
 
 # # Relevant data frames for plots are 
@@ -34,12 +33,12 @@ otter.kern.dat<- read.csv(paste(base.dir,"Data/csv files/Kernel otter abundances
   kelp.coastwide.dat <- kelp.coastwide.dat %>% mutate(abund.ratio=total.area/Mean,log.ratio= log(abund.ratio))
 
 # Start with making cumulative totals for the entire Olympic coast of WA
-otter.kern.dat$location <- as.character(otter.kern.dat$location)
-otter.kern.dat$location[otter.kern.dat$location=="Chibadehl Rock"] <- "Chibadehl Rocks"
+#otter.kern.dat$location <- as.character(otter.kern.dat$location)
+#otter.kern.dat$location[otter.kern.dat$location=="Chibadehl Rock"] <- "Chibahdehl Rocks"
 
   NOM <- c(
+    "Chibahdehl Rock",
     "Neah Bay",
-    "Chibadehl Rocks",
     "Tatoosh Island",
     "Anderson Point",
     "Point of the Arches",
@@ -111,6 +110,7 @@ O.2 <- ggplot(otter.kern.dat %>% filter(Region=="Northern"),aes(x=Year,y=tot.pop
           ylab("") +
           ggtitle("a) Northern") +
           theme_os() #+ theme(legend.position="none")
+O.2
 O.3 <- ggplot(otter.kern.dat %>% filter(Region=="Central"),aes(x=Year,y=tot.pop,color=location)) +
             geom_line(linetype="dashed") +
             geom_smooth(span=SPAN,method="loess",se=F) +
@@ -675,7 +675,7 @@ exposure.dat <- data.frame(matrix(c(
   "Point of the Arches"     ,       111405,
   "Anderson Point"  ,       65867,
   "Tatoosh Island"  ,       14400,
-  "Chibadehl Rocks" ,       23469,
+  "Chibahdehl Rock" ,       23469,
   "Neah Bay"        ,       13258),
   10,2,
   byrow=TRUE))

@@ -51,7 +51,8 @@ dim(nwfsc.otter.dat)
 head(nwfsc.otter.dat,10)
 
 nwfsc.otter.dat <-nwfsc.otter.dat %>% mutate(location=Category) %>% dplyr::select(-Category)
-
+nwfsc.otter.dat$location <- as.character(nwfsc.otter.dat$location)
+nwfsc.otter.dat$location[nwfsc.otter.dat$location=="Chibadehl Rock"] <- "Chibahdel Rock"
 
 NOM <- c(
   "Quinault",
@@ -63,7 +64,7 @@ NOM <- c(
   "Point of the Arches",
   "Anderson Point",
   "Tatoosh Island",
-  "Chibadehl Rock",
+  "Chibahdehl Rock",
   "Neah Bay",
   "East Juan De Fuca"
   )
@@ -240,11 +241,12 @@ kern.pop.est.trim <- merge(kern.pop.est.trim,kern.pop.est.start)
 kern.pop.est.trim$abund.ratio <- kern.pop.est.trim$tot.pop / kern.pop.est.trim$mean.init
 kern.pop.est.trim$log.ratio <- log(kern.pop.est.trim$abund.ratio)
 
-
+kern.pop.est$location <- as.character(kern.pop.est$location)
+kern.pop.est$location[kern.pop.est$location== "Chibadehl Rock"] <- "Chibahdehl Rock"
 
 ### 08142017:: Jameal adds regions
 kern.pop.est.trim$Region <- NA
-northern <- c("Neah Bay","Chibadehl Rock","Tatoosh Island")
+northern <- c("Neah Bay","Chibahdehl Rock","Tatoosh Island")
 central  <- c("Anderson Point","Point of the Arches","Cape Alava")
 southern <- c("Cape Johnson","Rock 305","Teahwhit Head","Destruction Island")
 # northern <- c(as.character(unique(kern.pop.est.trim$location)[9]),as.character(unique(kern.pop.est.trim$location)[5]), as.character(unique(kern.pop.est.trim$location)[7]))
@@ -307,8 +309,8 @@ otters_by_site_facet2_kern
 ### 08142017:: Jameal adds facet plots by region
 
 NOM2 <- c(
+  "Chibahdehl Rock",
   "Neah Bay",
-  "Chibadehl Rock",
   "Tatoosh Island",
   "Anderson Point",
   "Point of the Arches",

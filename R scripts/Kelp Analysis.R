@@ -3,6 +3,7 @@ options(max.print=99999)
 library(dplyr)
 library(ggplot2)
 library(reshape2)
+library(viridis)
 
 # for OLE
  base.dir <- "/Users/ole.shelton/GitHub/OCNMS"
@@ -71,10 +72,12 @@ kelp.ts$area.avail.tot  <- kelp.ts$weight * kelp.ts$Area.0to20m
 
 kelp.ts.all <- kelp.ts %>% group_by(Site,year) %>% summarise(total.area = sum(Area))
 
+kelp.ts.all$Site <- as.character(kelp.ts.all$Site)
+kelp.ts.all$Site[kelp.ts.all$Site == "Chibadehl Rocks"] <- "Chibahdehl Rock"
 
 site.order <- c(
+  "Chibahdehl Rock",
   "Neah Bay",
-  "Chibadehl Rocks",
   "Tatoosh Island",
   #"Cape Flattery",
   "Anderson Point",
@@ -91,7 +94,7 @@ kelp.ts.all$Site <-  factor(kelp.ts.all$Site,
 
 #V
 kelp.ts.all <- kelp.ts.all %>% mutate(Region = as.character(Site)) %>%
-  mutate(Region = replace(Region,Site%in%c("Neah Bay","Chibadehl Rocks","Tatoosh Island"), "Northern")) %>%
+  mutate(Region = replace(Region,Site%in%c("Neah Bay","Chibahdehl Rock","Tatoosh Island"), "Northern")) %>%
   mutate(Region = replace(Region,Site%in%c("Anderson Point","Point of the Arches","Cape Alava"), "Central")) %>%                                                                  
   mutate(Region = replace(Region,Site%in%c("Cape Johnson","Rock 305","Teahwhit Head","Destruction Island SW"), "Southern")) %>%
   as.data.frame()
