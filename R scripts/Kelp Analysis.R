@@ -181,15 +181,6 @@ kelp.ts.ne.ma <- kelp.ts.ne.ma %>% group_by(Site) %>%
 
 
 # Plots by area
-
-
-
-
-
-
-
-
-
 p1 <- ggplot(kelp.ts.ne.ma) +
   geom_point(aes(y=total.area.ne,x=year)) +
   geom_smooth(aes(y=total.area.ne,x=year),span=0.5,color="black",method="loess") +
@@ -202,7 +193,7 @@ print(p1)
 p2 <- ggplot(kelp.ts.ne.ma) +
   geom_point(aes(y=total.area.ne,x=year)) +
   geom_smooth(aes(y=total.area.ne,x=year),span=0.5,color="black",method="loess") +
-  geom_point(aes(y=total.area.ma,x=year)) +
+  geom_point(aes(y=total.area.ma,x=year),color="red") +
   geom_smooth(aes(y=total.area.ma,x=year),span=0.5,color="red",method="loess") +
   facet_wrap(~Site,ncol=2,scales="free_y") +
   labs(y="kelp area(ha)") +
@@ -222,17 +213,13 @@ p3 <- ggplot(kelp.ts.ne.ma) +
   geom_hline(yintercept =0,linetype="dashed")
 print(p3)
 
-
-
 bivariate.ne.ma <- ggplot(kelp.ts.ne.ma) +
   geom_point(aes(x=Dev.ne,y=Dev.ma,color=Region))+
   theme_bw() +
   geom_hline(yintercept =0,linetype="dashed") +
   geom_vline(xintercept =0,linetype="dashed") +
   labs(x="Nereocystis area (mean standardized)",y="Macrocystis area (mean standardized)") 
-  
 bivariate.ne.ma
-
 
 pdf(file=paste(base.dir,"/Plots/Kelp time-series plots by species.pdf",sep=""),onefile=T,width=11,height=8.5)
   print(p)
@@ -244,7 +231,7 @@ pdf(file=paste(base.dir,"/Plots/Kelp bivariate plots.pdf",sep=""),onefile=T,widt
   print(bivariate.ne.ma)
 dev.off()
 
-
+ 
 ############
 
 
@@ -317,10 +304,6 @@ kelp.ts.ne.ma$abund.ratio.ne <- kelp.ts.ne.ma$total.area.ne / kelp.ts.ne.ma$mean
 kelp.ts.ne.ma$abund.ratio.ma <- kelp.ts.ne.ma$total.area.ma / kelp.ts.ne.ma$mean.init.ma
 kelp.ts.ne.ma$log.ratio.ne <- log(kelp.ts.ne.ma$abund.ratio.ne)
 kelp.ts.ne.ma$log.ratio.ma <- log(kelp.ts.ne.ma$abund.ratio.ma)
-
-
-
-
 
 theme_os <- function(base_size = 12, base_family = "") {
   theme_bw()+

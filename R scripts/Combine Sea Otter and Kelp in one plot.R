@@ -29,8 +29,13 @@ otter.kern.dat<- read.csv(paste(base.dir,"Data/csv files/Kernel otter abundances
   nwfsc.otter.by.year$Mean <- nwfsc.otter.by.year %>%  filter(Year >= 1989, Year<=1991) %>% summarize(Mean=mean(Total)) %>% as.numeric()
   nwfsc.otter.by.year <- nwfsc.otter.by.year %>% mutate(abund.ratio=Total/Mean,log.ratio= log(abund.ratio))
   
-  kelp.coastwide.dat$Mean <- kelp.coastwide.dat %>% filter(year >= 1989, year<=1991) %>% summarize(Mean=mean(total.area)) %>% as.numeric()
-  kelp.coastwide.dat <- kelp.coastwide.dat %>% mutate(abund.ratio=total.area/Mean,log.ratio= log(abund.ratio))
+  kelp.coastwide.dat[,"Mean"] <- kelp.coastwide.dat %>% filter(year >= 1989, year<=1991) %>% summarize(Mean=mean(total.area))
+  kelp.coastwide.dat[,"Mean.ne"] <- kelp.coastwide.dat %>% filter(year >= 1989, year<=1991) %>% summarize(Mean.ne=mean(nereo,na.rm=T))
+  kelp.coastwide.dat[,"Mean.ma"] <- kelp.coastwide.dat %>% filter(year >= 1989, year<=1991) %>% summarize(Mean.ma=mean(macro,na.rm=T))
+  kelp.coastwide.dat <- kelp.coastwide.dat %>% 
+      mutate(abund.ratio=total.area/Mean,log.ratio= log(abund.ratio),
+             abund.ratio.ne=nereo/Mean.ne,log.ratio.ne= log(abund.ratio.ne),
+             abund.ratio.ma=macro/Mean.ma,log.ratio.ma= log(abund.ratio.ma))
 
 # Start with making cumulative totals for the entire Olympic coast of WA
 #otter.kern.dat$location <- as.character(otter.kern.dat$location)
@@ -396,8 +401,63 @@ K.index3.no.s <- ggplot() +
   theme(legend.position="none") +
   geom_line(mapping=aes(x=year,y=log.ratio),data=kelp.coastwide.dat)  
 
-#######
+###############################################################
+#### REPEAT WITH MACROCYSTIS ONLY
+###############################################################
 
+K.MA.index1.no.s <- ggplot() +
+  #geom_smooth(span=SPAN,method="loess",se=F) +
+  geom_line(data=kelp.ts.ne.ma %>% filter(Region =="Northern"),mapping=aes(x=year,y=log.ratio.ma,color=Site),linetype="dashed") +
+  geom_point(data=kelp.ts.ne.ma %>% filter(Region =="Northern"),mapping=aes(x=year,y=log.ratio.ma,color=Site)) +
+  geom_hline(yintercept = 0,linetype="dotted") +
+  scale_colour_manual(name="Site",values=COL) +
+  scale_x_continuous(limits = x.lim) +
+  scale_y_continuous(limits=y.lim)  +
+  #ylab("Sea otters") +
+  ggtitle("d) ") + 
+  xlab("")+
+  ylab("") +
+  theme_os() +
+  #theme(plot.title=element_text(color="white")) +
+  theme(legend.position="none") +
+  geom_line(mapping=aes(x=year,y=log.ratio.ma),data=kelp.coastwide.dat)  
+
+K.MA.index2.no.s <- ggplot() +
+  #geom_smooth(span=SPAN,method="loess",se=F) +
+  geom_line(data=kelp.ts.ne.ma %>% filter(Region =="Central"),mapping=aes(x=year,y=log.ratio.ma,color=Site),linetype="dashed") +
+  geom_point(data=kelp.ts.ne.ma %>% filter(Region =="Central"),mapping=aes(x=year,y=log.ratio.ma,color=Site)) +
+  geom_hline(yintercept = 0,linetype="dotted") +
+  scale_colour_manual(name="Site",values=COL) +
+  scale_x_continuous(limits = x.lim) +
+  scale_y_continuous(limits=y.lim)  +
+  #ylab("Sea otters") +
+  xlab("")+
+  ylab("Kelp area (log index)") +
+  theme_os() +
+  ggtitle("e) ") + 
+  #theme(plot.title=element_text(color="white")) +
+  theme(legend.position="none") +
+  geom_line(mapping=aes(x=year,y=log.ratio.ma),data=kelp.coastwide.dat)  
+
+
+K.MA.index3.no.s <- ggplot() +
+  #geom_smooth(span=SPAN,method="loess",se=F) +
+  geom_line(data=kelp.ts.ne.ma %>% filter(Region =="Southern"),mapping=aes(x=year,y=log.ratio.ma,color=Site),linetype="dashed") +
+  geom_point(data=kelp.ts.ne.ma %>% filter(Region =="Southern"),mapping=aes(x=year,y=log.ratio.ma,color=Site)) +
+  geom_hline(yintercept = 0,linetype="dotted") +
+  scale_colour_manual(name="Site",values=COL.2) +
+  scale_x_continuous(limits = x.lim) +
+  scale_y_continuous(limits=y.lim)  +
+  #ylab("Sea otters") +
+  xlab("")+
+  ylab("") +
+  theme_os() +
+  ggtitle("f) ") + 
+  #theme(plot.title=element_text(color="white")) +
+  theme(legend.position="none") +
+  geom_line(mapping=aes(x=year,y=log.ratio.ma),data=kelp.coastwide.dat)  
+
+#################################################################################
 
 quartz(file = paste(base.dir,"/Plots/Otters and Kelp coastwide.pdf",sep=""),type="pdf",dpi=300,height=6,width=4 )
 Layout= matrix(c(1,2),nrow=2,ncol=1,byrow=F)
@@ -436,6 +496,14 @@ QQ <- list(Otter.index2.no.s,Otter.index3.no.s,Otter.index4.no.s,
 multiplot(plotlist=QQ ,layout= Layout)
 dev.off()
 
+quartz(file = paste(base.dir,"/Plots/Otters index and MACRO index by region (no smoothes).pdf",sep=""),type="pdf",dpi=300,height=8,width=7 )
+Layout= matrix(c(1,2,3,4,5,6),nrow=3,ncol=2,byrow=F)
+QQ <- list(Otter.index2.no.s,Otter.index3.no.s,Otter.index4.no.s,
+           K.MA.index1.no.s,K.MA.index2.no.s,K.MA.index3.no.s)
+multiplot(plotlist=QQ ,layout= Layout)
+dev.off()
+
+
 #######################################################################################
 #######################################################################################
 #######################################################################################
@@ -447,17 +515,31 @@ dev.off()
 kelp.ts.all$Site <- as.character(kelp.ts.all$Site)
 kelp.ts.all$Site[kelp.ts.all$Site=="Destruction Island SW"] <-"Destruction Island"
 
+kelp.ts.ne.ma$Site <- as.character(kelp.ts.ne.ma$Site)
+kelp.ts.ne.ma$Site[kelp.ts.ne.ma$Site=="Destruction Island SW"] <-"Destruction Island"
+
 kelp.otter.dat <- merge(otter.kern.dat %>% select(location,Year,tot.pop,Region),
                           kelp.ts.all %>% select(Site,year,total.area,Region),
                           by.x=c("location","Year","Region"),
                           by.y=c("Site","year","Region"),all=T)
 
+kelp.MA.otter.dat <- merge(otter.kern.dat %>% select(location,Year,tot.pop,Region),
+                        kelp.ts.ne.ma %>% select(Site,year,total.area.ma,Region),
+                        by.x=c("location","Year","Region"),
+                        by.y=c("Site","year","Region"),all=T)
+
+
 kelp.otter.dat <- kelp.otter.dat %>% dplyr::rename(otter.n=tot.pop,kelp.area=total.area)
 kelp.otter.dat$log.otter <- log(kelp.otter.dat$otter.n)
 kelp.otter.dat$log.kelp  <- log(kelp.otter.dat$kelp.area)
-  
+
+kelp.MA.otter.dat <- kelp.MA.otter.dat %>% dplyr::rename(otter.n=tot.pop,kelp.area=total.area.ma)
+kelp.MA.otter.dat$log.otter <- log(kelp.MA.otter.dat$otter.n)
+kelp.MA.otter.dat$log.kelp  <- log(kelp.MA.otter.dat$kelp.area)
+
 temp <- expand.grid(Year=min(kelp.otter.dat$Year):max(kelp.otter.dat$Year),location=sort(unique(kelp.otter.dat$location)))
 kelp.otter.dat <- merge(kelp.otter.dat,temp,all=T)
+kelp.MA.otter.dat <- merge(kelp.MA.otter.dat,temp,all=T)
 
 k.o.dat <- NULL
 reg.coef1 <- NULL
@@ -472,7 +554,7 @@ for(i in 1:length(NOM)){
   k.o.dat <- rbind(k.o.dat,temp)
 
   BREAK <- 2001
-  temp <- kelp.otter.dat %>% filter(location == NOM[i],Year >= 1989,Year<= BREAK) 
+  temp <- kelp.MA.otter.dat %>% filter(location == NOM[i],Year >= 1989,Year<= BREAK) 
   
   mod <- lm(log.otter~Year,data=temp)  
   reg.coef1 <- rbind(reg.coef1,data.frame(Site=NOM[i],Start=1989,slope.otter=coef(summary(mod))["Year","Estimate"],slope.otter.se=coef(summary(mod))["Year","Std. Error"]))
@@ -542,7 +624,7 @@ for(i in 1:length(NOM)){
                                       kelp.mean= mean(temp$kelp.area,na.rm=T)))
   
   ### 1989-2015
-  temp <- kelp.otter.dat %>% filter(location == NOM[i],Year >= 1989,Year<= 2015) 
+  temp <- kelp.MA.otter.dat %>% filter(location == NOM[i],Year >= 1989,Year<= 2015) 
   
   mod <- lm(log.otter~(Year),data=temp)  
   reg.coef1 <- rbind(reg.coef1,data.frame(Site=NOM[i],Start="All",slope.otter=coef(summary(mod))["Year","Estimate"],slope.otter.se=coef(summary(mod))["Year","Std. Error"]))
@@ -606,7 +688,6 @@ coast.reg.coef<- data.frame(Site = "All",Start = c("All",1989,2002,"All",1989,20
                              kelp.02to15$coefficients['year','Std. Error']))
 
 reg.coef <- merge(reg.coef,coast.reg.coef,all=T)
-
 reg.coef<- merge(reg.coef,otter.mean.summary,by.x=c("Site","Start"),by.y=c("location","Start"),all=T)
 
 #### GLM for kelp x otter interaction.
@@ -617,6 +698,8 @@ slope.time2 <- reg.coef %>% filter(Region != "All", Start != 1996,Start!="All") 
                   lm(slope.kelp ~ Region + slope.otter*as.factor(Start), data=.) 
 summary(slope.time2)
 anova(slope.time2)
+
+### THIS IS FOR ALL KELP TOGETHER (NEREO + MACRO)
 # Call:
 #   lm(formula = slope.kelp ~ Region + slope.otter * as.factor(Start), 
 #      data = .)
@@ -663,6 +746,54 @@ anova(slope.all)
 # Residual standard error: 0.02018 on 6 degrees of freedom
 # Multiple R-squared:  0.7215,	Adjusted R-squared:  0.5822 
 # F-statistic:  5.18 on 3 and 6 DF,  p-value: 0.04202
+############################################################
+
+### THIS IS JUST FOR MACROCYSTIS ALONE
+slope.time1 <- reg.coef %>% filter(Region != "All", Start != 1996,Start!="All") %>% 
+  lmer(slope.kelp ~ (1|Site) + Region + slope.otter*as.factor(Start), data=.) 
+slope.time2 <- reg.coef %>% filter(Region != "All", Start != 1996,Start!="All") %>% 
+  lm(slope.kelp ~ Region + slope.otter*as.factor(Start), data=.) 
+summary(slope.time2)
+anova(slope.time2)
+
+# Call:
+#   lm(formula = slope.kelp ~ Region + slope.otter * as.factor(Start), 
+#      data = .)
+# 
+# Residuals:
+#   Min        1Q    Median        3Q       Max 
+# -0.069791 -0.022458  0.003686  0.017281  0.085275 
+# 
+# Coefficients:
+#   Estimate Std. Error t value Pr(>|t|)   
+# (Intercept)                       0.05532    0.02269   2.438  0.02867 * 
+#   RegionCentral                     0.03449    0.02568   1.343  0.20065   
+# RegionSouthern                    0.01712    0.04863   0.352  0.72998   
+# slope.otter                       0.16284    0.42212   0.386  0.70546   
+# as.factor(Start)2002             -0.09148    0.02748  -3.329  0.00497 **
+#   slope.otter:as.factor(Start)2002 -0.58834    0.53709  -1.095  0.29182   
+# ---
+#   Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+# 
+# Residual standard error: 0.04229 on 14 degrees of freedom
+# Multiple R-squared:  0.7404,	Adjusted R-squared:  0.6477 
+# F-statistic: 7.986 on 5 and 14 DF,  p-value: 0.0009617
+# 
+# > anova(slope.time2)
+# Analysis of Variance Table
+# 
+# Response: slope.kelp
+# Df   Sum Sq  Mean Sq F value    Pr(>F)    
+# Region                        2 0.004082 0.002041  1.1415 0.3473284    
+# slope.otter                   1 0.030702 0.030702 17.1707 0.0009936 ***
+#   as.factor(Start)              1 0.034465 0.034465 19.2754 0.0006161 ***
+#   slope.otter:as.factor(Start)  1 0.002146 0.002146  1.2000 0.2918171    
+# Residuals                    14 0.025033 0.001788                      
+# ---
+#   Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+
 
 # DATA FROM BLAKE on Exposure.
 # 
@@ -690,10 +821,10 @@ cv.diff.02 <- reg.coef %>% filter(Start==2002) %>% dplyr::select(Site,Start,kelp
 
 cv.diff    <- cv.diff.89 %>% mutate(kelp.mean.89 = kelp.mean, otter.89=otter,otter.mean.89=otter.mean,kelp.cv.89=kelp.cv.boot) %>%
                       dplyr::select(Site,Region,kelp.mean.89,otter.89,otter.mean.89,kelp.cv.89)
-cv.diff    <- cbind(cv.diff,cv.diff.02 %>%  mutate(kelp.mean.02 = kelp.mean, otter.02=otter,otter.mean.02=otter.mean)%>%
-                  dplyr::select(kelp.mean.02,otter.02,otter.mean.02) ) %>% as.data.frame()
+cv.diff    <- cbind(cv.diff,cv.diff.02 %>%  mutate(kelp.mean.02 = kelp.mean, otter.02=otter,otter.mean.02=otter.mean,kelp.cv.02=kelp.cv.boot)%>%
+                  dplyr::select(kelp.mean.02,kelp.cv.02,otter.02,otter.mean.02) ) %>% as.data.frame()
                   
-cv.diff$CV.DIFF <- cv.diff.02$kelp.cv.boot - cv.diff.89$kelp.cv.boot 
+cv.diff$CV.DIFF <- cv.diff$kelp.cv.02 - cv.diff$kelp.cv.89 
 cv.diff         <- cv.diff %>% filter(Site!="All")                    
 
 cv.diff <- cv.diff %>% mutate(diff.otter = otter.02 - otter.89, 
@@ -702,43 +833,43 @@ cv.diff <- cv.diff %>% mutate(diff.otter = otter.02 - otter.89,
 cv.diff$expose.value.short <- exposure.dat$expose.value.short[match(cv.diff$Site,exposure.dat$Site)]
 
 
-M.0a <- lm(CV.DIFF~Region,data=cv.diff)
+M.0a <- lm(kelp.cv.02~Region,data=cv.diff)
 summary(M.0a)
 anova(M.0a)
 
-M.0b <- lm(CV.DIFF~kelp.cv.89,data=cv.diff)
+M.0b <- lm(kelp.cv.02~kelp.cv.89,data=cv.diff)
 summary(M.0b)
 anova(M.0b)
 
-M.0c <- lm(CV.DIFF~diff.otter.mean,data=cv.diff)
+M.0c <- lm(kelp.cv.02~diff.otter.mean,data=cv.diff)
 summary(M.0c)
 anova(M.0c)
 
-M.1 <- lm(CV.DIFF~kelp.cv.89+Region,data=cv.diff)
+M.1 <- lm(kelp.cv.02~kelp.cv.89+Region,data=cv.diff)
 summary(M.1)
 anova(M.1)
 
-M.2 <- lm(CV.DIFF~kelp.cv.89+ diff.otter,data=cv.diff)
+M.2 <- lm(kelp.cv.02~kelp.cv.89+ diff.otter,data=cv.diff)
 summary(M.2)
 anova(M.2)
 
-M.2b <- lm(CV.DIFF~kelp.cv.89 + diff.otter.mean ,data=cv.diff)
+M.2b <- lm(kelp.cv.02~kelp.cv.89 + diff.otter.mean ,data=cv.diff)
 summary(M.2b)
 anova(M.2b)
 
-M.3 <- lm(CV.DIFF~Region+diff.otter,data=cv.diff)
+M.3 <- lm(kelp.cv.02~Region+diff.otter,data=cv.diff)
 summary(M.3)
 anova(M.3)
 
-M.3b <- lm(CV.DIFF~Region+diff.otter.mean,data=cv.diff)
+M.3b <- lm(kelp.cv.02~Region+diff.otter.mean,data=cv.diff)
 summary(M.3b)
 anova(M.3b)
 
-M.4 <- lm(CV.DIFF~kelp.cv.89 + diff.otter + Region,data=cv.diff)
+M.4 <- lm(kelp.cv.02~kelp.cv.89 + diff.otter + Region,data=cv.diff)
 summary(M.4)
 anova(M.4)
 
-M.4b <- lm(CV.DIFF~kelp.cv.89 + diff.otter.mean + Region,data=cv.diff)
+M.4b <- lm(kelp.cv.02~kelp.cv.89 + diff.otter.mean + Region,data=cv.diff)
 summary(M.4b)
 anova(M.4b)
 
@@ -795,17 +926,7 @@ reg.coef$expose.value.short <- exposure.dat$expose.value.short[match(reg.coef$Si
 reg.coef$log.otter.mean <-log(reg.coef$otter.mean)
 reg.coef$log.otter <-log(reg.coef$otter)
 
-
-
-
-
-
-
-
-
-
 CV.lmNull <- reg.coef %>% filter(Region != "All", Start != 1996,Start!="All") %>%  lmer(kelp.cv ~ (1|Site) , data=.) 
-
 CV.lm0a <- reg.coef %>% filter(Region != "All", Start != 1996,Start!="All") %>%  lmer(kelp.cv ~ (1|Site) + Region , data=.) 
 CV.lm0b <- reg.coef %>% filter(Region != "All", Start != 1996,Start!="All") %>%  lmer(kelp.cv ~ (1|Site) + Start , data=.) 
 summary(CV.lm0a)
@@ -885,7 +1006,7 @@ theme_os2 <- function(base_size = 12, base_family = "") {
 }  
 
 x.lim=c(-0.06,0.22)
-y.lim=c(-0.12,0.165)
+y.lim=c(-0.12,0.18)
 
 COL   <- viridis(32,begin=0,end=0.8)
 
@@ -929,7 +1050,7 @@ A.2002 <-  ggplot(reg.coef %>% filter(Start ==2002),aes(y=slope.kelp,x=slope.ott
   ggtitle("b) 2002-2015") +
   theme_os2 ()
 
-quartz(file = paste(base.dir,"/Plots/Otters vs. Kelp growth 2 halves.pdf",sep=""),type="pdf",dpi=300,height=7,width=5 )
+quartz(file = paste(base.dir,"/Plots/Otters vs. MA growth 2 halves.pdf",sep=""),type="pdf",dpi=300,height=7,width=5 )
   Layout= matrix(c(1,2),nrow=2,ncol=1,byrow=F)
   QQ <- list(A.1989,
            A.2002)
@@ -992,11 +1113,11 @@ C <- ggplot(reg.coef %>% filter(Start!=1996,Start!="All",Region!="All"),aes(y=ke
         legend.position   = c(0.98,0.98),
         plot.margin =        unit(c(0.2, 0.2, 0.2, 0.2), "lines"))
 
-quartz(file = paste(base.dir,"/Plots/Otters vs. Kelp CV change (MEAN).pdf",sep=""),type="pdf",dpi=300,height=4,width=5 )
+quartz(file = paste(base.dir,"/Plots/Otters vs. MA CV change (MEAN).pdf",sep=""),type="pdf",dpi=300,height=4,width=5 )
   print(A)
 dev.off()
 
-quartz(file = paste(base.dir,"/Plots/Otters vs. Kelp CV change (START).pdf",sep=""),type="pdf",dpi=300,height=4,width=5 )
+quartz(file = paste(base.dir,"/Plots/Otters vs. MA CV change (START).pdf",sep=""),type="pdf",dpi=300,height=4,width=5 )
   print(B)
 dev.off()
 
