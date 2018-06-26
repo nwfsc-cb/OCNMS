@@ -1,0 +1,49 @@
+CLASSCODE,NAME
+BEDRK,Substrate: Bedrock
+BOULD,Substrate: Boulder
+COB,Substrate: Cobble
+SAND,Substrate: Sand
+0-10cm,0-10cm
+10cm-1m,10cm-1m
+1m-2m,1m-2m
+>2m,>2m
+ANEM,Anemone
+ARTCOR,articulated coralline
+BARNAC,Barnacle
+BARROC,Bare Rock
+BARSAN,Bare Sand
+BIVALVE,various bivalves
+BRANCH,Red algae (branching flat blade)
+BROWNUN,Brown algae understory prone
+BRYO,Bryozoan
+BUSHY,Red algae (cylindrical branches)
+CLAM,Clam
+COLTUN,"Tunicate -Colonial,compund,social"
+CORCAL,Corynactis californica' strawberry anemone
+CRUCOR,Coralline algae -Crustose
+CUCSPP,Cucumaria spp.' sea cucumber
+CUPCOR,Cup Coral
+DEADHOLD,Macrosystis holdfast (dead)
+ENCRED,Red algae -Encrusting
+ERECOR,Coralline algae -Erect/Articulated
+GREEN,Green algae
+HYDROCOR,Encrusting hydrocoral (eg. Stylantheca)
+HYDROID,Hydroid
+LACY,Red algae (lacy branching)
+LAMHOLD,Laminariales holdfast (alive)
+LEAFYRED,Red algae (leaf-like)
+MACPYR_HF,Macrosystis holdfast (alive)
+MUD,Sediment/Mud
+MUSSEL,Mussel
+NEREO_HF,Nereocystis holdfast (alive)
+PHYSPP,Phyllospadix spp.' surfgrass
+PTERO,Pterogophora
+SARSPP,Sargassum spp.' Sargassum
+SCALLOP,Scallop
+SCUM,Diatom Layer
+SHELL,Shell Debris
+SOLTUN,Tunicate -Solitary
+SPONGE,Sponge
+TUBEWORM,Tubeworm
+URCHIN,urchin
+ZOSTERA,"Zostera marina, eelgrass"

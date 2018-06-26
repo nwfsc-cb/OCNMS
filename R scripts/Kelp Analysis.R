@@ -27,31 +27,53 @@ setwd(paste(base.dir,"/Data/csv files",sep=""))
 kelp.dat      <- read.csv("annual canopy area by index.csv")
 weight.dat    <- read.csv("Kelp area index weights.csv")
 kelp.coastwide.dat <- read.csv("kelp canopy all sites.csv")
+  kelp.coastwide.dat.raw<-kelp.coastwide.dat
 area.available <- read.csv("WADNR kelp index map bathymetry, kelp & substrate data table.csv")
 area.available[,2:ncol(area.available)] <- area.available[,2:ncol(area.available)] * 0.0001
 
-
 ## Coastwide summary of kelp
 kelp.coastwide.dat <- kelp.coastwide.dat %>% filter(map_index >=15.1 & map_index <= 25.2) %>% 
-         rename(year = year_) %>% filter(year<=2015) %>% group_by(year) %>% summarise(total.area = sum(tot_can)) %>% as.data.frame()
+         rename(year = year_) %>% filter(year<=2015) %>% group_by(year) %>% 
+          summarise(total.area = sum(tot_can),nereo=sum(tot_ne_can),macro=sum(tot_ma_can)) %>% as.data.frame()
+kelp.coastwide.dat[kelp.coastwide.dat < 0] <- NA
 
-p <- ggplot(kelp.coastwide.dat,aes(y=total.area,x=year)) +
-  geom_point() +
-  geom_line(linetype="dashed") +
-  geom_smooth(,span=0.5,color="black",method="loess") +
+p <- ggplot(kelp.coastwide.dat) +
+  geom_point(aes(y=total.area,x=year)) +
+  geom_line(aes(y=total.area,x=year),linetype="dashed") +
+  geom_smooth(aes(y=total.area,x=year),span=0.5,color="black",method="loess") +
   #facet_wrap(~Site,ncol=2) +
   labs(y="kelp area(ha)") +
   #  ggtitle("1000m buffer") +
   theme_bw() 
 print(p)
 
+p.nereo <- ggplot(kelp.coastwide.dat) +
+  geom_point(aes(y=nereo,x=year)) +
+  geom_line(aes(y=nereo,x=year),linetype="dashed") +
+  geom_smooth(aes(y=nereo,x=year),span=0.5,color="red",method="loess") +
+  #facet_wrap(~Site,ncol=2) +
+  labs(y="kelp area(ha)") +
+  #  ggtitle("1000m buffer") +
+  theme_bw() 
+print(p.nereo)
+
+p.macro <- ggplot(kelp.coastwide.dat,aes(y=macro,x=year)) +
+  geom_point() +
+  geom_line(linetype="dashed") +
+  geom_smooth(span=0.5,color="red",method="loess") +
+  #facet_wrap(~Site,ncol=2) +
+  labs(y="kelp area(ha)") +
+  #  ggtitle("1000m buffer") +
+  theme_bw() 
+print(p.macro)
+
 A <- kelp.coastwide.dat %>% filter(year <= 2001) 
 B <- kelp.coastwide.dat %>% filter(year >= 2002) 
 sd(A$total.area)
 sd(B$total.area)
-#####
-
-
+####################
+### THIS IS FOR THE SUM OF NEREO AND MACRO 
+####################
 kelp.dat <- melt(kelp.dat,id.vars = "kelp.map.index")
 kelp.dat <- kelp.dat %>% rename(year=variable)
 kelp.dat$year <- substr(kelp.dat$year,2,5)
@@ -108,54 +130,118 @@ kelp.ts.site <- kelp.ts.all %>% group_by(Site) %>% summarise(Mean=mean(total.are
 kelp.ts.all <- kelp.ts.all %>% group_by(Site) %>% summarise(Mean=mean(total.area),SD=sd(total.area)) %>%
                 as.data.frame() %>% merge(.,kelp.ts.all) %>% mutate(Dev = (total.area - Mean) / SD)
 
+####################
+### THIS IS FOR THE NEREO AND MACRO SEPARATELY 
+####################
+
+kelp.dat.ne.ma <- kelp.coastwide.dat.raw %>% dplyr::select(kelp.map.index=map_index,nereo=tot_ne_can,macro=tot_ma_can,total=tot_can,year=year_)
+kelp.dat.ne.ma <- merge(kelp.dat.ne.ma,weight.dat)
+kelp.dat.ne.ma[kelp.dat.ne.ma== -9999] <- NA
+kelp.dat.ne.ma <- kelp.dat.ne.ma %>% filter(year<=2015)
+
+kelp.dat.ne.ma$Area.ne <- kelp.dat.ne.ma$nereo * kelp.dat.ne.ma$weight
+kelp.dat.ne.ma$Area.ma <- kelp.dat.ne.ma$ma * kelp.dat.ne.ma$weight
+
+kelp.ts.ne.ma <- kelp.dat.ne.ma %>% group_by(Site,year) %>% summarise(total.area.ne = sum(Area.ne),total.area.ma = sum(Area.ma))
+kelp.ts.ne.ma$Site <- as.character(kelp.ts.ne.ma$Site)
+kelp.ts.ne.ma$Site[kelp.ts.ne.ma$Site=="Chibadehl Rocks"] <- "Chibahdehl Rock"
+
+site.order <- c(
+  "Chibahdehl Rock",
+  "Neah Bay",
+  "Tatoosh Island",
+  #"Cape Flattery",
+  "Anderson Point",
+  "Makah Bay",
+  "Point of the Arches",
+  "Cape Alava",
+  "Cape Johnson",
+  "Rock 305",
+  "Teahwhit Head",
+  "Destruction Island SW")
+
+kelp.ts.ne.ma$Site <-  factor(kelp.ts.ne.ma$Site, 
+                            levels = site.order)
+
+kelp.ts.ne.ma <- kelp.ts.ne.ma %>% mutate(Region = as.character(Site)) %>%
+  mutate(Region = replace(Region,Site%in%c("Neah Bay","Chibahdehl Rock","Tatoosh Island"), "Northern")) %>%
+  mutate(Region = replace(Region,Site%in%c("Anderson Point","Point of the Arches","Cape Alava"), "Central")) %>%                                                                  
+  mutate(Region = replace(Region,Site%in%c("Cape Johnson","Rock 305","Teahwhit Head","Destruction Island SW"), "Southern")) %>%
+  as.data.frame()
+kelp.ts.ne.ma$Region <- as.factor(kelp.ts.ne.ma$Region)
+
+kelp.ts.ne.ma$year <- as.numeric(as.character(kelp.ts.ne.ma$year))
+
+kelp.ts.ne.ma <- kelp.ts.ne.ma %>% group_by(Site) %>% 
+  summarise(Mean.ne=mean(total.area.ne,na.rm=T),SD.ne=sd(total.area.ne,na.rm=T), 
+            Mean.ma=mean(total.area.ma,na.rm=T),SD.ma=sd(total.area.ma,na.rm=T)) %>%
+  as.data.frame() %>% merge(.,kelp.ts.ne.ma) %>% 
+  mutate(Dev.ne = (total.area.ne - Mean.ne) / SD.ne,Dev.ma = (total.area.ma - Mean.ma) / SD.ma) %>%
+  arrange(Site,year)
+
 
 # Plots by area
 
-p1 <- ggplot(kelp.ts.all) +
-  geom_point(aes(y=total.area,x=year)) +
-  geom_smooth(aes(y=total.area,x=year),span=0.5,color="black",method="loess") +
+
+
+
+
+
+
+
+
+p1 <- ggplot(kelp.ts.ne.ma) +
+  geom_point(aes(y=total.area.ne,x=year)) +
+  geom_smooth(aes(y=total.area.ne,x=year),span=0.5,color="black",method="loess") +
   facet_wrap(~Site,ncol=2) +
   labs(y="kelp area(ha)") +
 #  ggtitle("1000m buffer") +
   theme_bw() 
 print(p1)
 
-p2 <- ggplot(kelp.ts.all) +
-  geom_point(aes(y=total.area,x=year)) +
-  geom_smooth(aes(y=total.area,x=year),span=0.5,color="black",method="loess") +
+p2 <- ggplot(kelp.ts.ne.ma) +
+  geom_point(aes(y=total.area.ne,x=year)) +
+  geom_smooth(aes(y=total.area.ne,x=year),span=0.5,color="black",method="loess") +
+  geom_point(aes(y=total.area.ma,x=year)) +
+  geom_smooth(aes(y=total.area.ma,x=year),span=0.5,color="red",method="loess") +
   facet_wrap(~Site,ncol=2,scales="free_y") +
   labs(y="kelp area(ha)") +
   #ggtitle("1000m buffer") +
   theme_bw() 
 print(p2)
 
-p3 <- ggplot(kelp.ts.all,aes(y=Dev,x=year)) +
-  geom_point() +
-  geom_smooth(span=0.5,color="black",method="loess") +
-  facet_wrap(~Site,ncol=2) +
-  labs(y="kelp area(ha)") +
+p3 <- ggplot(kelp.ts.ne.ma) +
+  geom_point(aes(y=Dev.ne,x=year)) +
+  geom_smooth(aes(y=Dev.ne,x=year),span=0.5,color="black",method="loess") +
+  geom_point(aes(y=Dev.ma,x=year),color="red") +
+  geom_smooth(aes(y=Dev.ma,x=year),span=0.5,color="red",method="loess") +
+      facet_wrap(~Site,ncol=2) +
+  labs(y="kelp area (mean standardized) ") +
   #  ggtitle("1000m buffer") +
   theme_bw() +
   geom_hline(yintercept =0,linetype="dashed")
 print(p3)
 
-p4 <- ggplot(kelp.ts.all,aes(y=Dev,x=year)) +
-  geom_point() +
-  geom_line()+
-  facet_wrap(~Site,ncol=2) +
-  labs(y="kelp area(ha)") +
-  #  ggtitle("1000m buffer") +
+
+
+bivariate.ne.ma <- ggplot(kelp.ts.ne.ma) +
+  geom_point(aes(x=Dev.ne,y=Dev.ma,color=Region))+
   theme_bw() +
-  geom_hline(yintercept =0,linetype="dashed")
-print(p4)
+  geom_hline(yintercept =0,linetype="dashed") +
+  geom_vline(xintercept =0,linetype="dashed") +
+  labs(x="Nereocystis area (mean standardized)",y="Macrocystis area (mean standardized)") 
+  
+bivariate.ne.ma
 
 
-pdf(file=paste(base.dir,"/Plots/Kelp time-series plots.pdf",sep=""),onefile=T,width=11,height=8.5)
+pdf(file=paste(base.dir,"/Plots/Kelp time-series plots by species.pdf",sep=""),onefile=T,width=11,height=8.5)
   print(p)
   print(p1)
   print(p2)
   print(p3)
-  print(p4)
+dev.off()
+pdf(file=paste(base.dir,"/Plots/Kelp bivariate plots.pdf",sep=""),onefile=T,width=8,height=7)
+  print(bivariate.ne.ma)
 dev.off()
 
 
@@ -223,6 +309,18 @@ kelp.start <- kelp.ts.all %>% filter(year <=1991) %>% group_by(Site) %>% summari
 kelp.ts.all <- merge(kelp.ts.all,kelp.start)
 kelp.ts.all$abund.ratio <- kelp.ts.all$total.area / kelp.ts.all$mean.init
 kelp.ts.all$log.ratio <- log(kelp.ts.all$abund.ratio)
+
+kelp.start.ne.ma <- kelp.ts.ne.ma %>% filter(year <=1991) %>% group_by(Site) %>% 
+                summarise(mean.init.ne= mean(total.area.ne,na.rm=T),mean.init.ma= mean(total.area.ma,na.rm=T))
+kelp.ts.ne.ma <- merge(kelp.ts.ne.ma,kelp.start.ne.ma)
+kelp.ts.ne.ma$abund.ratio.ne <- kelp.ts.ne.ma$total.area.ne / kelp.ts.ne.ma$mean.init.ne
+kelp.ts.ne.ma$abund.ratio.ma <- kelp.ts.ne.ma$total.area.ma / kelp.ts.ne.ma$mean.init.ma
+kelp.ts.ne.ma$log.ratio.ne <- log(kelp.ts.ne.ma$abund.ratio.ne)
+kelp.ts.ne.ma$log.ratio.ma <- log(kelp.ts.ne.ma$abund.ratio.ma)
+
+
+
+
 
 theme_os <- function(base_size = 12, base_family = "") {
   theme_bw()+
