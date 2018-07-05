@@ -383,6 +383,25 @@ multiplot(plotlist=QQ ,layout= Layout)
 dev.off()
 
 
+####################################################################
+#### Calculate some synchrony metrics
+
+# perform some analyses on total kelp (macro + nereo)
+# Cast a data from to be site x raw data
+
+kelp.dev <- dcast(kelp.ts.all,year~Site,value.var = "Dev")
+kelp.raw <- dcast(kelp.ts.all,year~Site,value.var = "total.area")
+
+sync.dev.all <- community.sync(kelp.dev %>% select(-year),nrands=1000)
+sync.dev.start <- community.sync(kelp.dev %>% filter(year <=2001) %>% select(-year),nrands=1000)
+sync.dev.end <- community.sync(kelp.dev %>% filter(year >2001) %>% select(-year),nrands=1000)
+
+sync.raw.all <- community.sync(kelp.raw %>% select(-year),nrands=1000)
+sync.raw.start <- community.sync(kelp.raw %>% filter(year <=2001) %>% select(-year),nrands=1000)
+sync.raw.end <- community.sync(kelp.raw %>% filter(year >2001) %>% select(-year),nrands=1000)
+
+
+
 # setwd(paste(base.dir,"/Data/csv files",sep=""))
 # 
 # kelp.dat    <- read.csv("kelp_area.csv")
