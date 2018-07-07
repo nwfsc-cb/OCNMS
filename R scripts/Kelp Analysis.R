@@ -4,6 +4,8 @@ library(dplyr)
 library(ggplot2)
 library(reshape2)
 library(viridis)
+library(synchrony)
+library(stats)
 
 # for OLE
  base.dir <- "/Users/ole.shelton/GitHub/OCNMS"
@@ -30,6 +32,9 @@ kelp.coastwide.dat <- read.csv("kelp canopy all sites.csv")
   kelp.coastwide.dat.raw<-kelp.coastwide.dat
 area.available <- read.csv("WADNR kelp index map bathymetry, kelp & substrate data table.csv")
 area.available[,2:ncol(area.available)] <- area.available[,2:ncol(area.available)] * 0.0001
+
+survey.locations.linear.shore <- read.csv("Survey locations linear shore.csv")
+survey.locations.linear.shore$distance.km <- survey.locations.linear.shore$Simplified.Distance..m. / 1000
 
 ## Coastwide summary of kelp
 kelp.coastwide.dat <- kelp.coastwide.dat %>% filter(map_index >=15.1 & map_index <= 25.2) %>% 
@@ -227,7 +232,7 @@ pdf(file=paste(base.dir,"/Plots/Kelp time-series plots by species.pdf",sep=""),o
   print(p2)
   print(p3)
 dev.off()
-pdf(file=paste(base.dir,"/Plots/Kelp bivariate plots.pdf",sep=""),onefile=T,width=8,height=7)
+pdf(file=paste(base.dir,"/Plots/Kelp bivariate plots.pdf",sep=""),onefile=T,width=5,height=4)
   print(bivariate.ne.ma)
 dev.off()
 
@@ -237,6 +242,7 @@ dev.off()
 
 #################################################################################################
 ### MEAN, CV at each site.
+#################################################################################################
 
 ## Raw area data. 1000m buffer
 
@@ -385,20 +391,193 @@ dev.off()
 
 ####################################################################
 #### Calculate some synchrony metrics
+locs <- survey.locations.linear.shore %>% filter(!Area %in% c("Pillar Point","Point Grenville")) %>% 
+  dplyr::select(-Simplified.Distance..m.) %>% arrange(desc(distance.km))
+loc.dist <- dist(locs$distance.km,diag=T)
+
+site.order2 <- c(
+  "Neah Bay",
+  "Chibahdehl Rock",
+  "Tatoosh Island",
+  #"Cape Flattery",
+  "Anderson Point",
+  #"Makah Bay",
+  "Point of the Arches",
+  "Cape Alava",
+  "Cape Johnson",
+  "Rock 305",
+  "Teahwhit Head",
+  "Destruction Island")
+
 
 # perform some analyses on total kelp (macro + nereo)
 # Cast a data from to be site x raw data
+kelp.ts.all$Site <- as.character(kelp.ts.all$Site)
+kelp.ts.all$Site[kelp.ts.all$Site == "Destruction Island SW"] <- "Destruction Island"
+kelp.ts.all.by.loc <- left_join(kelp.ts.all,locs,by=c("Site"="Area")) %>% arrange(desc(distance.km),year)
 
-kelp.dev <- dcast(kelp.ts.all,year~Site,value.var = "Dev")
-kelp.raw <- dcast(kelp.ts.all,year~Site,value.var = "total.area")
+kelp.ts.all.by.loc$Site <- factor(kelp.ts.all.by.loc$Site, levels=site.order2)
 
-sync.dev.all <- community.sync(kelp.dev %>% select(-year),nrands=1000)
-sync.dev.start <- community.sync(kelp.dev %>% filter(year <=2001) %>% select(-year),nrands=1000)
-sync.dev.end <- community.sync(kelp.dev %>% filter(year >2001) %>% select(-year),nrands=1000)
+kelp.dev <- dcast(kelp.ts.all.by.loc,year~Site,value.var = "Dev")
+kelp.raw <- dcast(kelp.ts.all.by.loc,year~Site,value.var = "total.area")
 
-sync.raw.all <- community.sync(kelp.raw %>% select(-year),nrands=1000)
-sync.raw.start <- community.sync(kelp.raw %>% filter(year <=2001) %>% select(-year),nrands=1000)
-sync.raw.end <- community.sync(kelp.raw %>% filter(year >2001) %>% select(-year),nrands=1000)
+N.rep <- 10
+
+sync.dev.start <- list() 
+sync.dev.end <- list() 
+boot.dev.start <- NULL
+boot.dev.end <- NULL
+
+sync.dev.all <- community.sync(kelp.dev %>% select(-year) %>% select(-2),nrands=N.rep)
+for(i in 1:9){
+  sync.dev.start[[i]] <- community.sync(kelp.dev %>% filter(year <=2001) %>% select(-year)%>% select(-2) %>% select(-i),nrands=N.rep)
+  sync.dev.end[[i]] <- community.sync(kelp.dev %>% filter(year >2001) %>% select(-year)%>% select(-2) %>% select(-i),nrands=N.rep)
+  boot.dev.start[i] <- sync.dev.start[[i]]$obs  
+  boot.dev.end[i]   <- sync.dev.end[[i]]$obs  
+}
+sync.dev.start[[10]] <- community.sync(kelp.dev %>% filter(year <=2001) %>% select(-year)%>% select(-2),nrands=N.rep) 
+sync.dev.end[[10]]   <- community.sync(kelp.dev %>% filter(year >2001) %>% select(-year)%>% select(-2),nrands=N.rep)    
+
+sd(boot.dev.start)
+sd(boot.dev.end)
+
+sync.raw.all <- community.sync(kelp.raw %>% select(-year)%>% select(-2),nrands=N.rep)
+sync.raw.start <- community.sync(kelp.raw %>% filter(year <=2001) %>% select(-year)%>% select(-2),nrands=N.rep)
+sync.raw.end <- community.sync(kelp.raw %>% filter(year >2001) %>% select(-year)%>% select(-2),nrands=N.rep)
+
+######################################
+# Pairwise correlations of kelp at each site.
+MAT <- matrix(0,length(site.order2),length(site.order2)); MAT[lower.tri(MAT)] <- 1
+pairwise.corr <- rbind(melt(cor(kelp.dev %>% filter(year <=2001) %>% select(-year)) * MAT) %>% mutate(period="early"),
+                      melt(cor(kelp.dev %>% filter(year >2001) %>% select(-year)) * MAT) %>% mutate(period="late")) %>%
+                      as.data.frame() %>%
+                      rename(site.1 = Var1,site.2=Var2,COR = value) %>%
+                      filter(!site.1 =="Chibahdehl Rock",!site.2=="Chibahdehl Rock",COR != 0)
+
+# Distance Matrix for sites
+locs <- survey.locations.linear.shore %>% filter(!Area %in% c("Pillar Point","Point Grenville")) %>% 
+          dplyr::select(-Simplified.Distance..m.) %>% arrange(desc(distance.km))
+
+loc.dist <- dist(locs$distance.km,diag=T,upper=T) %>% as.matrix()* MAT  %>% as.data.frame() 
+colnames(loc.dist) = site.order2; 
+loc.dist$site.1 = site.order2; 
+
+pairwise.corr  <- melt(loc.dist,id.vars = "site.1") %>% rename(site.2=variable,DIST=value) %>%
+                  filter(DIST > 0) %>%
+                  left_join(pairwise.corr,.) %>%
+                  filter(COR<0.999) %>%
+                  #mutate(plot.lab=period) %>% 
+                  mutate(plot.lab=case_when(period=="early" ~ "1989-2001",period=="late"~"2002-2015")) %>%
+                  as.data.frame() 
+
+
+###
+## exponential decay
+###
+
+mod.early <- nls(COR ~ exp(-(DIST)/(V)),
+                data=pairwise.corr %>% filter(period=="early"),
+                start=list(V=10))
+summary(mod.early)
+mod.late <- nls(COR ~ exp(-(DIST)/(V)),
+                 data=pairwise.corr %>% filter(period=="late"),
+                 start=list(V=10))
+summary(mod.late)
+
+est.early <- as.numeric(mod.early$m$getAllPars())
+pred.early <- data.frame(DIST = seq(0.01,100,length.out=500)) %>% mutate(period="early",PRED = exp(-(DIST)/(est.early)))
+est.late <- as.numeric(mod.late$m$getAllPars())
+pred.late<- data.frame(DIST = seq(0.01,100,length.out=500)) %>% mutate(period="late",PRED = exp(-(DIST)/(est.late)))
+
+
+plot(PRED~DIST,pred.early,col="black",ylim=c(0,1))
+par(new=T)
+plot(PRED~DIST,pred.late,col="red",ylim=c(0,1))
+
+
+
+theme_os2 <- function(base_size = 12, base_family = "") {
+  theme_bw()+
+    theme(
+      text=element_text(size=11),
+      #legend.title = element_blank(),
+      legend.text  = element_text(size=7.5),
+      legend.justification = c("left", "top"),
+      #legend.key   = element_blank(),
+      legend.key.size = unit(0.7, 'lines'),
+      # legend.background =  element_rect(colour = "white"),
+      legend.position   = c(0.7,0.98),
+      # #legend.text.align = 0,
+      legend.key =         element_rect(fill = "white", color="white",size=0.5),
+      panel.background =   element_rect(fill = "white", colour = "black",size=1.5),
+      panel.border =       element_blank(),
+      panel.grid.major =   element_blank(),
+      panel.grid.minor =   element_blank(),
+      # panel.spacing =       unit(0.25, "lines"),
+      #strip.background =   element_rect(fill = "black", colour = "black"),
+      strip.text.x = element_blank(),
+      strip.background = element_blank(),
+      plot.background =    element_rect(colour = "white"),
+      plot.title =         element_text(size = rel(0.9),hjust = 0),
+      plot.margin =        unit(c(0.2, 0.1, 0.2, 0.1), "lines")
+    )
+}  
+
+Pairwise.plot  <-  ggplot(pairwise.corr) +
+    geom_point(data=pairwise.corr,aes(y=COR,x=DIST,fill=plot.lab),shape=21)+
+    geom_line(data=pred.early,aes(y=PRED,x=DIST),size=1.5) +
+    geom_line(data=pred.late,aes(y=PRED,x=DIST),linetype="dashed",size=1.5) +
+    scale_fill_manual(name="Period",values=c("black","white")) +
+    ylim(-0.25,1)+
+    ylab("Pairwise correlation")+
+    xlab("Distance (km)") +
+    theme_os2()
+
+quartz(file = paste(base.dir,"/Plots/Pairwise Correlation Kelp.pdf",sep=""),type="pdf",dpi=300,height=4,width=4 )
+  print(Pairwise.plot)
+dev.off()
+
+
+
+
+
+
+
+
+
+######################
+### Go get some PDO and Upwelling information
+######################
+
+setwd(paste(base.dir,"/Data/oceanographic variables",sep=""))
+pdo.dat <- read.csv("PDO.csv")
+cui.dat <- read.csv("CUI index.csv")
+
+# filter to include appropriate years and months
+pdo.sum.dat <- pdo.dat %>% dplyr::select(-JAN,-FEB,-MAR,-OCT,-NOV,-DEC) %>% filter(YEAR >=1989)
+cui.sum.dat <- cui.dat %>% dplyr::select(-jan,-feb,-mar,-oct,-nov,-dec,-lat,-long) %>% filter(year >=1989)
+
+pdo.summer <- melt(pdo.sum.dat,id.vars = "YEAR") %>% group_by(YEAR) %>% summarise(mean.PDO=mean(value)) %>%
+                mutate( period = case_when(YEAR <= 2001 ~ "early",YEAR > 2001 ~ "late"))
+cui.summer <- melt(cui.sum.dat,id.vars = "year") %>% group_by(year) %>% summarise(mean.CUI=mean(value)) %>%
+                mutate( period = case_when(year <= 2001 ~ "early",year > 2001 ~ "late"))
+
+pdo.period <- pdo.summer %>% group_by(period) %>% dplyr::summarize(MEAN = mean(mean.PDO),SD=sd(mean.PDO))
+cui.period <- cui.summer %>% group_by(period) %>% dplyr::summarize(MEAN = mean(mean.CUI),SD=sd(mean.CUI))
+
+t.test(mean.PDO~period,data=pdo.summer)
+t.test(mean.CUI~period,data=cui.summer)
+
+
+
+
+
+
+
+
+
+
+
 
 
 
