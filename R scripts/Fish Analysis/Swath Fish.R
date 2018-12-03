@@ -11,7 +11,7 @@ data.dir <- "/Users/ole.shelton/GitHub/OCNMS/Data/CSV_2015_on"
 setwd(data.dir)
 
 dat.2015 <- read.csv("2015_OCNMSDataComplete_standardized_122116.csv")
-dat.2016.on.fish <- read.csv("NWFSC_FISH_ALLYEARS_data_2017.csv")
+dat.2016.on.fish <- read.csv("NWFSC_FISH_ALLYEARS_data_entry_2018.csv")
 
 species_names <- read.csv("species_code_list.csv")
 colnames(species_names) <- c("species","common.name")
@@ -110,7 +110,7 @@ dat.long <- dat.long %>%
 dat.2015.fish <- dat.long
 base.dat.2015 <- base.dat
 #########################################################
-################ Repeat for 2016 & 2017
+################ Repeat for 2016 & 2017 & 2018
 #########################################################
 colnames(dat.2016.on.fish)[2] <- "YEAR"
 colnames(dat.2016.on.fish)[which(colnames(dat.2016.on.fish)=="SIDE")] <- "AREA"
