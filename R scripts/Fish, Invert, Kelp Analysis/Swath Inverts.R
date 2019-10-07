@@ -121,48 +121,103 @@ dat.2016.plus.swath <- dat.2016.plus.swath %>% group_by(year,site,area,transect,
                           summarize(Count=sum(Count.seg),N.segments = length(Count.seg)) %>% mutate(Transect.area = 20*N.segments)
 
 #############################################################################
-# Combine all years of data into one data frame
+# Combine years of data later than 2015 into one data frame
 dat.swath <- full_join(dat.2015.swath,dat.2016.plus.swath)
 # Assign all 2015 transets to the 5m depth zone
 dat.swath <- dat.swath %>% mutate(zone=ifelse(year==2015 & is.na(zone)==T,5,zone))
+dat.swath <-dat.swath %>% filter(site != "")
 
 # Convert to m2 for comparability across all years.
 dat.swath <- dat.swath %>% mutate(density = Count / Transect.area) %>%
                 group_by(year,site,area,zone,common.name,species) %>% 
-                summarize(MEAN=mean(density),N.obs=length(Count),SD=sd(density),SE=SD/sqrt(N.obs))
+                summarize(MEAN=mean(density),N.obs=length(Count),SD=sd(density),SE.tot=SD/sqrt(N.obs))
+
+dat.swath.all <- dat.pre.2015 %>% select(year=Year,site=Site,group,MEAN=MEAN,SE.tot=SE) %>% 
+                      mutate(group=as.character(group)) %>% full_join(.,dat.swath)
+
+# combine the names of the sites sensibly.
+dat.swath.all <- dat.swath.all %>% mutate(site=ifelse(site=="Anderson Pt.","Anderson Point",site)) %>%
+                                   mutate(site=ifelse(site=="Chibahdel","Chibadehl Rocks",site)) %>%
+                                   mutate(site=ifelse(site=="Destruction Island SW","Destruction Island",site)) %>%
+                                   mutate(site=ifelse(site=="Pt. of the Arches","Point of the Arches",site)) %>%
+                                   mutate(site=ifelse(site=="Teawhit Head","Teahwhit Head",site))
+
+
 
 #  Pull out urchins and seastar species
 urchin = c("MESFRA","STRDRO", "STRPUR")
 seastar = c("ASTSPP","CROPAP","DERIMB","EVATRO","HENLEV","MEDAEQ","ORTKOE",
               "PATMIN","PISBRE","PISGIG","PISOCH","PISSPP","PYCHEL","SOLSTI")
+crab  = c("CANORE","CANSPP","CRYDEC","CRYSIT","LOPMAN","MIMFOL","PUGGRA","PUGPRO","SCYDEC")
+bivalve = c("CRAGIG", "MYTCAL", "PODSPP")
+chiton = c("CRYSTE")
+cucumber = c("CUCMIN", "EUPQUI")
+gastropod = c("CERFOL", "DIOASP", "FUSORE", "HALKAM", "LIRDIR", "NUCLAM", "ACMMIT") 
+tunicate = c("STYMON")
+anenome = c("URTCRA","URTLOF","URTPIS","URTSPP", "ANTSPP","ANTELE","ANTXAN")
 
-urchin.seastar.post.2015  <- dat.swath %>% filter(species %in% c(seastar,urchin)) %>% 
-                              mutate(group="seastar",group=ifelse(species %in% urchin,"urchin",group))
+dat.swath.all <- dat.swath.all %>%
+                  mutate(
+                        group=ifelse(species %in% urchin,"urchin",group),
+                        group=ifelse(species %in% seastar,"seastar",group),
+                        group=ifelse(species %in% crab,"crab",group),                                                 
+                        group=ifelse(species %in% bivalve,"bivalve",group),
+                        group=ifelse(species %in% chiton,"chiton",group),
+                        group=ifelse(species %in% cucumber,"cucumber",group),
+                        group=ifelse(species %in% gastropod,"gastropod",group),                                                  
+                        group=ifelse(species %in% tunicate,"tunicate",group),
+                        group=ifelse(species %in% anenome,"anenome",group))
 
-both.temp <- urchin.seastar.post.2015 %>% group_by(year,site,group) %>% 
-                summarize(Mean=sum(MEAN), SE.tot = sqrt(sum(SE^2))) %>% as.data.frame()
-                  
-# Combine with Kviteck surveys (pre-2015)
-all.urchin.seastar <- dat.pre.2015 %>% select(year=Year,site=Site,group,Mean=MEAN,SE.tot=SE) %>% 
-                        filter(group %in% c("urchin","seastar"))
-all.urchin.seastar <- rbind(all.urchin.seastar,both.temp)                    
+# Summarize densities by species groups 
+dat.swath.group.zone <- dat.swath.all %>% group_by(year,site,group,zone) %>%
+                      summarize(Mean=sum(MEAN), SE = sqrt(sum(SE.tot^2))) %>% as.data.frame()
 
+dat.swath.group <- dat.swath.all %>% group_by(year,site,group) %>%
+                      summarize(Mean=sum(MEAN), SE = sqrt(sum(SE.tot^2))) %>% as.data.frame()
+ #loop over groups for plots
+GROUPS <- 
+  c("urchin","seastar","crab","bivalve","chiton","cucumber","gastropod","tunicate","anenome")
+SITES <- c("Destruction Island","Anderson Point","Cape Alava","Tatoosh Island","Neah Bay")
 
-A <- ggplot(all.urchin.seastar %>% filter(site %in% c("Neah Bay","Tatoosh Island"))) +
+A <- list()
+for(i in 1:length(GROUPS)){
+A[[i]] <- ggplot(dat.swath.group %>% filter(group == GROUPS[i],site %in% SITES )) +
     geom_point(aes(x=year,y=Mean,color=site)) +
     geom_line(aes(x=year,y=Mean,color=site)) +
-    geom_errorbar(aes(x=year,ymin=Mean-SE.tot,ymax=Mean+SE.tot,color=site))+
-    facet_grid(group~.,scales = "free") +
+    geom_errorbar(aes(x=year,ymin=Mean-SE,ymax=Mean+SE,color=site))+
+    #facet_grid(group~.,scales = "free") +
     ylab(expression("Mean density (m"^-2*")"))+
-    xlab("Year")
+    xlab("Year") +
     scale_color_discrete("Site") +
+    ggtitle(GROUPS[i]) +
     theme_bw()
+}
 
-
-quartz(file=paste0(base.dir,"/Plots/__Chicago 12-2018/Seastars and Urchins, Neah + Tatoosh.pdf"),type="pdf",dpi=600,width=5,height=5)
-print(A)
+pdf(file=paste0(base.dir,"/Plots/__Chicago 12-2018/All Inverts.pdf"),onefile=T,width=7,height=5)
+for(i in 1:length(GROUPS)){
+  print(A[[i]])
+}
 dev.off()
 
 
+### FOR UCHICAGO PROPOSAL ON DIVERSITY.
 
+dat.chicago <- dat.swath.group %>% filter(group %in% c("urchin","seastar"),site %in% c("Tatoosh Island","Neah Bay")) %>%
+                          mutate(site=ifelse(site=="Neah Bay", "Koitlah",site),site=ifelse(site=="Tatoosh Island","Tatoosh",site))
 
+B <- ggplot(dat.chicago ) +
+  geom_point(aes(x=year,y=Mean,color=site)) +
+  geom_line(aes(x=year,y=Mean,color=site)) +
+  geom_errorbar(aes(x=year,ymin=Mean-SE,ymax=Mean+SE,color=site))+
+  facet_grid(group~.,scales = "free") +
+  ylab(expression("Mean density (m"^-2*")"))+
+  xlab("Year") +
+  scale_color_discrete("Site") +
+  #theme(legend.position = c(0.9, 0.2)) +
+  theme_bw() +
+  theme(legend.position = c(0.7, 0.9)
+      ,legend.background = element_rect(fill = "white", colour = NA))
+
+quartz(file=paste0(base.dir,"/Plots/__Chicago 12-2018/Seastars and Urchins, Neah + Tatoosh.pdf"),type="pdf",dpi=600,width=4,height=5)
+print(B)
+dev.off()
