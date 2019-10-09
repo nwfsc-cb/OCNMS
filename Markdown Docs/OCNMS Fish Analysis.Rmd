@@ -13,7 +13,7 @@ source("/Users/ole.shelton/GitHub/OCNMS/R scripts/Fish, Invert, Kelp Analysis/Sw
 ```
 
 # Exploratory analysis 
-These are some analyses based on the 2015-19 survey data for fish. I've done a bunch of processing in the Git repo (file "/GitHub/OCNMS/R scripts/Fish Analysis/Swath Fish.R").
+These are some analyses based on the 2015-19 survey data for fish. I've done a bunch of processing in the Git repo (file "/GitHub/OCNMS/R scripts/Fish, Invert, Kelp Analysis/Swath Fish.R").
 
 I first plotted a bunch of species together to look at the fish community.  Then I plot individual species by site and time. 
 

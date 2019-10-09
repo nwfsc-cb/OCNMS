@@ -17,11 +17,11 @@ data.dir <- "/Users/ole.shelton/GitHub/OCNMS/Data/CSV_2015_on"
 setwd(data.dir)
 
 dat.2015 <- read.csv("2015_OCNMSDataComplete_standardized_122116.csv")
-dat.2016.on.swath <- read.csv("NWFSC_SWATH_ALLYEARS_data_entry_2018.csv")
+dat.2016.on.swath <- read.csv("NWFSC_SWATH_ALLYEARS_data_2019.csv")
 
 species_names <- read.csv("species_code_list_swath.csv")
 
-#########
+######### THIS IS FOR PROCESSING 2015 DATA.
 
 nom <- c("Destruction Island","Teahwhit Head","Cape Johnson","Rock 305","Cape Alava","Point of the Arches",
          "Anderson Point","Tatoosh Island","Chibadehl Rocks","Neah Bay")
@@ -73,7 +73,7 @@ dat.long <- dat.long %>%
   rename(site=Site,transect=Transect,observer=Observer,
          common.name=Species,species=PISCO.Classcode)
 
-dat.2015.swath <- dat.long
+dat.2015.swath <- left_join(dat.long,species_names %>% dplyr::select(species,group))
 base.dat.2015 <- base.dat
 ############################################################
 ############################################################
@@ -82,15 +82,22 @@ base.dat.2015 <- base.dat
 
 colnames(dat.2016.on.swath)[2] <- "YEAR"
 colnames(dat.2016.on.swath)[which(colnames(dat.2016.on.swath)=="SIDE")] <- "AREA"
-base.dat <- dat.2016.on.swath %>% group_by(YEAR,SITE,AREA,TRANSECT,OBSERVER,ZONE,SEGMENT) %>% 
-  summarise(x=length(TRANSECT))%>% dplyr::select(-x) %>%as.data.frame()
 
-swath.dat <- dat.2016.on.swath %>% group_by(YEAR,SITE,AREA,TRANSECT,OBSERVER,ZONE,CLASSCODE,SIZE,SEGMENT,METERS.sampled) %>% 
+## Replace a couple of CLASSCODE entry errors from 2016:
+dat.2016.on.swath$CLASSCODE[dat.2016.on.swath$CLASSCODE=="no_alg"] <- "NO_ALG"
+
+# Add in an indicator for Algae or Invert transects
+dat.2016.on.swath <- dat.2016.on.swath %>% left_join(., species_names %>% rename(CLASSCODE=species))
+base.dat <- dat.2016.on.swath %>%
+              group_by(YEAR,SITE,AREA,TRANSECT,OBSERVER,ZONE,SEGMENT,group) %>% 
+              summarise(x=length(TRANSECT))%>% dplyr::select(-x) %>%as.data.frame()
+
+swath.dat <- dat.2016.on.swath %>% group_by(YEAR,SITE,AREA,TRANSECT,OBSERVER,ZONE,CLASSCODE,SIZE,SEGMENT,group,METERS.sampled) %>% 
   summarise(Count=sum(COUNT)) %>% as.data.frame() %>% rename(SPECIES=CLASSCODE)
 
 dat.long <- NULL
   for( i in 1: length(SP)){
-  #Loop for non-rockfish
+  #Loop for species (both inverts and algae)
     if(nrow(swath.dat %>% filter(SPECIES == SP[i])) >0){
       temp  <-  left_join(base.dat, swath.dat %>% filter(SPECIES == SP[i]) ) 
       temp$SPECIES <- SP[i]; temp$SPECIES <- unique(temp$SPECIES)[is.na(unique(temp$SPECIES))==F]
@@ -119,6 +126,7 @@ dat.2016.plus.swath = dat.2016.plus.swath %>% mutate(expand = 10 / METERS.sample
 dat.2016.plus.swath <- dat.2016.plus.swath %>% group_by(year,site,area,transect,observer,zone,species,SEGMENT) %>%
                           summarize(Count.seg=sum(total.count)) %>% group_by(year,site,area,transect,observer,zone,species) %>%
                           summarize(Count=sum(Count.seg),N.segments = length(Count.seg)) %>% mutate(Transect.area = 20*N.segments)
+dat.2016.plus.swath <- left_join(dat.2016.plus.swath, species_names %>% dplyr::select(species,group))
 
 #############################################################################
 # Combine years of data later than 2015 into one data frame
@@ -126,6 +134,17 @@ dat.swath <- full_join(dat.2015.swath,dat.2016.plus.swath)
 # Assign all 2015 transets to the 5m depth zone
 dat.swath <- dat.swath %>% mutate(zone=ifelse(year==2015 & is.na(zone)==T,5,zone))
 dat.swath <-dat.swath %>% filter(site != "")
+
+
+
+
+
+### STOPPED HERE.
+
+
+
+
+
 
 # Convert to m2 for comparability across all years.
 dat.swath <- dat.swath %>% mutate(density = Count / Transect.area) %>%
@@ -173,7 +192,7 @@ dat.swath.group.zone <- dat.swath.all %>% group_by(year,site,group,zone) %>%
                       summarize(Mean=sum(MEAN), SE = sqrt(sum(SE.tot^2))) %>% as.data.frame()
 
 dat.swath.group <- dat.swath.all %>% group_by(year,site,group) %>%
-                      summarize(Mean=sum(MEAN), SE = sqrt(sum(SE.tot^2))) %>% as.data.frame()
+                      summarize(Mean=sum(MEAN), SE = sqrt(sum(SE.tot^2,na.rm=T))) %>% as.data.frame()
  #loop over groups for plots
 GROUPS <- 
   c("urchin","seastar","crab","bivalve","chiton","cucumber","gastropod","tunicate","anenome")

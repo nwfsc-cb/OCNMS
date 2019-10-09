@@ -1,90 +1,91 @@
-﻿species,common.name
-ACMMIT,"Acmaea mitra, white cap limpet"
-ACAHUD,"Acanthodoris hudsoni, white nudibranch with yellow margin (we lump with Cadlina luteomarginata)"
-AGAFIM,Agarum fimbriatum
-ALAMAR,"Alaria marginata, Alaria"
-ANTSPP,"Anthopleura spp., unidentified anemone"
-ANTELE,"Anthopleura elegantissima, aggregating anemone"
-ANTXAN,"Anthopleura xanthogrammica, giant green anemone"
-ASTSPP,unknown seastar
-BALNUB,"Balanus nubilis, giant acorn barnacle"
-BONGO,Steve Lonhart description of later defined species
-CANORE,"Cancer oregonensis, pygmy rock crab"
-CANSPP,"Cancer spp., cancer crab"
-CERFOL,"Ceratostoma foliatum, Leafy hornmouth"
-CHITON,misc small chitons
-CLAMSP,misc clams
-COSCOS,"Costaria costatum, Costaria"
-CRAARB,"Craniella arb, grey tennis ball sponge"
-CRAGIG,"Crassadoma gigantea, rock scallop"
-CROPAP,"Crossaster papposus, sea star"
-CRYDEC,cryptic decorator crab unid. Spp.
-CRYSIT,"Cryptolithoides sitchensis, umbrella crab"
-CRYSTE,"Cryptochiton stelleri, gumboot chiton"
-CUCMIN,"Cucumaria miniata, orange sea cucumber"
-CYMTRI,"Cymathere triplicata, three-ribbed kelp"
-DERIMB,"Dermasterias imbricata, leather star"
-DESSPP,Desmarestia spp.
-DIASAN,Dialula sandiegensis
-DIOASP,"Diodora aspera, rough keyhole limpet"
-DIRALB,"Dirona albolineata, white lined nudibranch"
-DORODH,"Doris odhneri, white knight dorid nudibranch"
-EGRMEN,Egregia menziesii
-ENTDOF,Enteroctopus dofleini
-EPIPRO,"Epiactis prolifera, brooding anemona"
-EUPQUI,"Eupentacta quinquesemita, white sea cucumber"
-EVATRO,"Evasterias troschelii, mottled star"
-FUSORE,"Fusitriton oregonensis, Oregon hairy triton"
-HALKAM,"Haliotis kamtschatkana, pinto abalone"
-HENLEV,"Henricia leviuscula, blood star"
-HERCRA,"Hermissenda crassicornis, opalescent nudibranch"
-JANFUS,"Janolus fuscus, nudibranch"
-LAMSET,"Laminaria setchellii, Laminaria"
-LEPSPP,Lepasterias spp.
-LIMCOC,Limacia cockerelli
-LIRDIR,"Lirabuccinum dirum, dire whelk"
-LOPMAN,"Lopholithodes mandtii, Puget Sound king crab"
-MACPYR,"Macrocystis pyrifera, Macrocystis"
-MEDAEQ,"Mediaster aequalis, red star"
-MESFRA,"Mesocentrotus franciscanus, red urchin"
-METGIG,"Metridium giganteum, giant plumose anemone"
-METSPP,"Metridium spp., white plumed anemones"
-MIMFOL,"Mimulus foliatus, mimicking crab"
-MYTCAL,"Mytilus californianus, California mussel"
-NERLUE,"Nereocystis luetkeana, Nereocystis"
-NO_ALG,No kelp stipes present in this sample
-NO_ORG,No organisms present in this sample
-NOT_DONE,No data collected
-NUCLAM,"Nucella lamellosa, whelk (used generally for rough predatory whelks)"
-NUDIBR,unknown nudibranch
-ORTKOE,"Orthasterias koehleri, rainbow star"
-PAGSPP,"Pagurus spp, hermit crabs"
-PARCAL,"Parastichopus californicus, california sea cucumber"
-PATMIN,"Patiria miniata, bat star"
-PELNOB,"Peltodoris nobilis, pacific sea lemon"
-PISBRE,"Pisaster brevispinus, short spined star"
-PISGIG,"Pisaster giganteus, giant spined star"
-PISOCH,"Pisaster ochraceous, ochre star"
-PISSPP,Pisaster spp. (unidentified species)
-PLEGAR,"Pleurophycus gardneri, Pleurophycus"
-PODSPP,Pododesmus spp. Jingle shells
-PTECAL,"Pterygophora californica, Pterygophora"
-PUGGRA,"Pugettia gracilis, graceful kelp crab"
-PUGPRO,"Pugettia producta, kelp crab"
-PYCHEL,"Pycnopodia helianthoides, sunflower star"
-SACGRO,"Saccharina groenlandica, split kelp"
-SACLAT,"Saccharina latissima, ""bongo"""
-SCALLOP,misc. scallops (not rock)
-SCYDEC,"Scyra spp., decorator crab, moss crab"
-STARREC,sea star recruits (unidentifiable to species)
-SOLSTI,"Solaster stimpsoni, orange sun star"
-STRDRO,"Strongylocentrotus droebachiensis, green urchin"
-STRPUR,"Strongylocentrotus purpuratus, purple urchin"
-STYMON,"Styela montereyensis, stalked tunicate"
-TEGSPP,"Tegula spp., turban snails"
-TRICAT,"Triopha catalinae, sea clown nudibranch"
-UNIDSP,Unidentified mobile invert species
-URTCRA,"Urticina crassicornis, Christmas anemone"
-URTLOF,"Urticina lofotensis, white-spotted rose anemone"
-URTPIS,"Urticina piscivora, fish-eating anemone"
-URTSPP,"Urticina spp., Urticina spp."
+﻿species,common.name,group
+ACMMIT,"Acmaea mitra, white cap limpet",Invert
+ACAHUD,"Acanthodoris hudsoni, white nudibranch with yellow margin (we lump with Cadlina luteomarginata)",Invert
+AGAFIM,Agarum fimbriatum,Algae
+ALAMAR,"Alaria marginata, Alaria",Algae
+ANTSPP,"Anthopleura spp., unidentified anemone",Invert
+ANTELE,"Anthopleura elegantissima, aggregating anemone",Invert
+ANTXAN,"Anthopleura xanthogrammica, giant green anemone",Invert
+ASTSPP,unknown seastar,Invert
+BALNUB,"Balanus nubilis, giant acorn barnacle",Invert
+BONGO,Steve Lonhart description of later defined species,Algae
+CANORE,"Cancer oregonensis, pygmy rock crab",Invert
+CANSPP,"Cancer spp., cancer crab",Invert
+CERFOL,"Ceratostoma foliatum, Leafy hornmouth",Invert
+CHITON,misc small chitons,Invert
+CLAMSP,misc clams,Invert
+COSCOS,"Costaria costatum, Costaria",Algae
+CRAARB,"Craniella arb, grey tennis ball sponge",Invert
+CRAGIG,"Crassadoma gigantea, rock scallop",Invert
+CROPAP,"Crossaster papposus, sea star",Invert
+CRYDEC,cryptic decorator crab unid. Spp.,Invert
+CRYSIT,"Cryptolithoides sitchensis, umbrella crab",Invert
+CRYSTE,"Cryptochiton stelleri, gumboot chiton",Invert
+CUCMIN,"Cucumaria miniata, orange sea cucumber",Invert
+CYMTRI,"Cymathere triplicata, three-ribbed kelp",Invert
+DERIMB,"Dermasterias imbricata, leather star",Invert
+DESSPP,Desmarestia spp.,Algae
+DIASAN,Dialula sandiegensis,Invert
+DIOASP,"Diodora aspera, rough keyhole limpet",Invert
+DIRALB,"Dirona albolineata, white lined nudibranch",Invert
+DORODH,"Doris odhneri, white knight dorid nudibranch",Invert
+EGRMEN,Egregia menziesii,Algae
+ENTDOF,Enteroctopus dofleini,Invert
+EPIPRO,"Epiactis prolifera, brooding anemona",Invert
+EUPQUI,"Eupentacta quinquesemita, white sea cucumber",Invert
+EVATRO,"Evasterias troschelii, mottled star",Invert
+FUSORE,"Fusitriton oregonensis, Oregon hairy triton",Invert
+HALKAM,"Haliotis kamtschatkana, pinto abalone",Invert
+HENLEV,"Henricia leviuscula, blood star",Invert
+HERCRA,"Hermissenda crassicornis, opalescent nudibranch",Invert
+JANFUS,"Janolus fuscus, nudibranch",Invert
+LAMSET,"Laminaria setchellii, Laminaria",Algae
+LEPSPP,Lepasterias spp.,Invert
+LIMCOC,Limacia cockerelli,Invert
+LIRDIR,"Lirabuccinum dirum, dire whelk",Invert
+LOPMAN,"Lopholithodes mandtii, Puget Sound king crab",Invert
+MACPYR,"Macrocystis pyrifera, Macrocystis",Algae
+MEDAEQ,"Mediaster aequalis, red star",Invert
+MESFRA,"Mesocentrotus franciscanus, red urchin",Invert
+METGIG,"Metridium giganteum, giant plumose anemone",Invert
+METSPP,"Metridium spp., white plumed anemones",Invert
+MIMFOL,"Mimulus foliatus, mimicking crab",Invert
+MYTCAL,"Mytilus californianus, California mussel",Invert
+NERLUE,"Nereocystis luetkeana, Nereocystis",Algae
+NO_ALG,No kelp stipes present in this sample,Algae
+NO_ORG,No organisms present in this sample,Invert
+NOT_DONE,No data collected,MISSING
+NUCLAM,"Nucella lamellosa, whelk (used generally for rough predatory whelks)",Invert
+NUDIBR,unknown nudibranch,Invert
+ORTKOE,"Orthasterias koehleri, rainbow star",Invert
+PAGSPP,"Pagurus spp, hermit crabs",Invert
+PARCAL,"Parastichopus californicus, california sea cucumber",Invert
+PATMIN,"Patiria miniata, bat star",Invert
+PELNOB,"Peltodoris nobilis, pacific sea lemon",Invert
+PISBRE,"Pisaster brevispinus, short spined star",Invert
+PISGIG,"Pisaster giganteus, giant spined star",Invert
+PISOCH,"Pisaster ochraceous, ochre star",Invert
+PISSPP,Pisaster spp. (unidentified species),Invert
+PLEGAR,"Pleurophycus gardneri, Pleurophycus",Algae
+PODSPP,Pododesmus spp. Jingle shells,Invert
+PTECAL,"Pterygophora californica, Pterygophora",Algae
+PUGGRA,"Pugettia gracilis, graceful kelp crab",Invert
+PUGPRO,"Pugettia producta, kelp crab",Invert
+PYCHEL,"Pycnopodia helianthoides, sunflower star",Invert
+SACGRO,"Saccharina groenlandica, split kelp",Algae
+SACLAT,"Saccharina latissima, ""bongo""",Algae
+SCALLOP,misc. scallops (not rock),Invert
+SCYDEC,"Scyra spp., decorator crab, moss crab",Invert
+STARREC,sea star recruits (unidentifiable to species),Invert
+SOLSTI,"Solaster stimpsoni, orange sun star",Invert
+STRDRO,"Strongylocentrotus droebachiensis, green urchin",Invert
+STRPUR,"Strongylocentrotus purpuratus, purple urchin",Invert
+STYMON,"Styela montereyensis, stalked tunicate",Invert
+TEGSPP,"Tegula spp., turban snails",Invert
+TRICAT,"Triopha catalinae, sea clown nudibranch",Invert
+UNIDSP,Unidentified mobile invert species,Invert
+URTCRA,"Urticina crassicornis, Christmas anemone",Invert
+URTLOF,"Urticina lofotensis, white-spotted rose anemone",Invert
+URTPIS,"Urticina piscivora, fish-eating anemone",Invert
+URTSPP,"Urticina spp., Urticina spp.",Invert
+ACANAN,Acanthodoris nanaimo,Invert
