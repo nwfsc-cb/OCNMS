@@ -1,10 +1,11 @@
 ﻿species,common.name,group
-ACMMIT,"Acmaea mitra, white cap limpet",Invert
 ACAHUD,"Acanthodoris hudsoni, white nudibranch with yellow margin (we lump with Cadlina luteomarginata)",Invert
+ACANAN,Acanthodoris nanaimo,Invert
+ACMMIT,"Acmaea mitra, white cap limpet",Invert
 AGAFIM,Agarum fimbriatum,Algae
 ALAMAR,"Alaria marginata, Alaria",Algae
-ANTSPP,"Anthopleura spp., unidentified anemone",Invert
 ANTELE,"Anthopleura elegantissima, aggregating anemone",Invert
+ANTSPP,"Anthopleura spp., unidentified anemone",Invert
 ANTXAN,"Anthopleura xanthogrammica, giant green anemone",Invert
 ASTSPP,unknown seastar,Invert
 BALNUB,"Balanus nubilis, giant acorn barnacle",Invert
@@ -22,13 +23,14 @@ CRYDEC,cryptic decorator crab unid. Spp.,Invert
 CRYSIT,"Cryptolithoides sitchensis, umbrella crab",Invert
 CRYSTE,"Cryptochiton stelleri, gumboot chiton",Invert
 CUCMIN,"Cucumaria miniata, orange sea cucumber",Invert
-CYMTRI,"Cymathere triplicata, three-ribbed kelp",Invert
+CYMTRI,"Cymathere triplicata, three-ribbed kelp",Algae
 DERIMB,"Dermasterias imbricata, leather star",Invert
 DESSPP,Desmarestia spp.,Algae
 DIASAN,Dialula sandiegensis,Invert
 DIOASP,"Diodora aspera, rough keyhole limpet",Invert
 DIRALB,"Dirona albolineata, white lined nudibranch",Invert
 DORODH,"Doris odhneri, white knight dorid nudibranch",Invert
+DOROHD,,Invert
 EGRMEN,Egregia menziesii,Algae
 ENTDOF,Enteroctopus dofleini,Invert
 EPIPRO,"Epiactis prolifera, brooding anemona",Invert
@@ -76,8 +78,8 @@ SACGRO,"Saccharina groenlandica, split kelp",Algae
 SACLAT,"Saccharina latissima, ""bongo""",Algae
 SCALLOP,misc. scallops (not rock),Invert
 SCYDEC,"Scyra spp., decorator crab, moss crab",Invert
-STARREC,sea star recruits (unidentifiable to species),Invert
 SOLSTI,"Solaster stimpsoni, orange sun star",Invert
+STARREC,sea star recruits (unidentifiable to species),Invert
 STRDRO,"Strongylocentrotus droebachiensis, green urchin",Invert
 STRPUR,"Strongylocentrotus purpuratus, purple urchin",Invert
 STYMON,"Styela montereyensis, stalked tunicate",Invert
@@ -88,4 +90,3 @@ URTCRA,"Urticina crassicornis, Christmas anemone",Invert
 URTLOF,"Urticina lofotensis, white-spotted rose anemone",Invert
 URTPIS,"Urticina piscivora, fish-eating anemone",Invert
 URTSPP,"Urticina spp., Urticina spp.",Invert
-ACANAN,Acanthodoris nanaimo,Invert
