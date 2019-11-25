@@ -215,6 +215,10 @@ dat.invert.density <- dat.invert.density %>%
            group.name=ifelse(species %in% anenome,"anenome",group.name))
 
 
+
+write.csv(dat.invert,file="Invert counts.csv",row.names = F)
+write.csv(dat.invert.density,file="Invert densities.csv",row.names = F)
+
 # Summarize densities by species groups 
 dat.invert.group.zone <- dat.invert.density %>% group_by(year,site,group.name,zone) %>%
                       summarize(Mean=sum(MEAN), SE = sqrt(sum(SE.tot^2))) %>% as.data.frame()
