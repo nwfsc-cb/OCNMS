@@ -154,7 +154,7 @@ A <- ggplot(all.urchin.seastar %>% filter(site %in% c("Neah Bay","Tatoosh Island
     geom_errorbar(aes(x=year,ymin=Mean-SE.tot,ymax=Mean+SE.tot,color=site))+
     facet_grid(group~.,scales = "free") +
     ylab(expression("Mean density (m"^-2*")"))+
-    xlab("Year")
+    xlab("Year") +
     scale_color_discrete("Site") +
     theme_bw()
 
