@@ -2,7 +2,9 @@
 title: "Fish Analysis OCNMS"
 author: "Ole Shelton"
 date: "10/07/2018"
-output: pdf_document
+output:
+  pdf_document: default
+  word_document: default
 ---
 
 ```{r setup, include=FALSE}

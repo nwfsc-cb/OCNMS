@@ -228,7 +228,7 @@ dat.invert.group <- dat.invert.density %>% group_by(year,site,group.name) %>%
 
 #loop over groups for plots
 GROUPS <- c("urchin","seastar","crab","bivalve","chiton","cucumber","gastropod","tunicate","anenome")
-SITES  <- c("Destruction Island","Anderson Point","Cape Alava","Tatoosh Island","Neah Bay")
+SITES  <- c("Destruction Island","Cape Johnson","Cape Alava","Tatoosh Island","Neah Bay")
 
 dat.invert.group$site <- factor(dat.invert.group$site,levels=SITES) 
 dat.invert.group.zone$site <- factor(dat.invert.group.zone $site,levels=SITES)
