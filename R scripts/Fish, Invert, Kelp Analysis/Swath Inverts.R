@@ -152,11 +152,23 @@ dat.swath <- dat.swath %>% filter(!group =="MISSING")
 
 dat.swath.base <- dat.swath %>% as.data.frame()
 
+<<<<<<< HEAD
+A <- ggplot(all.urchin.seastar %>% filter(site %in% c("Neah Bay","Tatoosh Island"))) +
+    geom_point(aes(x=year,y=Mean,color=site)) +
+    geom_line(aes(x=year,y=Mean,color=site)) +
+    geom_errorbar(aes(x=year,ymin=Mean-SE.tot,ymax=Mean+SE.tot,color=site))+
+    facet_grid(group~.,scales = "free") +
+    ylab(expression("Mean density (m"^-2*")"))+
+    xlab("Year") +
+    scale_color_discrete("Site") +
+    theme_bw()
+=======
 dat.swath.base <- dat.swath.base %>% mutate(site=ifelse(site=="Anderson Pt.","Anderson Point",site)) %>%
   mutate(site=ifelse(site=="Chibahdel","Chibadehl Rocks",site)) %>%
   mutate(site=ifelse(site=="Destruction Island SW","Destruction Island",site)) %>%
   mutate(site=ifelse(site=="Pt. of the Arches","Point of the Arches",site)) %>%
   mutate(site=ifelse(site=="Teawhit Head","Teahwhit Head",site))
+>>>>>>> a7d2dd24a9f92e130851a9793536a4b53e6ab2c1
 
 # Separate out invertebrates and algae.
 dat.invert <- dat.swath.base %>% filter(group == "Invert")
