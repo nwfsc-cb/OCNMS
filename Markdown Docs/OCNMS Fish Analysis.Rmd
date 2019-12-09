@@ -1,7 +1,7 @@
 ---
 title: "Fish Analysis OCNMS"
 author: "Ole Shelton"
-date: "4/23/2018"
+date: "10/07/2018"
 output: pdf_document
 ---
 
@@ -9,11 +9,11 @@ output: pdf_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-source("/Users/ole.shelton/GitHub/OCNMS/R scripts/Fish Analysis/Swath Fish.R")
+source("/Users/ole.shelton/GitHub/OCNMS/R scripts/Fish, Invert, Kelp Analysis/Swath Fish.R")
 ```
 
 # Exploratory analysis 
-These are some analyses based on the 2015-17 survey data for fish. I've done a bunch of processing in the Git repo (file "/GitHub/OCNMS/R scripts/Fish Analysis/Swath Fish.R").
+These are some analyses based on the 2015-19 survey data for fish. I've done a bunch of processing in the Git repo (file "/GitHub/OCNMS/R scripts/Fish, Invert, Kelp Analysis/Swath Fish.R").
 
 I first plotted a bunch of species together to look at the fish community.  Then I plot individual species by site and time. 
 

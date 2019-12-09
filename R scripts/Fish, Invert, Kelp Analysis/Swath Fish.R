@@ -11,7 +11,7 @@ data.dir <- "/Users/ole.shelton/GitHub/OCNMS/Data/CSV_2015_on"
 setwd(data.dir)
 
 dat.2015 <- read.csv("2015_OCNMSDataComplete_standardized_122116.csv")
-dat.2016.on.fish <- read.csv("NWFSC_FISH_ALLYEARS_data_entry_2018.csv")
+dat.2016.on.fish <- read.csv("NWFSC_FISH_ALLYEARS_data_2019.csv")
 
 species_names <- read.csv("species_code_list.csv")
 colnames(species_names) <- c("species","common.name")
@@ -33,7 +33,7 @@ base.dat <- dat.2015 %>% filter(PISCO.datatype=="fish", data.type=="swath") %>% 
 
 #ADD IN ONE TRANSECT THAT HAD ZERO OBSERVATIONS (KELLY ANDREWS, TATOOSH, TRANSECT=2)
 base.dat <- rbind(base.dat,c("Tatoosh Island",2,"KA")) %>% arrange(Site,Observer,Transect)
-  #MAKE CATCH FOR if there are more than 4 total observations for each site in 2015
+#MAKE CATCH FOR if there are more than 4 total observations for each site in 2015
   A <- base.dat %>% group_by(Site) %>% summarise(N= length(Transect))
   if(max(A$N) > 4 | min(A$N) < 4 ){ print(rep("STOP, SOMETHING IS WRONG",100))}
 base.dat$Transect <- as.integer(base.dat$Transect )
@@ -57,6 +57,7 @@ SEB.dat     <- filter(fish.dat,grepl("SE",PISCO.Classcode)) %>%
 
 fish.dat <- data.frame(rbind(non.SEB.dat,SEB.dat))
 fish.dat$size_class[fish.dat$PISCO.Classcode =="RYOY"] <- "small"
+
 #####
 # Make a padded data frame with zeros for each species.
 #####
@@ -110,7 +111,7 @@ dat.long <- dat.long %>%
 dat.2015.fish <- dat.long
 base.dat.2015 <- base.dat
 #########################################################
-################ Repeat for 2016 & 2017 & 2018
+################ Repeat for 2016 - 2019
 #########################################################
 colnames(dat.2016.on.fish)[2] <- "YEAR"
 colnames(dat.2016.on.fish)[which(colnames(dat.2016.on.fish)=="SIDE")] <- "AREA"
