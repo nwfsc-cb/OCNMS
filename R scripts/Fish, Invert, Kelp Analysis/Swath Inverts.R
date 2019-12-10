@@ -13,7 +13,7 @@ base.dir <- "/Users/ole.shelton/GitHub/OCNMS/"
 source(paste(base.dir,"R scripts/Fish, Invert, Kelp Analysis/Data process pre-2017 data.R",sep=""))
 dat.pre.2015 <- dat.trim %>% rename(group.name=group)
 
-data.dir <- "/Users/ole.shelton/GitHub/OCNMS/Data/CSV_2015_on"
+data.dir <- paste0(base.dir,"/Data/CSV_2015_on")
 setwd(data.dir)
 
 dat.2015 <- read.csv("2015_OCNMSDataComplete_standardized_122116.csv")
