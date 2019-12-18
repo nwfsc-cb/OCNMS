@@ -85,8 +85,27 @@ p2 <- ggplot(dat.invert.group.zone %>% filter(group.name == GROUP,site %in% SITE
     facet_wrap(~zone,nrow=2) +
     theme_bw()
 
+
+A<- species_names %>% filter(species %in% urchin) %>% rename(code=species) %>% dplyr::select(-group)
+P.sp <- list()
+for(i in 1:nrow(A)){
+P.sp[[i]] <- ggplot(dat.invert.species.zone %>% filter(species==A$code[i],site %in% SITES )) +
+        geom_point(aes(x=year,y=Mean,color=site),alpha=ALP) +
+    geom_line(aes(x=year,y=Mean,color=site),alpha=ALP) +
+    geom_errorbar(aes(x=year,ymin=Mean-SE,ymax=Mean+SE,color=site),alpha=ALP)+
+    ylab(expression("Mean density (m"^-2*")"))+
+    xlab("Year") +
+    scale_color_discrete("Site") +
+    ggtitle(paste(A$code[i],A$common.name[i])) +
+    facet_wrap(~zone,nrow=2) +
+    theme_bw()
+}
+
 print(p1)
 print(p2)
+for(i in 1:nrow(A)){
+    print(P.sp[[i]])
+}
 ```
 <!-- 
 ###################################################
