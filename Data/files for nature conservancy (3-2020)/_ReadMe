@@ -1,0 +1,15 @@
+This text file describes the data files for the OCNMS surveys conducted by NOAA's NWFSC between 2015 and 2019. Most of these fields are self-explanatory, but some of the spatial nesting and depth strata have changed over the years and could confuse.
+
+"Pycnopodia helianthoides OCNMS data.csv" contains the raw survey data with fields:
+site
+transect (each transect is supposed to be 30m long x 2m wide, but there is variation)
+observer (which diver did the counting)
+transect.area (in m^2, use this field for calculating densities for each transect)
+common.name
+species(should be all "PYCHEL" for pychnopodia helianthoides)
+year
+group (should be all "Invert")
+Count (number of pychnopodia observed)
+area (factor for spatial area within a site. NA for 2015, because we only used 1 area, 1 or 2 in 2016, then N/S or E/W after 2016)
+zone (targeted depth in meters for the transect.  2015 were all at 5 m. 2016 and later were 5 and 10 m.)
+N.segments (can ignore: how many 10m long segments within the 30m transect were surveyed)
