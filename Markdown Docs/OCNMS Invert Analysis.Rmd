@@ -65,7 +65,7 @@ kable(A)
 ALP <- 0.5
 p1 <- ggplot(dat.invert.group %>% filter(group.name == GROUP,site %in% SITES )) +
     geom_point(aes(x=year,y=Mean,color=site),alpha=ALP) +
-    geom_line(aes(x=year,y=Mean,color=site),alpha=ALP) +
+    #geom_line(aes(x=year,y=Mean,color=site),alpha=ALP) +
     geom_errorbar(aes(x=year,ymin=Mean-SE,ymax=Mean+SE,color=site),alpha=ALP)+
     
     ylab(expression("Mean density (m"^-2*")"))+
@@ -76,7 +76,7 @@ p1 <- ggplot(dat.invert.group %>% filter(group.name == GROUP,site %in% SITES )) 
 
 p2 <- ggplot(dat.invert.group.zone %>% filter(group.name == GROUP,site %in% SITES )) +
         geom_point(aes(x=year,y=Mean,color=site),alpha=ALP) +
-    geom_line(aes(x=year,y=Mean,color=site),alpha=ALP) +
+    #geom_line(aes(x=year,y=Mean,color=site),alpha=ALP) +
     geom_errorbar(aes(x=year,ymin=Mean-SE,ymax=Mean+SE,color=site),alpha=ALP)+
     ylab(expression("Mean density (m"^-2*")"))+
     xlab("Year") +
@@ -91,7 +91,7 @@ P.sp <- list()
 for(i in 1:nrow(A)){
 P.sp[[i]] <- ggplot(dat.invert.species.zone %>% filter(species==A$code[i],site %in% SITES )) +
         geom_point(aes(x=year,y=Mean,color=site),alpha=ALP) +
-    geom_line(aes(x=year,y=Mean,color=site),alpha=ALP) +
+    #geom_line(aes(x=year,y=Mean,color=site),alpha=ALP) +
     geom_errorbar(aes(x=year,ymin=Mean-SE,ymax=Mean+SE,color=site),alpha=ALP)+
     ylab(expression("Mean density (m"^-2*")"))+
     xlab("Year") +
