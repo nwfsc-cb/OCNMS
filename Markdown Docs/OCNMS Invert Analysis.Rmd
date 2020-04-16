@@ -167,6 +167,30 @@ p2 <- ggplot(dat.invert.group.zone %>% filter(group.name == GROUP,site %in% SITE
 
 print(p1)
 print(p2)
+A<- species_names %>% filter(species %in% seastar) %>% rename(code=species) %>% dplyr::select(-group)
+P.sp <- list()
+for(i in 1:nrow(A)){
+    if(nrow(dat.invert.species.zone %>% filter(species==A$code[i],site %in% SITES ))>0){
+    upper.lim = dat.invert.species.zone %>% filter(species==A$code[i],site %in% SITES )
+    upper.lim <- max(upper.lim$Mean+upper.lim$SE,na.rm=T)
+
+    P.sp[[i]] <- ggplot(dat.invert.species.zone %>% filter(species==A$code[i],site %in% SITES )) +
+        geom_point(aes(x=year,y=Mean,color=site),alpha=ALP) +
+    #geom_line(aes(x=year,y=Mean,color=site),alpha=ALP) +
+    geom_errorbar(aes(x=year,ymin=Mean-SE,ymax=Mean+SE,color=site),alpha=ALP)+
+    scale_y_continuous(limits = c(0,upper.lim)) +
+    ylab(expression("Mean density (m"^-2*")"))+
+    xlab("Year") +
+    scale_color_discrete("Site") +
+    ggtitle(paste(A$code[i],A$common.name[i])) +
+    facet_wrap(~zone,nrow=2) +
+    theme_bw()
+    }
+}
+for(i in 1:nrow(A)){
+    quartz(file=paste("seastar",i,".jpeg"),type="jpeg",dpi=600,height=5,width=7); print(P.sp[[i]]); dev.off()
+}
+
 ```
 <!-- 
 ###################################################
