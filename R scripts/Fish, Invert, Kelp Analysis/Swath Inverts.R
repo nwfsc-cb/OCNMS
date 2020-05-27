@@ -152,23 +152,23 @@ dat.swath <- dat.swath %>% filter(!group =="MISSING")
 
 dat.swath.base <- dat.swath %>% as.data.frame()
 
-<<<<<<< HEAD
-A <- ggplot(all.urchin.seastar %>% filter(site %in% c("Neah Bay","Tatoosh Island"))) +
-    geom_point(aes(x=year,y=Mean,color=site)) +
-    geom_line(aes(x=year,y=Mean,color=site)) +
-    geom_errorbar(aes(x=year,ymin=Mean-SE.tot,ymax=Mean+SE.tot,color=site))+
-    facet_grid(group~.,scales = "free") +
-    ylab(expression("Mean density (m"^-2*")"))+
-    xlab("Year") +
-    scale_color_discrete("Site") +
-    theme_bw()
-=======
-dat.swath.base <- dat.swath.base %>% mutate(site=ifelse(site=="Anderson Pt.","Anderson Point",site)) %>%
-  mutate(site=ifelse(site=="Chibahdel","Chibadehl Rocks",site)) %>%
-  mutate(site=ifelse(site=="Destruction Island SW","Destruction Island",site)) %>%
-  mutate(site=ifelse(site=="Pt. of the Arches","Point of the Arches",site)) %>%
-  mutate(site=ifelse(site=="Teawhit Head","Teahwhit Head",site))
->>>>>>> a7d2dd24a9f92e130851a9793536a4b53e6ab2c1
+# <<<<<<< HEAD
+# A <- ggplot(all.urchin.seastar %>% filter(site %in% c("Neah Bay","Tatoosh Island"))) +
+#     geom_point(aes(x=year,y=Mean,color=site)) +
+#     geom_line(aes(x=year,y=Mean,color=site)) +
+#     geom_errorbar(aes(x=year,ymin=Mean-SE.tot,ymax=Mean+SE.tot,color=site))+
+#     facet_grid(group~.,scales = "free") +
+#     ylab(expression("Mean density (m"^-2*")"))+
+#     xlab("Year") +
+#     scale_color_discrete("Site") +
+#     theme_bw()
+# =======
+# dat.swath.base <- dat.swath.base %>% mutate(site=ifelse(site=="Anderson Pt.","Anderson Point",site)) %>%
+#   mutate(site=ifelse(site=="Chibahdel","Chibadehl Rocks",site)) %>%
+#   mutate(site=ifelse(site=="Destruction Island SW","Destruction Island",site)) %>%
+#   mutate(site=ifelse(site=="Pt. of the Arches","Point of the Arches",site)) %>%
+#   mutate(site=ifelse(site=="Teawhit Head","Teahwhit Head",site))
+# >>>>>>> a7d2dd24a9f92e130851a9793536a4b53e6ab2c1
 
 # Separate out invertebrates and algae.
 dat.invert <- dat.swath.base %>% filter(group == "Invert")
@@ -232,18 +232,28 @@ write.csv(dat.invert,file="Invert counts.csv",row.names = F)
 write.csv(dat.invert.density,file="Invert densities.csv",row.names = F)
 
 # Summarize densities by species groups 
-dat.invert.group.zone <- dat.invert.density %>% group_by(year,site,group.name,zone) %>%
-                      summarize(Mean=sum(MEAN), SE = sqrt(sum(SE.tot^2))) %>% as.data.frame()
+dat.invert.species.zone <- dat.invert.density %>% group_by(year,site,species,zone) %>%
+  summarize(n.area=length(unique(area)),
+            Mean=sum(MEAN)/n.area, 
+            SE = sqrt(sum(SE.tot^2) / n.area^2)) %>% as.data.frame()
 
-dat.invert.group <- dat.invert.density %>% group_by(year,site,group.name) %>%
-                      summarize(Mean=sum(MEAN), SE = sqrt(sum(SE.tot^2,na.rm=T))) %>% as.data.frame()
+
+dat.invert.group.zone <- dat.invert.density %>% group_by(year,site,group.name,zone) %>%
+                            summarize(n.area=length(unique(area)),
+                                Mean=sum(MEAN)/n.area, 
+                                SE = sqrt(sum(SE.tot^2) / n.area^2)) %>% as.data.frame()
+
+dat.invert.group <- dat.invert.group.zone %>% group_by(year,site,group.name) %>%
+                      #summarize(MeaN=sum(MEAN), Se = sqrt(sum(SE^2,na.rm=T))) %>% group_by( year,site,group.name) %>%
+                      summarise(n.zone=length(unique(zone)),Mean=sum(Mean)/n.zone, SE = sqrt(sum(SE^2,na.rm=T) / n.zone^(2)) )
 
 #loop over groups for plots
 GROUPS <- c("urchin","seastar","crab","bivalve","chiton","cucumber","gastropod","tunicate","anenome")
 SITES  <- c("Destruction Island","Cape Johnson","Cape Alava","Tatoosh Island","Neah Bay")
 
 dat.invert.group$site <- factor(dat.invert.group$site,levels=SITES) 
-dat.invert.group.zone$site <- factor(dat.invert.group.zone $site,levels=SITES)
+dat.invert.species.zone$site <- factor(dat.invert.species.zone$site,levels=SITES)
+dat.invert.group.zone$site <- factor(dat.invert.group.zone$site,levels=SITES)
 # A <- list()
 # for(i in 1:length(GROUPS)){
 # A[[i]] <- ggplot(dat.swath.group %>% filter(group.name == GROUPS[i],site %in% SITES )) +
