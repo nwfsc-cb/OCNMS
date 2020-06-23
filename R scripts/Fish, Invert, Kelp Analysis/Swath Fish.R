@@ -282,6 +282,7 @@ P.large <- list()
 Q.large <- list()
 
 for(i in 1:nrow(SP.count.large %>% filter(tot>=5))){
+  print(SP.count.large$species[i])
   P.large[[i]] <- ggplot(data=dat.large.fish.summary %>% filter(species == SP.count.large$species[i])) +
             geom_point(aes(y=Mean,x=site)) +
             geom_errorbar(aes(ymin=Mean-SE-1e-10,ymax=Mean+SE,x=site),width=0.1) +          
@@ -292,8 +293,8 @@ for(i in 1:nrow(SP.count.large %>% filter(tot>=5))){
   Q.large[[i]] <- ggplot() +
             geom_point(data=dat.large.fish.summary %>% filter(species == SP.count.large$species[i]),
                 aes(y=Mean,x=year,color=site)) +
-            geom_line(data=dat.large.fish.summary %>% filter(species == SP.count.large$species[i]),
-                aes(y=Mean,x=year,color=site)) +
+            # geom_line(data=dat.large.fish.summary %>% filter(species == SP.count.large$species[i]),
+            #     aes(y=Mean,x=year,color=site)) +
             geom_errorbar(data=dat.large.fish.summary %>% filter(species == SP.count.large$species[i]),
                 aes(ymin=Mean-SE-1e-10,ymax=Mean+SE,x=year,color=site),width=0.1) +
     
@@ -304,7 +305,7 @@ for(i in 1:nrow(SP.count.large %>% filter(tot>=5))){
                aes(y=MEAN,x=year+0.1),color=1,size=1) +
             geom_errorbar(data=dat.large.fish.by.year %>% filter(species == SP.count.large$species[i]),
                   aes(ymin=MEAN-SE-1e-10,ymax=MEAN+SE,x=year+0.1),color=1,width=0.1) +          
-            facet_grid(~zone) +
+            facet_wrap(~zone,nrow=2) +
             ggtitle(paste(SP.count.large$species[i],SP.count.large$common.name[i])) + 
             theme_bw() +
             theme(axis.text.x = element_text(angle = 90, hjust = 1,vjust=0.5,size=8))
