@@ -132,76 +132,10 @@ dat.2015.swath <- dat.2015.swath %>% filter(!CLASSCODE == "" )
 # SIZE_CODE is new and has three levels BD = Basal Diameter , TD = Total Diameter, TR = Total Radius
 
 
-
-write.csv(dat.2015.swath,file="TEMP.2015.csv",row.names = F)
-
-
+# Write to File:
+#write.csv(dat.2015.swath,file="TEMP.2015.csv",row.names = F)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-  
-  
-  
-  
-  
-  
-
-# observed species in all years
-SP.all <- data.frame(species=unique(c(as.character(swath.dat$PISCO.Classcode))))
-SP.all.common.names <- left_join(SP.all,species_names)
-
-#####
-dat.long <- NULL
-SP <- SP.all[SP.all != "NO_ORG" & SP.all != "NOT_DONE"]
-for( i in 1: length(SP)){
-  if(nrow(swath.dat %>% filter(PISCO.Classcode == SP[i])) >0){
-    temp  <-  left_join(base.dat %>% filter(group == species_names$group[species_names$species==SP[i]]) , swath.dat %>% filter(PISCO.Classcode == SP[i]) ) 
-    temp$PISCO.Classcode <- SP[i]; temp$Species <- unique(temp$Species)[is.na(unique(temp$Species))==F][1]
-  }
-  if(nrow(swath.dat %>% filter(PISCO.Classcode == SP[i])) ==0){
-    temp  <-  data.frame(base.dat %>% filter(group == species_names$group[species_names$species==SP[i]]), 
-                         Species= SP.all.common.names$common.name[which(SP.all.common.names$species==SP[i])], PISCO.Classcode = SP[i],
-                         Count= 0,Size.cm=NA) #,size_class=NA) 
-  }
-  dat.long <- rbind(dat.long, temp)
-}
-
-dat.long$Count[is.na(dat.long$Count)==T] <- 0
-dat.long$year <- 2015
-
-dat.long <- dat.long %>% 
-  rename(site=Site,transect=Transect,observer=Observer,
-         common.name=Species,species=PISCO.Classcode)
-
-dat.2015.swath  <-  dat.long
-dat.2015.swath.count <- dat.long %>% group_by(site,transect,observer,Transect.area,common.name,species,year,group) %>%
-  summarise(count=sum(Count)) %>% rename(Count=count) 
-base.dat.2015 <- base.dat
-######################################
-
-                                  
-
-                                  
-
-
-
-class(dat.2015$Date
-      )
 
 
 
