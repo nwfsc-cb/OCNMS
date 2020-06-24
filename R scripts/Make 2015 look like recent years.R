@@ -47,7 +47,8 @@ swath.dat <- dat.2015 %>%
 # Get rid of a few screwed up entries in the "Transect.area..inverts." column, convert NA to 0
 
 swath.dat <- swath.dat %>% 
-              mutate(Transect.area..inverts.=ifelse(Transect.area..inverts.=="",0,Transect.area..inverts.)) %>%
+              mutate(Transect.area..inverts. = as.character(Transect.area..inverts.),
+                Transect.area..inverts.=ifelse(Transect.area..inverts.=="",0,Transect.area..inverts.)) %>%
               mutate(Transect.area..fish.=ifelse(is.na(Transect.area..fish.),0,Transect.area..fish.)) %>%            
               mutate(Transect.area..stipes.=ifelse(is.na(Transect.area..stipes.),0,Transect.area..stipes.)) %>%            
               mutate(Transect.area..inverts.= as.numeric(as.character(Transect.area..inverts.)))
@@ -63,7 +64,8 @@ bind_rows(check.1,check.2)
 # There is 1 row. Destruction Island. In has area for Inverts when it shouldn't (It's an algae count). Cull that entry.
 swath.dat <- swath.dat %>% 
             mutate(Transect.area..inverts.=ifelse(Transect.area..inverts.> 0 &
-                                                    Transect.area..stipes. > 0 ,0,Transect.area..inverts.))
+                                                    Transect.area..stipes. > 0 & 
+                                                    group == "Algae",0,Transect.area..inverts.))
 
 # check again to make sure that only one of the transect area columns is > 0.
 check.1 <- swath.dat %>% 
@@ -84,15 +86,23 @@ swath.dat <- swath.dat %>% mutate(Date2 = as.Date(Date,"%m/%d/%y")) %>%
 
 # Make rules for defining Meters Sampled and Swath Width.
 swath.dat <- swath.dat %>%
-              mutate(Swath.width = case_when(Transect.area > 30 ~ 2,
-                                             Transect.area <= 30 ~ 1))
+              mutate(Swath.width = NA_real_,
+                     Swath.width = case_when(Transect.area == 60 ~2,
+                                            Transect.area == 30~1,
+                                            TRUE~Swath.width),
+                     METERS.sampled =ifelse(is.na(METERS.sampled)==T,Transect.area / Swath.width,METERS.sampled))
 
 # Add in a Fish group id.                                             
 swath.dat <- swath.dat %>% mutate(group = as.character(group),
                                   group = ifelse(PISCO.datatype == "fish","Fish",group))
 
+# Fix Destruction Island Naming conventions
+swath.dat <- swath.dat %>% mutate(Site = as.character(Site),
+                            Site=ifelse(Site == "Destruction Island SW","Destruction Island",Site))
 
-dat.2015.swath <- swath.dat %>% 
+# Make a table that looks like later data.frames.
+dat.2015.swath.invert.algae <- swath.dat %>% 
+  filter(group %in% c("Algae","Invert")) %>%
   mutate(BUDDY = NA,
          SIDE = NA,
          ZONE = 5,
@@ -117,7 +127,8 @@ dat.2015.swath <- swath.dat %>%
                 SEGMENT,
                 CLASSCODE,
                 COUNT = Count,
-                "METERS sampled" = Transect.area,
+                "METERS sampled" = METERS.sampled,
+                "TRANSECT AREA" = Transect.area,
                 SIZE_CODE = Echinoderm.size..TD..TR..BD..BR..T.Total..B.Basal..D.Diameter..R.Radius..L.length.,
                 SIZE =Size.cm,
                 cntrl_a ,
@@ -127,15 +138,61 @@ dat.2015.swath <- swath.dat %>%
 
 ### Last Checks
 # Cull observations without CLASSCODE
-dat.2015.swath <- dat.2015.swath %>% filter(!CLASSCODE == "" )
+#dat.2015.swath.invert.algae <- dat.2015.swath.invert.algae %>% filter(!CLASSCODE == "" )
+
+# Write to File:
+# write.csv(dat.2015.swath.invert.algae,file="Invert_Algae_swath_2015.csv",row.names = F)
 
 # SIZE_CODE is new and has three levels BD = Basal Diameter , TD = Total Diameter, TR = Total Radius
 
-
-# Write to File:
-#write.csv(dat.2015.swath,file="TEMP.2015.csv",row.names = F)
+##### Make an equivalent Fish data frame.
 
 
 
+dat.2015.swath.fish <- swath.dat %>% 
+  filter(group %in% c("Fish")) %>%
+  mutate(BUDDY = NA,
+         SIDE = NA,
+         ZONE = 5,
+         LEVEL = "BOT",
+         HEADING = NA,
+         DEPTH_M = NA,
+         DEPTH_FT = NA,
+         VIS_M = NA,
+         SURGE = NA,
+         HEADING = NA,
+         TEMP_C = NA,
+         TEMP_F = NA,
+         SEGMENT = NA,
+         SPECIES = PISCO.Classcode,
+         cntrl_a = NA,
+         "DATA ENTRY PROBLEMS" = NA) %>%
+  dplyr::select(YEAR,MONTH,DAY,
+                SITE = Site,
+                OBSERVER = Observer,
+                BUDDY,
+                SIDE ,
+                ZONE ,
+                LEVEL,
+                TRANSECT = Transect,
+                DEPTH_M ,
+                DEPTH_FT ,
+                VIS_M,
+                SURGE,
+                HEADING,
+                TEMP_C,
+                TEMP_F,
+                SPECIES,
+                SEGMENT,
+                QUANTITY = Count,
+                "SIZE (MIN)" = Size.cm,
+                "SIZE (MAX"  = Size.cm,
+                "METERS sampled" = Transect.area,
+                Cntrl_a ,
+                Notes	= Notes ,
+                ORG_TYPE = group)
 
+# Write to FILE
+#write.csv(dat.2015.swath.fish,file="Fish_swath_2015.csv",row.names = F)
+###
 
