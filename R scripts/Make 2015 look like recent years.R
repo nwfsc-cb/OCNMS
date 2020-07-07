@@ -141,7 +141,7 @@ dat.2015.swath.invert.algae <- swath.dat %>%
 #dat.2015.swath.invert.algae <- dat.2015.swath.invert.algae %>% filter(!CLASSCODE == "" )
 
 # Write to File:
-# write.csv(dat.2015.swath.invert.algae,file="Invert_Algae_swath_2015.csv",row.names = F)
+write.csv(dat.2015.swath.invert.algae,file="Invert_Algae_swath_2015.csv",row.names = F)
 
 # SIZE_CODE is new and has three levels BD = Basal Diameter , TD = Total Diameter, TR = Total Radius
 
@@ -188,11 +188,11 @@ dat.2015.swath.fish <- swath.dat %>%
                 "SIZE (MIN)" = Size.cm,
                 "SIZE (MAX"  = Size.cm,
                 "METERS sampled" = Transect.area,
-                Cntrl_a ,
+                cntrl_a ,
                 Notes	= Notes ,
                 ORG_TYPE = group)
 
 # Write to FILE
-#write.csv(dat.2015.swath.fish,file="Fish_swath_2015.csv",row.names = F)
+write.csv(dat.2015.swath.fish,file="Fish_swath_2015.csv",row.names = F)
 ###
 
