@@ -4,7 +4,7 @@ output:
   html_document: default
   pdf_document: default
 ---
-check on segments that arent done?? 
+ 
 ```{r setup, include=FALSE, message=FALSE, warning=FALSE}
 #to load data make sure directory is set to knit from project directory
 knitr::opts_chunk$set(echo = FALSE,message=FALSE, warning=FALSE)
@@ -37,13 +37,44 @@ dat.upc <- rbind(dat.2015, dat.2016) %>%
   left_join(substrate_codes) %>% #rename two that arent in substrate key
   mutate(NAME = case_when(CLASSCODE == "ptero" | NAME == "Pterogophora" ~ "Pterygophora",
                           CLASSCODE == "shell" ~ "various bivalves",
-                          TRUE ~ NAME))
- 
+                          TRUE ~ NAME),
+#ASSIGN FUNCTIONAL GROUPS 
+         Functional_Group = case_when(
+                                    NAME %in% c("Red algae (branching flat blade)", "Red algae (cylindrical branches)", "Red algae (lacy branching)","Red algae -Encrusting", "Coralline algae -Crustose", "Red algae (leaf-like)","articulated coralline") ~ "Red Algae",
+                                    NAME %in% c("Nereocystis holdfast (alive)", "Macrosystis holdfast (alive)", "Laminariales holdfast (alive)") ~"Holdfast", 
+                                    NAME %in% c("Pterygophora", "Brown algae understory prone") ~ "Brown Algae (Understory)",
+                                    NAME %in% c("urchin", "Cucumaria spp.' sea cucumber") ~ "Echinoderm", 
+                                    NAME %in% c("various bivalves", "Scallop") ~ "Bivalve",
+                                    NAME %in% c("Anemone", "Cup Coral") ~ "Anthozoa",
+                                    NAME %in% c("Substrate: Bedrock","Shell Debris","Bare Sand", "Substrate: Cobble","Sediment/Mud", "Substrate: Sand","Bare Rock" ) ~ "Non-living Substrate",
+                                    NAME %in% c("Tunicate -Colonial,compund,social","Tunicate -Solitary") ~"Tunicate",
+                                    NAME %in% c("Zostera marina, eelgrass" , "Phyllospadix spp.' surfgrass") ~ "Eelgrass_Surfgrass",
+                                    NAME %in% c("Encrusting hydrocoral (eg. Stylantheca)", "Hydroid" ) ~ "Misc Invert",
+                                    TRUE ~ NAME),
+ #ASSIGN ORGANISM GROUPS         
+        Organism_Group = case_when(NAME %in% c("Red algae (branching flat blade)", "Red algae (cylindrical branches", "Red algae (lacy branching)","Pterygophora", "Brown algae understory prone","Red algae -Encrusting", "Coralline algae -Crustose","Nereocystis holdfast (alive)","Macrosystis holdfast (alive)","Phyllospadix spp.' surfgrass", "Zostera marina, eelgrass","Encrusting hydrocoral (eg. Stylantheca)","Green algae","Laminariales holdfast (alive)","articulated coralline", "Red algae (cylindrical branches)","Red algae (leaf-like)") ~ "Plant_Algae",
+                                    NAME %in% c("various bivalves", "Scallop","Anemone", "Cup Coral","Barnacle","Tunicate -Colonial,compund,social", "Tunicate -Solitary","urchin","Bryozoan","Diatom Layer","Sponge","Tubeworm","Hydroid", "Cucumaria spp.' sea cucumber") ~ "Invertebrate",
+                                    NAME %in% c("Substrate: Bedrock","Shell Debris","Bare Sand", "Substrate: Cobble","Sediment/Mud", "Substrate: Sand","Bare Rock" ) ~ "Non-living Substrate", 
+                                    TRUE ~ NAME))  
+
+
+rm(dat.2016,dat.2015) 
+
+
+unique(dat.upc$Functional_Group)
 ```
 
+## Lump Original Categories
+
+```{r , echo=FALSE}
+summary_table<- dat.upc %>%
+  group_by(Organism_Group,Functional_Group, NAME) %>%
+  summarise(species_occurence = sum(COUNT))  
+ 
+kable(summary_table)
+```
 
 ```{r }
-#plot species occurence to figure out what should be lumped
 dat.upc %>%
   group_by(NAME) %>%
   summarise(species_occurence = sum(COUNT)) %>%
@@ -53,50 +84,32 @@ dat.upc %>%
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
   xlab("Original Species Groups") +
   ylab("Species Count")
- 
 ```
 
-
-```{r pressure, eval=FALSE}
-summary_table<- dat.upc %>%
-  group_by(CLASSCODE) %>%
-  summarise(species_occurence = sum(COUNT))  %>%
-  arrange(desc(species_occurence))
  
-print(summary_table)
-
-unique(dat.upc$NAME)
-```
-
-## Proposed Lumping 
-- Initial thought to do this based on general functional groups 
 ```{r}
-dat.upc.summary <- dat.upc %>%
-  group_by(NAME) %>%
+dat.upc %>%
+  group_by(Functional_Group) %>%
   summarise(species_occurence = sum(COUNT)) %>%
-  mutate(proposed_new_group = case_when(NAME %in% c("Red algae (branching flat blade)", "Red algae (cylindrical branches", "Red algae (lacy branching)") ~ "Red Algae Branching",
-                                    NAME %in% c("Pterygophora", "Brown algae understory prone") ~ "Brown Algae (Understory)",
-                                    NAME %in% c("various bivalves", "Scallop") ~ "Bivalve",
-                                    NAME %in% c("Anemone", "Cup Coral") ~ "Anthozoa",
-                                    NAME %in% c("Red algae -Encrusting", "Coralline algae -Crustose") ~ "Red Corralline Crust",
-                                    TRUE ~ NAME)) %>%
-  select(proposed_new_group, NAME, species_occurence)
-  
-  kable(dat.upc.summary)
-  
-```
- 
- 
-```{r}
-
-ggplot(dat.upc.summary) +
-  geom_bar(aes(x=reorder(proposed_new_group, -species_occurence), y = species_occurence), stat = "identity")+ 
+  ggplot() +
+  geom_bar(aes(x=reorder(Functional_Group, -species_occurence), y = species_occurence), stat = "identity")+ 
   theme_classic() +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
-  xlab("New Species Groups") +
+  xlab("Functional Groups") +
   ylab("Species Count")
-
 ```
+
  
- 
+```{r}
+dat.upc %>%
+  group_by(Organism_Group) %>%
+  summarise(species_occurence = sum(COUNT)) %>%
+  ggplot() +
+  geom_bar(aes(x=reorder(Organism_Group, -species_occurence), y = species_occurence), stat = "identity")+ 
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+  xlab("Organism Groups") +
+  ylab("Species Count")
+```
+
  
