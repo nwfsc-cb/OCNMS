@@ -1,7 +1,7 @@
 #### Analysis of the UPC for the OCNMS survey region.
 
 # Libraries
-library(dplyr)
+library(tidyverse)
 library(ggplot2)
 library(viridis)
 library(reshape2)
@@ -88,22 +88,24 @@ relief <- dat.2016.on.upc %>% filter(CATEGORY=="RELIEF")
   sub.summary.year.transect <- dat.sub %>% 
     group_by(YEAR,SITE,ZONE,SIDE,TRANSECT,CLASSCODE) %>%
     dplyr::summarise(
-      PROPORTION=sum(PROPORTION)
+      PROPORTION=sum(PROPORTION),
+      .groups = "keep"
     )
   sub.summary.year.transect$YEAR <- as.factor(sub.summary.year.transect$YEAR)
   # order sites from south to north
   sub.summary.year.transect$SITE <- factor(sub.summary.year.transect$SITE,
                                        levels=c("Destruction Island","Cape Johnson","Cape Alava","Tatoosh Island","Neah Bay"))
-  glimpse(sub.summary.transect)
+  glimpse(sub.summary.year.transect)
   
   # 2) calculate summary stats for site-year-zone
   sub.summary.year.zone <- sub.summary.year.transect %>% 
     group_by(YEAR,SITE,ZONE,CLASSCODE) %>%
     dplyr::summarise(
       MEAN=mean(PROPORTION),
-      SD=sqrt(PROPORTION * (1 - PROPORTION)),
+      SD=sqrt(MEAN * (1 - MEAN)),
       N=length(PROPORTION),
-      SE=SD/sqrt(N)
+      SE=SD/sqrt(N),
+      .groups = "keep"
       )
   sub.summary.year.zone$YEAR <- as.factor(sub.summary.year.zone$YEAR)
   # order sites from south to north
@@ -116,9 +118,10 @@ relief <- dat.2016.on.upc %>% filter(CATEGORY=="RELIEF")
     group_by(YEAR,SITE,CLASSCODE) %>%
     dplyr::summarise(
       MEAN=mean(PROPORTION),
-      SD=sqrt(PROPORTION * (1 - PROPORTION)),
+      SD=sqrt(MEAN * (1 - MEAN)),
       N=length(PROPORTION),
-      SE=SD/sqrt(N)
+      SE=SD/sqrt(N),
+      .groups = "keep"
     )
   sub.summary.year$YEAR <- as.factor(sub.summary.year$YEAR)
   sub.summary.year$SITE <- factor(sub.summary.year$SITE,
@@ -130,9 +133,10 @@ relief <- dat.2016.on.upc %>% filter(CATEGORY=="RELIEF")
     group_by(SITE,ZONE,CLASSCODE) %>%
     dplyr::summarise(
       MEAN=mean(PROPORTION),
-      SD=sqrt(PROPORTION * (1 - PROPORTION)),
+      SD=sqrt(MEAN * (1 - MEAN)),
       N=length(PROPORTION),
-      SE=SD/sqrt(N)
+      SE=SD/sqrt(N),
+      .groups = "keep"
     )
   sub.summary.zone$SITE <- factor(sub.summary.zone$SITE,
                                   levels=c("Destruction Island","Cape Johnson","Cape Alava","Tatoosh Island","Neah Bay"))
@@ -145,9 +149,10 @@ relief <- dat.2016.on.upc %>% filter(CATEGORY=="RELIEF")
     group_by(SITE,CLASSCODE) %>%
     dplyr::summarise(
       MEAN=mean(PROPORTION),
-      SD=sqrt(PROPORTION * (1 - PROPORTION)),
+      SD=sqrt(MEAN * (1 - MEAN)),
       N=length(PROPORTION),
-      SE=SD/sqrt(N)
+      SE=SD/sqrt(N),
+      .groups = "keep"
     )
   sub.summary.site$SITE <- factor(sub.summary.site$SITE,
                                   levels=c("Destruction Island","Cape Johnson","Cape Alava","Tatoosh Island","Neah Bay"))
@@ -158,8 +163,8 @@ relief <- dat.2016.on.upc %>% filter(CATEGORY=="RELIEF")
   ### WRITE OUT SUBSTRATE DATA FRAMES
   
   
-  write_csv(sub.summary.transect, paste0(data.summary.output.dir, "/SUBSTRATE summary by TRANSECT 2016-2019.csv"))
-  write_rds(sub.summary.transect, paste0(data.summary.output.dir, "/SUBSTRATE summary by TRANSECT 2016-2019.rds"))
+  write_csv(sub.summary.year.transect, paste0(data.summary.output.dir, "/SUBSTRATE summary by YEAR-SITE-DEPTH-SIDE-TRANSECT 2016-2019.csv"))
+  write_rds(sub.summary.year.transect, paste0(data.summary.output.dir, "/SUBSTRATE summary by YEAR-SITE-DEPTH-SIDE-TRANSECT 2016-2019.rds"))
   write_csv(sub.summary.year.zone, paste0(data.summary.output.dir, "/SUBSTRATE summary by YEAR-SITE-DEPTH 2016-2019.csv"))
   write_rds(sub.summary.year.zone, paste0(data.summary.output.dir, "/SUBSTRATE summary by YEAR-SITE-DEPTH 2016-2019.rds"))
   write_csv(sub.summary.year, paste0(data.summary.output.dir, "/SUBSTRATE summary by YEAR-SITE 2016-2019.csv"))
@@ -173,12 +178,10 @@ relief <- dat.2016.on.upc %>% filter(CATEGORY=="RELIEF")
   
   #### MAKE SUBSTRATE PLOTS
   
-  ### pick up here. need to fix error bars
-  
   # 1) plots for site-year-zone. 
   # a) substrate type on x axis, site as facets
   sub.plot.year.zone_sub <- ggplot() +
-    geom_jitter(data=sub.summary.year.transect,aes(y=PROPORTION,x=CLASSCODE,colour=YEAR),width=0.2,height=0.01,alpha=0.5 )+
+    geom_jitter(data=sub.summary.year.transect,aes(y=PROPORTION,x=CLASSCODE,colour=YEAR),alpha=0.5, position=position_dodge(width=0.5))+
     geom_point(data=sub.summary.year.zone,aes(y=MEAN,x=CLASSCODE,fill=YEAR),color="black",size=3,shape=21, position=position_dodge(width=0.5))+
     geom_errorbar(data=sub.summary.year.zone,
                   aes(ymin=MEAN-SE-1e-10,ymax=MEAN+SE,x=CLASSCODE, colour=YEAR),width=0.1, position=position_dodge(width=0.5))  +
@@ -190,7 +193,7 @@ relief <- dat.2016.on.upc %>% filter(CATEGORY=="RELIEF")
   
   # b) site on x axis, substrate type as facets
   sub.plot.year.zone_site <- ggplot() +
-    geom_jitter(data=sub.summary.year.transect,aes(y=PROPORTION,x=SITE, colour=YEAR),width=0.2,height=0.01,alpha=0.5 )+
+    geom_jitter(data=sub.summary.year.transect,aes(y=PROPORTION,x=SITE, colour=YEAR),alpha=0.5, position=position_dodge(width=0.5) )+
     geom_point(data=sub.summary.year.zone,aes(y=MEAN,x=SITE,fill=YEAR),color="black",size=3,shape=21, position=position_dodge(width=0.5))+
     geom_errorbar(data=sub.summary.year.zone,
                   aes(ymin=MEAN-SE-1e-10,ymax=MEAN+SE,x=SITE, colour=YEAR),width=0.1, position=position_dodge(width=0.5))  +
@@ -203,25 +206,25 @@ relief <- dat.2016.on.upc %>% filter(CATEGORY=="RELIEF")
     )
   sub.plot.year.zone_site
   
-  # c) compare zones
+  # c) compare zones, years as facets, lines connecting 5m v 10m
   
   sub.plot.year.zone_compare1 <- ggplot() +
-    geom_jitter(data=sub.summary.year.transect,aes(y=PROPORTION,x=ZONE),width=0.2,height=0.01,alpha=0.5 )+
-    geom_point(data=sub.summary.year.zone,aes(y=MEAN,x=ZONE,colour=SITE),size=2)+
+    geom_jitter(data=sub.summary.year.transect,aes(y=PROPORTION,x=ZONE, colour=SITE),alpha=0.5, position=position_dodge(width=0.5))+
+    geom_point(data=sub.summary.year.zone,aes(y=MEAN,x=ZONE,colour=SITE),size=2, position=position_dodge(width=0.5))+
     geom_line(data=sub.summary.year.zone,aes(y=MEAN,x=ZONE,colour=SITE),size=1)+
     geom_errorbar(data=sub.summary.year.zone,
-                  aes(ymin=MEAN-SE-1e-10,ymax=MEAN+SE,x=ZONE,colour=SITE),width=0.1)  +
+                  aes(ymin=MEAN-SE-1e-10,ymax=MEAN+SE,x=ZONE,colour=SITE),width=0.1, position=position_dodge(width=0.5))  +
     scale_colour_viridis_d()+
     facet_grid(YEAR~CLASSCODE) +
     theme_bw()
   sub.plot.year.zone_compare1
   
+  # d) compare zones, CLASSCODE as facets, no lines connecting 5m v 10m
   sub.plot.year.zone_compare2 <- ggplot() +
-    geom_jitter(data=sub.summary.year.transect,aes(y=PROPORTION,x=ZONE,colour=YEAR),width=0.2,height=0.01,alpha=0.3 )+
-    geom_point(data=sub.summary.year.zone,aes(y=MEAN,x=ZONE,fill=YEAR),size=3,shape=21,colour="black")+
-    #geom_line(data=sub.summary,aes(y=MEAN,x=ZONE),size=2)+
+    geom_jitter(data=sub.summary.year.transect,aes(y=PROPORTION,x=ZONE,colour=YEAR),alpha=0.3 , position=position_dodge(width=0.5))+
+    geom_point(data=sub.summary.year.zone,aes(y=MEAN,x=ZONE,fill=YEAR),size=2,shape=21, position=position_dodge(width=0.5))+
     geom_errorbar(data=sub.summary.year.zone,
-                  aes(ymin=MEAN-SE-1e-10,ymax=MEAN+SE,x=ZONE,colour=YEAR),colour="black",width=0.1)  +
+                  aes(ymin=MEAN-SE-1e-10,ymax=MEAN+SE,x=ZONE,colour=YEAR),width=0.1, position=position_dodge(width=0.5))  +
     scale_colour_viridis_d() +
     scale_fill_viridis_d() +
     facet_grid(CLASSCODE~SITE) +
@@ -231,7 +234,6 @@ relief <- dat.2016.on.upc %>% filter(CATEGORY=="RELIEF")
   # 2) plots for site-year. 
   # a) substrate type on x axis, site as facets
   sub.plot.year_sub <- ggplot() +
-    #geom_jitter(data=sub.summary.year.transect,aes(y=PROPORTION,x=CLASSCODE,colour=YEAR),width=0.2,height=0.01,alpha=0.5 )+
     geom_point(data=sub.summary.year,aes(y=MEAN,x=CLASSCODE,fill=YEAR),colour="black",size=3,shape=21, position=position_dodge(width=0.5))+
     geom_errorbar(data=sub.summary.year,
                   aes(ymin=MEAN-SE-1e-10,ymax=MEAN+SE,x=CLASSCODE, colour=YEAR),width=0.1, position=position_dodge(width=0.5))  +
@@ -241,9 +243,9 @@ relief <- dat.2016.on.upc %>% filter(CATEGORY=="RELIEF")
     theme_bw()
   sub.plot.year_sub
   
+
   # b) site on x axis, substrate type as facets
   sub.plot.year_site <- ggplot() +
-    #geom_jitter(data=sub.summary.year.transect,aes(y=PROPORTION,x=SITE, colour=YEAR),width=0.2,height=0.01,alpha=0.5 )+
     geom_point(data=sub.summary.year,aes(y=MEAN,x=SITE,fill=YEAR),color="black",size=3,shape=21, position=position_dodge(width=0.5))+
     geom_errorbar(data=sub.summary.year,
                   aes(ymin=MEAN-SE-1e-10,ymax=MEAN+SE,x=SITE, colour=YEAR),width=0.1, position=position_dodge(width=0.5))  +
@@ -256,45 +258,137 @@ relief <- dat.2016.on.upc %>% filter(CATEGORY=="RELIEF")
     )
   sub.plot.year_site
   
-  # c) compare zones
+  # c) time series, CLASSCODE as facets
   
-  sub.plot.year.zone_compare1 <- ggplot() +
-    geom_jitter(data=sub.summary.year.transect,aes(y=PROPORTION,x=ZONE),width=0.2,height=0.01,alpha=0.5 )+
-    geom_point(data=sub.summary.year.zone,aes(y=MEAN,x=ZONE,colour=SITE),size=2)+
-    geom_line(data=sub.summary.year.zone,aes(y=MEAN,x=ZONE,colour=SITE),size=1)+
-    geom_errorbar(data=sub.summary.year.zone,
-                  aes(ymin=MEAN-SE-1e-10,ymax=MEAN+SE,x=ZONE,colour=SITE),width=0.1)  +
+  sub.plot.year_ts1 <- ggplot() +
+    geom_point(data=sub.summary.year,aes(y=MEAN,x=YEAR,colour=SITE, group=SITE),size=2, position=position_dodge(width=0.5))+
+    geom_line(data=sub.summary.year,aes(y=MEAN,x=YEAR,colour=SITE, group=SITE),size=1, position=position_dodge(width=0.5))+
+    geom_errorbar(data=sub.summary.year,
+                  aes(ymin=MEAN-SE-1e-10,ymax=MEAN+SE,x=YEAR,colour=SITE, group=SITE),width=0.1, position=position_dodge(width=0.5))  +
     scale_colour_viridis_d()+
-    facet_grid(YEAR~CLASSCODE) +
+    facet_grid(.~CLASSCODE) +
     theme_bw()
-  sub.plot.year.zone_compare1
+  sub.plot.year_ts1
   
-  sub.plot.year.zone_compare2 <- ggplot() +
-    geom_jitter(data=sub.summary.year.transect,aes(y=PROPORTION,x=ZONE,colour=YEAR),width=0.2,height=0.01,alpha=0.3 )+
-    geom_point(data=sub.summary.year.zone,aes(y=MEAN,x=ZONE,fill=YEAR),size=3,shape=21,colour="black")+
-    #geom_line(data=sub.summary,aes(y=MEAN,x=ZONE),size=2)+
-    geom_errorbar(data=sub.summary.year.zone,
-                  aes(ymin=MEAN-SE-1e-10,ymax=MEAN+SE,x=ZONE,colour=YEAR),colour="black",width=0.1)  +
-    scale_colour_viridis_d() +
-    scale_fill_viridis_d() +
-    facet_grid(CLASSCODE~SITE) +
+  # d) time series, SITE as facets
+  
+  sub.plot.year_ts2 <- ggplot() +
+    geom_point(data=sub.summary.year,aes(y=MEAN,x=YEAR,colour=CLASSCODE, group=CLASSCODE),size=2, position=position_dodge(width=0.5))+
+    geom_line(data=sub.summary.year,aes(y=MEAN,x=YEAR,colour=CLASSCODE, group=CLASSCODE),size=1, position=position_dodge(width=0.5))+
+    geom_errorbar(data=sub.summary.year,
+                  aes(ymin=MEAN-SE-1e-10,ymax=MEAN+SE,x=YEAR,colour=CLASSCODE, group=CLASSCODE),width=0.1, position=position_dodge(width=0.5))  +
+    scale_colour_viridis_d()+
+    facet_grid(.~SITE) +
     theme_bw()
-  sub.plot.year.zone_compare2
+  sub.plot.year_ts2
   
   # 3) plots for site-zone. 
   
+  # a) substrate type on x axis, site as facets
+  sub.plot.zone_sub <- ggplot() +
+    geom_point(data=sub.summary.zone,aes(y=MEAN,x=CLASSCODE,fill=factor(ZONE)),colour="black",size=3,shape=21, position=position_dodge(width=0.5))+
+    geom_errorbar(data=sub.summary.zone,
+                  aes(ymin=MEAN-SE-1e-10,ymax=MEAN+SE,x=CLASSCODE, colour=factor(ZONE)),width=0.1, position=position_dodge(width=0.5))  +
+    labs(fill='ZONE', colour='ZONE') +
+    scale_colour_viridis_d()+
+    scale_fill_viridis_d()+
+    facet_grid(SITE~.) +
+    theme_bw()
+  sub.plot.zone_sub
+  
+  
+  # b) site on x axis, substrate type as facets
+  sub.plot.zone_site <- ggplot() +
+    geom_point(data=sub.summary.zone,aes(y=MEAN,x=SITE,fill=factor(ZONE)),color="black",size=3,shape=21, position=position_dodge(width=0.5))+
+    geom_errorbar(data=sub.summary.zone,
+                  aes(ymin=MEAN-SE-1e-10,ymax=MEAN+SE,x=SITE, colour=factor(ZONE)),width=0.1, position=position_dodge(width=0.5))  +
+    labs(fill='ZONE', colour='ZONE') +
+    scale_colour_viridis_d()+
+    scale_fill_viridis_d()+
+    facet_grid(CLASSCODE~.) +
+    theme_bw() +
+    theme(
+      axis.text.x = element_text(angle = 45, hjust=1)
+    )
+  sub.plot.zone_site
+  
+  # c) compare zones, years as facets, lines connecting 5m v 10m
+  
+  sub.plot.zone_compare1 <- ggplot() +
+    geom_point(data=sub.summary.zone,aes(y=MEAN,x=factor(ZONE),colour=SITE, group=SITE),size=2, position=position_dodge(width=0.5))+
+    geom_line(data=sub.summary.zone,aes(y=MEAN,x=factor(ZONE),colour=SITE, group=SITE),size=1, position=position_dodge(width=0.5))+
+    geom_errorbar(data=sub.summary.zone,
+                  aes(ymin=MEAN-SE-1e-10,ymax=MEAN+SE,x=factor(ZONE),colour=SITE, group=SITE),width=0.1, position=position_dodge(width=0.5))  +
+    xlab("ZONE") +
+    scale_colour_viridis_d()+
+    facet_grid(.~CLASSCODE) +
+    theme_bw()
+  sub.plot.zone_compare1
+  
+  # d) compare zones, CLASSCODE as facets, no lines connecting 5m v 10m
+  
+  sub.plot.zone_compare2 <- ggplot() +
+    geom_point(data=sub.summary.zone,aes(y=MEAN,x=factor(ZONE),colour=SITE, group=SITE),size=2, position=position_dodge(width=0.5))+
+    geom_line(data=sub.summary.zone,aes(y=MEAN,x=factor(ZONE),colour=SITE, group=SITE),size=1, position=position_dodge(width=0.5))+
+    geom_errorbar(data=sub.summary.zone,
+                  aes(ymin=MEAN-SE-1e-10,ymax=MEAN+SE,x=factor(ZONE),colour=SITE, group=SITE),width=0.1, position=position_dodge(width=0.5))  +
+    xlab("ZONE") +
+    scale_colour_viridis_d()+
+    facet_grid(.~CLASSCODE) +
+    theme_bw()
+  sub.plot.zone_compare2
+  
   # 4) plots for site
-
-
+  
+  # a) substrate type on x axis, site as facets
+  sub.plot.site_sub <- ggplot() +
+    geom_point(data=sub.summary.site,aes(y=MEAN,x=CLASSCODE, fill=CLASSCODE),colour="black",size=3,shape=21, position=position_dodge(width=0.5))+
+    geom_errorbar(data=sub.summary.site,
+                  aes(ymin=MEAN-SE-1e-10,ymax=MEAN+SE,x=CLASSCODE, colour=CLASSCODE),width=0.1, position=position_dodge(width=0.5))  +
+    scale_colour_viridis_d()+
+    scale_fill_viridis_d()+
+    facet_grid(SITE~.) +
+    theme_bw()
+  sub.plot.site_sub
   
   
-
+  # b) site on x axis, substrate type as facets
+  sub.plot.site_site <- ggplot() +
+    geom_point(data=sub.summary.site,aes(y=MEAN,x=SITE,fill=SITE),color="black",size=3,shape=21, position=position_dodge(width=0.5))+
+    geom_errorbar(data=sub.summary.site,
+                  aes(ymin=MEAN-SE-1e-10,ymax=MEAN+SE,x=SITE, colour=SITE),width=0.1, position=position_dodge(width=0.5))  +
+    scale_colour_viridis_d()+
+    scale_fill_viridis_d()+
+    facet_grid(CLASSCODE~.) +
+    theme_bw() +
+    theme(
+      axis.text.x = element_text(angle = 45, hjust=1)
+    )
+  sub.plot.site_site
+  
+  
+#### PRINT OUT THE PLOTS IN A SINGLE PDF
   
   pdf(file=paste0(base.dir,"/Plots/Substrate v2.pdf"),onefile=T)
+  
   print(sub.plot.year.zone_sub)  
   print(sub.plot.year.zone_site)
   print(sub.plot.year.zone_compare1)
   print(sub.plot.year.zone_compare2)
+  
+  print(sub.plot.year_sub)
+  print(sub.plot.year_site)
+  print(sub.plot.year_ts1)
+  print(sub.plot.year_ts2)
+  
+  print(sub.plot.zone_sub)
+  print(sub.plot.zone_site)
+  print(sub.plot.zone_compare1)
+  print(sub.plot.zone_compare2)
+  
+  print(sub.plot.site_sub)
+  print(sub.plot.site_site)
+  
   dev.off()
 
 ###
@@ -303,43 +397,43 @@ relief <- dat.2016.on.upc %>% filter(CATEGORY=="RELIEF")
 ##############
   
   
-  
-  
-###
-##############
-### LOOK AT PERCENT COVER FRACTIONS.
-##############
-  # cover is the relevant data here.
-  
-  cat <- data.frame(merge(unique(cover$SITE),unique(cover$CLASSCODE))); colnames(cat) <- c("SITE","CLASSCODE")
-  dat.cov <- cover %>% group_by(YEAR,SITE,SEGMENT,TRANSECT,SIDE,ZONE,OBSERVER) %>% summarise(a=length(SEGMENT)) %>% 
-    full_join(.,cat,by="SITE") %>% dplyr::select(-a) %>% left_join(.,cover)
-  dat.cov$COUNT[is.na(dat.cov$COUNT)==T] <- 0
-  
-  cov.summary <- dat.cov %>% group_by(YEAR,SITE,ZONE,CLASSCODE) %>% dplyr::summarise(Mean=mean(COUNT),SD=sd(COUNT),N=length(COUNT),SE=SD/sqrt(N)) %>% as.data.frame()
-  cov.summary$YEAR <- as.factor(cov.summary$YEAR)
-  
-  cov.among.site <- cov.summary %>% group_by(YEAR,CLASSCODE,ZONE) %>% dplyr::summarise(among.mean=mean(Mean),among.sd=sd(Mean)) %>% arrange(desc(among.mean))
-  cov.order <- cov.among.site %>% group_by(CLASSCODE) %>% dplyr::summarise(MEAN=mean(among.mean)) %>% arrange(desc(MEAN))
-  
-  cov.summary$CLASSCODE <- factor(cov.summary$CLASSCODE,levels=cov.order$CLASSCODE)
-  cov.among.site$CLASSCODE <- factor(cov.among.site$CLASSCODE,levels=cov.order$CLASSCODE)
-  
-  cov.summary$SITE <- factor(cov.summary$SITE,
-                         levels=c("Destruction Island","Cape Johnson","Cape Alava","Tatoosh Island","Neah Bay"))
-  cov.summary$YEAR <- as.factor(cov.summary$YEAR)
-  
-  # Across site comparison
-  cov.among.plot <- ggplot(cov.among.site) +
-      geom_col(aes(y=among.mean,x=CLASSCODE,fill=YEAR),position="dodge") +
-      facet_wrap(~ZONE)+
-      theme_bw()+
-      theme(axis.text.x = element_text(angle = 90, hjust = 1,vjust=0.5,size=8))
-  
-  cov.by.site <- ggplot(cov.summary) +
-    geom_col(aes(y=Mean,x=CLASSCODE,fill=YEAR),position="dodge") +
-    facet_grid(SITE~ZONE)+
-    theme_bw()+
-    theme(axis.text.x = element_text(angle = 90, hjust = 1,vjust=0.5,size=8))
+#   
+#   
+# ###
+# ##############
+# ### LOOK AT PERCENT COVER FRACTIONS.
+# ##############
+#   # cover is the relevant data here.
+#   
+#   cat <- data.frame(merge(unique(cover$SITE),unique(cover$CLASSCODE))); colnames(cat) <- c("SITE","CLASSCODE")
+#   dat.cov <- cover %>% group_by(YEAR,SITE,SEGMENT,TRANSECT,SIDE,ZONE,OBSERVER) %>% summarise(a=length(SEGMENT)) %>% 
+#     full_join(.,cat,by="SITE") %>% dplyr::select(-a) %>% left_join(.,cover)
+#   dat.cov$COUNT[is.na(dat.cov$COUNT)==T] <- 0
+#   
+#   cov.summary <- dat.cov %>% group_by(YEAR,SITE,ZONE,CLASSCODE) %>% dplyr::summarise(Mean=mean(COUNT),SD=sd(COUNT),N=length(COUNT),SE=SD/sqrt(N)) %>% as.data.frame()
+#   cov.summary$YEAR <- as.factor(cov.summary$YEAR)
+#   
+#   cov.among.site <- cov.summary %>% group_by(YEAR,CLASSCODE,ZONE) %>% dplyr::summarise(among.mean=mean(Mean),among.sd=sd(Mean)) %>% arrange(desc(among.mean))
+#   cov.order <- cov.among.site %>% group_by(CLASSCODE) %>% dplyr::summarise(MEAN=mean(among.mean)) %>% arrange(desc(MEAN))
+#   
+#   cov.summary$CLASSCODE <- factor(cov.summary$CLASSCODE,levels=cov.order$CLASSCODE)
+#   cov.among.site$CLASSCODE <- factor(cov.among.site$CLASSCODE,levels=cov.order$CLASSCODE)
+#   
+#   cov.summary$SITE <- factor(cov.summary$SITE,
+#                          levels=c("Destruction Island","Cape Johnson","Cape Alava","Tatoosh Island","Neah Bay"))
+#   cov.summary$YEAR <- as.factor(cov.summary$YEAR)
+#   
+#   # Across site comparison
+#   cov.among.plot <- ggplot(cov.among.site) +
+#       geom_col(aes(y=among.mean,x=CLASSCODE,fill=YEAR),position="dodge") +
+#       facet_wrap(~ZONE)+
+#       theme_bw()+
+#       theme(axis.text.x = element_text(angle = 90, hjust = 1,vjust=0.5,size=8))
+#   
+#   cov.by.site <- ggplot(cov.summary) +
+#     geom_col(aes(y=Mean,x=CLASSCODE,fill=YEAR),position="dodge") +
+#     facet_grid(SITE~ZONE)+
+#     theme_bw()+
+#     theme(axis.text.x = element_text(angle = 90, hjust = 1,vjust=0.5,size=8))
   
     
