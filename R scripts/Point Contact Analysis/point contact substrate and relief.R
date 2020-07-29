@@ -328,13 +328,13 @@ relief <- dat.2016.on.upc %>% filter(CATEGORY=="RELIEF")
   # d) compare zones, CLASSCODE as facets, no lines connecting 5m v 10m
   
   sub.plot.zone_compare2 <- ggplot() +
-    geom_point(data=sub.summary.zone,aes(y=MEAN,x=factor(ZONE),colour=SITE, group=SITE),size=2, position=position_dodge(width=0.5))+
-    geom_line(data=sub.summary.zone,aes(y=MEAN,x=factor(ZONE),colour=SITE, group=SITE),size=1, position=position_dodge(width=0.5))+
+    geom_point(data=sub.summary.zone,aes(y=MEAN,x=factor(ZONE),colour=CLASSCODE, group=CLASSCODE),size=2, position=position_dodge(width=0.5))+
+    geom_line(data=sub.summary.zone,aes(y=MEAN,x=factor(ZONE),colour=CLASSCODE, group=CLASSCODE),size=1, position=position_dodge(width=0.5))+
     geom_errorbar(data=sub.summary.zone,
-                  aes(ymin=MEAN-SE-1e-10,ymax=MEAN+SE,x=factor(ZONE),colour=SITE, group=SITE),width=0.1, position=position_dodge(width=0.5))  +
+                  aes(ymin=MEAN-SE-1e-10,ymax=MEAN+SE,x=factor(ZONE),colour=CLASSCODE, group=CLASSCODE),width=0.1, position=position_dodge(width=0.5))  +
     xlab("ZONE") +
     scale_colour_viridis_d()+
-    facet_grid(.~CLASSCODE) +
+    facet_grid(.~SITE) +
     theme_bw()
   sub.plot.zone_compare2
   
@@ -371,23 +371,23 @@ relief <- dat.2016.on.upc %>% filter(CATEGORY=="RELIEF")
   
   pdf(file=paste0(base.dir,"/Plots/Substrate v2.pdf"),onefile=T)
   
-  print(sub.plot.year.zone_sub)  
-  print(sub.plot.year.zone_site)
-  print(sub.plot.year.zone_compare1)
-  print(sub.plot.year.zone_compare2)
-  
-  print(sub.plot.year_sub)
-  print(sub.plot.year_site)
-  print(sub.plot.year_ts1)
-  print(sub.plot.year_ts2)
+  print(sub.plot.site_sub)
+  print(sub.plot.site_site)
   
   print(sub.plot.zone_sub)
   print(sub.plot.zone_site)
   print(sub.plot.zone_compare1)
   print(sub.plot.zone_compare2)
   
-  print(sub.plot.site_sub)
-  print(sub.plot.site_site)
+  print(sub.plot.year_sub)
+  print(sub.plot.year_site)
+  print(sub.plot.year_ts1)
+  print(sub.plot.year_ts2)
+  
+  print(sub.plot.year.zone_sub)  
+  print(sub.plot.year.zone_site)
+  print(sub.plot.year.zone_compare1)
+  print(sub.plot.year.zone_compare2)
   
   dev.off()
 
