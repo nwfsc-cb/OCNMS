@@ -17,7 +17,7 @@ library(viridis)
 substrate_codes <- read_csv(here("Data","CSV_2015_on","substrate_codes.csv"))
  
 #2016 --> 2019
-dat.upc <- read_csv(here("Data","CSV_2015_on","NWFSC_UPC_ALLYEARS_data_2019.csv")) %>% 
+dat.upc <- read_csv(here("Data","CSV_2015_on","NWFSC_UPC_ALLYEARS_data_2019.csv"), col_types = cols(SIDE = col_character())) %>% 
               filter(CATEGORY == "COVER") %>%
               select(1:20) %>%
               rename(DEPTH.FT= "DEPTH (FT)")  %>%
@@ -33,10 +33,9 @@ dat.upc <- read_csv(here("Data","CSV_2015_on","NWFSC_UPC_ALLYEARS_data_2019.csv"
          Functional_Group = case_when(
                                     NAME %in% c("Red algae (branching flat blade)", "Red algae (cylindrical branches)", "Red algae (lacy branching)", "Red algae (leaf-like)") ~ "Red Algae",
                                     NAME %in% c("articulated coralline","Encrusting hydrocoral (eg. Stylantheca)","Red algae -Encrusting", "Coralline algae -Crustose") ~ "Encrusting Species",
-                                    NAME %in% c("Pterygophora", "Brown algae understory prone","Nereocystis holdfast (alive)", "Macrosystis holdfast (alive)", "Laminariales holdfast (alive)") ~ "Brown Algae (Understory)",
-                                    NAME %in% c("urchin", "Cucumaria spp.' sea cucumber") ~ "Echinoderm", 
-                                    NAME %in% c("various bivalves", "Scallop") ~ "Bivalve",
+                                    NAME %in% c("Pterygophora", "Brown algae understory prone","Nereocystis holdfast (alive)", "Macrosystis holdfast (alive)", "Laminariales holdfast (alive)") ~ "Brown Algae",
                                     NAME %in% c("Anemone", "Bryozoan", "Cup Coral","Tunicate -Colonial,compund,social","Tunicate -Solitary", "Hydroid", "Sponge", "Barnacle","Tubeworm") ~ "Non-mobile Invertebrate",
+                                     NAME %in% c("various bivalves", "Scallop","urchin", "Cucumaria spp.' sea cucumber") ~ "Mobile Invertebrate",
                                     NAME %in% c("Substrate: Bedrock","Shell Debris","Bare Sand", "Substrate: Cobble","Sediment/Mud", "Substrate: Sand","Bare Rock" ) ~ "Non-living Substrate",
                                     NAME %in% c("Zostera marina, eelgrass" , "Phyllospadix spp.' surfgrass") ~ "Eelgrass_Surfgrass",
                                     TRUE ~ NAME),
@@ -49,7 +48,8 @@ dat.upc <- read_csv(here("Data","CSV_2015_on","NWFSC_UPC_ALLYEARS_data_2019.csv"
 
 #rm(dat.2016,dat.2015) 
 
-unique(dat.upc$Functional_Group)
+#unique(dat.upc$Functional_Group)
+#unique(dat.upc[c("YEAR", "SITE","SIDE")])
 
 ```
 
@@ -99,11 +99,10 @@ dat.upc %>%
 ```
 
 
-- Create data frame that has replication on transect level-- this can be used for future analyses. But I summarize across other columns for the plots. I used percent cover at the ZONE/SIDE/SITE/YEAR I used the mean % cover for transects within each depth zone. There are only 11 transects in whole dataset that have less than 30 upc counts (aka an incomplete transect)... In the cases where it is less than 30 I get total % cover from the total points sampled for that transect. 
-This data frame is called: dat.transect.replicates.
+- I created a df that summarises at the transect level: dat.transect.summary. I used percent cover at the ZONE/SIDE/SITE/YEAR I used the mean % cover for transects within each depth zone. There are only 11 transects in whole dataset that have less than 30 upc counts (aka an incomplete transect)... In the cases where it is less than 30 I get total % cover from the total points sampled for that transect. 
 
-\n Question about SIDE:
-\n 2018/2019 SIDE is 0, but for 2016/2017 SIDE is either 1 or 2.  
+- I also created a df that summarises at the site level: dat.site.summary. This has mean percent cover across ZONE/SIDE/SITE/YEAR and variance. 
+
 
 ```{r}
 dat.transect.summary <- dat.upc %>%
@@ -113,8 +112,8 @@ dat.transect.summary <- dat.upc %>%
   spread(Functional_Group, COUNT) %>%
   ungroup() %>%
   replace(is.na(.), 0) %>%
-  dplyr::mutate(Sum = rowSums(.[,7:16])) %>%
-  tidyr::gather(7:16, key = "Functional_Group", value = "COUNT") %>%
+  dplyr::mutate(Sum = rowSums(.[,7:15])) %>%
+  tidyr::gather(7:15, key = "Functional_Group", value = "COUNT") %>%
   mutate(percent_cover = COUNT/Sum) 
 ```
 
@@ -128,7 +127,6 @@ dat.zone.summary <- dat.transect.summary %>%
 ```
 
 Now plot percent cover at depth/site through time. 
-
 ```{r, echo=FALSE}
 ggplot(dat.zone.summary,aes(x=YEAR)) +
   geom_bar(aes(y=mean_percent_cover, fill= Functional_Group), position="fill", stat="identity",width = 0.95
