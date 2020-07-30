@@ -1,0 +1,564 @@
+---
+title: "Swath Data Initial Cleaning and Trends"
+author: "Owen Liu"
+date: Last Run "`r Sys.Date()`"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(magrittr)
+library(here)
+
+# ggplot theme
+plot_theme <-   theme_minimal()+
+  theme(text=element_text(family="sans",size=12,color="black"),
+        legend.text = element_text(size=14),
+        axis.title=element_text(family="sans",size=14,color="black"),
+        axis.text=element_text(family="sans",size=8,color="black"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        axis.line = element_line())
+theme_set(plot_theme)
+
+```
+
+## Purpose
+
+Clean, organize, and explore the kelp data from swath transects in OCNMS.
+
+## Import Recent Data
+
+```{r}
+dat <- read_csv(here('Data','2019','NWFSC_SWATH_ALLYEARS_data_2019.csv'))
+problems(dat) %>% glimpse()
+
+# dictionary (for species category and species names)
+spp_key <- read_csv(here('Data','2019','swath_species_dictionary.csv'))
+
+# add a short plotting name by just slicing
+spp_key %<>% mutate(short=str_sub(spp,1,8))
+
+```
+
+There are parsing problems. Investigate.
+
+```{r}
+unique(problems(dat)$col)
+
+# it had trouble reading Side and Size
+problems(dat) %>% select(col,expected,actual) %>% distinct() %>% knitr::kable()
+```
+
+Okay let's just read `SIDE` as character and `SIZE` as integer
+
+```{r}
+dat <- read_csv(here('Data','2019','NWFSC_SWATH_ALLYEARS_data_2019.csv'),col_types = 'cdddccccddddddccddddccc')
+```
+
+
+## Clean 2015 Data
+
+The 2015 dat are in a different format and we need to make it line up with the rest of the data.
+
+```{r}
+dat.2015 <- read.csv(here('Data','CSV_2015_on',"2015_OCNMSDataComplete_standardized_122116.csv"))
+species_names <- read_csv(here('Data','CSV_2015_on','species_code_list_swath.csv'))
+
+# Make list of transects by site, and species group.
+dat.2015 <- left_join( dat.2015, species_names %>% dplyr::select(species,group) %>% rename(PISCO.Classcode=species))
+
+# subset the variables we need, filter for just the swath algae species, then expand the data, adding zeroes
+dat.2015.clean <- dat.2015 %>% 
+  filter(PISCO.datatype=="swath", data.type=="swath",group=="Algae") %>% 
+  
+  # select the needed columns
+  dplyr::select(Site,Observer,Transect,Transect.area..stipes.,group,PISCO.Classcode,Count,Notes) %>% 
+  
+  # rename some variables
+  rename(site=Site,observer=Observer,transect=Transect,observed_area=Transect.area..stipes.,classcode=PISCO.Classcode,count=Count) %>% 
+  
+  # fix some site names
+  mutate(site=as.character(site)) %>% 
+  mutate(site=case_when(
+    site=="Destruction Island SW"~"Destruction Island",
+    site=="Anderson Pt."~"Anderson Point",
+    site=="Chibahdel" ~ "Chibadehl Rocks",
+    site=="Pt. of the Arches" ~ "Point of the Arches",
+    site=="Teawhit Head"~"Teahwhit Head",
+    TRUE ~ site))
+  
+
+
+dat.2015.clean.complete <- dat.2015.clean %>% 
+  # fill in zeroes for unobserved species (using all the unique species in the overall data as our universe of possible species)
+  complete(nesting(site,transect),classcode,fill=list(count=0,observed_area=60,group="Algae")) %>% 
+  mutate(year=2015,zone=5)
+
+# Look at and deal with notes
+unique(dat.2015.clean.complete$Notes)
+# some gems in here, but it seems that the only one we have to worry about seriously is "total guess based on extrapolating 1 m2"
+# correct for this by dividing by 60 (to get back to what was presumably a quadrat measurement)
+dat.2015.clean.complete %<>%
+  mutate(count=ifelse(grepl("total guess based on extrapolating 1 m2",Notes),count/observed_area,count))
+
+# #MAKE CATCH FOR if there are more than 4 total observations for each site in 2015
+# # A <- base.dat %>% group_by(Site) %>% summarise(N= length(Transect))
+# # if(max(A$N) > 4 | min(A$N) < 4 ){ print(rep("STOP, SOMETHING IS WRONG",100))}
+# base.dat$Transect <- as.integer(base.dat$Transect )
+# 
+# #### OK. Merge in the invert data to the base data for each species observed.  Make one giant data frame
+# swath.dat <- dat.2015 %>% filter(PISCO.datatype=="swath", data.type=="swath") %>% 
+#   group_by(Site,Transect,Observer,Species,PISCO.Classcode,Size.cm,group) %>%
+#   summarise(Count = sum(Count))  
+# 
+# # observed species in all years
+# SP.all <- data.frame(species=unique(c(as.character(swath.dat$PISCO.Classcode))))
+# SP.all.common.names <- left_join(SP.all,species_names)
+# 
+# dat.long <- NULL
+# SP <- SP.all[SP.all != "NO_ORG" & SP.all != "NOT_DONE"]
+#   for( i in 1: length(SP)){
+#     if(nrow(swath.dat %>% filter(PISCO.Classcode == SP[i])) >0){
+#       temp  <-  left_join(base.dat %>% filter(group == species_names$group[species_names$species==SP[i]]) , swath.dat %>% filter(PISCO.Classcode == SP[i]) ) 
+#       temp$PISCO.Classcode <- SP[i]; temp$Species <- unique(temp$Species)[is.na(unique(temp$Species))==F][1]
+#     }
+#     if(nrow(swath.dat %>% filter(PISCO.Classcode == SP[i])) ==0){
+#       temp  <-  data.frame(base.dat %>% filter(group == species_names$group[species_names$species==SP[i]]), 
+#                            Species= SP.all.common.names$common.name[which(SP.all.common.names$species==SP[i])], PISCO.Classcode = SP[i],
+#                            Count= 0,Size.cm=NA) #,size_class=NA) 
+#     }
+#   dat.long <- rbind(dat.long, temp)
+#   }
+#   
+# dat.long$Count[is.na(dat.long$Count)==T] <- 0
+# dat.long$year <- 2015
+# 
+# dat.long <- dat.long %>% 
+#   rename(site=Site,transect=Transect,observer=Observer,
+#          common.name=Species,species=PISCO.Classcode)
+# 
+# dat.2015.swath  <-  dat.long
+# dat.2015.swath.count <- dat.long %>% group_by(site,transect,observer,Transect.area,common.name,species,year,group) %>%
+#                           summarise(count=sum(Count)) %>% rename(Count=count) 
+# 
+# dat.swath <- dat.2015.swath.count %>% mutate(zone=5)
+# dat.swath <-dat.swath %>% filter(site != "")
+# dat.swath <- dat.swath %>% filter(!group =="MISSING")
+# 
+# dat.swath.base <- dat.swath %>% as.data.frame()
+
+# dat.algae.2015 <- dat.swath.base %>% filter(group == "Algae")
+
+```
+
+## Clean 2016-2019 Data
+
+Select a subset of columns that we will use in plots, join the 2015 data, and filter for only algae species.
+
+Select a subset of columns
+```{r}
+dat %<>% select(YEAR,SITE,TRANSECT,ZONE,`SWATH WIDTH`,`DEPTH (ft)`,`METERS sampled`,SEGMENT,CLASSCODE,COUNT,SIZE,notes) %>% 
+  # rename some variables
+  rename(year=YEAR, zone=ZONE,site=SITE,transect=TRANSECT,width=`SWATH WIDTH`,swath_length=`METERS sampled`,depth=`DEPTH (ft)`,segment=SEGMENT,classcode=CLASSCODE,count=COUNT,size=SIZE)
+```
+
+Use species key to subset data to only algae
+
+```{r}
+# join the species key
+spp_key %<>% rename(classcode=CLASSCODE,org_type=ORG_TYPE)
+dat %<>% left_join(spp_key,by='classcode')
+
+dat %<>%
+  filter(org_type=='algae')
+```
+
+Fill in zeroes. At the segment level, for missing/unobserved species we assume the area surveyed is 20 square meters.
+
+```{r}
+dat %<>%
+  # fix one weird data entry issue
+  mutate(segment=ifelse(segment=="10-20M","10-20m",segment)) %>% 
+  mutate(surveyed_area=width*swath_length) %>% 
+  group_by(year,site,zone,transect,segment,classcode) %>% 
+  summarise(count=sum(count,na.rm=T),segment_area=sum(surveyed_area)) %>% 
+  # fill in zeroes
+  ungroup() %>% 
+  complete(nesting(year,site,zone,transect,segment),classcode,fill=list(count=0,segment_area=20))
+```
+
+## Calculate Densities
+
+For now, we calculate densities as counts per square meter, but this could be changed.
+
+We calculate the summaries initially at the transect by site by year level. From there, they can be aggregated to the site by year or site (across all years) levels.
+
+Dealing with segment-level data, there are two options for how to aggregate the species counts, which we will call "weighted" and "average". In the "weighted" version, we compile the transect-level densities by summing all the counts across transect segments, then dividing by total transect area surveyed. This is "weighted" because it implies weighting the segments by their relative area surveyed.
+
+In the "average" version, we essentially treat all segments-within-transects as independent samples. That is, we calculate the density of each individual segment, then weight them all equally and calculate a mean density for that transect.
+
+Note: 2015 is a bit different because it does not have segment numbers. Instead, we use separate observers on the same transects as our analogous "segments". That is, in the weighted version, we sum the counts and divide by total area, while in the average version, we calculate density as estimated by each observer on each transect, then average by transect.
+
+First, join the 2015 and 2016-2019 data, acknowledging the differences mentioned above.
+
+```{r}
+dat.2015.clean.complete %<>% 
+  # make a new variable that indicates when transects have multiple observations (analogous to segments for the purpose of the calculations described above). We'll call it replicate, and we'll do the same for the other data
+  group_by(year,site,zone,transect,classcode) %>% 
+  mutate(replicate=row_number()) %>% 
+  ungroup() %>% 
+  select(year,site,zone,transect,replicate,classcode,count,observed_area)
+
+dat %<>%
+  group_by(year,site,transect,classcode) %>% 
+  mutate(replicate=row_number()) %>% 
+  ungroup() %>% 
+  select(year,site,zone,transect,replicate,classcode,count,observed_area=segment_area)
+
+# join the datasets
+dat_all <- bind_rows(dat.2015.clean.complete,dat)
+```
+
+```{r}
+# join the species key again
+dat_all %<>% left_join(spp_key,by='classcode')
+# fxn for area-weighted sd
+w.sd <- function(vec,areas){
+  ests <- vec/areas
+  w <- areas/sum(areas,na.rm=T)
+  m <- sum(ests*w,na.rm=T)
+  v <- sum(w*(ests-m)^2)
+  sqrt(v)
+}
+
+# transect-level density summaries, weighted and averaged
+dat_transect<- dat_all %>% 
+  group_by(year,site,zone,transect,classcode,spp,short) %>% 
+  summarise(n_obs=n(),
+            dens_weighted=sum(count)/sum(observed_area),
+            sd_w =w.sd(count,observed_area),
+            se_w=sd_w/sqrt(n_obs),
+            dens_averaged=mean(count/observed_area),
+            sd_ave=sd(count/observed_area),
+            se_ave=sd_ave/sqrt(n_obs)) %>% 
+  ungroup()
+
+# plot relationship between weighted and averaged densities
+# include 1:1 line
+dat_transect %>% 
+  ggplot(aes(dens_weighted,dens_averaged,
+             ymin=dens_averaged-se_ave,ymax=dens_averaged+se_ave,
+             xmin=dens_weighted-se_w,xmax=dens_averaged+se_w))+
+  geom_point(col='gray50')+
+  # geom_errorbar(height=0)+geom_errorbarh(height=0)+
+  geom_smooth(method="lm",se=F)+
+  geom_abline(slope=1,intercept=0,linetype=2)+
+  coord_equal(xlim = c(0,11),ylim=c(0,11))+
+  labs(x="Area-Weighted Mean Density",y="Segment-Averaged Mean Density",title="Comparison of Two Density Estimates")
+```
+
+The correlation between the two measures is `r cor(dat_transect$dens_averaged,dat_transect$dens_weighted,use='complete.obs') %>% signif(3)`, with the segment-averaged densities skewing higher than the area-weighted densities (which is expected).
+
+
+Now aggregate to the zone x site x year level, and the site x year level
+
+```{r}
+# aggregate SDs
+sd_agg <- function(sdvec,nvec){
+  sqrt(sum((sdvec*nvec)^2,na.rm=T)/sum(nvec,na.rm=T))
+}
+# calculate densities
+dat_zone <- dat_transect %>% 
+  group_by(year,site,zone,classcode,spp,short) %>% 
+  summarise(n_obs=sum(n_obs),
+            dens_weighted=mean(dens_weighted),
+            sd_w=sd_agg(sd_w,n_obs),
+            dens_averaged=mean(dens_averaged),
+            sd_ave=sd_agg(sd_ave,n_obs)) %>% 
+  ungroup() %>% 
+  mutate(se_w=sd_w/sqrt(n_obs),se_ave=sd_ave/sqrt(n_obs))
+
+dat_site <- dat_transect %>% 
+  group_by(year,site,classcode,spp,short) %>% 
+  summarise(n_obs=sum(n_obs),
+            dens_weighted=mean(dens_weighted),
+            sd_w=sd_agg(sd_w,n_obs),
+            dens_averaged=mean(dens_averaged),
+            sd_ave=sd_agg(sd_ave,n_obs)) %>% 
+  ungroup() %>% 
+  mutate(se_w=sd_w/sqrt(n_obs),se_ave=sd_ave/sqrt(n_obs))
+```
+
+
+## Explore
+
+### Overall Species Rankings
+
+Most encountered and most overall abundant species
+
+```{r,fig.width=8,fig.height=8}
+num_obs <- dat_transect %>%
+  filter(dens_averaged>0) %>% 
+  group_by(short) %>%
+  summarise(n_obs=n()) %>% 
+  ungroup()
+
+# number of encounters
+num_obs %>% 
+  ggplot(aes(x=reorder(short,-n_obs),y=n_obs))+
+  geom_bar(stat="identity")+
+  labs(x="Species",y="Number of Transects",title="Most Frequently Observed Species by Number of Sites/Years")+
+  theme(axis.text.x = element_text(angle=90,vjust=0.5))
+
+# highest mean density across all years and sites, including zeroes
+overall_mean_density <- dat_site %>% 
+  group_by(short) %>% 
+  summarise(mean_overall_density=mean(dens_averaged,na.rm=T)) %>% 
+  ungroup()
+overall_mean_density %>% 
+  ggplot(aes(x=reorder(short,-mean_overall_density),y=mean_overall_density))+
+  geom_bar(stat="identity")+
+  labs(x="Species",y="Mean Density,all sites and years\n(count/sq. m)",title="Most Abundant Species")+
+  theme(axis.text.x = element_text(angle=90,vjust=0.5))
+
+# highest positive density across all years and sites (not including zeroes)
+overall_mean_positive_density <- dat_transect %>% 
+  filter(dens_averaged>0) %>%
+  group_by(short) %>% 
+  summarise(mean_overall_density=mean(dens_averaged)) %>% 
+  ungroup()
+overall_mean_positive_density %>% 
+  ggplot(aes(x=reorder(short,-mean_overall_density),y=mean_overall_density))+
+  geom_bar(stat="identity")+
+  labs(x="Species",y="Mean Positive Density,all sites and years\n(count/sq. m)",title="Most Abundant Species (Removing Zeroes)")+
+  theme(axis.text.x = element_text(angle=90,vjust=0.5))
+```
+
+### Individual Species Density Timeseries
+
+Construct timeseries of density by year, site, and depth zone
+
+```{r}
+# reset plot theme
+plot_theme <-   theme_minimal()+
+  theme(text=element_text(family="sans",size=10,color="black"),
+        legend.text = element_text(size=14),
+        axis.title=element_text(family="sans",size=14,color="black"),
+        axis.text=element_text(family="sans",size=8,color="black"),
+        strip.text =element_text(family="sans",size=8,color="black"))
+theme_set(plot_theme)
+```
+
+```{r,fig.width=8,fig.height=4}
+library(viridis)
+density_ts_plot <- function(species,dens_type="segments weighted",trans="none"){
+  df <-dat_zone %>% 
+    filter(classcode==species) %>% 
+    # remove only-2015 sites
+    filter(!(site %in%c("Anderson Point","Chibadehl Rocks","Point of the Arches","Rock 305","Teahwhit Head"))) %>% 
+    mutate(site=factor(site,levels=c("Destruction Island","Cape Johnson","Cape Alava","Tatoosh Island","Neah Bay")))
+  
+  if(dens_type=="segments weighted"){
+    df %<>%
+      select(year,site,zone,dens_weighted,se_w) %>% 
+      rename(dens=dens_weighted,se=se_w) %>% 
+      mutate(upper=dens+se,lower=dens-se)%>% 
+      select(-se)
+  }
+  
+  if(dens_type=="segments averaged"){
+    df %<>%
+      select(year,site,zone,dens_averaged,se_ave) %>% 
+      rename(dens=dens_averaged,se=se_ave) %>% 
+      mutate(upper=dens+se,lower=dens-se) %>% 
+      select(-se)
+  }
+  
+  if(trans=="log"){
+    df %<>%
+      mutate(across(all_of(c("dens","upper","lower")),~pmax(.x,0))) %>% 
+      mutate(across(all_of(c("dens","upper","lower")),~log(.x+1)))
+  }
+  
+  yl <- ifelse(trans=="log","Log Density (count/sq. m + 1)","Density (count/sq. m)")
+  
+  pl <- df %>% 
+    ggplot(aes(year,dens,ymin=lower,ymax=upper,col=factor(zone)))+
+    geom_pointrange()+geom_line()+
+    geom_hline(yintercept=0)+
+    facet_wrap(~site,nrow=1)+
+    scale_color_manual(values=viridis_pal()(3))+
+    labs(x="Year",y=yl,col="Depth Zone",
+         title=paste0(spp_key$spp[match(species,spp_key$classcode)],"\n",dens_type))+
+    theme(axis.text.x = element_text(angle=90,vjust=0.5),
+          panel.border = element_rect(fill=NA))
+  print(pl)
+  
+  # if(dens_type=="weighted"){
+  #   pl <- df %>% 
+  #     ggplot(aes(year,dens_weighted,ymin=dens_weighted-se_w,ymax=dens_weighted+se_w,col=factor(zone)))+
+  #     geom_pointrange()+geom_line()+
+  #     geom_hline(yintercept=0)+
+  #     facet_wrap(~site,nrow=1)+
+  #     scale_color_manual(values=viridis_pal()(3))+
+  #     labs(x="Year",y="Density (count/sq. m)",col="Depth Zone",
+  #          title=paste0(spp_key$spp[match(species,spp_key$classcode)],"\n",dens_type))+
+  #     theme(axis.text.x = element_text(angle=90,vjust=0.5),
+  #           panel.border = element_rect(fill=NA))
+  #   print(pl)
+  # } else{
+  #   pl <- df %>% 
+  #     ggplot(aes(year,dens_averaged,ymin=dens_averaged-se_ave,ymax=dens_averaged+se_ave,col=factor(zone)))+
+  #     geom_pointrange()+geom_line()+
+  #     geom_hline(yintercept=0)+
+  #     facet_wrap(~site,nrow=1)+
+  #     scale_color_manual(values=viridis_pal()(3))+
+  #     labs(x="Year",y="Density (count/sq. m)",color="Depth Zone",
+  #          title=paste0(spp_key$spp[match(species,spp_key$classcode)],"\n",dens_type))+
+  #     theme(axis.text.x = element_text(angle=90,vjust=0.5),
+  #           panel.border = element_rect(fill=NA))
+  #   print(pl)
+  # }
+}
+# test
+density_ts_plot("PTECAL",dens_type="segments weighted",trans="log")
+density_ts_plot("PTECAL",dens_type="segments averaged",trans="log")
+
+# descending order of mean density
+overall_mean_density %>% arrange(desc(mean_overall_density)) %>% left_join(spp_key) %>% 
+  filter(classcode!="NOT_DONE",classcode!="NO_ALG")->y
+```
+
+```{r}
+purrr::walk(unique(y$classcode), density_ts_plot,dens_type="segments weighted")
+purrr::walk(unique(y$classcode), density_ts_plot,dens_type="segments averaged")
+```
+
+### Individual Species Log Density Timeseries
+
+```{r,fig.width=8,fig.height=4}
+purrr::walk(unique(y$classcode), density_ts_plot,dens_type="segments weighted",trans="log")
+purrr::walk(unique(y$classcode), density_ts_plot,dens_type="segments averaged",trans="log")
+```
+
+### Top 5 Species by Site/Year/Zone
+
+```{r,fig.width=8,fig.height=4}
+top5 <- y$classcode[1:5]
+# non-log density (weighted)
+df5 <- dat_zone %>% 
+  filter(classcode %in% top5) %>% 
+  # remove only-2015 sites
+  filter(!(site %in%c("Anderson Point","Chibadehl Rocks","Point of the Arches","Rock 305","Teahwhit Head"))) %>% 
+  mutate(site=factor(site,levels=c("Destruction Island","Cape Johnson","Cape Alava","Tatoosh Island","Neah Bay")))
+
+df5 %>% 
+  ggplot(aes(year,dens_weighted,
+             ymin=pmax(dens_weighted-se_w,0),ymax=dens_weighted+se_w,
+             col=short))+
+  geom_pointrange()+geom_line()+
+  geom_hline(yintercept=0)+
+  facet_grid(zone~site)+
+  scale_color_manual(values=viridis_pal()(5))+
+  labs(x="Year",y="Density (count/sq. m)",col="Species",
+       title="")+
+  theme(axis.text.x = element_text(angle=90,vjust=0.5),
+        panel.border = element_rect(fill=NA))
+
+# log density
+df5 %>% 
+  mutate(upper=dens_weighted+se_w,lower=dens_weighted-se_w) %>% 
+  mutate(across(all_of(c("dens_weighted","upper","lower")),~pmax(.x,0))) %>% 
+  mutate(across(all_of(c("dens_weighted","upper","lower")),~log(.x+1))) %>% 
+  ggplot(aes(year,dens_weighted,
+             ymin=lower,ymax=upper,
+             col=short))+
+  geom_pointrange()+geom_line()+
+  geom_hline(yintercept=0)+
+  facet_grid(zone~site)+
+  scale_color_manual(values=viridis_pal()(5))+
+  labs(x="Year",y="Log Density (count/sq. m + 1)",col="Species",
+       title="")+
+  theme(axis.text.x = element_text(angle=90,vjust=0.5),
+        panel.border = element_rect(fill=NA))
+```
+
+### Nereocystis versus Macrocystis Densities
+
+```{r,fig.width=8,fig.height=4}
+# investigate the relative densities of canopy forming kelps (nereo, macro)
+canopy <- dat_site %>% 
+  # remove only-2015 sites
+  filter(!(site %in%c("Anderson Point","Chibadehl Rocks","Point of the Arches","Rock 305","Teahwhit Head"))) %>% 
+  mutate(site=factor(site,levels=c("Destruction Island","Cape Johnson","Cape Alava","Tatoosh Island","Neah Bay"))) %>% 
+  filter(classcode %in% c("MACPYR","NERLUE")) %>% 
+  # take the ratio of their mean densities
+  select(year,site,short,dens_weighted)
+  # pivot_wider(names_from="classcode",values_from="dens_weighted") %>% 
+  # mutate(ratio_n_m=NERLUE/MACPYR) %>%
+  # # fix divide by zero issues
+  # mutate(ratio_n_m=ifelse(ratio_n_m==Inf,NA,ratio_n_m))
+
+canopy %>% 
+  ggplot(aes(year,dens_weighted,col=short,fill=short))+
+  geom_bar(stat='identity',position='dodge')+
+  facet_wrap(~site,nrow=1)+
+  labs(x="Year",y="Density",fill="Species",col="Species",title="Macrocystis and Nereocystis Densities")+
+  scale_color_manual(values=viridis_pal()(3))+
+  scale_fill_manual(values=viridis_pal()(3))+
+  theme(axis.text.x = element_text(angle=90,vjust=0.25))
+```
+
+### Abudance Rank Coherence
+
+Use Kendall's $\tau$ to test whether the ranked abundance of algae species is similar among sites and years
+
+```{r}
+# make ranks
+dat_ranks <- dat_site %>% 
+  filter(classcode != "NO_ALG",classcode!="NOT_DONE") %>% 
+  filter(year>2015) %>% 
+  filter(!(site %in%c("Anderson Point","Chibadehl Rocks","Point of the Arches","Rock 305","Teahwhit Head"))) %>% 
+  mutate(site=factor(site,levels=c("Destruction Island","Cape Johnson","Cape Alava","Tatoosh Island","Neah Bay"))) %>% 
+  group_by(year,site) %>% 
+  mutate(rank=dense_rank(desc(dens_weighted))) %>% 
+  arrange(year,site,classcode) %>% 
+  ungroup() %>% 
+  mutate(site_yr=paste(site,year,sep="_"))
+
+cnames <- dat_ranks %>% distinct(year,site,site_yr) %>% arrange(site,year)
+
+rank_mat <- dat_ranks$rank %>% matrix(nrow=13,byrow=T,dimnames=list(dat_ranks$classcode[1:13],cnames$site_yr))
+
+# run the test
+kt <-cor(rank_mat,method="kendall")
+
+# make plot
+rankcorr <- kt %>% 
+  as_tibble(rownames="site1",.name_repair="minimal") %>% 
+  pivot_longer(-site1,names_to="site2",values_to="kendalls_tau") %>% 
+  ggplot(aes(site1,site2,fill=kendalls_tau))+
+  geom_tile()+
+  coord_equal()+
+  scale_fill_gradient2()+
+  labs(x="",y="",title="Site by Year Kendall Correlation Matrix",fill="")+
+  theme(axis.text.x = element_text(angle=90,vjust=0.5,hjust=1))
+
+rankcorr
+```
+
+## Save Datasets
+
+```{r}
+write_rds(dat_transect,here('Data','Summarized data','algae_swath_transectlevel.rds'))
+
+write_rds(dat_zone,here('Data','Summarized data','algae_swath_zonelevel.rds'))
+
+write_rds(dat_site,here('Data','Summarized data','algae_swath_sitelevel.rds'))
+```
+
