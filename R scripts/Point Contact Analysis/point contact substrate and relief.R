@@ -37,7 +37,7 @@ substrate.codes <- clean_names(read.csv("substrate_codes.csv"), case = "all_caps
   remove_empty(c("rows", "cols")) # js checked on 072720 and codes are same in 2019 data
   
 substrate <- dat.2016.on.upc %>% filter(CATEGORY=="SUBSTRATE")
-relief <- dat.2016.on.upc %>% filter(CATEGORY=="RELIEF")
+#relief <- dat.2016.on.upc %>% filter(CATEGORY=="RELIEF")
 #cover <- dat.2016.on.upc %>% filter(CATEGORY=="COVER")
 
  
