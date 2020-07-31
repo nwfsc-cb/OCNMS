@@ -514,7 +514,7 @@ canopy %>%
   theme(axis.text.x = element_text(angle=90,vjust=0.25))
 ```
 
-### Abudance Rank Coherence
+### Abundance Rank Coherence
 
 Use Kendall's $\tau$ to test whether the ranked abundance of algae species is similar among sites and years
 
@@ -552,6 +552,191 @@ rankcorr <- kt %>%
 rankcorr
 ```
 
+### Cluster Species
+
+We want to cluster together some species and treat them as categories. Specifically, we keep *Macrocystis*, *Nereocystis*, and *Pterygophora* separate while lumping understory, prostrate brown kelps. We lump *Pleurophycus*, *Laminaria*, *Saccharina*, *Costaria*, *Alaria*, *Cymathere*, *Desmarestia*, *Agarum*, and *Egregia*.
+
+We again produce datasets at the segment, transect, zone, and site levels. For this, we only calculate the averaged versions of the densities, because we 
+
+```{r}
+lump_list <- c("PLEGAR",'LAMSET','SACGRO','SACLAT','COSCOS','DESSPP','ALAMAR','CYMTRI','AGAFIM','EGRMEN')
+dat_lump <- dat_all %>% 
+  filter(!(classcode %in% c('NO_ALG','NOT_DONE'))) %>% 
+  mutate(classcode=ifelse(classcode %in% lump_list,"OTHER",classcode)) %>% 
+  mutate(spp=ifelse(classcode=="OTHER","Other Brown Algae",spp))%>% 
+  mutate(short=ifelse(classcode=="OTHER","Other",short))
+
+# transect-level density summaries, weighted and averaged
+dat_lump_transect<- dat_lump %>% 
+  group_by(year,site,zone,transect,classcode,spp,short) %>% 
+  summarise(n_obs=n(),
+            dens_weighted=sum(count)/sum(observed_area),
+            sd_w =w.sd(count,observed_area),
+            se_w=sd_w/sqrt(n_obs),
+            dens_averaged=mean(count/observed_area),
+            sd_ave=sd(count/observed_area),
+            se_ave=sd_ave/sqrt(n_obs)) %>% 
+  ungroup()
+
+# other levels
+# zone
+dat_lump_zone <- dat_lump_transect %>% 
+  group_by(year,site,zone,classcode,spp,short) %>% 
+  summarise(n_obs=sum(n_obs),
+            dens_weighted=mean(dens_weighted),
+            sd_w=sd_agg(sd_w,n_obs),
+            dens_averaged=mean(dens_averaged),
+            sd_ave=sd_agg(sd_ave,n_obs)) %>% 
+  ungroup() %>% 
+  mutate(se_w=sd_w/sqrt(n_obs),se_ave=sd_ave/sqrt(n_obs))
+
+# site
+dat_lump_site <- dat_transect %>% 
+  group_by(year,site,classcode,spp,short) %>% 
+  summarise(n_obs=sum(n_obs),
+            dens_weighted=mean(dens_weighted),
+            sd_w=sd_agg(sd_w,n_obs),
+            dens_averaged=mean(dens_averaged),
+            sd_ave=sd_agg(sd_ave,n_obs)) %>% 
+  ungroup() %>% 
+  mutate(se_w=sd_w/sqrt(n_obs),se_ave=sd_ave/sqrt(n_obs))
+```
+
+Density plots
+
+```{r}
+dat_lump_zone %>%
+  
+  # remove only-2015 sites
+  filter(!(site %in%c("Anderson Point","Chibadehl Rocks","Point of the Arches","Rock 305","Teahwhit Head"))) %>% 
+  mutate(site=factor(site,levels=c("Destruction Island","Cape Johnson","Cape Alava","Tatoosh Island","Neah Bay"))) %>% 
+  mutate(short=factor(short,levels=c("Nereocys","Macrocys","Pterygop","Other"))) %>% 
+  
+  ggplot(aes(year,dens_weighted,
+             ymin=pmax(dens_weighted-se_w,0),ymax=dens_weighted+se_w,
+             col=short))+
+  geom_pointrange()+geom_line()+
+  geom_hline(yintercept=0)+
+  facet_grid(zone~site)+
+  scale_color_manual(values=viridis_pal()(4))+
+  labs(x="Year",y="Density (count/sq. m)",col="Species",
+       title="")+
+  theme(axis.text.x = element_text(angle=90,vjust=0.5),
+        panel.border = element_rect(fill=NA))
+
+# log density
+dat_lump_zone %>% 
+  
+  # remove only-2015 sites
+  filter(!(site %in%c("Anderson Point","Chibadehl Rocks","Point of the Arches","Rock 305","Teahwhit Head"))) %>% 
+  mutate(site=factor(site,levels=c("Destruction Island","Cape Johnson","Cape Alava","Tatoosh Island","Neah Bay"))) %>% 
+  mutate(short=factor(short,levels=c("Nereocys","Macrocys","Pterygop","Other"))) %>% 
+  
+  mutate(upper=dens_weighted+se_w,lower=dens_weighted-se_w) %>% 
+  mutate(across(all_of(c("dens_weighted","upper","lower")),~pmax(.x,0))) %>% 
+  mutate(across(all_of(c("dens_weighted","upper","lower")),~log(.x+1))) %>% 
+  ggplot(aes(year,dens_weighted,
+             ymin=lower,ymax=upper,
+             col=short))+
+  geom_pointrange()+geom_line()+
+  geom_hline(yintercept=0)+
+  facet_grid(zone~site)+
+  scale_color_manual(values=viridis_pal()(4))+
+  labs(x="Year",y="Log Density (count/sq. m + 1)",col="Species",
+       title="")+
+  theme(axis.text.x = element_text(angle=90,vjust=0.5),
+        panel.border = element_rect(fill=NA))
+```
+
+### Patchiness
+
+There is some interest in trying to define patchiness for these sites---that is, how much variance in algal density there is not just across sites, but among transects and transect segments. Here we calculate both the range and variance in densities across replicates at both the segment and transect scales.
+
+```{r,warning=F,message=F}
+# add ranges to the lumped data
+dat_seg_patch <- dat_lump %>%
+  group_by(year,site,zone,transect,classcode,spp,short) %>% 
+  summarise(n_obs=n(),
+            dens_weighted=sum(count)/sum(observed_area),
+            sd_w =w.sd(count,observed_area),
+            se_w=sd_w/sqrt(n_obs),
+            dens_averaged=mean(count/observed_area),
+            sd_ave=sd(count/observed_area),
+            se_ave=sd_ave/sqrt(n_obs),
+            range=max(count/observed_area)-min(count/observed_area)) %>% 
+  ungroup()
+
+# for transects
+dat_tx_patch <- dat_lump %>% 
+  group_by(year,site,zone,classcode,spp,short) %>% 
+  summarise(n_obs=n(),
+            dens_weighted=sum(count)/sum(observed_area),
+            sd_w =w.sd(count,observed_area),
+            se_w=sd_w/sqrt(n_obs),
+            dens_averaged=mean(count/observed_area),
+            sd_ave=sd(count/observed_area),
+            se_ave=sd_ave/sqrt(n_obs),
+            range=max(count/observed_area)-min(count/observed_area)) %>% 
+  ungroup()
+
+# Cross-segment SD
+dat_seg_patch %>% 
+  filter(!(site %in%c("Anderson Point","Chibadehl Rocks","Point of the Arches","Rock 305","Teahwhit Head"))) %>% 
+  mutate(site=factor(site,levels=c("Destruction Island","Cape Johnson","Cape Alava","Tatoosh Island","Neah Bay"))) %>%
+  mutate(short=factor(short,levels=c("Nereocys","Macrocys","Pterygop","Other"))) %>% 
+  ggplot(aes(year,sd_w,col=short))+
+  geom_point()+geom_smooth(se=F)+
+  facet_grid(zone~site)+
+  scale_color_manual(values=viridis_pal()(4))+
+  labs(x="Year",y="SD Density (Across Segments)",col="Species",
+       title="Cross-Segment Variance in Density")+
+  theme(axis.text.x = element_text(angle=90,vjust=0.5),
+        panel.border = element_rect(fill=NA))
+
+# Cross-Transect SD
+dat_tx_patch %>% 
+  filter(!(site %in%c("Anderson Point","Chibadehl Rocks","Point of the Arches","Rock 305","Teahwhit Head"))) %>% 
+  mutate(site=factor(site,levels=c("Destruction Island","Cape Johnson","Cape Alava","Tatoosh Island","Neah Bay"))) %>%
+  mutate(short=factor(short,levels=c("Nereocys","Macrocys","Pterygop","Other"))) %>% 
+  ggplot(aes(year,sd_w,col=short))+
+  geom_point()+geom_line()+
+  facet_grid(zone~site)+
+  scale_color_manual(values=viridis_pal()(4))+
+  labs(x="Year",y="SD Density (Across Transects)",col="Species",
+       title="Cross-Transect Variance in Density")+
+  theme(axis.text.x = element_text(angle=90,vjust=0.5),
+        panel.border = element_rect(fill=NA))
+
+# Cross-segment range in density
+dat_seg_patch %>% 
+  filter(!(site %in%c("Anderson Point","Chibadehl Rocks","Point of the Arches","Rock 305","Teahwhit Head"))) %>% 
+  mutate(site=factor(site,levels=c("Destruction Island","Cape Johnson","Cape Alava","Tatoosh Island","Neah Bay"))) %>%
+  mutate(short=factor(short,levels=c("Nereocys","Macrocys","Pterygop","Other"))) %>% 
+  ggplot(aes(year,range,col=short))+
+  geom_point()+geom_smooth(se=F)+
+  facet_grid(zone~site)+
+  scale_color_manual(values=viridis_pal()(4))+
+  labs(x="Year",y="Range of Density (Across Segments)",col="Species",
+       title="Cross-Segment Range in Density")+
+  theme(axis.text.x = element_text(angle=90,vjust=0.5),
+        panel.border = element_rect(fill=NA))
+
+# Cross-transect range in density
+dat_tx_patch %>% 
+  filter(!(site %in%c("Anderson Point","Chibadehl Rocks","Point of the Arches","Rock 305","Teahwhit Head"))) %>% 
+  mutate(site=factor(site,levels=c("Destruction Island","Cape Johnson","Cape Alava","Tatoosh Island","Neah Bay"))) %>%
+  mutate(short=factor(short,levels=c("Nereocys","Macrocys","Pterygop","Other"))) %>% 
+  ggplot(aes(year,range,col=short))+
+  geom_point()+geom_line()+
+  facet_grid(zone~site)+
+  scale_color_manual(values=viridis_pal()(4))+
+  labs(x="Year",y="Range of Density (Across Transects)",col="Species",
+       title="Cross-Transect Range in Density")+
+  theme(axis.text.x = element_text(angle=90,vjust=0.5),
+        panel.border = element_rect(fill=NA))
+```
+
+
 ## Save Datasets
 
 ```{r}
@@ -560,5 +745,11 @@ write_rds(dat_transect,here('Data','Summarized data','algae_swath_transectlevel.
 write_rds(dat_zone,here('Data','Summarized data','algae_swath_zonelevel.rds'))
 
 write_rds(dat_site,here('Data','Summarized data','algae_swath_sitelevel.rds'))
+
+write_rds(dat_lump_transect,here('Data','Summarized data','algae_swath_transectlevel_lump.rds'))
+
+write_rds(dat_lump_zone,here('Data','Summarized data','algae_swath_zonelevel_lump.rds'))
+
+write_rds(dat_lump_site,here('Data','Summarized data','algae_swath_sitelevel_lump.rds'))
 ```
 
