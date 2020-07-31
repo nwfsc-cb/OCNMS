@@ -107,7 +107,7 @@ Summarise raw data into data frames that: 1) sum segments for each transect. 2) 
   # create summary df. 1) sum segments for each transect. 2) calculate summary stats for site-year-zone. 3) calculate summary stats for site-year. 4) calculate summary stats for site-zone. 5) calculate summary stats for site
   #proportion data so use binomial distribution for summary stats. https://sites.warnercnr.colostate.edu/gwhite/wp-content/uploads/sites/73/2017/04/BinomialDistribution.pdf
   
-  # 1) sum segments for each transect to get total proportion of each substrate CLASSCODE
+  # 1a) sum segments for each transect to get total proportion of each substrate CLASSCODE
   sub.summary.year.transect <- dat.sub %>% 
     group_by(YEAR,SITE,ZONE,SIDE,TRANSECT,CLASSCODE) %>%
     dplyr::summarise(
@@ -121,7 +121,7 @@ Summarise raw data into data frames that: 1) sum segments for each transect. 2) 
                                        levels=c("Destruction Island","Cape Johnson","Cape Alava","Tatoosh Island","Neah Bay"))
   glimpse(sub.summary.year.transect)
   
-  # 2) calculate substrate diversity for each transect
+  # 1b) calculate substrate diversity for each transect
   sub.summary.year.transect.div <- sub.summary.year.transect %>%
     #dat.sub %>%
     #filter(!is.na(COUNT)) %>%
@@ -141,7 +141,7 @@ Summarise raw data into data frames that: 1) sum segments for each transect. 2) 
   #   geom_density(aes(SUBSTRATE_DIVERSITY)) +
   #   theme_bw()
   
-  # 3) calculate summary stats for site-year-zone
+  # 2a) calculate summary stats for site-year-zone
   sub.summary.year.zone <- sub.summary.year.transect %>% 
     group_by(YEAR,SITE,ZONE,CLASSCODE) %>%
     dplyr::summarise(
@@ -157,39 +157,51 @@ Summarise raw data into data frames that: 1) sum segments for each transect. 2) 
                          levels=c("Destruction Island","Cape Johnson","Cape Alava","Tatoosh Island","Neah Bay"))
   glimpse(sub.summary.year.zone)
   
-  # 4) calculate substrate diversity for each site-year-zone
+  # 2b) calculate substrate diversity for each site-year-zone
   sub.summary.year.zone.div <- sub.summary.year.transect.div %>% 
     group_by(YEAR,SITE,ZONE) %>%
     dplyr::summarise(
-      SUBSTRATE_DIVERSITY=mean(SUBSTRATE_DIVERSITY),
-      SD_SUBSTRATE_DIVERSITY= sd(SUBSTRATE_DIVERSITY),
+      MEAN=mean(SUBSTRATE_DIVERSITY),
+      SD= sd(SUBSTRATE_DIVERSITY),
       N=length(SUBSTRATE_DIVERSITY),
-      SE=SD_SUBSTRATE_DIVERSITY/sqrt(N),
+      SE=SD/sqrt(N),
       .groups = "keep"
       )
   glimpse(sub.summary.year.zone.div)
   
-  # 3) calculate summary stats for site-year
+  # 3a) calculate summary stats for site-year
   sub.summary.year <- sub.summary.year.transect %>% 
     group_by(YEAR,SITE,CLASSCODE) %>%
     dplyr::summarise(
-      MEAN=mean(PROPORTION),
       N=length(PROPORTION),
+      MEAN=mean(PROPORTION),
       SD=sqrt(MEAN * (1 - MEAN) * N),
       SE=SD/sqrt(N),
       .groups = "keep"
     )
-  sub.summary.year$YEAR <- as.factor(sub.summary.year$YEAR)
+  #sub.summary.year$YEAR <- as.factor(sub.summary.year$YEAR)
   sub.summary.year$SITE <- factor(sub.summary.year$SITE,
                                        levels=c("Destruction Island","Cape Johnson","Cape Alava","Tatoosh Island","Neah Bay"))
   glimpse(sub.summary.year)
   
-  # 4) calculate summary stats for site-zone
+    # 3b) calculate substrate diversity for each site-year-zone
+  sub.summary.year.div <- sub.summary.year.transect.div %>% 
+    group_by(YEAR,SITE) %>%
+    dplyr::summarise(
+      MEAN=mean(SUBSTRATE_DIVERSITY),
+      SD= sd(SUBSTRATE_DIVERSITY),
+      N=length(SUBSTRATE_DIVERSITY),
+      SE=SD/sqrt(N),
+      .groups = "keep"
+      )
+  glimpse(sub.summary.year.div)
+  
+  # 4a) calculate summary stats for site-zone
   sub.summary.zone <- sub.summary.year.transect %>% 
     group_by(SITE,ZONE,CLASSCODE) %>%
     dplyr::summarise(
-      MEAN=mean(PROPORTION),
       N=length(PROPORTION),
+      MEAN=mean(PROPORTION),
       SD=sqrt(MEAN * (1 - MEAN) * N),
       SE=SD/sqrt(N),
       .groups = "keep"
@@ -198,14 +210,24 @@ Summarise raw data into data frames that: 1) sum segments for each transect. 2) 
                                   levels=c("Destruction Island","Cape Johnson","Cape Alava","Tatoosh Island","Neah Bay"))
   glimpse(sub.summary.zone)
   
+  # 4b) calculate substrate diversity for each site-year-zone
+  sub.summary.zone.div <- sub.summary.year.transect.div %>% 
+    group_by(SITE,ZONE) %>%
+    dplyr::summarise(
+      MEAN=mean(SUBSTRATE_DIVERSITY),
+      SD= sd(SUBSTRATE_DIVERSITY),
+      N=length(SUBSTRATE_DIVERSITY),
+      SE=SD/sqrt(N),
+      .groups = "keep"
+      )
+  glimpse(sub.summary.zone.div)
   
-  
-  # 5) calculate summary stats for site
+  # 5a) calculate summary stats for site
   sub.summary.site <- sub.summary.year.transect %>% 
     group_by(SITE,CLASSCODE) %>%
     dplyr::summarise(
-      MEAN=mean(PROPORTION),
       N=length(PROPORTION),
+      MEAN=mean(PROPORTION),
       SD=sqrt(MEAN * (1 - MEAN) * N),
       SE=SD/sqrt(N),
       .groups = "keep"
@@ -213,6 +235,18 @@ Summarise raw data into data frames that: 1) sum segments for each transect. 2) 
   sub.summary.site$SITE <- factor(sub.summary.site$SITE,
                                   levels=c("Destruction Island","Cape Johnson","Cape Alava","Tatoosh Island","Neah Bay"))
   glimpse(sub.summary.site)
+  
+  # 5b) calculate substrate diversity for each site-year-zone
+  sub.summary.site.div <- sub.summary.year.transect.div %>% 
+    group_by(SITE) %>%
+    dplyr::summarise(
+      MEAN=mean(SUBSTRATE_DIVERSITY),
+      SD= sd(SUBSTRATE_DIVERSITY),
+      N=length(SUBSTRATE_DIVERSITY),
+      SE=SD/sqrt(N),
+      .groups = "keep"
+      )
+  glimpse(sub.summary.site.div)
 
   #### END BASIC SUBSTRATE SUMMARIES.
 
@@ -230,14 +264,29 @@ Write out the data frames we just made.
   
   write_csv(sub.summary.year.transect, paste0(data.summary.output.dir, "/SUBSTRATE summary by YEAR-SITE-DEPTH-SIDE-TRANSECT 2016-2019.csv"))
   write_rds(sub.summary.year.transect, paste0(data.summary.output.dir, "/SUBSTRATE summary by YEAR-SITE-DEPTH-SIDE-TRANSECT 2016-2019.rds"))
+  write_csv(sub.summary.year.transect.div, paste0(data.summary.output.dir, "/SUBSTRATE diversity summary by YEAR-SITE-DEPTH-SIDE-TRANSECT 2016-2019.csv"))
+  write_rds(sub.summary.year.transect.div, paste0(data.summary.output.dir, "/SUBSTRATE summary by YEAR-SITE-DEPTH-SIDE-TRANSECT 2016-2019.rds"))
+  
   write_csv(sub.summary.year.zone, paste0(data.summary.output.dir, "/SUBSTRATE summary by YEAR-SITE-DEPTH 2016-2019.csv"))
   write_rds(sub.summary.year.zone, paste0(data.summary.output.dir, "/SUBSTRATE summary by YEAR-SITE-DEPTH 2016-2019.rds"))
+  write_csv(sub.summary.year.zone.div, paste0(data.summary.output.dir, "/SUBSTRATE diversity summary by YEAR-SITE-DEPTH 2016-2019.csv"))
+  write_rds(sub.summary.year.zone.div, paste0(data.summary.output.dir, "/SUBSTRATE summary by YEAR-SITE-DEPTH 2016-2019.rds"))
+  
   write_csv(sub.summary.year, paste0(data.summary.output.dir, "/SUBSTRATE summary by YEAR-SITE 2016-2019.csv"))
   write_rds(sub.summary.year, paste0(data.summary.output.dir, "/SUBSTRATE summary by YEAR-SITE 2016-2019.rds"))
+  write_csv(sub.summary.year.div, paste0(data.summary.output.dir, "/SUBSTRATE diversity summary by YEAR-SITE 2016-2019.csv"))
+  write_rds(sub.summary.year.div, paste0(data.summary.output.dir, "/SUBSTRATE summary by YEAR-SITE 2016-2019.rds"))
+  
   write_csv(sub.summary.zone, paste0(data.summary.output.dir, "/SUBSTRATE summary by SITE-DEPTH 2016-2019.csv"))
   write_rds(sub.summary.zone, paste0(data.summary.output.dir, "/SUBSTRATE summary by SITE-DEPTH 2016-2019.rds"))
+  write_csv(sub.summary.zone.div, paste0(data.summary.output.dir, "/SUBSTRATE diversity summary by SITE-DEPTH 2016-2019.csv"))
+  write_rds(sub.summary.zone.div, paste0(data.summary.output.dir, "/SUBSTRATE summary by SITE-DEPTH 2016-2019.rds"))
+  
   write_csv(sub.summary.site, paste0(data.summary.output.dir, "/SUBSTRATE summary by SITE 2016-2019.csv"))
   write_rds(sub.summary.site, paste0(data.summary.output.dir, "/SUBSTRATE summary by SITE 2016-2019.rds"))
+  write_csv(sub.summary.site.div, paste0(data.summary.output.dir, "/SUBSTRATE diversity summary by SITE 2016-2019.csv"))
+  write_rds(sub.summary.site.div, paste0(data.summary.output.dir, "/SUBSTRATE diversity summary by SITE 2016-2019.rds"))
+  
   
   #### END WRITING OUT SUBSTRATE DATA FRAMES
 ```
@@ -260,7 +309,7 @@ Write out the data frames we just made.
     facet_grid(SITE~ZONE) +
     theme_bw()
  plot(sub.plot.year.zone_sub)
-  
+
   # b) site on x axis, substrate type as facets
   sub.plot.year.zone_site <- ggplot() +
     geom_jitter(data=sub.summary.year.transect,aes(y=PROPORTION,x=SITE, colour=YEAR),alpha=0.5, position=position_dodge(width=0.5) )+
@@ -275,6 +324,20 @@ Write out the data frames we just made.
       axis.text.x = element_text(angle = 45, hjust=1)
     )
   plot(sub.plot.year.zone_site)
+  
+  sub.plot.year.zone_site_div <- ggplot() +
+    geom_jitter(data=sub.summary.year.transect.div,aes(y=SUBSTRATE_DIVERSITY,x=SITE, colour=YEAR),alpha=0.5, position=position_dodge(width=0.5) )+
+    geom_point(data=sub.summary.year.zone.div,aes(y=MEAN,x=SITE,fill=YEAR),color="black",size=3,shape=21, position=position_dodge(width=0.5))+
+    geom_errorbar(data=sub.summary.year.zone.div,
+                  aes(ymin=MEAN-SE-1e-10,ymax=MEAN+SE,x=SITE, colour=YEAR),width=0.1, position=position_dodge(width=0.5))  +
+    scale_colour_viridis_d()+
+    scale_fill_viridis_d()+
+    facet_grid(.~ZONE) +
+    theme_bw() +
+    theme(
+      axis.text.x = element_text(angle = 45, hjust=1)
+    )
+  plot(sub.plot.year.zone_site_div)
   
   # c) compare zones, years as facets, lines connecting 5m v 10m
   
@@ -300,6 +363,17 @@ Write out the data frames we just made.
     facet_grid(CLASSCODE~SITE) +
     theme_bw()
   plot(sub.plot.year.zone_compare2)
+  
+  sub.plot.year.zone_compare2_div <- ggplot() +
+    geom_jitter(data=sub.summary.year.transect.div,aes(y=SUBSTRATE_DIVERSITY,x=ZONE,colour=YEAR),alpha=0.3 , position=position_dodge(width=0.5))+
+    geom_point(data=sub.summary.year.zone.div,aes(y=MEAN,x=ZONE,fill=YEAR),size=2,shape=21, position=position_dodge(width=0.5))+
+    geom_errorbar(data=sub.summary.year.zone.div,
+                  aes(ymin=MEAN-SE-1e-10,ymax=MEAN+SE,x=ZONE,colour=YEAR),width=0.1, position=position_dodge(width=0.5))  +
+    scale_colour_viridis_d() +
+    scale_fill_viridis_d() +
+    facet_grid(.~SITE) +
+    theme_bw()
+  plot(sub.plot.year.zone_compare2_div)
 ```
 
 
@@ -331,6 +405,19 @@ Write out the data frames we just made.
     )
   plot(sub.plot.year_site)
   
+  sub.plot.year_site_div <- ggplot() +
+    geom_point(data=sub.summary.year.div,aes(y=MEAN,x=SITE,fill=YEAR),color="black",size=3,shape=21, position=position_dodge(width=0.5))+
+    geom_errorbar(data=sub.summary.year.div,
+                  aes(ymin=MEAN-SE-1e-10,ymax=MEAN+SE,x=SITE, colour=YEAR),width=0.1, position=position_dodge(width=0.5))  +
+    scale_colour_viridis_d()+
+    scale_fill_viridis_d()+
+    #facet_grid(CLASSCODE~.) +
+    theme_bw() +
+    theme(
+      axis.text.x = element_text(angle = 45, hjust=1)
+    )
+  plot(sub.plot.year_site_div)
+  
   # c) time series, CLASSCODE as facets
   
   sub.plot.year_ts1 <- ggplot() +
@@ -354,6 +441,16 @@ Write out the data frames we just made.
     facet_grid(.~SITE) +
     theme_bw()
   plot(sub.plot.year_ts2)
+  
+  sub.plot.year_ts2_div <- ggplot() +
+    geom_point(data=sub.summary.year.div,aes(y=MEAN,x=YEAR,colour=SITE, group=SITE),size=2, position=position_dodge(width=0.5))+
+    geom_line(data=sub.summary.year.div,aes(y=MEAN,x=YEAR,colour=SITE, group=SITE),size=1, position=position_dodge(width=0.5))+
+    geom_errorbar(data=sub.summary.year.div,
+                  aes(ymin=MEAN-SE-1e-10,ymax=MEAN+SE,x=YEAR,colour=SITE, group=SITE),width=0.1, position=position_dodge(width=0.5))  +
+    scale_colour_viridis_d()+
+    #facet_grid(.~SITE) +
+    theme_bw()
+  plot(sub.plot.year_ts2_div)
 ```
 
 
@@ -388,6 +485,20 @@ Write out the data frames we just made.
     )
   plot(sub.plot.zone_site)
   
+  sub.plot.zone_site_div <- ggplot() +
+    geom_point(data=sub.summary.zone.div,aes(y=MEAN,x=SITE,fill=factor(ZONE)),color="black",size=3,shape=21, position=position_dodge(width=0.5))+
+    geom_errorbar(data=sub.summary.zone.div,
+                  aes(ymin=MEAN-SE-1e-10,ymax=MEAN+SE,x=SITE, colour=factor(ZONE)),width=0.1, position=position_dodge(width=0.5))  +
+    labs(fill='ZONE', colour='ZONE') +
+    scale_colour_viridis_d()+
+    scale_fill_viridis_d()+
+    #facet_grid(CLASSCODE~.) +
+    theme_bw() +
+    theme(
+      axis.text.x = element_text(angle = 45, hjust=1)
+    )
+  plot(sub.plot.zone_site_div)
+  
   # c) compare zones, years as facets, lines connecting 5m v 10m
   
   sub.plot.zone_compare1 <- ggplot() +
@@ -401,6 +512,17 @@ Write out the data frames we just made.
     theme_bw()
   plot(sub.plot.zone_compare1)
   
+  sub.plot.zone_compare1_div <- ggplot() +
+    geom_point(data=sub.summary.zone.div,aes(y=MEAN,x=factor(ZONE),colour=SITE, group=SITE),size=2, position=position_dodge(width=0.5))+
+    geom_line(data=sub.summary.zone.div,aes(y=MEAN,x=factor(ZONE),colour=SITE, group=SITE),size=1, position=position_dodge(width=0.5))+
+    geom_errorbar(data=sub.summary.zone.div,
+                  aes(ymin=MEAN-SE-1e-10,ymax=MEAN+SE,x=factor(ZONE),colour=SITE, group=SITE),width=0.1, position=position_dodge(width=0.5))  +
+    xlab("ZONE") +
+    scale_colour_viridis_d()+
+    #facet_grid(.~CLASSCODE) +
+    theme_bw()
+  plot(sub.plot.zone_compare1_div)
+  
   # d) compare zones, CLASSCODE as facets, no lines connecting 5m v 10m
   
   sub.plot.zone_compare2 <- ggplot() +
@@ -413,6 +535,7 @@ Write out the data frames we just made.
     facet_grid(.~SITE) +
     theme_bw()
   plot(sub.plot.zone_compare2)
+  
 
 ```
 
@@ -447,6 +570,19 @@ Write out the data frames we just made.
     )
   plot(sub.plot.site_site)
   
+  sub.plot.site_site_div <- ggplot() +
+    geom_point(data=sub.summary.site.div,aes(y=MEAN,x=SITE,fill=SITE),color="black",size=3,shape=21, position=position_dodge(width=0.5))+
+    geom_errorbar(data=sub.summary.site.div,
+                  aes(ymin=MEAN-SE-1e-10,ymax=MEAN+SE,x=SITE, colour=SITE),width=0.1, position=position_dodge(width=0.5))  +
+    scale_colour_viridis_d()+
+    scale_fill_viridis_d()+
+    #facet_grid(CLASSCODE~.) +
+    theme_bw() +
+    theme(
+      axis.text.x = element_text(angle = 45, hjust=1)
+    )
+  plot(sub.plot.site_site_div)
+  
 ```
 
 PRINT OUT ALL OF THE PLOTS IN A SINGLE PDF.
@@ -455,25 +591,32 @@ PRINT OUT ALL OF THE PLOTS IN A SINGLE PDF.
 
 
   
-  pdf(file=paste0(base.dir,"/Plots/Substrate v2.pdf"),onefile=T)
+  pdf(file=paste0(base.dir,"/Plots/Substrate v3.pdf"),onefile=T)
   
   print(sub.plot.site_sub)
   print(sub.plot.site_site)
+  plot(sub.plot.site_site_div)
   
   print(sub.plot.zone_sub)
   print(sub.plot.zone_site)
   print(sub.plot.zone_compare1)
   print(sub.plot.zone_compare2)
+  print(sub.plot.zone_site_div)
+  print(sub.plot.zone_compare1_div)
   
   print(sub.plot.year_sub)
   print(sub.plot.year_site)
   print(sub.plot.year_ts1)
   print(sub.plot.year_ts2)
+  print(sub.plot.year_site_div)
+  print(sub.plot.year_ts2_div)
   
   print(sub.plot.year.zone_sub)  
   print(sub.plot.year.zone_site)
   print(sub.plot.year.zone_compare1)
   print(sub.plot.year.zone_compare2)
+  print(sub.plot.year.zone_site_div)
+  print(sub.plot.year.zone_compare2_div)
   
   invisible(dev.off())
   
