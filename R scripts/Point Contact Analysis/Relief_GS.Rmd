@@ -1,7 +1,11 @@
 ---
-title: "Summarise Relief Data OCNMS July 2020"
+title: "Summarise Relief Data OCNMS"
 author: Genoa Sullaway
-output: html_document
+date: "July 2020"
+output: 
+  html_document:
+      toc: true
+      toc_float: true
 ---
 
 
@@ -9,9 +13,28 @@ output: html_document
 
 \n Data frames created here are saved in: OCNMS/Data/Summarized data
 
-\n 1. dat.transect.summary = RELIEF_Transect_Level_Summary.csv: This has percent cover across TRANSECT/ZONE/SIDE/SITE/YEAR. Transect is lowest level of replication here. There are only 11 transects in whole dataset that have less than 30 upc counts (aka an incomplete transect)... In the cases where it is less than 30 I get total % cover from the total points sampled for that transect. 
-\n 2. dat.zone.summary = RELIEF_Zone_Level_Summary.csv: This has mean percent cover and variance across ZONE/SITE/YEAR. 
-\n 3. dat.site.summary = RELIEF_Site_Level_Summary.csv: This has mean percent cover and variance across SITES. 
+\n There are four **Percent Cover** data sets:
+
+\n 1. dat.transect.summary = RELIEF_Transect_Level_Summary.csv: This has percent cover across TRANSECT/ZONE/SIDE/SITE/YEAR. Transect is lowest level of replication here. There are only 11 transects in whole dataset that have less than 30 upc counts (aka an incomplete transect)... In the cases where it is less than 30 I get total % cover from the total points sampled for that transect.
+
+\n 2. dat.zone.summary = RELIEF_Zone_Level_Summary.csv: This has mean percent cover and variance across ZONE/SITE/YEAR.
+
+\n 3. dat.site.summary = RELIEF_Site_Level_Summary.csv: This has mean percent cover and variance across SITES.
+
+
+\n There are four **Simspons Diversity** data sets:
+
+\n 1. dat.diversity = RELIEF_DIVERSITY_Transect_Level_Summary.csv: This has Simpsons Diversity across TRANSECT/ZONE/SIDE/SITE/YEAR. Transect is lowest level of replication here.
+
+\n 2. dat.diversity.zone.summary = RELIEF_DIVERSITY_Zone_Level_Summary.csv: This has mean Simpsons Diversity and variance across ZONE/SITE/YEAR.
+
+\n 3. dat.diversity.year.site.summary= RELIEF_DIVERSITY_Year_Site_Level_Summary.csv: This has mean Simpsons Diversity and variance across SITE/YEAR.
+
+\n 4. dat.diversity.site.summary = RELIEF_DIVERSITY_Site_Level_Summary.csv: This has Simpsons Diversity and variance across SITES.
+
+
+## Summary Thoughts
+-  Tattoosh and Destruction appear to have greatest diversity in relief which makes sense with diver impressions. Cape Johnson has the lowest diversity in relief-- so if rockfish respond to complexity  non-biogenic habitat we may expect to see greater abundances or divesity in rockfish species at Tattoosh and Destruction. 
 
 ```{r setup,message=FALSE, warning=FALSE}
 #to load data make sure directory is set to knit from project directory
@@ -66,7 +89,8 @@ dat.site.summary <- dat.relief %>%
   
 
 ```
-
+## Percent Cover
+### Create data frames
 ```{r}
 ggplot(dat.zone.summary,aes(x=YEAR)) +
   geom_bar(aes(y=MEAN, fill= CLASSCODE), position="fill", stat="identity",width = 0.95
@@ -85,8 +109,8 @@ ggplot(dat.zone.summary,aes(x=YEAR)) +
 
 ```
 
-
-```{r}
+### Plot
+```{r,echo=FALSE}
 ggplot(dat.site.summary,aes(x=SITE)) +
   geom_bar(aes(y=MEAN, fill= CLASSCODE), position="fill", stat="identity",width = 0.95
            )+
@@ -104,6 +128,8 @@ ggplot(dat.site.summary,aes(x=SITE)) +
 ```
 
 
+## Simpsons Diversity Index 
+### Create data frames
 ```{r calculate Simpsons Diversity}
 
 #use dat.relief to get Simpsons index for every transect and save data frames 
@@ -161,8 +187,8 @@ dat.diversity<- dat.relief %>%
 
 ```
 
-### Now plot diversity from  different summary levels 
-```{r}
+### Plot 
+```{r,echo=FALSE}
 dat.diversity.zone.summary %>%
   ungroup() %>%
   mutate(SITE = factor(SITE, levels = c("Destruction Island","Cape Johnson", "Cape Alava","Tatoosh Island","Neah Bay"))) %>%
@@ -177,7 +203,7 @@ dat.diversity.zone.summary %>%
 
 ```
 
-```{r}
+```{r,echo=FALSE}
 dat.diversity.year.site.summary %>%
     ungroup() %>%
    mutate(SITE = factor(SITE, levels = c("Destruction Island","Cape Johnson", "Cape Alava","Tatoosh Island","Neah Bay"))) %>%
@@ -190,7 +216,7 @@ dat.diversity.year.site.summary %>%
   ylab("Simpsons Diversity Index - RELIEF")
 ```
 
-```{r}
+```{r,echo=FALSE}
 dat.diversity.site.summary %>%
     ungroup() %>%
   mutate(SITE = factor(SITE, levels = c("Destruction Island","Cape Johnson", "Cape Alava","Tatoosh Island","Neah Bay"))) %>%
