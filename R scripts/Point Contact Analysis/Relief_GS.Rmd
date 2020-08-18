@@ -36,6 +36,8 @@ output:
 ## Summary Thoughts
 -  Tattoosh and Destruction appear to have greatest diversity in relief which makes sense with diver impressions. Cape Johnson has the lowest diversity in relief-- so if rockfish respond to complexity  non-biogenic habitat we may expect to see greater abundances or divesity in rockfish species at Tattoosh and Destruction. 
 
+## Percent Cover: Relief
+### Create data frames
 ```{r setup,message=FALSE, warning=FALSE}
 #to load data make sure directory is set to knit from project directory
 knitr::opts_chunk$set(message=FALSE, warning=FALSE)
@@ -72,6 +74,17 @@ dat.zone.summary <- dat.relief %>%
       SE=SD/sqrt(N)) %>%
   ungroup() %>%
   mutate(SITE = factor(SITE, levels = c("Destruction Island","Cape Johnson", "Cape Alava","Tatoosh Island","Neah Bay")))
+
+# added by JS 081820
+dat.year.site.summary <- dat.relief %>%
+  group_by(SITE,YEAR,CLASSCODE) %>% 
+  summarise(
+      N=length(percent_cover),
+      MEAN=mean(percent_cover),
+      SD=sqrt(MEAN * (1 - MEAN) * N),
+      SE=SD/sqrt(N)) %>%
+  ungroup() %>%
+  mutate(SITE = factor(SITE, levels = c("Destruction Island","Cape Johnson", "Cape Alava","Tatoosh Island","Neah Bay")))
  
 dat.site.summary <- dat.relief %>%
   group_by(SITE,CLASSCODE) %>% 
@@ -85,12 +98,13 @@ dat.site.summary <- dat.relief %>%
 
   write.csv(dat.relief, here("Data","Summarized data","RELIEF_Transect_Level_Summary.csv"))
   write.csv(dat.zone.summary, here("Data","Summarized data","RELIEF_Zone_Level_Summary.csv"))
+  write.csv(dat.year.site.summary, here("Data","Summarized data","RELIEF_Year_Site_Level_Summary.csv"))
   write.csv(dat.site.summary, here("Data","Summarized data","RELIEF_Site_Level_Summary.csv"))
   
 
 ```
-## Percent Cover
-### Create data frames
+
+### Plot
 ```{r}
 ggplot(dat.zone.summary,aes(x=YEAR)) +
   geom_bar(aes(y=MEAN, fill= CLASSCODE), position="fill", stat="identity",width = 0.95
@@ -109,7 +123,7 @@ ggplot(dat.zone.summary,aes(x=YEAR)) +
 
 ```
 
-### Plot
+
 ```{r,echo=FALSE}
 ggplot(dat.site.summary,aes(x=SITE)) +
   geom_bar(aes(y=MEAN, fill= CLASSCODE), position="fill", stat="identity",width = 0.95
