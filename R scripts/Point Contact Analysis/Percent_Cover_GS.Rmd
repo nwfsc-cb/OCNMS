@@ -1,7 +1,7 @@
 ---
 title: "Summarise UPC Data OCNMS July 2020"
-author: Genoa Sullaway
-date: "July 2020"
+author: Genoa Sullaway, Jameal Samhouri
+date: "July-August 2020"
 output: 
   html_document:
       toc: true
@@ -20,7 +20,9 @@ output:
 
 \n 2. dat.zone.summary = UPC_Zone_Level_Summary.csv: This has mean percent cover and variance across ZONE/SITE/YEAR.
 
-\n 3. dat.site.summary = UPC_Site_Level_Summary.csv: This has mean percent cover and variance across SITES. 
+\n 3. dat.year.site.summary = UPC_Year_Site_Level_Summary.csv: This has mean percent cover and variance across SITE/YEAR. 
+
+\n 4. dat.site.summary = UPC_Site_Level_Summary.csv: This has mean percent cover and variance across SITES. 
 
 \n There are four **Simspons Diversity** data sets:
 
@@ -149,6 +151,17 @@ dat.zone.summary <- dat.transect.summary %>%
       SE=SD/sqrt(N)) %>%
   ungroup() %>%
   mutate(SITE = factor(SITE, levels = c("Destruction Island","Cape Johnson", "Cape Alava","Tatoosh Island","Neah Bay")))
+
+# added by JS 081820
+dat.year.site.summary <- dat.transect.summary %>%
+  group_by(SITE,YEAR,Functional_Group) %>% 
+  summarise(
+      N=length(percent_cover),
+      MEAN=mean(percent_cover),
+      SD=sqrt(MEAN * (1 - MEAN) * N),
+      SE=SD/sqrt(N)) %>%
+  ungroup() %>%
+  mutate(SITE = factor(SITE, levels = c("Destruction Island","Cape Johnson", "Cape Alava","Tatoosh Island","Neah Bay")))
   
 dat.site.summary <- dat.transect.summary %>%
   group_by(SITE,Functional_Group) %>% 
@@ -162,6 +175,7 @@ dat.site.summary <- dat.transect.summary %>%
   
   write.csv(dat.transect.summary, here("Data","Summarized data","UPC_Transect_Level_Summary.csv"))
   write.csv(dat.zone.summary, here("Data","Summarized data","UPC_Zone_Level_Summary.csv"))
+  write.csv(dat.year.site.summary, here("Data","Summarized data", "UPC_Year_Site_Level_Summary.csv"))
   write.csv(dat.site.summary, here("Data","Summarized data","UPC_Site_Level_Summary.csv"))
   
 ```
