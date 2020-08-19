@@ -1,0 +1,69 @@
+CLASSCODE,Genus species,total count,functional_group,group_the_random/rare
+ACAHUD,"Acanthodoris hudsoni, white nudibranch with yellow margin (we lump with Cadlina luteomarginata)",28,large_nudibranch,mollusk
+ACANAN,Acanthodoris nanaimo,2,large_nudibranch,mollusk
+ACMMIT,"Acmaea mitra, white cap limpet",73,shelled_mollusk,mollusk
+ANTELE,"Anthopleura elegantissima, aggregating anemone",1,small_anemone,anemone
+ANTXAN,"Anthopleura xanthogrammica, giant green anemone",149,large_anemone,anemone
+BALNUB,"Balanus nubilis, giant acorn barnacle",2142,large_barnacle,barnacle
+CANORE,"Cancer oregonensis, pygmy rock crab",15,crabs,mobile_invert
+CANSPP,"Cancer spp., cancer crab",33,crabs,mobile_invert
+CERFOL,"Ceratostoma foliatum, Leafy hornmouth",891,shelled_mollusk,mollusk
+CHITON,"misc small chitons (Mopalia, etc.)",142,shelled_mollusk,mollusk
+CLAMSP,misc clams,1,shelled_mollusk,mollusk
+CRAARB,"Craniella arb, grey tennis ball sponge",15,sponge,sponge
+CRAGIG,"Crassadoma gigantea, rock scallop",473,shelled_mollusk,mollusk
+CROPAP,"Crossaster papposus, sea star",1,seastar,med_seastar
+CRYSIT,"Cryptolithoides sitchensis, umbrella crab",13,crabs,mobile_invert
+CRYSTE,"Cryptochiton stelleri, gumboot chiton",82,shelled_mollusk,mollusk
+CUCMIN,"Cucumaria miniata, orange sea cucumber",1299,sea_cucumber,sea_cucumber
+DERIMB,"Dermasterias imbricata, leather star",791,seastar,med_seastar
+DIASAN,Dialula sandiegensis,10,med_nudibranch,mollusk
+DIOASP,"Diodora aspera, rough keyhole limpet",340,shelled_mollusk,mollusk
+DIRALB,"Dirona albolineata, white lined nudibranch",95,med_nudibranch,mollusk
+DORODH,"Doris odhneri, white knight dorid nudibranch",66,large_nudibranch,mollusk
+ENTDOF,Enteroctopus dofleini,1,octopus,mollusk
+EPIPRO,"Epiactis prolifera, brooding anemona",60,small_anemone,anemone
+EUPQUI,"Eupentacta quinquesemita, white sea cucumber",177,sea_cucumber,sea_cucumber
+EVATRO,"Evasterias troschelii, mottled star",99,seastar,large_seastar
+FUSORE,"Fusitriton oregonensis, Oregon hairy triton",4,shelled_mollusk,mollusk
+HENLEV,"Henricia leviuscula, blood star",1344,seastar,med_seastar
+HERCRA,"Hermissenda crassicornis, opalescent nudibranch",12,med_nudibranch,mollusk
+JANFUS,"Janolus fuscus, nudibranch",35,med_nudibranch,mollusk
+LEPSPP,Lepasterias spp.,186,seastar,med_seastar
+LIMCOC,Limacia cockerelli,1,med_nudibranch,mollusk
+LIRDIR,"Lirabuccinum dirum, dire whelk",75,shelled_mollusk,mollusk
+LOPMAN,"Lopholithodes mandtii, Puget Sound king crab",2,crabs,mobile_invert
+MEDAEQ,"Mediaster aequalis, red star",7,seastar,med_seastar
+MESFRA,"Mesocentrotus franciscanus, red urchin",1478,urchin,urchin
+METGIG,"Metridium giganteum, giant plumose anemone",3,large_anemone,anemone
+METSPP,"Metridium spp., white plumed anemones",195,large_anemone,anemone
+MIMFOL,"Mimulus foliatus, mimicking crab",3,crabs,mobile_invert
+MYTCAL,"Mytilus californianus, California mussel",17,shelled_mollusk,mollusk
+NO_ORG,No organisms present in this sample,0,,
+NUCLAM,"Nucella lamellosa, whelk (used generally for rough predatory whelks)",2876,shelled_mollusk,mollusk
+ORTKOE,"Orthasterias koehleri, rainbow star",62,seastar,large_seastar
+PAGSPP,"Pagurus spp, hermit crabs",48,crabs,mobile_invert
+PARCAL,"Parastichopus californicus, california sea cucumber",23,sea_cucumber,sea_cucumber
+PATMIN,"Patiria miniata, bat star",135,seastar,med_seastar
+PELNOB,"Peltodoris nobilis, pacific sea lemon",64,large_nudibranch,mollusk
+PISBRE,"Pisaster brevispinus, short spined star",7,seastar,large_seastar
+PISGIG,"Pisaster giganteus, giant spined star",1,seastar,large_seastar
+PISOCH,"Pisaster ochraceous, ochre star",266,seastar,large_seastar
+PODSPP,Pododesmus spp. Jingle shells,6,shelled_mollusk,mollusk
+PUGGRA,"Pugettia gracilis, graceful kelp crab",25,crabs,mobile_invert
+PUGPRO,"Pugettia producta, kelp crab",23,crabs,mobile_invert
+PYCHEL,"Pycnopodia helianthoides, sunflower star",8,seastar,large_seastar
+SCALLOP,misc. scallops (not rock),1,shelled_mollusk,mollusk
+SCYDEC,"Scyra spp., decorator crab, moss crab",109,crabs,mobile_invert
+SOLSTI,"Solaster stimpsoni, orange sun star",14,seastar,large_seastar
+STARREC,sea star recruits (unidentifiable to species),69,seastar,med_seastar
+STRDRO,"Strongylocentrotus droebachiensis, green urchin",840,urchin,urchin
+STRPUR,"Strongylocentrotus purpuratus, purple urchin",3611,urchin,urchin
+STYMON,"Styela montereyensis, stalked tunicate",1215,tunicate,tunicate
+TEGSPP,"Tegula spp., turban snails",23,shelled_mollusk,mollusk
+TRICAT,"Triopha catalinae, sea clown nudibranch",31,med_nudibranch,mollusk
+UNIDSP,Unidentified mobile invert species,6,mobile_invert,mobile_invert
+URTCRA,"Urticina crassicornis, Christmas anemone",10,large_anemone,anemone
+URTLOF,"Urticina lofotensis, white-spotted rose anemone",12,large_anemone,anemone
+URTPIS,"Urticina piscivora, fish-eating anemone",9,large_anemone,anemone
+URTSPP,"Urticina spp., Urticina spp.",297,large_anemone,anemone
