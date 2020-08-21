@@ -59,6 +59,9 @@ dat <- read_csv(here('Data','2019','NWFSC_SWATH_ALLYEARS_data_2019.csv'),col_typ
 # lumping key for inverts (via Kinsey, August 2020)
 lump <- read_csv(here('Data','CSV_2015_on','ocnms_invert_lumping.csv')) %>% 
   set_colnames(c("classcode","genus","tot_count","functional_group","lump"))
+
+species_names <- read_csv(here('Data','CSV_2015_on','species_code_list_swath.csv'))
+
 ```
 
 
@@ -96,7 +99,7 @@ dat.2015.clean <- dat.2015 %>%
 
 dat.2015.clean.complete <- dat.2015.clean %>% 
   # fill in zeroes for unobserved species (using all the unique species in the overall data as our universe of possible species)
-  complete(nesting(site,transect),classcode,fill=list(count=0,observed_area=60,group="Invert")) %>% 
+  complete(nesting(site,transect),classcode,fill=list(count=0,observed_area=60)) %>% 
   mutate(year=2015,zone=5)
 
 # Look at and deal with notes
@@ -166,16 +169,6 @@ dat %<>% select(YEAR,SITE,TRANSECT,ZONE,`SWATH WIDTH`,`DEPTH (ft)`,`METERS sampl
   rename(year=YEAR, zone=ZONE,site=SITE,transect=TRANSECT,width=`SWATH WIDTH`,swath_length=`METERS sampled`,depth=`DEPTH (ft)`,segment=SEGMENT,classcode=CLASSCODE,count=COUNT,size=SIZE)
 ```
 
-Use species key to subset data to only algae
-
-```{r}
-# join the species key
-dat %<>% left_join(lump,by='classcode')
-
-dat %<>%
-  filter(!is.na(functional_group))
-```
-
 Fill in zeroes. At the segment level, for missing/unobserved species we assume the area surveyed is 20 square meters.
 
 ```{r}
@@ -183,11 +176,18 @@ dat %<>%
   # fix one weird data entry issue
   mutate(segment=ifelse(segment=="10-20M","10-20m",segment)) %>% 
   mutate(surveyed_area=width*swath_length) %>% 
-  group_by(year,site,zone,transect,segment,classcode,lump) %>% 
+  group_by(year,site,zone,transect,segment,classcode) %>% 
   summarise(count=sum(count,na.rm=T),segment_area=sum(surveyed_area)) %>% 
   # fill in zeroes
   ungroup() %>% 
   complete(nesting(year,site,zone,transect,segment),classcode,fill=list(count=0,segment_area=20))
+
+# join the species key
+dat %<>% left_join(lump,by='classcode')
+
+dat %<>%
+  filter(!is.na(lump))
+
 ```
 
 ## Calculate Densities
@@ -218,7 +218,7 @@ dat %<>%
   group_by(year,site,transect,classcode) %>% 
   mutate(replicate=row_number()) %>% 
   ungroup() %>% 
-  select(year,site,zone,transect,replicate,classcode,count,observed_area=segment_area)
+  select(year,site,zone,transect,replicate,classcode,lump,count,observed_area=segment_area)
 
 # join the datasets
 dat_all <- bind_rows(dat.2015.clean.complete,dat)
@@ -304,7 +304,7 @@ dat_site <- dat_transect %>%
 ### Overall Species Rankings
 
 Most encountered and most overall abundant species
-
+  
 ```{r,fig.width=8,fig.height=8}
 num_obs <- dat_transect %>%
   filter(dens_averaged>0) %>% 
