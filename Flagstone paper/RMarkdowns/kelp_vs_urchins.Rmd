@@ -1,0 +1,61 @@
+---
+title: "Kelp and Urchin Comparison"
+author: "Owen Liu"
+date: "8/24/2020"
+output: html_document
+---
+
+# Purpose
+
+Quick analysis of kelp density vs. urchin density for the OCNMS data
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(here)
+```
+
+## Data
+
+```{r}
+inverts <- read_csv(here('Flagstone paper','Data','invert_swath_zonelevel.csv'))
+kelp <- read_csv(here('Flagstone paper','Data','algae_swath_zonelevel_lump.csv'))
+```
+
+## Join
+
+Join two datasets by year, site, and zone
+
+```{r}
+urchins <- inverts %>% filter(lump=="urchin") %>% select(year,site,zone,lump,dens_weighted,se_w)
+
+kelp_urchins <- kelp %>% select(year,site,zone,classcode,dens_weighted,se_w) %>% 
+  rename(lump=classcode)%>% 
+  bind_rows(urchins)
+
+kelp_urchins <- kelp_urchins %>% 
+  pivot_wider(names_from="lump",values_from=c("dens_weighted","se_w"))
+
+glimpse(kelp_urchins)
+```
+
+## Visualize
+
+```{r}
+library(cowplot)
+
+pl <- purrr::map(c('MACPYR',"NERLUE","OTHER","PTECAL"),function(spp){
+  df <- kelp_urchins %>% select(year,site,zone,contains(spp),dens_weighted_urchin,se_w_urchin)
+  df %>% 
+    ggplot(aes_string("dens_weighted_urchin",paste0("dens_weighted_",spp)))+
+    geom_point()+
+    theme_minimal()+
+    theme(axis.line.x = element_line(),axis.line.y=element_line())+
+    labs(x="Urchin Density",y=paste(spp,"Density"))
+})
+
+p <- plot_grid(plotlist=pl,ncol=2)
+p
+```
+
+
+

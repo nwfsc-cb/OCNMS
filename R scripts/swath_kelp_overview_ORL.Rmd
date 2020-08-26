@@ -591,7 +591,7 @@ dat_lump_zone <- dat_lump_transect %>%
   mutate(se_w=sd_w/sqrt(n_obs),se_ave=sd_ave/sqrt(n_obs))
 
 # site
-dat_lump_site <- dat_transect %>% 
+dat_lump_site <- dat_lump_transect %>% 
   group_by(year,site,classcode,spp,short) %>% 
   summarise(n_obs=sum(n_obs),
             dens_weighted=mean(dens_weighted),
@@ -791,5 +791,9 @@ write_rds(dat_lump_transect,here('Data','Summarized data','algae_swath_transectl
 write_rds(dat_lump_zone,here('Data','Summarized data','algae_swath_zonelevel_lump.rds'))
 
 write_rds(dat_lump_site,here('Data','Summarized data','algae_swath_sitelevel_lump.rds'))
+
+write_csv(dat_lump_zone,here('Data','Summarized data','algae_swath_zonelevel_lump.csv'))
+
+write_csv(dat_lump_site,here('Data','Summarized data','algae_swath_sitelevel_lump.csv'))
 ```
 

@@ -57,8 +57,10 @@ Okay let's just read `SIDE` as character and `SIZE` as integer
 dat <- read_csv(here('Data','2019','NWFSC_SWATH_ALLYEARS_data_2019.csv'),col_types = 'cdddccccddddddccddddccc')
 
 # lumping key for inverts (via Kinsey, August 2020)
-lump <- read_csv(here('Data','CSV_2015_on','ocnms_invert_lumping.csv')) %>% 
-  set_colnames(c("classcode","genus","tot_count","functional_group","lump"))
+lump <- read_csv(here('Data','CSV_2015_on','invert_groups.csv')) %>% 
+  set_colnames(c('classcode','species','common_name','tot_count','lump','functional_group','group_rare','notes'))
+# lump <- read_csv(here('Data','CSV_2015_on','ocnms_invert_lumping.csv')) %>% 
+#   set_colnames(c("classcode","genus","tot_count","functional_group","lump"))
 
 species_names <- read_csv(here('Data','CSV_2015_on','species_code_list_swath.csv'))
 
@@ -264,6 +266,18 @@ dat_transect %>%
   geom_abline(slope=1,intercept=0,linetype=2)+
   coord_equal()+
   labs(x="Area-Weighted Mean Density",y="Segment-Averaged Mean Density",title="Comparison of Two Density Estimates")
+
+# Keep one transect-level dataset at the species level
+dat_transect_spp<- dat_all %>% 
+  group_by(year,site,zone,transect,lump,classcode) %>% 
+  summarise(n_obs=n(),
+            dens_weighted=sum(count)/sum(observed_area),
+            sd_w =w.sd(count,observed_area),
+            se_w=sd_w/sqrt(n_obs),
+            dens_averaged=mean(count/observed_area),
+            sd_ave=sd(count/observed_area),
+            se_ave=sd_ave/sqrt(n_obs)) %>% 
+  ungroup()
 ```
 
 The correlation between the two measures is `r cor(dat_transect$dens_averaged,dat_transect$dens_weighted,use='complete.obs') %>% signif(3)`, with the segment-averaged densities skewing higher than the area-weighted densities (which is expected).
@@ -346,11 +360,15 @@ overall_mean_positive_density %>%
 ## Save Datasets
 
 ```{r}
+write_rds(dat_transect_spp,here('Data','Summarized data','invert_swath_transect_species.rds'))
+
 write_rds(dat_transect,here('Data','Summarized data','invert_swath_transectlevel.rds'))
 
 write_rds(dat_zone,here('Data','Summarized data','invert_swath_zonelevel.rds'))
 
 write_rds(dat_site,here('Data','Summarized data','invert_swath_sitelevel.rds'))
+
+write_rds(dat_transect_spp,here('Data','Summarized data','invert_swath_transect_species.csv'))
 
 write_csv(dat_transect,here('Data','Summarized data','invert_swath_transectlevel.csv'))
 
