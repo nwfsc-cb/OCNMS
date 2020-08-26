@@ -1,0 +1,730 @@
+---
+title: "Multivariate Fish Analysis"
+author: Nick Toimieri
+date: 
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 3
+    number_sections: true
+    fig_caption: true
+fontsize: 11pt
+
+---
+
+```{r SETUP, include=FALSE}
+# A bunch of initial set up junk
+
+# rm(list = ls())
+
+##### knitr stuff and libraries ####
+
+HomeFile = getwd()
+Fig_Loc = paste0(HomeFile,"/Figures/")
+Data_Loc = paste0(HomeFile,"/Data/")
+Results_Loc = paste0(HomeFile,"/Results/")
+Other_Files = paste0(HomeFile,"/Other Files/")
+
+##### TRIGGERS AND SETTINGS #####
+
+process.data = FALSE # FALSE to speed up and use previously processed data
+
+fish.include = c("OPEL", "HEXA", "EMBI", "AUFL", "BAIT",  
+                 "SECA" , "SCMA" ,"SENE", 
+                 "SEFL" , "SEME" , "SEMY" , 
+                 "SECAy","SEPIy" , "SEMEy","SEBYTy" , "RYOY") 
+
+# min rockfish size for YOY for correcting some files
+
+min_rockfish_size = 6 # higher?
+
+# include 2015 or not
+Include.2015 = FALSE
+
+# Delete low vis transects
+Min.Vis = 2.0 # NA will use all the data, otherwise set min.
+
+# common transform for all multivar analyses
+
+data.transform = 'none' # 'none', 'log', 'sqrt' , '4th-root'
+
+#########################
+
+if(Include.2015 == TRUE){year.statement <- "NOTE: These analyses include 2015." }
+if(Include.2015 == FALSE){year.statement <-  "NOTE: These analyses DO NOT include 2015."}
+
+if(is.na(Min.Vis)){vis.statement <- "NOTE: The data were not corrected for visibility." }
+if(!is.na(Min.Vis)){vis.statement <- paste0("NOTE: Transects with visibility < ", Min.Vis, " m were deleted from the analysis.")}
+  
+###########################
+
+
+# tools in use 0
+library(knitr)
+# library(tidyr)
+# library(dplyr)
+library(tidyverse)
+library(stringr)
+library(tinytex)
+library(RColorBrewer)
+library(readxl)
+
+# stats packages etc
+library(vegan)
+library(BiodiversityR)
+library(pracma)
+library(factoextra)
+
+# options
+knitr::opts_chunk$set(
+  fig.path = Fig_Loc,
+  cache.path = 'cache/graphics-', 
+  echo=FALSE,
+  error=FALSE,
+  include = TRUE,
+  dev='png',
+  dpi=300,
+  warning=FALSE,
+  #out.width = '100%',
+  fig.align='center'
+  
+  )
+# opts_knit$set(eval.after = "fig.cap")
+
+# just to keep track of when I ran things.
+
+Last_Run0 = Sys.time()
+Last_Run = str_replace(Last_Run0, ":", ".")
+Last_Run = str_replace(Last_Run, ":", ".")
+capture.output(Last_Run, file = 'Last_Run.txt')
+
+par(ps=10, cex=1)
+
+```
+
+# Intro
+
+This is an up-dated fish file with only the "final" fish multivariate analyses for the Foundational MS.  
+
+
+# Import and manipulate data
+
+For data processing: 
+
+* Corrected some spp codes
+* Make a 'group' variable for lumping taxa/species
+* Combined 2015 and 2016-2019 data
+  * 2015 data are not necessarily used in analyses
+  * 2015 data lack visibility estimates
+* No depth data for the 2015 data. 
+  * I took the average of the quadrats.
+  * I assigned transects with an average depth of >20 ft to the 10-m group.
+
+`r vis.statement`  
+
+`r year.statement`
+
+DATA TRANSFORM: `r data.transform`
+
+I set the data transform to 'none' because there wasn't a lot of variation in spp density among groups.  Some but not a lot. Again, this emphasizes the more abudnant species, which is, I think, ok.
+
+```{r Import_Data , include=FALSE }
+#
+
+spp_code =  data.frame(read.csv("spp_codes.csv", header = TRUE))
+
+if(process.data == TRUE){
+
+fishx =  data.frame(read.csv(paste0(Data_Loc, "NWFSC_FISH_ALLYEARS_data_2019.csv"), header = TRUE))
+
+
+# Bring in 2015 data and combine
+df1 <- data.frame(read_excel( paste0(Data_Loc, "2015_OCNMSDataComplete_standardized_122116.xlsx"),
+                              sheet = "Master data"))
+
+# use quadrats to apply depth to transects and get zones
+
+id = paste(df1$Site, df1$Transect, df1$Date, sep='_')
+x = data.frame(cbind(id,df1$Depth.ft))
+colnames(x) <- c('id','depth.ft')
+x$depth.ft = as.numeric(x$depth.ft)
+depth = aggregate( x$depth.ft ~ id, data=x, FUN = mean, na.action = na.omit)
+colnames(depth) <- c('id','ft')
+
+# get just transects
+df2 = df1[ df1$data.type == 'swath' ,]
+# get just fish
+df3 = df2[ df2$PISCO.Classcode %in% spp_code$code , ]
+df3$YEAR = substring(df3$Date, 1 , 4)
+
+id3 = paste(df3$Site, df3$Transect, df3$Date, sep='_')
+df3$Depth.ft <- depth$ft[ match(id3, depth$id)]
+
+# subset columns to match fish0
+df4 = df3[ , c('YEAR', 'Site','Observer','Depth.ft', 'Transect', 'PISCO.Classcode' , 'Count', 'Size.cm')]
+
+# change to fish0 colnames
+colnames(df4) <- c('YEAR', 'SITE', 'OBSERVER', 'DEPTH_FT', 'TRANSECT', 'SPECIES' , 'QUANTITY', 'Size_Min')
+df4$Size_Max <- df4$Size_Min
+
+# populate data frame for 2015 that matches 2016-2019
+dfx =  data.frame(array(NA, dim=c(nrow(df4),ncol(fishx))))
+colnames(dfx)<- colnames(fishx)
+x <- colnames(df4)
+
+for(i in 1:length(x)){
+  dfx[,x[i]] = df4[,x[i]]  
+}
+# correct zone for 2015
+dfx$ZONE <- ifelse(dfx$DEPTH_FT > 20, 10, 5)
+
+fish_all <- rbind(dfx,fishx)
+
+# transfer some names
+fish_all$group = spp_code$group[ match( fish_all$SPECIES , spp_code$code)]
+fish_all$spp = spp_code$spp[ match( fish_all$SPECIES , spp_code$code)]
+fish_all$com_name = spp_code$com_name[ match( fish_all$SPECIES , spp_code$code)]
+
+# get just 2016-2019 sites for analysis and later plotting
+
+fish_all$Size_Max = as.numeric(fish_all$Size_Max)
+
+# fish_all$SPECIES <- ifelse(fish_all$Size_Max <= min_rockfish_size & fish_all$SPECIES == "SECA" ,  "SECAy", fish_all$SPECIES)
+# fish_all$SPECIES <- ifelse(fish_all$Size_Max <= min_rockfish_size & fish_all$SPECIES == "SEPI" ,  "SEPIy",  fish_all$SPECIES)
+# fish_all$SPECIES <- ifelse(fish_all$Size_Max <= min_rockfish_size & fish_all$SPECIES == "SEME" ,  "SEMEy",  fish_all$SPECIES)
+# fish_all$SPECIES <- ifelse(fish_all$Size_Max <= min_rockfish_size & fish_all$SPECIES == "SEFL" ,  "SEBYTy",  fish_all$SPECIES)
+
+fish_all$group <- ifelse(fish_all$Size_Max <= min_rockfish_size & fish_all$group == "SECA" ,  "SECAy",  fish_all$group)
+fish_all$group <- ifelse(fish_all$Size_Max <= min_rockfish_size & fish_all$group == "SEPI" ,  "SEPIy",  fish_all$group)
+fish_all$group <- ifelse(fish_all$Size_Max <= min_rockfish_size & fish_all$group == "SEME" ,  "SEMEy",  fish_all$group)
+fish_all$group <- ifelse(fish_all$Size_Max <= min_rockfish_size & fish_all$group == "SEFL" ,  "SEBYTy",  fish_all$group)
+
+write.csv(fish_all , paste0(Data_Loc,"Data_Fish_All_2015_2019.csv") , row.names = FALSE)
+
+} # END IMPORT AND PROCESS DATA
+
+if(process.data == FALSE){ # bring in data file again
+  # just to get sites
+  fishx =  data.frame(read.csv(paste0(Data_Loc, "NWFSC_FISH_ALLYEARS_data_2019.csv"), header = TRUE))
+  # data for analysis
+  fish_all = data.frame(read.csv(paste0(Data_Loc,"Data_Fish_All_2015_2019.csv"), header = TRUE))}
+
+site =  data.frame(matrix(c(levels(as.factor(fishx$SITE)),'black','darkgrey','green','red','blue'),  ncol = 2))
+
+fish0 <- fish_all[ fish_all$group %in% fish.include, ]
+fish0 <- fish0[fish0$SITE %in% site[,1], ]
+
+
+
+
+############# some common plotting stuff #####
+
+years = 2015:2019
+PCH = c(8, 21, 22, 24, 25)
+if( !is.na(Min.Vis) ){fish0 <- fish0[ fish0$VIS_M >= Min.Vis , ] }
+if( Include.2015 == FALSE ){ fish0 <- fish0[ fish0$YEAR != 2015 , ] ; 
+                             years = 2016:2019 
+                             PCH = c(21, 22, 24,25) }
+year.pch = data.frame(cbind(years, PCH))
+
+colnames(site) <- c('site', 'col')
+site$col = as.character(site$col)
+site$order = c( 3, 2 , 1 , 5, 4)
+site = site[ order(site$order , decreasing = TRUE) ,]
+
+
+
+```
+
+NOTES
+
+* Some rockfish were recorded in the 'adult' category (eg SECA instead of SECAy) but were small.  
+* Set minimum size for rockfishes to `r min_rockfish_size` cm. Fish <= to `r min_rockfish_size` cm were classified as YOY.
+* Maintained their original desigation in SPECIES column.  New designation in the 'group' column.
+
+```{r Functions}
+# removes rows with zero data and columns with too few observations
+
+Sum_Stats <- function( form1 , data.file ){
+  # calculate a bunch of summary stats and put in one file
+  # text in quotes, form1 looks like: "Y = site + year"
+  # no spaces allowed in column titles
+  
+  library('stringr')
+  data.file$xNx = 1
+
+  mn = aggregate( as.formula( form1 ) , data = data.file , FUN = mean )
+  s2 = aggregate( as.formula( form1 ) , data = data.file , FUN = var )
+  
+  x = stringr::str_split( form1 , "~", simplify = TRUE )[2]
+  form2 = paste0( 'xNx ~ ', x )
+  n  = aggregate( as.formula( form2 ) , data = data.file , FUN = sum )
+  
+  BY = stringr::str_split( x , "\\+" , simplify = TRUE ) 
+  BY = stringr::str_remove_all(BY," ")
+  BY = as.vector(BY , mode = 'character')
+  
+  a = merge( mn , s2 , by = BY, all = TRUE )
+  z = merge( a , n , by = BY , all = TRUE )
+  colnames( z )[(ncol(z)-2):ncol(z)] <- c( 'mean' , 'var' , 'n' ) 
+  
+  z$sd = sqrt(z$var)
+  z$se = z$sd/sqrt((z$n-1))
+  
+  return( z )
+  
+}
+
+```
+
+Because there were a lot of zeros for some species, we lumped some species or taxa them into higher taxonomic categories. Species higher grouping used in the analyses are:
+
+```{r Species_Included}
+
+
+spp.inlcluded = spp_code[spp_code$group %in% fish.include , c(1,2,4)]
+colnames(spp.inlcluded) <- c('Spp_Code', 'Spp_Group', 'Common_Name')
+spp.inlcluded
+
+
+```
+## Year x Site x Depth  
+
+No text here. Just calculating averages by year x site x depth and outputting data. 
+
+```{r Group_Year_Site_Depth , include = FALSE}
+# aggregate for analysis
+fish0$QUANTITY <- as.numeric(fish0$QUANTITY)
+
+l.fish.ysz = aggregate( QUANTITY ~ YEAR + SITE + ZONE + group , data = fish0 , FUN = mean )
+# change to wide format
+w.fish.ysz = spread(l.fish.ysz , group , QUANTITY )
+w.fish.ysz[is.na(w.fish.ysz)] <- 0
+
+# for plotting
+fish_info = w.fish.ysz[,c('YEAR','SITE','ZONE')]
+fish_info$color = site$col[match(fish_info$SITE, site$site)]
+fish_info$pch = ifelse(fish_info$ZONE == 5, 19, 21)
+fish_info$id = paste(fish_info$SITE, fish_info$YEAR, fish_info$ZONE, sep="_")
+w.fish.ysz = cbind(fish_info[,c('color','pch','id')] , w.fish.ysz)
+
+# save out
+write.csv(l.fish.ysz , paste0(Data_Loc, "D_Fish_Group_Site_Year_Zone_long.csv") , row.names = FALSE)
+write.csv(w.fish.ysz , paste0(Data_Loc, "D_Fish_Group_Site_Year_Zone_wide.csv") , row.names = FALSE)
+
+```
+
+## Year x Site
+
+No text here. Just calculating averages by year x site and outputting data.  
+
+```{r Group_Year_Site , include = FALSE}
+# aggregate for analysis
+l.fish.ys = aggregate( QUANTITY ~ YEAR + SITE + group , data = fish0 , FUN = mean )
+# change to wide format
+w.fish.ys = spread(l.fish.ys , group , QUANTITY )
+w.fish.ys[is.na(w.fish.ys)] <- 0
+
+# for plotting
+fish_info = w.fish.ys[,c('YEAR','SITE' )]
+fish_info$color = site$col[match(fish_info$SITE, site$site)]
+fish_info$id = paste(fish_info$SITE, fish_info$YEAR , sep="_")
+w.fish.ys = cbind(fish_info[, c('color', 'id') ] , w.fish.ys)
+
+# save out
+write.csv(l.fish.ys , paste0(Data_Loc, "D_Fish_Group_Site_Year_long.csv") , row.names = FALSE)
+write.csv(w.fish.ys , paste0(Data_Loc, "D_Fish_Group_Site_Year_wide.csv") , row.names = FALSE)
+
+```
+
+
+# Constrained Ordinations 
+
+
+
+```{r Set_Fish_Transform}
+# spread to WIDE
+# transform data
+
+# set fish to include - remove YOY
+
+cap.fish =  c("OPEL", "HEXA", "EMBI", "AUFL",  "BAIT",  
+                 "SECA" , "SCMA" ,"SENE",  "SEFL" , "SEME" ) 
+
+l.fish  = aggregate( QUANTITY ~ YEAR + SITE + ZONE + TRANSECT + group , data = fish0 , FUN = mean )
+# change to wide format
+w.fish1 = spread(l.fish , group , QUANTITY )
+w.fish1[is.na(w.fish1)] <- 0
+rownames(w.fish1) <- paste0("Tran_", 1:nrow(w.fish1))
+
+x = rowSums(w.fish1[ , cap.fish])
+w.fish <- w.fish1[ x != 0 , ]
+
+if(data.transform == "none"){df_fish = w.fish[, cap.fish]}
+if(data.transform == "sqrt"){df_fish = w.fish[, cap.fish]^(1/2)}
+if(data.transform == "4th-root"){df_fish = w.fish[, cap.fish]^(1/4)}
+if(data.transform == "log"){df_fish = log(w.fish[, cap.fish]+1) }
+
+# remove transects with zero fish
+
+```
+
+Note: there are no rockfish YOY in these ordinations and analyses. 
+
+DATA TRANSFORM: `r data.transform`
+
+
+We deleted YOY from the analyses because they were highly variable and often appeared in only one year. Taxa included in the actual analyses were:
+
+Taxa Included: `r cap.fish`
+
+
+
+## Basic - Discriminat CAP Site x Depth x Year
+
+### Permanova  
+
+In the PerMANVOA everything is significant.  I think this is OK.  Things are messy.  
+
+The associated ordination is more clear. This ordination uses site x year x depth as groups and transects as replicates.  I have, however, calculated the centroids for plotting.
+
+FYI removing BAIT doesn't do much.
+
+```{r PerManova_Transect}
+
+pm1 = adonis( df_fish ~ SITE*ZONE*YEAR, data = w.fish, method = 'bray')
+
+# summary(pm1)
+pm1$aov.tab
+
+saveRDS(pm1, file = paste0(Results_Loc,'Fish_PerMANOVA_transect_all.rds'))
+capture.output(pm1, file =  paste0(Results_Loc,'Fish_PerMANOVA_transect_all.txt'))
+```
+### CAP 
+
+
+### capscale - site x year x depth
+
+To match PerMANOVA
+
+```{r capscale1 , include = FALSE}
+
+CAPid = as.factor(paste(w.fish$SITE , w.fish$ZONE , w.fish$YEAR, sep = "_"))
+CAPfish = data.frame(cbind(CAPid, w.fish))
+# fish.start = grep('AUFL', colnames(CAPfish))
+# df_fish <- (CAPfish[, fish.start:ncol(CAPfish) ] )^(1/4)
+df_fish <- as.matrix(df_fish)
+cap2 = capscale( df_fish  ~  as.factor(CAPid) , data=CAPfish , dist = 'bray' )
+# cap2
+cap2_scores = scores(cap2)
+
+cap2_df = data.frame(cbind( cap2_scores$sites , w.fish ))
+
+capture.output( cap2, paste0(Results_Loc,"R_capscale_site_depth_year.txt"))
+saveRDS( cap2, paste0(Results_Loc,"R_capscale_site_depth_year.rds"))
+```
+
+```{r Fish_capscale1_plot_YSD , fig.width=6, fig.height= 6, fig.cap="Ordination plot for CAP based on site x year x depth.  Error bars are +/- 1.0 s.e."}
+cap2_df$col = site$col[ match(cap2_df$SITE , site$site)]
+cap2_df$pch = site$pch[ match(cap2_df$ZONE , site$site)]
+
+par( mfrow = c(2,2), pty='s' , mar = c(4,4,1,1))
+
+Xlim = c(-4, 4)
+Ylim = c(-4,4)
+
+plot(cap2_df$CAP1 , cap2_df$CAP2, pch = 19 , col = cap2_df$col, xlim = Xlim, ylim = Ylim )
+# summarize
+cap2_df1 = Sum_Stats( 'CAP1 ~ SITE + YEAR + col', cap2_df)
+cap2_df2 = Sum_Stats(' CAP2 ~ SITE + YEAR + col', cap2_df)
+
+cap2_df1$pch = year.pch$PCH[ match(cap2_df1$YEAR , year.pch$years)]
+
+segments( par()$usr[1],0,par()$usr[2],0, lty = 'dotted', lwd = 0.5)
+segments( 0, par()$usr[3],0,par()$usr[4], lty = 'dotted', lwd = 0.5)
+legend('topright' , legend = site$site, col = site$col , pch = 19, bty = 'n', cex = 0.8)
+
+plot(cap2_df1$mean , cap2_df2$mean , pch = cap2_df1$pch, col=cap2_df1$col , bg = cap2_df1$col , xlim = c(-2,2) , ylim = c(-2,2), cex = 1.2)
+arrows( cap2_df1$mean+cap2_df1$se , cap2_df2$mean,  cap2_df1$mean-cap2_df1$se , cap2_df2$mean, col = cap2_df1$col, length = 0)
+arrows( cap2_df1$mean, cap2_df2$mean+cap2_df2$se ,  cap2_df1$mean , cap2_df2$mean-cap2_df2$se, col = cap2_df1$col, length = 0)
+segments( par()$usr[1],0,par()$usr[2],0, lty = 'dotted', lwd = 0.5)
+segments( 0, par()$usr[3],0,par()$usr[4], lty = 'dotted', lwd = 0.5)
+# legend('bottomright' , legend = years,  pch = PCH, bty = 'n', cex = 0.8)
+
+
+spp_scores = data.frame(cap2_scores$species)
+plot(spp_scores[,1] , spp_scores[,2], pch="", xlim = Xlim, ylim = Ylim )
+text(spp_scores[,1] , spp_scores[,2], rownames(spp_scores), cex=0.8)
+segments( par()$usr[1],0,par()$usr[2],0, lty = 'dotted', lwd = 0.5)
+segments( 0, par()$usr[3],0,par()$usr[4], lty = 'dotted', lwd = 0.5)
+
+
+plot(1:10, 1:10, pch="", xlab=NA, ylab=NA, xaxt='n', yaxt='n', bty='n')
+legend('left' , legend = site$site, col = site$col , pch = 19, bty = 'n', cex = 1)
+legend('right' , legend = years, pch = PCH, bty = 'n', cex = 1)
+```
+
+
+
+Same data replotted on one pane. We can see some clear site differences:
+
+* Cape Alava and Cape Johnson do not overlap
+* Tatoosh and Neah Bay are intermediate between the former two
+* Destruction is all over the place
+
+
+
+```{r Fish_capscale1_plot_YSD_1pane , fig.width=6, fig.height= 6, fig.cap="Ordination plot for CAP based on site x year x depth.  Error bars are +/- 1.0 s.e."}
+cap2_df$col = site$col[ match(cap2_df$SITE , site$site)]
+cap2_df$pch = site$pch[ match(cap2_df$ZONE , site$site)]
+
+par(pty='s')
+
+# cal means
+cap2_df1 = Sum_Stats( 'CAP1 ~ SITE + YEAR + col', cap2_df)
+cap2_df2 = Sum_Stats(' CAP2 ~ SITE + YEAR + col', cap2_df)
+cap2_df1$pch = year.pch$PCH[ match(cap2_df1$YEAR , year.pch$years)]
+
+xy = 2.5
+
+plot(cap2_df1$mean , cap2_df2$mean , pch = cap2_df1$pch, col=cap2_df1$col , bg = cap2_df1$col , xlim = c(-xy,xy) , ylim = c(-xy,xy), cex = 1.2)
+arrows( cap2_df1$mean+cap2_df1$se , cap2_df2$mean,  cap2_df1$mean-cap2_df1$se , cap2_df2$mean, col = cap2_df1$col, length = 0)
+arrows( cap2_df1$mean, cap2_df2$mean+cap2_df2$se ,  cap2_df1$mean , cap2_df2$mean-cap2_df2$se, col = cap2_df1$col, length = 0)
+segments( par()$usr[1],0,par()$usr[2],0, lty = 'dotted', lwd = 0.5)
+segments( 0, par()$usr[3],0,par()$usr[4], lty = 'dotted', lwd = 0.5)
+
+spp_scores = data.frame(cap2_scores$species)
+spp_scores1 = spp_scores[ abs(spp_scores$CAP1) > 0.2 | abs(spp_scores$CAP2) > 0.2, ]
+
+
+text(spp_scores1[,1] , spp_scores1[,2], rownames(spp_scores1), cex=0.8 , col='red', font=2)
+
+legend('topleft' , legend = site$site, col = site$col , pch = 19, bty = 'n', cex = 1)
+legend('topright' , legend = years, pch = PCH, bty = 'n', cex = 1)
+```
+
+```{r CAPDiscrim , include = FALSE}
+# for some reason, there are no species scores.  Could calculate correlations instead.
+
+CAPid = data.frame(as.factor(paste(w.fish$SITE , w.fish$ZONE , w.fish$YEAR, sep = "_")))
+CAPid = data.frame(as.factor(w.fish$SITE ))
+colnames(CAPid) = 'id'
+fish.div = vegdist( df_fish , method = "bray")
+cap_dis <- CAPdiscrim( fish.div ~ id , data = CAPid)
+
+ordiplot(cap_dis)
+
+```
+
+```{r Import_UPC_Data, include=FALSE}
+
+# bring in data
+
+# algae
+
+algae_zone_long = data.frame(read.csv( paste0(Data_Loc , "algae_swath_zonelevel_lump.csv"), header = TRUE))
+algae_zone <- spread(algae_zone_long[, c('year','site','zone','classcode','dens_weighted')], classcode, dens_weighted)
+colnames(algae_zone)[1:3] <- c('YEAR', 'SITE','ZONE')
+
+
+
+# UPC ####
+upc_site_long = data.frame(read.csv( paste0(Data_Loc , "UPC_Year_Site_Level_Summary.csv"), header = TRUE))
+upc_zone_long = data.frame(read.csv( paste0(Data_Loc , "UPC_Zone_Level_Summary.csv"), header = TRUE))
+# convert to wide 
+upc_site <- spread(upc_site_long[ ,c("SITE", "YEAR", "Functional_Group","MEAN")], Functional_Group, MEAN)
+upc_zone <- spread(upc_zone_long[ ,c("SITE", "YEAR", "ZONE", "Functional_Group","MEAN")], Functional_Group, MEAN)
+
+# Substrate ####
+
+rock_site_long = data.frame(read.csv( paste0(Data_Loc , "SUBSTRATE summary by YEAR-SITE 2016-2019.csv"), header = TRUE))
+rock_zone_long = data.frame(read.csv( paste0(Data_Loc , "SUBSTRATE summary by YEAR-SITE-DEPTH 2016-2019.csv"), header = TRUE))
+# convert to wide
+rock_site <- spread( rock_site_long[, c("YEAR", "SITE", "CLASSCODE", "MEAN")] , CLASSCODE , MEAN)
+rock_zone <- spread( rock_zone_long[, c("YEAR", "SITE", "ZONE", "CLASSCODE", "MEAN")] , CLASSCODE , MEAN)
+rock_zone$pch = year.pch$PCH[ match(rock_zone$YEAR , year.pch$years)]
+rock_zone$col = site$col[ match(rock_zone$SITE , site$site)]  
+# Relief ####
+
+relief.div_site_long = data.frame(read.csv( paste0(Data_Loc , "RELIEF_DIVERSITY_Year_Site_Level_Summary.csv"), header = TRUE))
+relief.div_zone_long = data.frame(read.csv( paste0(Data_Loc , "RELIEF_DIVERSITY_Zone_Level_Summary.csv"), header = TRUE))
+
+# Relief  ####
+
+relief_site_long = data.frame(read.csv( paste0(Data_Loc , "RELIEF_Year_Site_Level_Summary.csv"), header = TRUE))
+
+relief_zone_long = data.frame(read.csv( paste0(Data_Loc , "RELIEF_Zone_Level_Summary.csv"), header = TRUE))
+# convert to wide
+relief_site <- spread( relief_site_long[, c("YEAR", "SITE", "CLASSCODE", "MEAN")] , CLASSCODE , MEAN)
+relief_zone <- spread( relief_zone_long[, c("YEAR", "SITE", "ZONE", "CLASSCODE", "MEAN")] , CLASSCODE , MEAN)
+
+
+#### combine all substrate data for pca
+
+
+hab1 = merge(rock_zone, relief_zone , by = c("YEAR", "SITE", "ZONE"))
+hab = merge(hab1, relief.div_zone_long[,c("YEAR", "SITE", "ZONE","MEAN")], by = c("YEAR", "SITE", "ZONE"))
+colnames(hab)[ncol(hab)] <- "rel.div"
+
+```
+
+
+* PCA the various habitat variables to reduces dimensions
+* Do separately for each variable type
+* Initial analysis by depth zone to maintain the most replicates
+  * not necessarily interested in depth for the analyses
+
+## Substrate PCA - YEAR x SITE x DEPTH means
+
+PC1 mostly distinguishes between bedrock and boulder. Boulder areas had higher relief (>2m) and higher relief diversity. PC2 tends to distinguish between the two mid-complexity categories.
+
+While there is some variation among years within sites (spread), it isn't bad.  Mostly, there are some obvious differences among sites with regard to habitat. 
+
+This might be a good initial ordination figure just describing the sites and showing that the physcial habitat differs among sites. Depths to a lesser extent.
+
+* Tatoosh and Destruction Island have more bedrock and higher relief than other areas. 
+* Neah Bay is bascially intermediate for everything.
+* Cape Alava and Cape Johnson have more boulder and kind of intermediate relief.
+
+
+
+```{r pca_rock , fig.width=5, fig.height = 5, fig.cap= "Substrate PCA. Open circles are 5-m depth zone; closed circles 10-m depth zone."}  
+
+Vars = c("BEDRK","BOULD","COB","SAND",">2m","0-10cm","10cm-1m","1m-2m","rel.div")
+
+hab_pca <- princomp( hab[, Vars] )
+
+par(pty='s', mar = c(4,3,2,1))
+
+# screeplot(rock_pca)
+fviz_eig(hab_pca)
+
+
+# # biplot(rock_pca , arrow.len = 0.05)
+# 
+# fviz_pca_biplot(hab_pca, repel = TRUE,
+#                 geom.ind = c('point'),
+#                 col.var = "#2E9FDF", # Variables color
+#                 col.ind =  hab$col, # Individuals color
+#                 #addEllipses = TRUE,
+#                 title = "Substrate Biplot"
+#                 )
+# 
+
+# good old ordiplot
+
+hab$col2 = ifelse( hab$ZONE == 5 , NA, hab$col)
+par( pty = 's', ps = 10, cex = 1.0)
+ordiplot(hab_pca, display = 'species' , type = 'text' , xlim = c(-1 , 1) , ylim = c(-1 , 1))
+
+pcs_hab = scores(hab_pca)
+points(pcs_hab[,1] , pcs_hab[,2], pch = hab$pch , col = hab$col, bg = hab$col2 , lwd = 1.5 )
+
+segments( par()$usr[1],0,par()$usr[2],0, lty = 'dotted', lwd = 0.5)
+segments( 0, par()$usr[3],0,par()$usr[4], lty = 'dotted', lwd = 0.5)
+
+legend('topright' , legend = site$site, pch=19, col=site$col, bty='n', cex = 0.8)
+legend('topleft' , legend = years, pch=PCH , bty = 'n', cex= 0.8)
+
+x = data.frame(hab[,c('YEAR','SITE','ZONE','pch','col')])
+abiotic = data.frame(cbind(x,pcs_hab))
+
+write.csv(abiotic , paste0(Data_Loc,"PCs_Abiotic_Habitat.csv") , row.names = TRUE)
+
+```
+
+### Fish vs abiotic habitat and kelp
+
+I combined the PCs from the habitat analysis with the kelp data.  I then ran and RDA style constrained analysis.    
+
+This constrained habitat vs. fish analysis is ugly. In fact, it is non-significant! So while there are differences among sites x depth x year in fish abundance, they don't seem related to habitat directly.  
+
+This actually makes sense when you compare the separate fish and habitat ordinations. For example, Cape Alava and Cape Johnson have different fish fauna, but similar habitat. 
+
+
+```{r Can_Cor_Type_RDA}
+
+# merge data
+
+hab_vars0 = data.frame(merge(abiotic, algae_zone , by=c("YEAR", "SITE", "ZONE")))
+hab_vars1 = apply( hab_vars0[, c('Comp.1','Comp.2','MACPYR','NERLUE','PTECAL','OTHER') ] , 2, scale)
+hab_vars = cbind(hab_vars0[,1:5] , hab_vars1)
+
+cap_data = data.frame(merge(w.fish.ysz , hab_vars, by=c("YEAR", "SITE", "ZONE")))
+
+write.csv( cap_data , paste0(Data_Loc, 'D_cap_data_test.csv'), row.names = FALSE)
+cap_data = read.csv(paste0(Data_Loc, 'D_cap_data_test.csv'), header=TRUE)
+cap4 = capscale( cap_data[,cap.fish] ~ Comp.1 + Comp.2 + MACPYR + NERLUE + OTHER + PTECAL, 
+                 data = cap_data)
+cap4
+cap_sum <- summary(cap4)
+
+scores1 = scores(cap4)
+anova(cap4)
+
+```
+
+
+
+```{r Hab_Analysis_capscale_plot}
+
+
+df = data.frame(scores1$sites)
+xy = max(df)
+ordiplot(cap4 , display = 'species' , type = 'text' , xlim = c(-xy,xy) , ylim = c(-xy,xy) , col = 'blue' )
+points( df$CAP1 , df$CAP2 ) 
+hab_scores = data.frame(cap_sum$biplot)
+text(hab_scores$CAP1, hab_scores$CAP1 , rownames(hab_scores) , col = 'red')
+
+```
+***
+
+# Univariate plots by group
+
+
+Note: I have plotted YOY here but they are not in the above ordinations.  
+
+
+
+```{r Fish_Spp_Plots_Site_Year , fig.width=6, fig.height=8, fig.cap="Fish abundance by site and year."}
+
+
+par(  mfrow = c(4,2) , mar=c(3,4,1,1))
+
+for(i in 1:length(fish.include)){
+  form1 = paste0(fish.include[i] , " ~ YEAR + SITE" )
+  df1 = Sum_Stats( form1 , w.fish)
+  df1$seUP = df1$mean + df1$se
+  df1$seLO= df1$mean - df1$se
+  Ymax = max(df1$seUP)
+  
+  # blank plot
+  plot( years , seq(0,Ymax, length.out = length(years)) , pch ="", ylim = c(0, Ymax) , 
+        xlab = NA, ylab = "Number")
+  legend('topleft', legend = fish.include[i], bty='n')
+  for(k in 1:nrow(site)){
+    df2 = df1[ df1$SITE == site$site[k] , ]
+    points( df2$YEAR , df2$mean , type = "b", pch =19, col = site$col[k] )
+    
+    if(i %in% c(1,9)){ legend('topright', legend = site$site, pch=19 , col=site$col , bty='n' , cex=0.8)}
+   
+   
+  }
+  
+  
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
