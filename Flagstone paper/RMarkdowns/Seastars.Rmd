@@ -1,0 +1,286 @@
+---
+title: "Seastars"
+author: "Genoa Sullaway"
+date: "8/27/2020"
+output: 
+  html_document:
+      toc: true
+      toc_float: true
+---
+## Purpose
+- to plot seastar patterns in abundance and occurance, look at potential predator prey relationships and look at size distributions (not done yet).  
+
+## Summary Notes
+- A lot of seastars in 2015 -- Is this a 2015 methods thing? 
+- the 2015 thing looks to matter a lot, it drives  alot of patterns between predator prey that don't appear as strongly once I remove 2015. 
+- A lot of YOY seastars in 2017
+- Looks like there is more to explore with seastars and prey... Species and site specific relationships ?   
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+library(here)
+library(tidyverse)
+library(PNWColors)
+library(viridis)
+ 
+color5= pnw_palette("Cascades",n=5 ,"discrete")
+color6= pnw_palette("Cascades",n=6 ,"discrete")
+seastar_spp <- c("blood_sea_star","large_sea_star","med_sea_star",
+                     "sea_star_YOY","large_sea_star","leather_star","P_ochraceous")
+site_factor <- c("Destruction Island","Cape Johnson","Cape Alava","Tatoosh Island", "Neah Bay")
+```
+
+## Site-Level Abundance
+- Plot patterns of seastar abundance by site and year using site-level data
+```{r invert swath site level}
+inverts <- read_csv(here('Flagstone paper','Data','invert_swath_sitelevel.csv'))
+seastars_site <- inverts %>% 
+  mutate(lump = case_when(lump %in% c("brood_sea_star", "blood_star")~ "blood_sea_star",
+                          lump %in% c("med_seastar")~ "med_sea_star",
+                          TRUE ~ lump )) %>%
+  dplyr::filter(lump %in% seastar_spp,
+         !site %in% c("Anderson Point", "Point of the Arches","Rock 305", "Chibadehl Rocks","Teahwhit Head")) %>%     
+  dplyr::select(year,site,lump,dens_weighted,se_w) 
+
+#look at community across sites using a stacked bar and means across years 
+seastars_site %>%
+  group_by(site,lump) %>%
+  summarise(dens_weighted = mean(dens_weighted)) %>%
+  ungroup() %>%
+  mutate(site = factor(site, levels =site_factor)) %>%
+ggplot(aes(fill=lump, y=dens_weighted, x=site)) + 
+    geom_bar(position="stack", stat="identity") +
+  scale_fill_manual(values = color6) +
+  ggtitle("Years: 2015-2019") +
+  theme_classic()
+
+#What Happens if we remove 2015? -- look at community across sites and years using a stacked bar  
+seastars_site %>%
+  filter(!year == 2015) %>%
+  group_by(site,lump) %>%
+  summarise(dens_weighted = mean(dens_weighted)) %>%
+  ungroup() %>%
+  mutate(site = factor(site, levels =c("Destruction Island","Cape Johnson","Cape Alava","Tatoosh Island" , "Neah Bay" ))) %>%
+ggplot(aes(fill=lump, y=dens_weighted, x=site)) + 
+    geom_bar(position="stack", stat="identity") +
+  scale_fill_manual(values = color6) +
+  ggtitle("remove 2015")+
+    theme_classic()
+
+#How do sites change across time?
+seastars_site %>%  
+  group_by(year,site,lump) %>%
+  summarise(dens_weighted = mean(dens_weighted)) %>% #take mean across zones 
+  ungroup() %>%
+  mutate(site = factor(site, levels =c("Destruction Island","Cape Johnson","Cape Alava","Tatoosh Island" , "Neah Bay" ))) %>%
+ggplot(aes(fill=lump, y=dens_weighted, x=year)) + 
+    geom_bar(position="stack", stat="identity") +
+  scale_fill_manual(values = color6) +
+  facet_wrap(~site,scales = "free" )+
+  theme_classic()
+ 
+#REMOVE 2015 -- look at stacked bar for each site across years 
+seastars_site %>%  
+  filter(!year == 2015) %>%
+  group_by(year,site,lump) %>%
+  summarise(dens_weighted = mean(dens_weighted)) %>% #take mean across zones 
+  ungroup() %>%
+  mutate(site = factor(site, levels =c("Destruction Island","Cape Johnson","Cape Alava","Tatoosh Island" , "Neah Bay" ))) %>%
+ggplot(aes(fill=lump, y=dens_weighted, x=year)) + 
+    geom_bar(position="stack", stat="identity") +
+  scale_fill_manual(values = color6) +
+  ggtitle("remove 2015") +
+  facet_wrap(~site,scales = "free") +
+  theme_classic()
+```
+
+## Characterisize seastars and prey by transect using transect-level data
+
+- Get seastar diets, match them with prey
+- Look at transect,zone and site level relationships of species with their specific prey groups 
+- Which species is most likely to each urchins? make a plot that focuses on that relatioship
+- Right now considering bivalves and urchins as prey -- but need to research this a bit
+
+```{r}
+#load data - filter to species, remove some 2015 sites that werent surveyed in other years, fix some species names  
+inverts <- read_csv(here('Flagstone paper','Data','invert_swath_transectlevel.csv'))
+
+seastars <- inverts %>% 
+  mutate(lump = case_when(lump %in% c("brood_sea_star", "blood_star")~ "blood_sea_star",
+                          lump %in% c("med_seastar")~ "med_sea_star",
+                          TRUE ~ lump )) %>%
+  dplyr::filter(lump %in% seastar_spp,
+         !site %in% c("Anderson Point", "Point of the Arches","Rock 305", "Chibadehl Rocks","Teahwhit Head")) %>%     
+  dplyr::select(year,site,zone,lump,transect,dens_weighted,se_w) %>%
+   mutate(pred_prey_group = "seastar")
+
+#unique(inverts$lump)
+
+seastar_prey <- inverts %>% 
+  dplyr::filter(lump %in% c("bivalve","green_urchin","shelled_mollusk", "purple_urchin","chiton",
+                            "shelled_gastropod","red_urchin"),
+                !site %in% c("Anderson Point", "Point of the Arches","Rock 305", "Chibadehl Rocks","Teahwhit Head")) %>%    
+  dplyr::select(year,site,zone,lump,transect,dens_weighted,se_w) %>%
+  mutate(pred_prey_group = "prey")
+
+seastar.pred.prey <- full_join(seastars,seastar_prey) 
+
+```
+
+
+```{r}
+seastar.pred.prey %>%
+  filter(!lump %in% c( "blood_sea_star")) %>% 
+   group_by(year,site,zone,transect,pred_prey_group) %>%
+   summarise(dens_weighted=sum(dens_weighted)) %>%  
+   spread(pred_prey_group, dens_weighted) %>%
+   ungroup() %>%
+   ggplot() +
+   geom_point(aes(x=seastar, y = prey,color = as.factor(site))) +
+   scale_color_viridis(discrete = T)  +
+  xlab("Seastar Density (Includes all lumps except blood stars") +
+  theme_classic()
+
+seastar.pred.prey %>%
+  filter(!lump %in% c( "blood_sea_star")) %>% 
+   group_by(year,site,zone,transect,pred_prey_group) %>%
+   summarise(dens_weighted=sum(dens_weighted)) %>%  
+   spread(pred_prey_group, dens_weighted) %>%
+   ungroup() %>%
+   ggplot() +
+   geom_point(aes(x=seastar, y = prey,color = as.factor(site))) +
+   scale_color_viridis(discrete = T)  +
+  xlab("Seastar Density (Includes all lumps except blood stars") +
+    facet_wrap(~site ) +
+  theme_classic()
+
+seastar.pred.prey %>%
+  filter(!lump %in% c( "blood_sea_star")) %>% 
+   group_by(year,site,zone,transect,pred_prey_group) %>%
+   summarise(dens_weighted=sum(dens_weighted)) %>%  
+   spread(pred_prey_group, dens_weighted) %>%
+   ungroup() %>%
+   ggplot() +
+   geom_point(aes(x=seastar, y = prey,color = as.factor(site))) +
+   scale_color_viridis(discrete = T)  +
+  xlab("Seastar Density (Includes all lumps except blood stars") +
+  ggtitle("Same Plot as Above but scales are Free") + 
+    facet_wrap(~site,scales = "free" ) +
+  theme_classic()
+
+#any difference sif you remove 2015?
+seastar.pred.prey %>%
+  filter(!lump %in% c( "blood_sea_star"), !year == "2015") %>% 
+   group_by(year,site,zone,transect,pred_prey_group) %>%
+   summarise(dens_weighted=sum(dens_weighted)) %>%  
+   spread(pred_prey_group, dens_weighted) %>%
+   ungroup() %>%
+   ggplot() +
+   geom_point(aes(x=seastar, y = prey,color = as.factor(site))) +
+   scale_color_viridis(discrete = T)  +
+  xlab("Seastar Density (Includes all lumps except blood stars") +
+  theme_classic() +
+  ggtitle("Remove 2015") 
+ 
+```
+
+ 
+Henricia has pretty different diets than many other stars, so I removed them from the above comparisions and did a seperate one below. THey mostly eat sponges and bacteria, so the only prey group I have here is sponge. 
+```{r}
+#make seperate prey DF 
+blood_star_prey <- inverts %>% 
+  dplyr::filter(lump %in% c("sponge"),
+                !site %in% c("Anderson Point", "Point of the Arches","Rock 305", "Chibadehl Rocks","Teahwhit Head")) %>%    
+  dplyr::select(year,site,zone,lump,transect,dens_weighted,se_w) %>%
+  mutate(pred_prey_group = "prey")
+
+blood.pred.prey <- full_join(seastars,blood_star_prey) 
+
+blood.pred.prey %>%
+  filter(!lump %in% c("blood_sea_star")) %>% 
+   group_by(year,site,zone,transect,pred_prey_group) %>%
+   summarise(dens_weighted=sum(dens_weighted)) %>%  
+ #select(-se_w, -lump) %>%
+   spread(pred_prey_group, dens_weighted) %>%
+   ungroup() %>%
+   ggplot() +
+   geom_point(aes(x=seastar, y = prey,color = as.factor(site))) +
+   scale_color_viridis(discrete = T) +
+  ylab("Sponge Density") +
+  xlab("Blood Star Density") +
+  ggtitle("Henricia and sponges only ") +
+    theme_classic()
+ 
+```
+
+ ## Size data - parce and plot 
+- Needs more work 
+- Plot Seastar size distribution by site, lumped all species because of availability of size data
+- Size data doesnt show that many differences... there may be a better way to parce it? 
+
+```{r }
+#source("swatch_invert_overview_ORL.Rmd") 
+#saveRDS(dat_all, here("Flagstone paper","Data","invert_lumps_with_size.RDS"))
+
+
+#size data is not in current data sets so I coped some of Owens code from: #source("swatch_invert_overview_ORL.Rmd")  but adapted it to keep size.
+
+lump <- read_csv(here('Data','CSV_2015_on','invert_groups.csv'))  %>%
+  rename(classcode=CLASSCODE, tot_count=total_count, lump=group)
+
+species_names <- read_csv(here('Data','CSV_2015_on','species_code_list_swath.csv'))
+
+dat.2015 <- read.csv(here('Data','CSV_2015_on',"2015_OCNMSDataComplete_standardized_122116.csv"))
+# species_names <- read_csv(here('Data','CSV_2015_on','species_code_list_swath.csv'))
+
+# Make list of transects by site, and species group.
+dat.2015 <- left_join( dat.2015, species_names %>% dplyr::select(species,group) %>% rename(PISCO.Classcode=species))
+
+# subset the variables we need, filter for just the swath invert species, then expand the data, adding zeroes
+dat.2015.clean <- dat.2015 %>% 
+  filter(PISCO.datatype=="swath", data.type=="swath",group=="Invert") %>% 
+  # select the needed columns
+  dplyr::select(Site,Observer,Transect,Transect.area..inverts.,group,PISCO.Classcode,Count,Size.cm) %>% 
+  # rename some variables
+  rename(size=Size.cm, site=Site,observer=Observer,transect=Transect,observed_area=Transect.area..inverts.,classcode=PISCO.Classcode,count=Count) %>% 
+  # fix some site names
+  mutate(site=as.character(site),
+         site=case_when(
+                site=="Destruction Island SW"~"Destruction Island",
+                site=="Anderson Pt."~"Anderson Point",
+                site=="Chibahdel" ~ "Chibadehl Rocks",
+                site=="Pt. of the Arches" ~ "Point of the Arches",
+                site=="Teawhit Head"~"Teahwhit Head",
+                TRUE ~ site)) %>% 
+  mutate(observed_area=as.numeric(observed_area))
+
+dat.2015.clean.complete <- dat.2015.clean %>% 
+  # fill in zeroes for unobserved species (using all the unique species in the overall data as our universe of possible species)
+  complete(nesting(site,transect),classcode,fill=list(count=0,observed_area=60)) %>% 
+  mutate(year=2015,zone=5) %>%
+  left_join(lump,by='classcode') %>%
+  filter(!site %in% c("Anderson Point", "Point of the Arches","Rock 305", "Chibadehl Rocks","Teahwhit Head"),
+         !is.na(size),
+         lump %in% seastar_spp) %>%
+  select(site, transect, size,year,zone,lump,classcode)
+ 
+################################################################################################################
+### now 2016-2019 data
+dat <- read_csv(here('Data','2019','NWFSC_SWATH_ALLYEARS_data_2019.csv'),col_types = 'cdddccccddddddccddddccc') %>%  select(YEAR,SITE,TRANSECT,ZONE,`SWATH WIDTH`,`DEPTH (ft)`,`METERS sampled`,SEGMENT,CLASSCODE,COUNT,SIZE,notes) %>% 
+  # rename some variables
+  rename(year=YEAR, zone=ZONE,site=SITE,transect=TRANSECT,width=`SWATH WIDTH`,swath_length=`METERS sampled`,depth=`DEPTH (ft)`,segment=SEGMENT,classcode=CLASSCODE,count=COUNT,size=SIZE) %>%
+  # fix one weird data entry issue
+  mutate(segment=ifelse(segment=="10-20M","10-20m",segment)) %>%
+  left_join(lump,by='classcode') %>%
+  filter(lump %in% seastar_spp, !is.na(size)) %>%
+  select(site, transect, size,year,zone,lump,classcode)
+
+  seastar.size <- rbind(dat.2015.clean.complete,dat)
+
+#violin plot
+seastar.size %>%
+  ggplot() +
+  geom_violin(aes(site,size))  +
+  theme_classic()
+```
+

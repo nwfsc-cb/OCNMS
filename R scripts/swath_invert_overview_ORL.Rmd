@@ -66,7 +66,6 @@ species_names <- read_csv(here('Data','CSV_2015_on','species_code_list_swath.csv
 
 ```
 
-
 ## Clean 2015 Data
 
 The 2015 dat are in a different format and we need to make it line up with the rest of the data.
@@ -225,6 +224,8 @@ dat %<>%
 # join the datasets
 dat_all <- bind_rows(dat.2015.clean.complete,dat)
 ```
+
+
 
 ```{r}
 # filter for just inverts in our lumping groups
