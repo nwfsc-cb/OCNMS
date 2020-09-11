@@ -26,7 +26,7 @@ kelp <- read_csv(here('Flagstone paper','Data','algae_swath_zonelevel_lump.csv')
 Join two datasets by year, site, and zone
 
 ```{r}
-urchins <- inverts %>% filter(lump=="urchin") %>% select(year,site,zone,lump,dens_weighted,se_w)
+urchins <- inverts %>% filter(lump%in% c('red_urchin','purple_urchin')) %>% select(year,site,zone,lump,dens_weighted,se_w)
 
 kelp_urchins <- kelp %>% select(year,site,zone,classcode,dens_weighted,se_w) %>% 
   rename(lump=classcode)%>% 
@@ -42,19 +42,55 @@ glimpse(kelp_urchins)
 
 ```{r}
 library(cowplot)
+library(viridis)
+kelp_urchins <- kelp_urchins %>% filter(!(site %in% c('Anderson Point','Chibadehl Rocks','Point of the Arches','Rock 305','Teahwhit Head')))
 
-pl <- purrr::map(c('MACPYR',"NERLUE","OTHER","PTECAL"),function(spp){
-  df <- kelp_urchins %>% select(year,site,zone,contains(spp),dens_weighted_urchin,se_w_urchin)
-  df %>% 
-    ggplot(aes_string("dens_weighted_urchin",paste0("dens_weighted_",spp)))+
-    geom_point()+
-    theme_minimal()+
-    theme(axis.line.x = element_line(),axis.line.y=element_line())+
-    labs(x="Urchin Density",y=paste(spp,"Density"))
-})
+kelp_urchins_long <- kelp_urchins %>% 
+  select(-contains("se")) %>% 
+  pivot_longer(dens_weighted_MACPYR:dens_weighted_PTECAL,names_to = 'kelp_spp',values_to = 'kelp_density') %>% 
+  mutate(kelp_spp=str_sub(kelp_spp,15,-1)) %>% 
+  pivot_longer(contains('urchin'),names_to='urchin_spp',values_to='urchin_density') %>% 
+  mutate(urchin_spp=str_sub(urchin_spp,15,-1)) %>% 
+  mutate(urchin_spp=str_replace_all(urchin_spp,"_"," ") %>% tools::toTitleCase()) %>% 
+  mutate(urchin_density=coalesce(urchin_density,0)) %>% 
+  mutate(log_kelp_density=log1p(kelp_density))
 
-p <- plot_grid(plotlist=pl,ncol=2)
-p
+pl <- kelp_urchins_long %>%
+  ggplot(aes(urchin_density,log_kelp_density,col=site))+
+  geom_point(size=2)+
+  theme_minimal()+
+  scale_color_manual(values=rev(viridis_pal()(5)))+
+  facet_grid(urchin_spp~kelp_spp)+
+  theme(axis.line.x = element_line(),axis.line.y=element_line(),
+        panel.border = element_rect(fill=NA))+
+  labs(x="Urchin Density",y=("Log (Kelp Density+1)"),col="Site")
+  
+
+# pl_red <- purrr::map(c('MACPYR',"NERLUE","OTHER","PTECAL"),function(spp){
+#   df <- kelp_urchins %>% select(year,site,zone,contains(spp),dens_weighted_red_urchin,se_w_red_urchin)
+#   df %>% 
+#     ggplot(aes_string("dens_weighted_red_urchin",paste0("dens_weighted_",spp),col="site"))+
+#     geom_point()+
+#     theme_minimal()+
+#     scale_color_manual(values=viridis_pal()(5))+
+#     theme(axis.line.x = element_line(),axis.line.y=element_line())+
+#     labs(x="Urchin Density",y=paste(spp,"Density"))
+# })
+# 
+# 
+# pl_purple <- purrr::map(c('MACPYR',"NERLUE","OTHER","PTECAL"),function(spp){
+#   df <- kelp_urchins %>% select(year,site,zone,contains(spp),dens_weighted_purple_urchin,se_w_purple_urchin)
+#   df %>% 
+#     ggplot(aes_string("dens_weighted_purple_urchin",paste0("dens_weighted_",spp),col="site"))+
+#     geom_point()+
+#     theme_minimal()+
+#     scale_color_manual(values=viridis_pal()(5))+
+#     theme(axis.line.x = element_line(),axis.line.y=element_line())+
+#     labs(x="Urchin Density",y=paste(spp,"Density"))
+# })
+
+# p <- plot_grid(pl_red,pl_purple,nrow=2)
+pl
 ```
 
 
