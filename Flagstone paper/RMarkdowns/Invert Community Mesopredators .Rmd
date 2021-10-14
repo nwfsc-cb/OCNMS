@@ -1,6 +1,6 @@
 ---
-title: "Swath Invert Overview"
-author: "Owen Liu"
+title: "Invert Mesopredator Community ID"
+author: "Genoa Sullaway"
 date: "8/18/2020"
 output: html_document
 ---
@@ -10,6 +10,8 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(magrittr)
 library(here)
+library(vegan)
+library(PNWColors)
 
 # ggplot theme
 plot_theme <-   theme_minimal()+
@@ -301,80 +303,100 @@ dat_zone <- dat_transect %>%
             sd_ave=sd_agg(sd_ave,n_obs)) %>% 
   ungroup() %>% 
   mutate(se_w=sd_w/sqrt(n_obs),se_ave=sd_ave/sqrt(n_obs))
-
-dat_site <- dat_transect %>% 
-  group_by(year,site,lump) %>% 
-  summarise(n_obs=sum(n_obs),
-            dens_weighted=mean(dens_weighted),
-            sd_w=sd_agg(sd_w,n_obs),
-            dens_averaged=mean(dens_averaged),
-            sd_ave=sd_agg(sd_ave,n_obs)) %>% 
-  ungroup() %>% 
-  mutate(se_w=sd_w/sqrt(n_obs),se_ave=sd_ave/sqrt(n_obs))
+ 
 ```
-
-
-## Explore
-
-### Overall Species Rankings
-
-Most encountered and most overall abundant species
-  
-```{r,fig.width=8,fig.height=8}
-num_obs <- dat_transect %>%
-  filter(dens_averaged>0) %>% 
-  group_by(lump) %>%
-  summarise(n_obs=n()) %>% 
-  ungroup()
-
-# number of encounters
-num_obs %>% 
-  ggplot(aes(x=reorder(lump,-n_obs),y=n_obs))+
-  geom_bar(stat="identity")+
-  labs(x="Species",y="Number of Transects",title="Most Frequently Observed Species by Number of Sites/Years")+
-  theme(axis.text.x = element_text(angle=90,vjust=0.5))
-
-# highest mean density across all years and sites, including zeroes
-overall_mean_density <- dat_site %>% 
-  group_by(lump) %>% 
-  summarise(mean_overall_density=mean(dens_averaged,na.rm=T)) %>% 
-  ungroup()
-overall_mean_density %>% 
-  ggplot(aes(x=reorder(lump,-mean_overall_density),y=mean_overall_density))+
-  geom_bar(stat="identity")+
-  labs(x="Species",y="Mean Density,all sites and years\n(count/sq. m)",title="Most Abundant Species")+
-  theme(axis.text.x = element_text(angle=90,vjust=0.5))
-
-# highest positive density across all years and sites (not including zeroes)
-overall_mean_positive_density <- dat_transect %>% 
-  filter(dens_averaged>0) %>%
-  group_by(lump) %>% 
-  summarise(mean_overall_density=mean(dens_averaged)) %>% 
-  ungroup()
-overall_mean_positive_density %>% 
-  ggplot(aes(x=reorder(lump,-mean_overall_density),y=mean_overall_density))+
-  geom_bar(stat="identity")+
-  labs(x="Species",y="Mean Positive Density,all sites and years\n(count/sq. m)",title="Most Abundant Species (Removing Zeroes)")+
-  theme(axis.text.x = element_text(angle=90,vjust=0.5))
-```
-
-## Save Datasets
 
 ```{r}
-write_rds(dat_transect_spp,here('Data','Summarized data','invert_swath_transect_species.rds'))
-
-write_rds(dat_transect,here('Data','Summarized data','invert_swath_transectlevel.rds'))
-
-write_rds(dat_zone,here('Data','Summarized data','invert_swath_zonelevel.rds'))
-
-write_rds(dat_site,here('Data','Summarized data','invert_swath_sitelevel.rds'))
-
-write_rds(dat_transect_spp,here('Data','Summarized data','invert_swath_transect_species.csv'))
-
-write_csv(dat_transect,here('Data','Summarized data','invert_swath_transectlevel.csv'))
-
-write_csv(dat_zone,here('Data','Summarized data','invert_swath_zonelevel.csv'))
-
-write_csv(dat_site,here('Data','Summarized data','invert_swath_sitelevel.csv'))
+dat_zone %>%  
+ filter(lump %in% c( "kelp_crab"), !year ==2015 ) %>% 
+ # group_by(year,site,lump) %>%
+ # summarise(dens_weighted = mean(dens_weighted)) %>% #take mean across zones 
+  ungroup() %>%
+  mutate(site = factor(site, levels =c("Destruction Island","Cape Johnson","Cape Alava","Tatoosh Island" , "Neah Bay" ))) %>%
+ggplot(aes(fill=lump, y=dens_weighted, x=year)) + 
+    geom_bar(position="stack", stat="identity") +
+  scale_fill_manual(values = color6) +
+  ggtitle("Kelp Crab") +
+  facet_grid(zone~site )+#,scales = "free") +
+  theme_classic()
 ```
+
+```{r}
+dat_zone %>%  
+ filter(lump %in% c( "kelp_crab"), !year ==2015) %>% 
+ # group_by(year,site,lump) %>%
+ # summarise(dens_weighted = mean(dens_weighted)) %>% #take mean across zones 
+  ungroup() %>%
+  mutate(site = factor(site, levels =c("Destruction Island","Cape Johnson","Cape Alava","Tatoosh Island" , "Neah Bay" ))) %>%
+ggplot(aes(fill=lump, y=dens_weighted, x=year)) + 
+    geom_bar(position="stack", stat="identity") +
+  scale_fill_manual(values = color6) +
+  ggtitle("Kelp Crab") +
+  facet_grid(zone~site )+#,scales = "free") +
+  theme_classic()
+```
+
+```{r invert diversity }
+total_proportion <-  dat_zone %>%
+   filter(!year ==2015, !dens_weighted == 0#, !site=="Tatoosh Island"
+          )  %>%
+  group_by(year,site,zone) %>%
+    dplyr::summarise(
+            total_sum=sum(dens_weighted))
+  
+dat_zone %>% #group_by(year,site,zone,lump) %>%
+   filter(!year ==2015, !dens_weighted == 0#, !site=="Tatoosh Island"
+          )  %>%
+  left_join(total_proportion) %>%
+  group_by(year,site,zone,lump) %>%
+    dplyr::summarise(
+            PROPORTION=dens_weighted/total_sum,
+            PROPORTION_2=sum(PROPORTION)^2,
+             .groups = "keep") %>%
+      group_by(year,site,zone) %>%
+    dplyr::summarise(    
+            DIVERSITY= sum(PROPORTION_2),
+             SIMPSONS_DIVERSITY= 1 - DIVERSITY, # simpsons diversity
+            .groups = "keep") %>%
+    select(-DIVERSITY) %>%
+  group_by(site) %>%
+    dplyr::summarise(
+      MEAN=mean(SIMPSONS_DIVERSITY),
+      SD= sd(SIMPSONS_DIVERSITY),
+      N=length(SIMPSONS_DIVERSITY),
+      SE=SD/sqrt(N),
+      .groups = "keep"
+      ) %>% 
+  mutate(site = factor(site, levels =c("Destruction Island","Cape Johnson","Cape Alava","Tatoosh Island" , "Neah Bay" ))) %>%
+  ggplot(aes(x=site, y =MEAN))+
+    geom_point() +
+    geom_line() +
+    geom_errorbar(aes(ymin=MEAN -SE, ymax=MEAN+SE), width = 0.1)+
+    theme_classic() +
+    ylab("Simpsons Diversity Index - inverts")
+```
+
+
+```{r}
+color6= pnw_palette("Cascades", "continuous", n=100)
+
+dat_zone %>%  
+ filter(!year ==2015,
+        !lump%in% c("Cal_cuc", "large_anemone","large_nudibranch","med_nudibranch","no_org","orange_cucumber","sea_cucumber", "small_anemone", "sponge", "tunicate")) %>% 
+   group_by(year,site,lump) %>%
+ dplyr::summarise(dens_weighted = mean(dens_weighted)) %>% #take mean across zones 
+  ungroup() %>%
+  mutate(site = factor(site, levels =c("Destruction Island","Cape Johnson","Cape Alava","Tatoosh Island" , "Neah Bay" ))) %>%
+ggplot(aes(fill=lump, y=dens_weighted, x=year)) + 
+    geom_bar(position="stack", stat="identity") +
+ # scale_fill_manual(values = color6) +
+  ggtitle("2016-2019 Invert Community Diversity") +
+  facet_grid(~site )+#,scales = "free") +
+  theme_classic()
+
+
+```
+
+
+
 

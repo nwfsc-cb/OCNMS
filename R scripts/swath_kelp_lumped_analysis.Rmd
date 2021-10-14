@@ -1,5 +1,5 @@
 ---
-title: "Swath Data Initial Cleaning and Trends"
+title: "Swath Kelp Lumped Analysis"
 author: "Owen Liu"
 date: Last Run "`r Sys.Date()`"
 output: 
@@ -605,13 +605,10 @@ dat_lump_site <- dat_lump_transect %>%
 Density plots
 
 ```{r}
-# linear scale
 dat_lump_zone %>%
   
   # remove only-2015 sites
   filter(!(site %in%c("Anderson Point","Chibadehl Rocks","Point of the Arches","Rock 305","Teahwhit Head"))) %>% 
-  # remove 2015
-  filter(year>2015) %>% 
   mutate(site=factor(site,levels=c("Destruction Island","Cape Johnson","Cape Alava","Tatoosh Island","Neah Bay"))) %>% 
   mutate(short=factor(short,levels=c("Nereocys","Macrocys","Pterygop","Other"))) %>% 
   
@@ -627,13 +624,11 @@ dat_lump_zone %>%
   theme(axis.text.x = element_text(angle=90,vjust=0.5),
         panel.border = element_rect(fill=NA))
 
-# log scale density
-kelp_logdens_lumped <- dat_lump_zone %>% 
+# log density
+dat_lump_zone %>% 
   
   # remove only-2015 sites
   filter(!(site %in%c("Anderson Point","Chibadehl Rocks","Point of the Arches","Rock 305","Teahwhit Head"))) %>% 
-  # remove 2015
-  filter(year>2015) %>% 
   mutate(site=factor(site,levels=c("Destruction Island","Cape Johnson","Cape Alava","Tatoosh Island","Neah Bay"))) %>% 
   mutate(short=factor(short,levels=c("Nereocys","Macrocys","Pterygop","Other"))) %>% 
   
@@ -651,8 +646,6 @@ kelp_logdens_lumped <- dat_lump_zone %>%
        title="")+
   theme(axis.text.x = element_text(angle=90,vjust=0.5),
         panel.border = element_rect(fill=NA))
-
-ggsave(here::here('Plots','log_density_kelp_ts.png'),kelp_logdens_lumped,w=8,h=6)
 ```
 
 ### Patchiness
