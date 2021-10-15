@@ -1,0 +1,512 @@
+---
+title: "Multivariate Analyses for Fish and Inverts"
+author: Nick Toimieri
+date: sys.date()
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 3
+    number_sections: true
+    fig_caption: true
+fontsize: 11pt
+
+---
+
+```{r SETUP, include=FALSE}
+# A bunch of initial set up junk
+
+rm(list = ls())
+
+##### knitr stuff and libraries ####
+
+HomeFile = getwd()
+Fig_Loc = paste0(HomeFile,"/Figures/")
+Data_Loc = paste0(HomeFile,"/Data/")
+Results_Loc = paste0(HomeFile,"/Results/")
+Other_Files = paste0(HomeFile,"/Other Files/")
+
+# tools in use 
+library(knitr)
+# library(tidyr)
+# library(dplyr)
+library(tidyverse)
+library(stringr)
+library(tinytex)
+library(RColorBrewer)
+# display.brewer.all(colorblindFriendly = TRUE)
+library(readxl)
+
+# stats packages etc
+library(vegan)
+library(BiodiversityR)
+library(pracma)
+library(factoextra)
+
+# install.packages("remotes")
+# remotes::install_github("phytomosaic/ecole")
+library(ecole)
+
+# options
+knitr::opts_chunk$set(
+  fig.path = Fig_Loc,
+  cache.path = 'cache/graphics-', 
+  echo=FALSE,
+  error=FALSE,
+  include = TRUE,
+  dev='png',
+  dpi=300,
+  warning=FALSE,
+  #out.width = '100%',
+  fig.align='center'
+  
+  )
+# opts_knit$set(eval.after = "fig.cap")
+
+# just to keep track of when I ran things.
+
+Last_Run0 = Sys.time()
+Last_Run = str_replace(Last_Run0, ":", ".")
+Last_Run = str_replace(Last_Run, ":", ".")
+capture.output(Last_Run, file = 'Last_Run.txt') # over-writes previous file
+
+par(ps=10, cex=1)
+
+# load some external functions
+source("R-functions-ocnms.r")
+
+```
+
+# Triggers and settings
+
+```{r Triggers-and-Settings}
+
+# bring in settings from previous ordination  or reset
+
+settings = readRDS('settings.rds')
+
+min.vis = as.numeric(settings['min.vis'])
+years = as.numeric(unlist(settings['years']))
+site.col = data.frame(settings['site.col'])
+colnames(site.col) = c('site','col')
+sites = site.col$site
+year.pch = data.frame(settings['year.pch'])
+colnames(year.pch) = c('year','pch','col')
+
+#kelp.transform =
+#fish.transform = 
+#invert.transform = 
+# nperm  = 
+
+spp_code =  data.frame(read.csv("spp_codes.csv", header = TRUE))
+invert_code = data.frame(read.csv("invert_groups.csv", header = TRUE))
+
+
+```
+
+
+# Import & Prepare Data for Ordinations
+
+## Kelp
+
+```{r import-data}
+
+# import data
+
+swath = readRDS( paste0( Data_Loc,'Swath_2015-2021.rds') )
+fish0 = readRDS( paste0(Data_Loc, "Fish_2015-2021-ntmods.rds") )
+
+algae.spp =  c("MACPYR", "NERLUE", "PTECAL")
+
+fish.spp =   c("EMBI","GOBI","OPEL", "HEXA", "SECA", "SCMA" ,"SENE", "SEME", "SEFL", "SECAyoy", "SEPIyoy", "YTBLyoy","RYOY")
+
+# invert.spp = c("MESFRA","STRPUR", "STRDRO", # urchins
+#                "PISOCH", "PISBRE", "PISGIG", "DERIMB", "PYCHEL", # stars
+#                "URTSPP","URTLOF", "URTPIS","URTCRA","METSPP","METGIG","ANTXAN","ANTELE", # anenom
+#                "CUCMIN", "PARCAL','EUPQUI'# cucs
+# )
+
+# set up invert groups
+
+invert0 = swath[swath$group == 'Invert',]
+invert0$taxa = invert_code$taxa[match(invert0$species,invert_code$CLASSCODE)]
+
+invert.taxa = c("anemone", "blood star","brood star", "chiton", "crabs", "cucumber","green urchin",      "hermit_crabs" , "kelp crab","large star","leather star" , "medium star", "nudibranch","Pisaster" ,         "purple urchin" ,"Pynopodia","red urchin", "shelled gastropod","sponge", "tunicate")
+
+# select species, years, visibility
+
+fish1 = fish0[ fish0$taxa %in% fish.spp & 
+              fish0$vis_m >= min.vis & 
+              fish0$year > 2015 &
+              fish0$site %in% sites,]
+
+algae1 = swath[swath$species  %in% algae.spp & 
+               # swath$zone ==5 &
+               swath$year > 2015 &
+               swath$site %in% sites,
+               ]
+
+
+inverts1 = invert0[invert0$taxa  %in% invert.taxa & 
+                   invert0$year > 2015 &
+                   invert0$site %in% sites,]
+
+
+### convert to wide &  sum up counts by transect
+fish = to_wide(fish1, spp.gr = 'taxa')
+kelp = to_wide(algae1 , spp.gr = 'species')
+inverts = to_wide(inverts1,  spp.gr = 'taxa')
+
+# save out analyzed data
+
+saveRDS(fish, paste0(Data_Loc,"Data-Multivariate-Fish.rds"))
+saveRDS(kelp, paste0(Data_Loc,"Data-Multivariate-Kelp.rds"))
+saveRDS(inverts, paste0(Data_Loc,"Data-Multivariate-Inverts.rds"))
+
+```
+
+# Ordinations
+
+```{r ordinations}
+run.ord = FALSE
+nperm = 999
+transform = 'log' # choose transform here
+if(run.ord == TRUE){
+
+
+fish.cap =   c("OPEL", "HEXA", "SECA", "SCMA" ,"SENE", "SEME", 'EMBI','GOBI')
+# fish.cap =   c("OPEL", "HEXA", "SECA", "SCMA" ,"SENE", "SEME")
+
+yoy =        c("SECAyoy", "SEPIyoy", "YTBLyoy","RYOY")
+
+
+print("Working on kelp ordination")
+kelp_ord = run.multivar.nt( data.file = kelp, drop2015 = TRUE, nperm=nperm,
+                        spp = algae.spp,
+                        data.transform = transform,
+                        outname = paste0( Results_Loc, "Kelp-")
+                        )
+saveRDS(kelp_ord,file = paste0(Results_Loc,"Kelp-ordination-n",nperm,"-",transform,".rds"))
+
+print("Working on fish ordination")
+fish_ord = run.multivar.nt( data.file = fish, drop2015 = TRUE, nperm=nperm,
+                        spp = fish.cap,
+                        data.transform = transform,
+                        outname = paste0( Results_Loc, "Fish-")
+                        )
+saveRDS(fish_ord,file = paste0(Results_Loc,"Fish-ordination-n",nperm,"-",transform,".rds"))
+
+print("Working on Sebastes YOY ordination")
+yoy_ord = run.multivar.nt( data.file = fish,  drop2015 = TRUE, nperm=nperm,
+                        spp = yoy,
+                        data.transform = transform,
+                        outname = paste0( Results_Loc, "YOY-")
+                        )
+saveRDS(yoy_ord,file = paste0(Results_Loc,"YOY-ordination-n",nperm,"-",transform,".rds"))
+
+print("Working on invert ordination")
+invert_ord = run.multivar.nt( data.file = inverts, drop2015 = TRUE, nperm=nperm,
+                        spp = invert.taxa,
+                        data.transform = transform,
+                        outname = paste0( Results_Loc, "Inverts-")
+                        )
+saveRDS(invert_ord,file = paste0(Results_Loc,"Invert-ordination-n",nperm,"-",transform,".rds"))
+
+}else{ # reload previously run files to save time
+     kelp_ord    <- readRDS( paste0(Results_Loc,"Kelp-ordination-n",nperm,"-",transform,".rds"))
+     fish_ord   <- readRDS( paste0(Results_Loc,"Fish-ordination-n",nperm,"-",transform,".rds"))
+     yoy_ord    <- readRDS( paste0(Results_Loc,"YOY-ordination-n",nperm,"-",transform,".rds"))
+     invert_ord <- readRDS( paste0(Results_Loc,"Invert-ordination-n",nperm,"-",transform,".rds"))
+}
+
+```
+# Combined ordination plot
+
+NOTE to self: These plots use `r nperm` permutations. Double check that these are the ones you want.
+
+Ordinations use a `r transform` transform to the data to reduce the influence of abundant species.
+
+```{r ordinations-plots, fig.width=6, fig.height=6}
+
+par( mfrow = c(2,2), pty='s' , mar = c(2,4,0,0))
+
+xy=c(-7,7)
+xy2 = c(-1.2, 1.2)
+var.ylim = c(0,0.8)
+var.cex = 0.7
+plotspp = TRUE
+sppseparate = FALSE
+sppcol = 'black'
+
+
+
+Plot_Ordination( data.file = kelp_ord$cap.df , ord.file = kelp_ord$cap, min.score = 0.2,
+                 Yform = 'LD', Xform =  ' ~ site + year + col + pch',
+                 Xlim = xy, Ylim=xy, Xlim2 = xy2, Ylim2=xy2,
+                 plot.species = plotspp , spp.separate = sppseparate, fig.legend = 'Kelp', sppcol = sppcol)
+
+legend('topright', legend=site.col$site, pch=19, col=site.col$col, bty='n', cex=0.8 )
+
+
+Plot_Ordination( data.file = fish_ord$cap.df , ord.file = fish_ord$cap, min.score = 0.2,
+                 Yform = 'LD', Xform =  ' ~ site + year + col + pch',
+                 Xlim = c(-3,3), Ylim=c(-3,3), Xlim2 = xy2, Ylim2=xy2,
+                 plot.species = plotspp , spp.separate = sppseparate, fig.legend = 'Fish', sppcol = sppcol)
+
+yr = year.pch[year.pch$year != 2015 & year.pch$year!=2020 ,]
+legend('topright', legend=yr$year, pch=as.numeric(yr$pch), col='darkgrey',pt.bg = 'darkgray', bty='n', cex=0.8 )
+
+# sebastes
+Plot_Ordination( data.file = yoy_ord$cap.df , ord.file = yoy_ord$cap, min.score = 0.2,
+                 Yform = 'LD', Xform =  ' ~ site + year + col + pch',
+                 Xlim = c(-3.5,3.5), Ylim=c(-3.5, 3.5), Xlim2 = xy2, Ylim2=xy2,
+                 plot.species = plotspp , spp.separate = sppseparate, fig.legend = 'Sebastes YOY', sppcol = sppcol)
+
+# invets
+Plot_Ordination( data.file = invert_ord$cap.df , ord.file = invert_ord$cap, min.score = 0.2,
+                 Yform = 'LD', Xform =  ' ~ site + year + col + pch',
+                 Xlim = xy, Ylim=xy, Xlim2 = xy2, Ylim2=xy2,
+                 plot.species = TRUE , spp.separate = sppseparate, fig.legend = 'Inverts', sppcol = sppcol)
+
+```
+
+
+Different version of the same plot. Separates spp plots and site plots. 
+
+```{r ordinations-plots-separate-spp-panes, fig.width=6, fig.height=8}
+
+par( mfrow = c(4,2), pty='s' , mar = c(2,4,0,0))
+
+xy=c(-7,7)
+xy2 = c(-1.2, 1.2)
+var.ylim = c(0,0.8)
+var.cex = 0.7
+plotspp = FALSE
+sppseparate = TRUE
+sppcol = 'black'
+
+
+
+Plot_Ordination( data.file = kelp_ord$cap.df , ord.file = kelp_ord$cap, min.score = 0.2,
+                 Yform = 'LD', Xform =  ' ~ site + year + col + pch',
+                 Xlim = xy, Ylim=xy, Xlim2 = xy2, Ylim2=xy2,
+                 plot.species = plotspp , spp.separate = sppseparate, fig.legend = 'Kelp', sppcol = sppcol)
+
+legend('bottomright', legend=site.col$site, pch=19, col=site.col$col, bty='n', cex=0.8 )
+yr = year.pch[year.pch$year != 2015 & year.pch$year!=2020 ,]
+legend('bottomleft', legend=yr$year, pch=as.numeric(yr$pch), col='darkgrey',pt.bg = 'darkgray', bty='n', cex=0.8 )
+
+Plot_Ordination( data.file = fish_ord$cap.df , ord.file = fish_ord$cap, min.score = 0.2,
+                 Yform = 'LD', Xform =  ' ~ site + year + col + pch',
+                 Xlim = c(-3,3), Ylim=c(-3,3), Xlim2 = xy2, Ylim2=xy2,
+                 plot.species = plotspp , spp.separate = sppseparate, fig.legend = 'Fish', sppcol = sppcol)
+
+
+
+# sebastes
+Plot_Ordination( data.file = yoy_ord$cap.df , ord.file = yoy_ord$cap, min.score = 0.2,
+                 Yform = 'LD', Xform =  ' ~ site + year + col + pch',
+                 Xlim = c(-3.5,3.5), Ylim=c(-3.5, 3.5), Xlim2 = xy2, Ylim2=xy2,
+                 plot.species = plotspp , spp.separate = sppseparate, fig.legend = 'Sebastes YOY', sppcol = sppcol)
+
+# invets
+Plot_Ordination( data.file = invert_ord$cap.df , ord.file = invert_ord$cap, min.score = 0.2,
+                 Yform = 'LD', Xform =  ' ~ site + year + col + pch',
+                 Xlim = xy, Ylim=xy, Xlim2 = xy2, Ylim2=xy2,
+                 plot.species = FALSE , spp.separate = sppseparate, fig.legend = 'Inverts', sppcol = sppcol)
+
+```
+
+```{r explained-variance-v1, fig.width=4.5, fig.height=3.5}
+
+pt.cex = 1.5
+axislabels = c('D', "S",'Y','SD','DY','SY','R')
+
+plot(1:7,  fish_ord$pm[1:7,'R2'] , xaxt='n' , xlim = c(0.5,7.5) , ylim = c(0,0.6), pch=19 , xlab=NA ,  ylab="Prop. explained variance" , cex = pt.cex, col = 'black')
+
+points(1:7,  kelp_ord$pm[1:7,'R2'], pch=19, cex = pt.cex, col = 'green' )
+points(1:7,  yoy_ord$pm[1:7,'R2'], pch=19, cex = pt.cex, col = 'grey' )
+points(1:7,  invert_ord$pm[1:7,'R2'], pch=19 ,  cex = pt.cex, col='red')
+
+axis(side = 1, at=1:7, labels = axislabels, cex.axis=0.8)
+
+legend('top', legend = c('Fish','Sebastes YOY','Kelp','Inverts'), pch=19, col = c('black','grey','green','red'), bty = 'n', cex = 0.8)
+
+
+
+
+```
+
+Just a different version of the same figure.
+
+
+
+``` {r explained-var-v2, fig.width=4.5, fig.height=3.5}
+
+axislabels = c('D', "S",'Y','SD','DY','SY','Res')
+
+f = data.frame(cbind('Fish' , axislabels, fish_ord$pm[1:7,'R2']))
+s = data.frame(cbind('Sebastes YOY', axislabels,yoy_ord$pm[1:7,'R2']))
+k = data.frame(cbind('Kelp', axislabels,kelp_ord$pm[1:7,'R2']))
+v = data.frame(cbind('Inverts', axislabels,invert_ord$pm[1:7,'R2']))
+
+df = rbind(f,s,k,v)
+colnames(df) <- c('Spp','x', 'r2')
+df$r2 = as.numeric(df$r2)
+
+library(ggplot2)
+
+df$Spp <- factor(df$Spp , levels = c('Fish','Sebastes YOY','Kelp','Inverts'))
+df$x <-   factor(df$x , levels = axislabels)
+
+hist.col = c('black','grey',RColorBrewer::brewer.pal(12,'Paired')[c(2,4)])
+
+p = ggplot( df , aes(x = x,  y = r2, fill=Spp)) +
+    # geom_point() + 
+    #geom_jitter(size = 4) +
+    geom_bar(stat="identity", position=position_dodge(), color='black') +
+    scale_fill_manual( values =  hist.col )+
+    ylab('Prop. explained variance') +
+    xlab("") +
+     theme_minimal()
+
+
+p
+
+```
+
+## Just Adult Fishes
+```{r set-depth}
+set.depth.5m = TRUE
+
+if(set.depth.5m == TRUE){print('This analysis includes only 5-m depth.')}else{
+      print('This analysis includes 5 & 10 m') }
+      
+```
+
+
+
+```{r fish-kelp-capscale}
+# distance-based redundancy analysis
+
+df0 = readRDS(paste0(Data_Loc,'Data_Fish_x_Kelp.rds'))
+
+cap.fish.spp = c("EMBI","GOBI","OPEL", "HEXA", "SECA", "SCMA" ,"SENE", "SEME", "SEFL")
+# , "SECAyoy", "SEPIyoy", "YTBLyoy","RYOY")
+
+df1 = df0[,c('id','site.x','year.x','zone.x','area.x', cap.fish.spp,algae.spp)]
+rownames(df1) <- df1$id
+df = na.omit(df1)
+if(set.depth.5m == TRUE){df = df[df$zone.x == 5,]}
+cap.fish = df[,c(cap.fish.spp)]
+cap.fish = log(cap.fish+1)
+transform = 'log'
+
+dim(cap.fish)
+
+cap1 = capscale( cap.fish ~ MACPYR + NERLUE + PTECAL , data = df, dist="bray" )
+anova(cap1)
+
+par( ps=10, cex = 1, pty='s')
+ordiplot(cap1, xlim=c(-6,6), ylim=c(-6,6) )
+x = scores(cap1)
+df = cbind(df,x$sites)
+df$col = site.col$col[match(df$site.x,site.col$s)]
+points(df$CAP1,df$CAP2,pch=19, col=df$col)
+a = data.frame(x$species)
+text(a$CAP1, a$CAP2, rownames(a), col='red')
+
+legend('topleft' , legend = site.col$site, pch=19, col = site.col$col, bty='n', cex=0.8)
+
+saveRDS(list(cap1,df), file = paste0(Results_Loc,'Fish-Kelp-',transform,".rds"))
+
+```
+
+Fish data  were `r transform` transformed for the analysis prior to calculating the dissimilartiy matrix.
+
+Fish included were `r cap.fish.spp`
+
+
+## Just Sebastes YOY 
+
+
+```{r yoy-kelp-capscale}
+# distance-based redundancy analysis
+
+df0 = readRDS(paste0(Data_Loc,'Data_Fish_x_Kelp.rds'))
+
+cap.fish.spp = c("SECAyoy", "SEPIyoy", "YTBLyoy","RYOY")
+
+df1 = df0[,c('id','site.x','year.x','zone.x','area.x', cap.fish.spp,algae.spp)]
+rownames(df1) <- df1$id
+df = na.omit(df1)
+if(set.depth.5m == TRUE){df = df[df$zone.x == 5,]}
+cap.fish = df[,c(cap.fish.spp)]
+cap.fish = log(cap.fish+1)
+transform = 'log'
+
+dim(cap.fish)
+
+cap.fish = cap.fish+0.001
+
+cap1 = capscale( cap.fish ~ MACPYR + NERLUE + PTECAL , data = df, dist="bray" )
+anova(cap1)
+
+par( ps=10, cex = 1, pty='s')
+ordiplot(cap1, xlim=c(-6,6), ylim=c(-6,6) )
+x = scores(cap1)
+df = cbind(df,x$sites)
+df$col = site.col$col[match(df$site.x,site.col$s)]
+points(df$CAP1,df$CAP2,pch=19, col=df$col)
+a = data.frame(x$species)
+text(a$CAP1, a$CAP2, rownames(a), col='red')
+
+legend('topleft' , legend = site.col$site, pch=19, col = site.col$col, bty='n', cex=0.8)
+
+saveRDS(list(cap1,df), file = paste0(Results_Loc,'Fish-Kelp-',transform,".rds"))
+
+```
+
+
+## Everything Combined 
+
+This includes the selected adult/large fish and sebastes yoy in the same redundancy analysis.
+
+```{r fish-all-kelp-capscale}
+# distance-based redundancy analysis
+
+df0 = readRDS(paste0(Data_Loc,'Data_Fish_x_Kelp.rds'))
+
+cap.fish.spp = c("EMBI","GOBI","OPEL", "HEXA", "SECA", "SCMA" ,"SENE", "SEME", "SEFL", "SECAyoy", "SEPIyoy", "YTBLyoy","RYOY")
+
+df1 = df0[,c('id','site.x','year.x','zone.x','area.x', cap.fish.spp,algae.spp)]
+rownames(df1) <- df1$id
+df = na.omit(df1)
+
+ordiplot(cap1, xlim=c(-6,6), ylim=c(-6,6) )
+if(set.depth.5m == TRUE){df = df[df$zone.x == 5,]
+}
+cap.fish = df[,c(cap.fish.spp)]
+cap.fish = log(cap.fish+1)
+transform = 'log'
+
+dim(cap.fish)
+
+cap1 = capscale( cap.fish ~ MACPYR + NERLUE + PTECAL , data = df, dist="bray" )
+anova(cap1)
+
+par( ps=10, cex = 1, pty='s')
+ordiplot(cap1, xlim=c(-6,6), ylim=c(-6,6) )
+x = scores(cap1)
+df = cbind(df,x$sites)
+df$col = site.col$col[match(df$site.x,site.col$s)]
+points(df$CAP1,df$CAP2,pch=19, col=df$col)
+a = data.frame(x$species)
+text(a$CAP1, a$CAP2, rownames(a), col='red')
+
+legend('topleft' , legend = site.col$site, pch=19, col = site.col$col, bty='n', cex=0.8)
+
+saveRDS(list(cap1,df), file = paste0(Results_Loc,'Fish-Kelp-',transform,".rds"))
+
+```
+
