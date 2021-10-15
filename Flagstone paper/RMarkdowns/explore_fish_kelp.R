@@ -46,6 +46,7 @@ fish_kelp <- fish_kelp %>%
 # Kelp are either total kelp (NERLUE+ MACPYR+PTECAL), canopy kelp (NERLUE+ MACPYR), or understory kelp (PTECAL)
 fish_kelp$canopy_kelp = fish_kelp$NERLUE + fish_kelp$MACPYR
 fish_kelp$kelp = fish_kelp$NERLUE + fish_kelp$MACPYR + fish_kelp$PTECAL
+fish_kelp$ner_pte =  fish_kelp$NERLUE + fish_kelp$PTECAL
 
 ###### fish ####
 ########fish1 includes all spp and five sites but no deletion of low vis.
@@ -73,7 +74,7 @@ fish_kelp %>%
 #look at YTBLyoy v canopy
 fish_kelp %>%
   ggplot() +
-  geom_point(aes(x=canopy_kelp, y = YTBLyoy, color = as.factor(zone.x), shape = as.factor(site.x))) +
+  geom_point(aes(x=canopy_kelp, y = YTBLyoy, color = as.factor(site.x), shape = as.factor(site.x))) +
   scale_color_viridis(discrete = T)  +
   xlab("Canopy Kelp Density") +
   ylab("Black and Yellowtail YOY") +
@@ -87,3 +88,43 @@ fish_kelp %>%
   xlab("All Kelp Density") +
   ylab("Black and Yellowtail YOY") +
   theme_classic()
+
+# try faceting a bit with positive data only
+fish_kelp %>%
+  filter(is.na(zone.x) == FALSE) %>%
+  filter(YTBLyoy > 0) %>%
+  filter(canopy_kelp > 0) %>%
+  ggplot(aes(x=canopy_kelp, y = YTBLyoy, color = as.factor(site.x))) +
+  geom_point() +
+  geom_smooth(method = lm) + 
+  facet_grid(rows = vars(zone.x)) +
+  scale_x_log10() +
+  scale_y_log10() +
+  scale_color_viridis(discrete = T, name = "")  +
+  xlab("Canopy Kelp Density") +
+  ylab("Black and Yellowtail YOY") +
+  theme_classic()
+
+# try occurrence
+# https://www.ericrscott.com/post/plot-logistic-regressions/
+fish_kelp %>%
+  mutate(
+    YTBLyoy_occur = ifelse(YTBLyoy > 0,1,0),
+    canopy_kelp_occur = ifelse(canopy_kelp > 0,1,0)
+  ) %>%
+  filter(is.na(zone.x) == FALSE) %>%
+  ggplot(aes(x=canopy_kelp,y = YTBLyoy_occur, color = as.factor(site.x))) +
+  #geom_jitter(aes(y = YTBLyoy_occur, color = as.factor(site.x))) +
+  stat_summary_bin(geom = "point", fun = mean, aes(y = YTBLyoy_occur)) +
+  facet_grid(rows = vars(zone.x)) +
+  scale_color_viridis(discrete = T, name = "")  +
+  xlab("Canopy Kelp Density") +
+  ylab("Black and Yellowtail YOY") +
+  theme_classic()
+
+# this code generally works, so now write a for loop to do it for all combinations of the things we're interested in
+
+# YOYs: SECAyoy, SEMAyoy, SEMYyoy, SENEyoy, SEPIyoy, YTBLyoy
+# black rocks: SEME
+# kelps: MACPYR, NERLUE, PTECAL, canopy_kelp, kelp, ner_pte
+# consider whether we want to plot all of the fish abundances, occurrence only, positive data only
