@@ -17,7 +17,7 @@ data.dir <- paste0(base.dir,"/Data/CSV_2015_on")
 setwd(data.dir)
 
 dat.2015 <- read.csv("2015_OCNMSDataComplete_standardized_122116.csv")
-dat.2016.on.swath <- read.csv("NWFSC_SWATH_ALLYEARS_data_2019.csv")
+dat.2016.on.swath <- read.csv("NWFSC_SWATH_ALLYEARS_data_2021.csv")
 
 dat.2016.on.swath$CLASSCODE[dat.2016.on.swath$CLASSCODE=="no_alg"] <- "NO_ALG"
 
@@ -63,9 +63,9 @@ SP <- SP.all[SP.all != "NO_ORG" & SP.all != "NOT_DONE"]
       temp$PISCO.Classcode <- SP[i]; temp$Species <- unique(temp$Species)[is.na(unique(temp$Species))==F][1]
     }
     if(nrow(swath.dat %>% filter(PISCO.Classcode == SP[i])) ==0){
-      temp  <-  data.frame(base.dat %>% filter(group == species_names$group[species_names$species==SP[i]]), 
-                           Species= SP.all.common.names$common.name[which(SP.all.common.names$species==SP[i])], PISCO.Classcode = SP[i],
-                           Count= 0,Size.cm=NA) #,size_class=NA) 
+      temp  <-  data.frame(base.dat %>% filter(group == species_names$group[species_names$species==SP[i]]) %>%
+                           mutate(Species= SP.all.common.names$common.name[which(SP.all.common.names$species==SP[i])], 
+                                  PISCO.Classcode = SP[i], Count= 0, Size.cm=NA)) #,size_class=NA) 
     }
   dat.long <- rbind(dat.long, temp)
   }
@@ -184,6 +184,7 @@ dat.invert.density <- dat.pre.2015 %>% dplyr::select(year=Year,site=Site,group.n
                         mutate(zone=ifelse(year<2015,5,zone))
 
 dat.invert.density$group.name <- as.character(dat.invert.density$group.name)
+dat.invert.density$site <- as.character(dat.invert.density$site)
 
 # combine the names of the sites sensibly.
 dat.invert.density <- dat.invert.density %>% mutate(site=ifelse(site=="Anderson Pt.","Anderson Point",site)) %>%
