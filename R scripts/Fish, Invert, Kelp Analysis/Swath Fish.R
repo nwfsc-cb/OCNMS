@@ -215,17 +215,21 @@ dat.fish <- dat.fish %>% ungroup() %>%
       area = case_when(
         site == "Cape Alava" & area %in% c("1","W") ~ "W",
         site == "Cape Alava" & area %in% c("2","E") ~ "E",
-        site == "Cape Johnson" | site == "Destruction Island" & area %in% c(1,"S") ~ "S",
-        site == "Cape Johnson" | site == "Destruction Island" & area %in% c(2,"N") ~ "N",
-        site == "Neah Bay" | site == "Tatoosh Island" & area %in% c(1,"N") ~ "N",
-        site == "Neah Bay" | site == "Tatoosh Island" & area %in% c(2,"S") ~ "S",
+        site == "Cape Johnson"  & area %in% c(1,"S") ~ "S",
+        site == "Cape Johnson"  & area %in% c(2,"N") ~ "N",
+        site == "Destruction Island" & area %in% c(1,"S") ~ "S",
+        site == "Destruction Island" & area %in% c(2,"N") ~ "N",
+        site == "Tatoosh Island" & area %in% c(1,"N") ~ "N",
+        site == "Tatoosh Island" & area %in% c(2,"S") ~ "S",
+        site == "Neah Bay" & area %in% c(1,"N") ~ "N",
+        site == "Neah Bay" & area %in% c(2,"S") ~ "S",
         TRUE ~ NA_character_
       )
     )
 
 # This is a check on labeling
-#dat.fish %>% ungroup() %>% dplyr::select(year, site,area,transect) %>% distinct(year,site,area) %>%
-#    as.data.frame()
+dat.fish %>% ungroup() %>% dplyr::select(year, site,area,transect) %>% distinct(year,site,area) %>%
+   as.data.frame()
 
 # All samples in 2015 were collected at 5m depth
 dat.fish$zone[dat.fish$year == 2015] <- 5
@@ -242,25 +246,14 @@ dat.fish$site <- factor(dat.fish$site,
                                     "Chibadehl Rocks",
                                     "Neah Bay"))
 
-
 saveRDS(dat.fish,"Fish_2015-2021.rds")
 
-
-
-
-
-
-
-
-
-
 ##############################################################
 ##############################################################
 ##############################################################
 ##############################################################
 ##############################################################
 ##############################################################
-
 
 # GENERATE INDEXES BY SITE and AMONG SITES
 dat.large.fish.summary <- dat.fish %>% filter(size_class=="large" | is.na(size_class)==T) %>%

@@ -151,6 +151,42 @@ dat.swath <-dat.swath %>% filter(site != "")
 dat.swath <- dat.swath %>% filter(!group =="MISSING")
 
 dat.swath.base <- dat.swath %>% as.data.frame()
+dat.swath.base$site <- as.character(dat.swath.base$site)
+
+dat.swath.base <- dat.swath.base %>% mutate(site=ifelse(site=="Anderson Pt.","Anderson Point",site)) %>%
+  mutate(site=ifelse(site=="Chibahdel","Chibadehl Rocks",site)) %>%
+  mutate(site=ifelse(site=="Destruction Island SW","Destruction Island",site)) %>%
+  mutate(site=ifelse(site=="Pt. of the Arches","Point of the Arches",site)) %>%
+  mutate(site=ifelse(site=="Teawhit Head","Teahwhit Head",site))
+
+dat.swath.base$area <- as.character(dat.swath.base$area)
+
+dat.swath.base <- dat.swath.base %>% ungroup() %>%
+  mutate(
+    area = case_when(
+      site == "Cape Alava" & area %in% c("1","W") ~ "W",
+      site == "Cape Alava" & area %in% c("2","E") ~ "E",
+      site == "Cape Johnson"  & area %in% c(1,"S") ~ "S",
+      site == "Cape Johnson"  & area %in% c(2,"N") ~ "N",
+      site == "Destruction Island" & area %in% c(1,"S") ~ "S",
+      site == "Destruction Island" & area %in% c(2,"N") ~ "N",
+      site == "Tatoosh Island" & area %in% c(1,"N") ~ "N",
+      site == "Tatoosh Island" & area %in% c(2,"S") ~ "S",
+      site == "Neah Bay" & area %in% c(1,"N") ~ "N",
+      site == "Neah Bay" & area %in% c(2,"S") ~ "S",
+      TRUE ~ NA_character_
+    )
+  )
+# Check for area labeling
+# dat.swath.base %>% ungroup() %>% dplyr::select(year, site,area,transect) %>% distinct(year,site,area) %>%
+#       as.data.frame()
+# 
+# dat.swath.base %>% ungroup() %>% dplyr::select(year, site,area,transect) %>% distinct(site,area) %>%
+#   as.data.frame()
+
+
+saveRDS(dat.swath.base,"Swath_2015-2021.rds")
+
 
 # <<<<<<< HEAD
 # A <- ggplot(all.urchin.seastar %>% filter(site %in% c("Neah Bay","Tatoosh Island"))) +
@@ -163,11 +199,6 @@ dat.swath.base <- dat.swath %>% as.data.frame()
 #     scale_color_discrete("Site") +
 #     theme_bw()
 # =======
-# dat.swath.base <- dat.swath.base %>% mutate(site=ifelse(site=="Anderson Pt.","Anderson Point",site)) %>%
-#   mutate(site=ifelse(site=="Chibahdel","Chibadehl Rocks",site)) %>%
-#   mutate(site=ifelse(site=="Destruction Island SW","Destruction Island",site)) %>%
-#   mutate(site=ifelse(site=="Pt. of the Arches","Point of the Arches",site)) %>%
-#   mutate(site=ifelse(site=="Teawhit Head","Teahwhit Head",site))
 # >>>>>>> a7d2dd24a9f92e130851a9793536a4b53e6ab2c1
 
 # Separate out invertebrates and algae.
