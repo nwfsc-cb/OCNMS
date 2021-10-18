@@ -178,12 +178,19 @@ dat.swath.base <- dat.swath.base %>% ungroup() %>%
     )
   )
 
+# This is a long set of transects conducted North to South by Jameal and Ole. We divide them up by placing half in 
+# The northern sub area and half in the southern sub area
+dat.swath.base$area <- as.character(dat.swath.base$area)
+dat.swath.base <- dat.swath.base %>% ungroup() %>%
+                  mutate(area = ifelse(site=="Cape Johnson" & year ==2017 & is.na(area) & transect <=3, "N",area)) %>%
+                  mutate(area = ifelse(site=="Cape Johnson" & year ==2017 & is.na(area) & transect >3, "S",area))
+
 # Check for area labeling
 # dat.swath.base %>% ungroup() %>% dplyr::select(year, site,area,transect) %>% distinct(year,site,area) %>%
 #       as.data.frame()
 # 
-# dat.swath.base %>% ungroup() %>% dplyr::select(year, site,area,transect) %>% distinct(site,area) %>%
-#   as.data.frame()
+ dat.swath.base %>% ungroup() %>% dplyr::select(year, site,area,transect) %>% distinct(year,site,area) %>%
+   as.data.frame()
 
 
 saveRDS(dat.swath.base,"Swath_2015-2021.rds")
