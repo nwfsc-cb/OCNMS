@@ -177,6 +177,7 @@ dat.swath.base <- dat.swath.base %>% ungroup() %>%
       TRUE ~ NA_character_
     )
   )
+
 # Check for area labeling
 # dat.swath.base %>% ungroup() %>% dplyr::select(year, site,area,transect) %>% distinct(year,site,area) %>%
 #       as.data.frame()

@@ -117,10 +117,6 @@ dat.long <- dat.long %>%
 
 dat.2015.fish <- dat.long
 
-
-
-
-
 base.dat.2015 <- base.dat
 #########################################################
 ################ Repeat for 2016 and later
@@ -151,8 +147,9 @@ fish.dat$size_class[fish.dat$SPECIES =="RYOY"] <- "small"
 fish.dat <- fish.dat %>% group_by(YEAR,SITE,AREA,TRANSECT,OBSERVER,ZONE,VIS_M,SPECIES,size_class) %>%
               summarize(Count=sum(Count))
 
-dat.long <- NULL
 
+
+dat.long <- NULL
 for( i in 1: length(SP)){
   #Loop for non-rockfish
   if( (SP[i] %in% ROCKFISH) ==F){
@@ -194,11 +191,37 @@ for( i in 1: length(SP)){
   # combine the files into one
   dat.long <- rbind(dat.long, temp )
 } 
+
 # Housekeeping
 dat.long$Count[is.na(dat.long$Count)==T] <- 0
+
 dat.long <- dat.long %>% 
-                    rename(year=YEAR,site=SITE,area=AREA,transect=TRANSECT,observer=OBSERVER,
-                           zone=ZONE,vis_m=VIS_M,species=SPECIES)
+  rename(year=YEAR,site=SITE,area=AREA,transect=TRANSECT,observer=OBSERVER,
+         zone=ZONE,vis_m=VIS_M,species=SPECIES)
+
+### merge in small and large classes for all rockfish 
+### to ensure the data frames are properly padded with zeros
+
+dat.u <- dat.long %>% distinct(year,site,area,transect,observer,zone,vis_m,species)
+
+sp.temp <- c( "SEAU", "SECA",
+              "SEFL", "SEMA","SEME",
+              "SEBYT","SEMI","SEMY",
+              "SENE","SEPA","SEPI")
+sp.size <- c("small","large")
+temp <- expand.grid(species = sp.temp,size_class=sp.size)
+temp <- bind_rows(temp,c(species="RYOY",size_class="small"))
+
+dat.u <- dat.u %>% filter(species %in% sp.temp) %>% left_join(.,temp)
+dat.long.rock <- dat.u %>% left_join(.,dat.long) 
+dat.long.rock$Count[is.na(dat.long.rock$Count)==T] <- 0
+
+dat.long.rock %>% filter()
+
+# replace rockfish in the data padded with small and large
+dat.long <- dat.long %>% filter(!species %in% sp.temp) %>% bind_rows(.,dat.long.rock)
+
+#
 dat.2016.plus.fish <- dat.long
 
 # Combine all years of data into one data frame
@@ -227,12 +250,12 @@ dat.fish <- dat.fish %>% ungroup() %>%
       )
     )
 
-# This is a check on labeling
-dat.fish %>% ungroup() %>% dplyr::select(year, site,area,transect) %>% distinct(year,site,area) %>%
-   as.data.frame()
-
 # All samples in 2015 were collected at 5m depth
 dat.fish$zone[dat.fish$year == 2015] <- 5
+
+# This is a check on labeling
+dat.fish %>% ungroup() %>% dplyr::select(year, site,area,transect) %>% distinct(year,site,area) %>%
+ as.data.frame()
 
 dat.fish$site <- factor(dat.fish$site,
                         levels = c("Destruction Island",
