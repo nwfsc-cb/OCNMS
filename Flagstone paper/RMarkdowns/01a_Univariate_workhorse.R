@@ -1,3 +1,26 @@
+library(knitr)
+# library(tidyr)
+library(dplyr)
+library(tidyverse)
+library(stringr)
+# library(tinytex)
+library(RColorBrewer)
+# display.brewer.all(colorblindFriendly = TRUE)
+library(readxl)
+
+# stats packages etc
+library(vegan)
+library(BiodiversityR)
+library(pracma)
+library(factoextra)
+
+
+# Paths for files
+HomeFile = "/Users/ole.shelton/Github/OCNMS"
+Fig_Loc = paste0(HomeFile,"/Flagstone paper/Plots/")
+Data_Loc = paste0(HomeFile,"/Flagstone paper/Data/")
+Results_Loc = paste0(HomeFile,"/Flagstone paper/Results/")
+Other_Files = paste0(HomeFile,"/Flagstone paper/Other Files/")
 
 setwd(Data_Loc)
 spp_code = data.frame(read.csv("spp_codes.csv"))
@@ -7,6 +30,25 @@ spp_code = data.frame(read.csv("spp_codes.csv"))
 
 # read in rds file with combined data
 fish0 = readRDS( paste0(Data_Loc,'Fish_2015-2021.rds' ))
+
+min.vis = 2.0
+years = 2015:2021
+pch = c(9, 4, 8 , 21, 22, 24, 25 )
+col = RColorBrewer::brewer.pal(n = 12, name = "Paired")[c(2,4,6,10,12,7,8)]
+year.pch = data.frame(cbind(years, pch,col))
+
+sites = c("Neah Bay","Tatoosh Island","Cape Alava","Cape Johnson","Destruction Island")
+col = RColorBrewer::brewer.pal(n = 12, name = "Paired")[c(2,4,6, 10,12)]
+site.col = data.frame(cbind(sites,col))
+colnames(site.col) <- c('site', 'col')
+
+#### species depths #####
+
+kelp.depth = 5
+fish.depth = c(5,10)
+invert.depth = 5
+
+###########################
 
 # fix a spp name
 #fish0$species[ fish0$species == 'SEBYT'] <- 'SEFL'
@@ -58,7 +100,6 @@ fish1b = fish1a[fish1a$zone %in% fish.depth,]
 fish1b %>% filter(size_class == "small") %>% distinct(taxa)
 # all of the small taxa are rockfish YOY.
 
-
 fish1c <- fish1b %>% filter(size_class == "small") %>% group_by(site,year,transect,observer,zone,area) %>% 
                       summarise(Count_all=sum(Count)) %>%
                       mutate(species="totYOY",taxa="totYOY") %>%
@@ -66,11 +107,11 @@ fish1c <- fish1b %>% filter(size_class == "small") %>% group_by(site,year,transe
 fish1d <- fish1b %>% full_join(.,fish1c)                       
                     
 # double check specific averaging process here 
-fish2 = aggregate( Count ~ site + zone + year + taxa, data = fish1c, FUN = mean )
-colnames(fish2)[ncol(fish2)] <- 'mean'
-fish = Sum_Stats('mean ~ year +  taxa', fish2)
-fish$se_lo = fish$mean - fish$se
-fish$se_up = fish$mean + fish$se
+# fish2 = aggregate( Count ~ site + zone + year + taxa, data = fish1c, FUN = mean )
+# colnames(fish2)[ncol(fish2)] <- 'mean'
+# fish = Sum_Stats('mean ~ year +  taxa', fish2)
+# fish$se_lo = fish$mean - fish$se
+# fish$se_up = fish$mean + fish$se
 
 # Ole made this to check the aggregating in fish 2.
 fish3 <- fish1d %>% group_by(site,year,zone,species, taxa) %>%
