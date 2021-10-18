@@ -100,7 +100,8 @@ fish1b = fish1a[fish1a$zone %in% fish.depth,]
 fish1b %>% filter(size_class == "small") %>% distinct(taxa)
 # all of the small taxa are rockfish YOY.
 
-fish1c <- fish1b %>% filter(size_class == "small") %>% group_by(site,year,transect,observer,zone,area) %>% 
+fish1c <- fish1b %>% filter(size_class == "small") %>% 
+                      group_by(site,year,transect,observer,zone,area) %>% 
                       summarise(Count_all=sum(Count)) %>%
                       mutate(species="totYOY",taxa="totYOY") %>%
                       rename(Count=Count_all)
@@ -122,7 +123,7 @@ fish3 %>% group_by(site,year,zone) %>% distinct(N) %>% as.data.frame()
 
 
 #######################################################################
-# OLE STOPPED HERE on 10.15.2021.
+# OLE STOPPED HERE on 10.18.2021.
 #######################################################################
 
 # Make Plots of Fish
