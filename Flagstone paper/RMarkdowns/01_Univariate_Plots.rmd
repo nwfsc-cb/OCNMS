@@ -16,16 +16,9 @@ fontsize: 11pt
 ```{r SETUP, include=FALSE}
 # A bunch of initial set up junk
 
-rm(list = ls())
+#rm(list = ls())
 
 ##### knitr stuff and libraries ####
-
-HomeFile = getwd()
-Fig_Loc = paste0(HomeFile,"/Figures/")
-Data_Loc = paste0(HomeFile,"/Data/")
-Results_Loc = paste0(HomeFile,"/Results/")
-Other_Files = paste0(HomeFile,"/Other Files/")
-
 # tools in use 
 library(knitr)
 # library(tidyr)
@@ -70,6 +63,14 @@ par(ps=10, cex=1)
 
 source("R-functions-ocnms.r")
 
+# Paths for files
+HomeFile = getwd()
+Fig_Loc = paste0(HomeFile,"/Flagstone paper/Plots/")
+Data_Loc = paste0(HomeFile,"/Flagstone paper/Data/")
+Results_Loc = paste0(HomeFile,"/Flagstone paper/Results/")
+Other_Files = paste0(HomeFile,"/Flagstone paper/Other Files/")
+
+
 ```
 
 ```{r triggers-and-settings}
@@ -83,8 +84,6 @@ sites = c("Neah Bay","Tatoosh Island","Cape Alava","Cape Johnson","Destruction I
 col = RColorBrewer::brewer.pal(n = 12, name = "Paired")[c(2,4,6, 10,12)]
 site.col = data.frame(cbind(sites,col))
 colnames(site.col) <- c('site', 'col')
-
-spp_code = data.frame(read.csv('spp_codes.csv'))
 
 #### species depths #####
 
@@ -112,65 +111,10 @@ Kelp Depth = `r kelp.depth` meters
 Invert Depth = `r invert.depth` meters  
 
 ```{r fish-import-rds }
-# import fish data. wide format
+# This script import fish data, does manipulations
+# Imports Invert and Algae Data, does manipulations.
 
-# read in rds file with combined data
-fish0 = readRDS( paste0(Data_Loc,'Fish_2015-2021.rds' ))
-
-# fix a spp name
-fish0$species[ fish0$species == 'SEBYT'] <- 'SEFL'
-
-# add in taxa groupings
-# add in yoy designator and fix some names
-
-taxa = spp_code$group[ match(fish0$species, spp_code$code)]
-
-taxa1 <- ifelse( is.na(fish0$size_class)==TRUE, taxa, 
-                       ifelse(fish0$size_class == "small", paste0(taxa,"yoy"), taxa))
-fish0$taxa <- taxa1
-fish0$taxa[ fish0$taxa == "RYOYyoy"] <- 'RYOY'
-
-# combine YT and black or keep separate?
-fish0$taxa[ fish0$taxa %in% c('SEFLyoy','SEMEyoy')] <- 'YTBLyoy'
-
-# subset visibility
-# add fake vis for 2015
-fish0$vis_m[ fish0$year == 2015 ] <- 3
-# poor vis at destruction in year 1.
-fish0$vis_m[ fish0$year == 2015 & fish0$site == "Destruction Island"] <- 1
-
-# output for multivariate 
-saveRDS(fish0, paste0(Data_Loc, "Fish_2015-2021-ntmods.rds"))
-
-# get just five sites
-
-fish1 = fish0[ fish0$site %in% c("Destruction Island", "Cape Johnson","Cape Alava","Tatoosh Island","Neah Bay"),]
-
-# drop low vis sites/transects
-fish1a = fish1[fish1$vis_m >= min.vis, ]
-
-# set depth
-
-fish1b = fish1a[fish1a$zone %in% fish.depth,]
-
-# calculate total yoy
-x = fish1b[ fish1b$taxa %in% c("SECAyoy","SEPIyoy", "YTBLyoy", "RYOY"),]
-x$taxa = 'totYOY'
-x$species = 'totYOY'
-x$common.name = "total rockfish yoy"
-tyoy = aggregate(Count ~ . , data = x, FUN = sum)
-tyoy = tyoy[,colnames(x)]                 
-
-fish1c = rbind(fish1b , tyoy)
-
-# double check specific averaging process here 
-
-fish2 = aggregate( Count ~ site + zone + year + taxa, data = fish1c, FUN = mean )
-colnames(fish2)[ncol(fish2)] <- 'mean'
-fish = Sum_Stats('mean ~ year +  taxa', fish2)
-fish$se_lo = fish$mean - fish$se
-fish$se_up = fish$mean + fish$se
-
+source("01a_Univariate_workhorse.R")
 ```
 
 # Time series
@@ -186,38 +130,7 @@ fish$se_up = fish$mean + fish$se
 Fish depth = `r fish.depth`
 
 ```{r fish-ts-2pane, fig.width=4.5, fig.height=5}
-
-library(ggplot2)
-library(gtable)
-library(gridExtra)
-
-
-fish.ylabel = "No. per transect"
-all.colors =  RColorBrewer::brewer.pal(n = 12, name = "Paired")
-fish.col = all.colors[ c(3,4,8,12,11,11,2) ]
-fish.col[6] <- 'black'
-yoy.col = all.colors[c(10,12,6,6,'black')]
-yoy.col[4] <- 'black'  
-     
-uni.fish = fish[ fish$taxa %in% c("OPEL", "HEXA", "SECA", "SCMA" ,"SENE", "SEME", "SEFL"),]    
-
-fish.plot = species.plot(uni.fish, group.var = 'taxa', years = 2015:2021, 
-                     Ylim = NA, Ylab = fish.ylabel , Colors = fish.col)
-
-yoy.fish = fish[ fish$taxa %in% c("SECAyoy","SEPIyoy", "YTBLyoy", "RYOY", "totYOY"),]
-
-
-yoy.plot = species.plot(yoy.fish, group.var = 'taxa', years = 2015:2021, 
-                     Ylab = fish.ylabel ,Ylim = NA, Colors = yoy.col)
-
-g2 <- ggplotGrob(fish.plot)
-g3 <- ggplotGrob(yoy.plot)
-g <- rbind(g2, g3, size = "first")
-
-g$widths <- grid::unit.pmax(g2$widths, g3$widths)
-grid::grid.newpage()
-grid::grid.draw(g)
-
+print()
 
 ```
 
