@@ -1,7 +1,7 @@
 ---
 title: "Fish Analysis OCNMS"
 author: "Ole Shelton"
-date: "10/07/2018"
+date: "9/28/2021"
 output:
   pdf_document: default
   word_document: default
@@ -40,7 +40,7 @@ print(SP.all.common.names %>% arrange(species))
 ## Small Rockfish (<10cm)
 Here are the rockfish plotted in a couple different ways.  This is for all small rockfish combined. I have included all transects here, not just those with visibility > 2m.  See the end for information about the transects and visibility.  In the bottom panel, the black boxes and error bars are simple the among site means and SE using the site means. For all panels, the 5 vs. 10 colums indicate water depth category.
 
-```{r echo=FALSE, warning=FALSE, fig.rock.yoy1, fig.height = 4.25, fig.width = 7,fig.align='center'}
+```{r echo=FALSE, warning=FALSE, fig.rock.yoy1, fig.height = 6, fig.width = 7,fig.align='center'}
 print(P.complex.small)
 ```
 ```{r echo=FALSE, warning=FALSE, fig.rock.yoy2, fig.height = 3.75, fig.width = 7,fig.align='center'}
@@ -52,13 +52,13 @@ print(Q.complex.small.log)
 
 Here is why I didn't make plots of species by sub-types.  Different levels of taxonomic specificity are available for different observers and years. 
 ```{r echo=FALSE, warning=FALSE, fig.multispecies.small, fig.height = 4.5, fig.width = 7,fig.align='center'}
-print(small.count.2015)
-print(small.count.2016.5m)
-print(small.count.2017.5m)
-print(small.count.2018.5m)
-print(small.count.2016.10m)
-print(small.count.2017.10m)
-print(small.count.2018.10m)
+print(small.count)
+#print(small.count2016.5m)
+#print(small.count.2017.5m)
+#print(small.count.2018.5m)
+#print(small.count.2016.10m)
+#print(small.count.2017.10m)
+#print(small.count.2018.10m)
 ```
 
 \newpage
@@ -66,14 +66,9 @@ print(small.count.2018.10m)
 Here, here are the fish > 10 cm.  In general, you will notice a lot of grey in the figures.  This means most species were not observed in any transect at that site-year combination.  
 
 ```{r echo=FALSE, warning=FALSE, fig.multispecies.large, fig.height = 4.5, fig.width = 7,fig.align='center'}
-print(all.sp.count.2015)
-print(all.sp.count.2016.5m)
-print(all.sp.count.2017.5m)
-print(all.sp.count.2018.5m)
-print(all.sp.count.2016.10m)
-print(all.sp.count.2017.10m)
-print(all.sp.count.2018.10m)
+print(all.sp.count)
 ```
+
 \newpage
 # Example time series and spatial variation for the top 8 most common species.
 

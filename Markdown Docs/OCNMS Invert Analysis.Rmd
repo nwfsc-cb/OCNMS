@@ -14,7 +14,7 @@ source("/Users/ole.shelton/GitHub/OCNMS/R scripts/Fish, Invert, Kelp Analysis/Sw
 ```
 
 # Exploratory analysis 
-These are some analyses based on the 2015-19 survey data for invertebrates. I've done a bunch of processing in the Git repo (file "/GitHub/OCNMS/R scripts/Fish, Invert, Kelp Analysis/Swath Inverts.R"").
+These are some analyses based on the 2015- survey data for invertebrates. I've done a bunch of processing in the Git repo (file "/GitHub/OCNMS/R scripts/Fish, Invert, Kelp Analysis/Swath Inverts.R"").
 
 During the sampling, a total of `r A<-dat.swath %>% filter(group=="Invert") %>% dplyr::select(species) %>% as.data.frame(); length(unique(A$species))` invertebrate species and species groups were observed. Here is how the sampling was distributed across sites and 5m and 10m depths among years (2015-present). Surveys from pre-2015 were not collected by NWFSC and have a different design and methods.  They also are only available for some species
 
@@ -65,7 +65,7 @@ kable(A)
 ALP <- 0.5
 p1 <- ggplot(dat.invert.group %>% filter(group.name == GROUP,site %in% SITES )) +
     geom_point(aes(x=year,y=Mean,color=site),alpha=ALP) +
-    #geom_line(aes(x=year,y=Mean,color=site),alpha=ALP) +
+    geom_line(aes(x=year,y=Mean,color=site),alpha=ALP) +
     geom_errorbar(aes(x=year,ymin=Mean-SE,ymax=Mean+SE,color=site),alpha=ALP)+
     
     ylab(expression("Mean density (m"^-2*")"))+
@@ -76,7 +76,7 @@ p1 <- ggplot(dat.invert.group %>% filter(group.name == GROUP,site %in% SITES )) 
 
 p2 <- ggplot(dat.invert.group.zone %>% filter(group.name == GROUP,site %in% SITES )) +
         geom_point(aes(x=year,y=Mean,color=site),alpha=ALP) +
-    #geom_line(aes(x=year,y=Mean,color=site),alpha=ALP) +
+    geom_line(aes(x=year,y=Mean,color=site),alpha=ALP) +
     geom_errorbar(aes(x=year,ymin=Mean-SE,ymax=Mean+SE,color=site),alpha=ALP)+
     ylab(expression("Mean density (m"^-2*")"))+
     xlab("Year") +

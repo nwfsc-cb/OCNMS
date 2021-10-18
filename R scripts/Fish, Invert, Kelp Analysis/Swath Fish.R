@@ -6,15 +6,15 @@ library(ggplot2)
 library(viridis)
 library(reshape2)
 
-
 data.dir <- "/Users/ole.shelton/GitHub/OCNMS/Data/CSV_2015_on"
 setwd(data.dir)
 
 dat.2015 <- read.csv("2015_OCNMSDataComplete_standardized_122116.csv")
-dat.2016.on.fish <- read.csv("NWFSC_FISH_ALLYEARS_data_2019.csv")
+dat.2016.on.fish <- read.csv("NWFSC_FISH_ALLYEARS_data_2021.csv")
 
 species_names <- read.csv("species_code_list.csv")
-colnames(species_names) <- c("species","common.name")
+species_names <- species_names %>% rename("species"="pisco.classcode")
+
 # Define codes for rockfish 
 ROCKFISH <- c(as.character(species_names$species[grep("SE",species_names$species)]),"RYOY")
 
@@ -196,6 +196,18 @@ dat.fish <- dat.fish[-which(dat.fish$species=="RYOY" & dat.fish$size_class=="lar
 # All samples in 2015 were collected at 5m depth
 dat.fish$zone[dat.fish$year == 2015] <- 5
 
+dat.fish$site <- factor(dat.fish$site,
+                        levels = c("Destruction Island",
+                                    "Teahwhit Head",
+                                    "Cape Johnson",
+                                    "Rock 305",
+                                    "Cape Alava",
+                                    "Point of the Arches",
+                                    "Anderson Point",
+                                    "Tatoosh Island",
+                                    "Chibadehl Rocks",
+                                    "Neah Bay"))
+
 # GENERATE INDEXES BY SITE and AMONG SITES
 dat.large.fish.summary <- dat.fish %>% filter(size_class=="large" | is.na(size_class)==T) %>%
                     group_by(year,site,zone,species,size_class) %>% 
@@ -227,6 +239,7 @@ dat.small.fish.complex.by.year <- dat.small.fish.complex.summary %>% filter(size
 dat.large.fish.summary$site <- factor(dat.large.fish.summary$site,levels=nom)
 dat.small.fish.summary$site <- factor(dat.small.fish.summary$site,levels=nom)
 
+
 ### Make some tables that are helpful
 SP.count <- dat.fish %>% group_by(species,size_class) %>% summarise(tot = sum(Count))  %>% arrange(desc(tot))
 SP.count.large <- SP.count %>% filter(size_class == "large" | is.na(size_class)==T) %>% arrange(desc(tot)) %>% as.data.frame()
@@ -239,7 +252,8 @@ SP.count.small.cast.year <- list()
 
 YEAR <- unique(dat.fish$year)
 for(i in 1:length(YEAR)){
-  SP.count.small.cast.year[[i]] <- dat.fish %>% filter(size_class == "small",year==YEAR[i]) %>% dcast(.,species~site,sum,value.var = c("Count")) %>% mutate(year=YEAR[i])
+  SP.count.small.cast.year[[i]] <- dat.fish %>% filter(size_class == "small",year==YEAR[i]) %>% 
+                                    dcast(.,species~site,sum,value.var = c("Count")) %>% mutate(year=YEAR[i])
 }
 ##############################################################################
 ##############################################################################
@@ -262,7 +276,6 @@ vis.by.site <- ggplot(vis.sum) +
   labs(y="Median Visibility (m)") +
   theme_bw()
 
-
 ##############################################################################
 ##############################################################################
 ##############################################################################
@@ -282,7 +295,7 @@ P.large <- list()
 Q.large <- list()
 
 for(i in 1:nrow(SP.count.large %>% filter(tot>=5))){
-  print(SP.count.large$species[i])
+  #print(SP.count.large$species[i])
   P.large[[i]] <- ggplot(data=dat.large.fish.summary %>% filter(species == SP.count.large$species[i])) +
             geom_point(aes(y=Mean,x=site)) +
             geom_errorbar(aes(ymin=Mean-SE-1e-10,ymax=Mean+SE,x=site),width=0.1) +          
@@ -384,66 +397,25 @@ BREAKS <- c(1,5,10,15,20,40,80,120,160)
 MIN    <- 0.05
 
 dat.large.fish.summary$species <- factor(dat.large.fish.summary$species, levels=SP.count.large$species)
-
 THESE <- SP.count.large$species[SP.count.large$tot>0]
 
 ## All 
-all.sp.count.2015 <-  ggplot(data=dat.large.fish.summary %>% filter(year==2015,zone==5,species%in%THESE)) +
-  geom_tile(aes(fill=Mean,x=site,y=species)) +
-  scale_fill_gradientn(colors = viridis(32),limits=c(MIN,MAX),breaks=BREAKS) +
-  labs(ylab="Species",xlab="Site") + 
-  ggtitle("All >10cm, 2015 average count 5m deep (per 30x2x2 m transect)")+
-  theme_bw() +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1,vjust=0.5))
-
-all.sp.count.2016.5m <-  ggplot(data=dat.large.fish.summary %>% filter(year==2016,zone==5,species%in%THESE)) +
-  geom_tile(aes(fill=Mean,x=site,y=species)) +
-  scale_fill_gradientn(colors = viridis(32),limits=c(MIN,MAX),breaks=BREAKS) +
-  labs(ylab="Species",xlab="Site") + 
-  ggtitle("All >10cm, 2016 average count 5m deep (per 30x2x2 m transect)")+
-  theme_bw() +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1,vjust=0.5))
-
-all.sp.count.2016.10m <-  ggplot(data=dat.large.fish.summary %>% filter(year==2016,zone==10,species%in%THESE)) +
-  geom_tile(aes(fill=Mean,x=site,y=species)) +
-  scale_fill_gradientn(colors = viridis(32),limits=c(MIN,MAX),breaks=BREAKS) +
-  labs(ylab="Species",xlab="Site") + 
-  ggtitle("All >10cm, 2016 average count 10m deep (per 30x2x2 m transect)")+
-  theme_bw() +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1,vjust=0.5))
-
-all.sp.count.2017.5m <-  ggplot(data=dat.large.fish.summary %>% filter(year==2017,zone==5,species%in%THESE)) +
-  geom_tile(aes(fill=Mean,x=site,y=species)) +
-  scale_fill_gradientn(colors = viridis(32),limits=c(MIN,MAX),breaks=BREAKS) +
-  labs(ylab="Species",xlab="Site") + 
-  ggtitle("All >10cm, 2017 average count 5m deep (per 30x2x2 m transect)")+
-  theme_bw() +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1,vjust=0.5))
-
-all.sp.count.2017.10m <-  ggplot(data=dat.large.fish.summary %>% filter(year==2017,zone==10,species%in%THESE)) +
-  geom_tile(aes(fill=Mean,x=site,y=species)) +
-  scale_fill_gradientn(colors = viridis(32),limits=c(MIN,MAX),breaks=BREAKS) +
-  labs(ylab="Species",xlab="Site") + 
-  ggtitle("All >10cm, 2017 average count 10m deep (per 30x2x2 m transect)")+
-  theme_bw() +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1,vjust=0.5))
-
-all.sp.count.2018.5m <-  ggplot(data=dat.large.fish.summary %>% filter(year==2018,zone==5,species%in%THESE)) +
-  geom_tile(aes(fill=Mean,x=site,y=species)) +
-  scale_fill_gradientn(colors = viridis(32),limits=c(MIN,MAX),breaks=BREAKS) +
-  labs(ylab="Species",xlab="Site") + 
-  ggtitle("All >10cm, 2018 average count 5m deep (per 30x2x2 m transect)")+
-  theme_bw() +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1,vjust=0.5))
-
-all.sp.count.2018.10m <-  ggplot(data=dat.large.fish.summary %>% filter(year==2018,zone==10,species%in%THESE)) +
-  geom_tile(aes(fill=Mean,x=site,y=species)) +
-  scale_fill_gradientn(colors = viridis(32),limits=c(MIN,MAX),breaks=BREAKS) +
-  labs(ylab="Species",xlab="Site") + 
-  ggtitle("All >10cm, 2018 average count 10m deep (per 30x2x2 m transect)")+
-  theme_bw() +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1,vjust=0.5))
-
+all.sp.count <- list()
+for(i in 1:length(YEAR)){
+  for(j in c(5,10)){
+  if(nrow(dat.large.fish.summary %>% filter(year==YEAR[i],zone==j,species%in%THESE))>0){
+    all.sp.count[[as.name(paste("X",YEAR[i],j,sep="."))]]  <-
+      ggplot(data=dat.large.fish.summary %>% filter(year==YEAR[i],zone==j,species%in%THESE),
+             aes(x=site,y=species)) +
+      geom_tile(aes_string(fill="Mean")) +
+      scale_fill_gradientn(colors = viridis(32),limits=c(MIN,MAX),breaks=BREAKS) +
+      labs(ylab="Species",xlab="Site") + 
+      ggtitle(paste0("All >10cm ", YEAR[i]," average count ",j,"m deep (per 30x2x2 m transect)"))+
+      theme_bw() +
+      theme(axis.text.x = element_text(angle = 90, hjust = 1,vjust=0.5))
+    }
+  }
+}
 
 ################
 ### Just Small (< size.break) ## SQRT TRANSFORMED
@@ -455,62 +427,131 @@ MIN    <- 0.05
 dat.small.fish.summary$species <- factor(dat.small.fish.summary$species, levels=SP.count.small$species)
 THESE <- SP.count.small$species[SP.count.small$tot>0]
 
-small.count.2015 <-  ggplot(data=dat.small.fish.summary %>% filter(year==2015,zone==5,species%in%THESE)) +
-  geom_tile(aes(fill=Mean,x=site,y=species)) +
-  scale_fill_gradientn(colors = viridis(32),trans="sqrt",limits=c(MIN,MAX),breaks=BREAKS) +
-  labs(ylab="Species",xlab="Site") + 
-  ggtitle("All <10cm, 2015 average count 5m deep (per 30x2x2 m transect)")+
-  theme_bw() +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1,vjust=0.5))
+small.count <- list()
+for(i in 1:length(YEAR)){
+  for(j in c(5,10)){
+    if(nrow(dat.small.fish.summary %>% filter(year==YEAR[i],zone==j,species%in%THESE))>0){
+      small.count[[as.name(paste("X",YEAR[i],j,sep="."))]] <-
+        ggplot(data=dat.small.fish.summary %>% filter(year==YEAR[i],zone==j,species%in%THESE)) +
+        geom_tile(aes_string(fill="Mean",x="site",y="species")) +
+        scale_fill_gradientn(colors = viridis(32),trans="sqrt",limits=c(MIN,MAX),breaks=BREAKS) +
+        labs(ylab="Species",xlab="Site") + 
+        ggtitle(paste0("All <10cm, ",YEAR[i]," average count ",j,"m deep (per 30x2x2 m transect)"))+
+        theme_bw() +
+        theme(axis.text.x = element_text(angle = 90, hjust = 1,vjust=0.5))
+    }
+  }
+}
 
-small.count.2016.5m <-  ggplot(data=dat.small.fish.summary %>% filter(year==2016,zone==5,species%in%THESE)) +
-  geom_tile(aes(fill=Mean,x=site,y=species)) +
-  scale_fill_gradientn(colors = viridis(32),trans="sqrt",limits=c(MIN,MAX),breaks=BREAKS) +
-  labs(ylab="Species",xlab="Site") + 
-  ggtitle("All <10cm, 2016 average count 5m deep (per 30x2x2 m transect)")+
-  theme_bw() +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1,vjust=0.5))
 
-small.count.2016.10m <-  ggplot(data=dat.small.fish.summary %>% filter(year==2016,zone==10,species%in%THESE)) +
-  geom_tile(aes(fill=Mean,x=site,y=species)) +
-  scale_fill_gradientn(colors = viridis(32),trans="sqrt",limits=c(MIN,MAX),breaks=BREAKS) +
-  labs(ylab="Species",xlab="Site") + 
-  ggtitle("All <10cm, 2016 average count 10m deep (per 30x2x2 m transect)")+
-  theme_bw() +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1,vjust=0.5))
 
-small.count.2017.5m <-  ggplot(data=dat.small.fish.summary %>% filter(year==2017,zone==5,species%in%THESE)) +
-  geom_tile(aes(fill=Mean,x=site,y=species)) +
-  scale_fill_gradientn(colors = viridis(32),trans="sqrt",limits=c(MIN,MAX),breaks=BREAKS) +
-  labs(ylab="Species",xlab="Site") + 
-  ggtitle("All <10cm, 2017 average count 5m deep (per 30x2x2 m transect)")+
-  theme_bw() +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1,vjust=0.5))
+# 
+# all.sp.count.2015 <-  ggplot(data=dat.large.fish.summary %>% filter(year==2015,zone==5,species%in%THESE)) +
+#   geom_tile(aes(fill=Mean,x=site,y=species)) +
+#   scale_fill_gradientn(colors = viridis(32),limits=c(MIN,MAX),breaks=BREAKS) +
+#   labs(ylab="Species",xlab="Site") + 
+#   ggtitle("All >10cm, 2015 average count 5m deep (per 30x2x2 m transect)")+
+#   theme_bw() +
+#   theme(axis.text.x = element_text(angle = 90, hjust = 1,vjust=0.5))
+# 
+# all.sp.count.2016.5m <-  ggplot(data=dat.large.fish.summary %>% filter(year==2016,zone==5,species%in%THESE)) +
+#   geom_tile(aes(fill=Mean,x=site,y=species)) +
+#   scale_fill_gradientn(colors = viridis(32),limits=c(MIN,MAX),breaks=BREAKS) +
+#   labs(ylab="Species",xlab="Site") + 
+#   ggtitle("All >10cm, 2016 average count 5m deep (per 30x2x2 m transect)")+
+#   theme_bw() +
+#   theme(axis.text.x = element_text(angle = 90, hjust = 1,vjust=0.5))
+# 
+# all.sp.count.2016.10m <-  ggplot(data=dat.large.fish.summary %>% filter(year==2016,zone==10,species%in%THESE)) +
+#   geom_tile(aes(fill=Mean,x=site,y=species)) +
+#   scale_fill_gradientn(colors = viridis(32),limits=c(MIN,MAX),breaks=BREAKS) +
+#   labs(ylab="Species",xlab="Site") + 
+#   ggtitle("All >10cm, 2016 average count 10m deep (per 30x2x2 m transect)")+
+#   theme_bw() +
+#   theme(axis.text.x = element_text(angle = 90, hjust = 1,vjust=0.5))
+# 
+# all.sp.count.2017.5m <-  ggplot(data=dat.large.fish.summary %>% filter(year==2017,zone==5,species%in%THESE)) +
+#   geom_tile(aes(fill=Mean,x=site,y=species)) +
+#   scale_fill_gradientn(colors = viridis(32),limits=c(MIN,MAX),breaks=BREAKS) +
+#   labs(ylab="Species",xlab="Site") + 
+#   ggtitle("All >10cm, 2017 average count 5m deep (per 30x2x2 m transect)")+
+#   theme_bw() +
+#   theme(axis.text.x = element_text(angle = 90, hjust = 1,vjust=0.5))
+# 
+# all.sp.count.2017.10m <-  ggplot(data=dat.large.fish.summary %>% filter(year==2017,zone==10,species%in%THESE)) +
+#   geom_tile(aes(fill=Mean,x=site,y=species)) +
+#   scale_fill_gradientn(colors = viridis(32),limits=c(MIN,MAX),breaks=BREAKS) +
+#   labs(ylab="Species",xlab="Site") + 
+#   ggtitle("All >10cm, 2017 average count 10m deep (per 30x2x2 m transect)")+
+#   theme_bw() +
+#   theme(axis.text.x = element_text(angle = 90, hjust = 1,vjust=0.5))
+# 
+# all.sp.count.2018.5m <-  ggplot(data=dat.large.fish.summary %>% filter(year==2018,zone==5,species%in%THESE)) +
+#   geom_tile(aes(fill=Mean,x=site,y=species)) +
+#   scale_fill_gradientn(colors = viridis(32),limits=c(MIN,MAX),breaks=BREAKS) +
+#   labs(ylab="Species",xlab="Site") + 
+#   ggtitle("All >10cm, 2018 average count 5m deep (per 30x2x2 m transect)")+
+#   theme_bw() +
+#   theme(axis.text.x = element_text(angle = 90, hjust = 1,vjust=0.5))
+# 
+# all.sp.count.2018.10m <-  ggplot(data=dat.large.fish.summary %>% filter(year==2018,zone==10,species%in%THESE)) +
+#   geom_tile(aes(fill=Mean,x=site,y=species)) +
+#   scale_fill_gradientn(colors = viridis(32),limits=c(MIN,MAX),breaks=BREAKS) +
+#   labs(ylab="Species",xlab="Site") + 
+#   ggtitle("All >10cm, 2018 average count 10m deep (per 30x2x2 m transect)")+
+#   theme_bw() +
+#   theme(axis.text.x = element_text(angle = 90, hjust = 1,vjust=0.5))
+# 
 
-small.count.2017.10m <-  ggplot(data=dat.small.fish.summary %>% filter(year==2017,zone==10,species%in%THESE)) +
-  geom_tile(aes(fill=Mean,x=site,y=species)) +
-  scale_fill_gradientn(colors = viridis(32),trans="sqrt",limits=c(MIN,MAX),breaks=BREAKS) +
-  labs(ylab="Species",xlab="Site") + 
-  ggtitle("All <10cm, 2017 average count 10m deep (per 30x2x2 m transect)")+
-  theme_bw() +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1,vjust=0.5))
 
-small.count.2018.5m <-  ggplot(data=dat.small.fish.summary %>% filter(year==2018,zone==5,species%in%THESE)) +
-  geom_tile(aes(fill=Mean,x=site,y=species)) +
-  scale_fill_gradientn(colors = viridis(32),trans="sqrt",limits=c(MIN,MAX),breaks=BREAKS) +
-  labs(ylab="Species",xlab="Site") + 
-  ggtitle("All <10cm, 2018 average count 5m deep (per 30x2x2 m transect)")+
-  theme_bw() +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1,vjust=0.5))
-
-small.count.2018.10m <-  ggplot(data=dat.small.fish.summary %>% filter(year==2018,zone==10,species%in%THESE)) +
-  geom_tile(aes(fill=Mean,x=site,y=species)) +
-  scale_fill_gradientn(colors = viridis(32),trans="sqrt",limits=c(MIN,MAX),breaks=BREAKS) +
-  labs(ylab="Species",xlab="Site") + 
-  ggtitle("All <10cm, 2018 average count 10m deep (per 30x2x2 m transect)")+
-  theme_bw() +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1,vjust=0.5))
-
+# small.count.2016.5m <-  ggplot(data=dat.small.fish.summary %>% filter(year==2016,zone==5,species%in%THESE)) +
+#   geom_tile(aes(fill=Mean,x=site,y=species)) +
+#   scale_fill_gradientn(colors = viridis(32),trans="sqrt",limits=c(MIN,MAX),breaks=BREAKS) +
+#   labs(ylab="Species",xlab="Site") + 
+#   ggtitle("All <10cm, 2016 average count 5m deep (per 30x2x2 m transect)")+
+#   theme_bw() +
+#   theme(axis.text.x = element_text(angle = 90, hjust = 1,vjust=0.5))
+# 
+# small.count.2016.10m <-  ggplot(data=dat.small.fish.summary %>% filter(year==2016,zone==10,species%in%THESE)) +
+#   geom_tile(aes(fill=Mean,x=site,y=species)) +
+#   scale_fill_gradientn(colors = viridis(32),trans="sqrt",limits=c(MIN,MAX),breaks=BREAKS) +
+#   labs(ylab="Species",xlab="Site") + 
+#   ggtitle("All <10cm, 2016 average count 10m deep (per 30x2x2 m transect)")+
+#   theme_bw() +
+#   theme(axis.text.x = element_text(angle = 90, hjust = 1,vjust=0.5))
+# 
+# small.count.2017.5m <-  ggplot(data=dat.small.fish.summary %>% filter(year==2017,zone==5,species%in%THESE)) +
+#   geom_tile(aes(fill=Mean,x=site,y=species)) +
+#   scale_fill_gradientn(colors = viridis(32),trans="sqrt",limits=c(MIN,MAX),breaks=BREAKS) +
+#   labs(ylab="Species",xlab="Site") + 
+#   ggtitle("All <10cm, 2017 average count 5m deep (per 30x2x2 m transect)")+
+#   theme_bw() +
+#   theme(axis.text.x = element_text(angle = 90, hjust = 1,vjust=0.5))
+# 
+# small.count.2017.10m <-  ggplot(data=dat.small.fish.summary %>% filter(year==2017,zone==10,species%in%THESE)) +
+#   geom_tile(aes(fill=Mean,x=site,y=species)) +
+#   scale_fill_gradientn(colors = viridis(32),trans="sqrt",limits=c(MIN,MAX),breaks=BREAKS) +
+#   labs(ylab="Species",xlab="Site") + 
+#   ggtitle("All <10cm, 2017 average count 10m deep (per 30x2x2 m transect)")+
+#   theme_bw() +
+#   theme(axis.text.x = element_text(angle = 90, hjust = 1,vjust=0.5))
+# 
+# small.count.2018.5m <-  ggplot(data=dat.small.fish.summary %>% filter(year==2018,zone==5,species%in%THESE)) +
+#   geom_tile(aes(fill=Mean,x=site,y=species)) +
+#   scale_fill_gradientn(colors = viridis(32),trans="sqrt",limits=c(MIN,MAX),breaks=BREAKS) +
+#   labs(ylab="Species",xlab="Site") + 
+#   ggtitle("All <10cm, 2018 average count 5m deep (per 30x2x2 m transect)")+
+#   theme_bw() +
+#   theme(axis.text.x = element_text(angle = 90, hjust = 1,vjust=0.5))
+# 
+# small.count.2018.10m <-  ggplot(data=dat.small.fish.summary %>% filter(year==2018,zone==10,species%in%THESE)) +
+#   geom_tile(aes(fill=Mean,x=site,y=species)) +
+#   scale_fill_gradientn(colors = viridis(32),trans="sqrt",limits=c(MIN,MAX),breaks=BREAKS) +
+#   labs(ylab="Species",xlab="Site") + 
+#   ggtitle("All <10cm, 2018 average count 10m deep (per 30x2x2 m transect)")+
+#   theme_bw() +
+#   theme(axis.text.x = element_text(angle = 90, hjust = 1,vjust=0.5))
+# 
 
 
 #pdf()
