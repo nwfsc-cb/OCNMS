@@ -13,7 +13,7 @@ dat.2015 <- read.csv("2015_OCNMSDataComplete_standardized_122116.csv")
 dat.2016.on.fish <- read.csv("NWFSC_FISH_ALLYEARS_data_2021.csv")
 
 species_names <- read.csv("species_code_list.csv")
-species_names <- species_names %>% rename("species"="pisco.classcode")
+#species_names <- species_names %>% rename("species"="PISCO.CLASSCODE")
 
 # Define codes for rockfish 
 ROCKFISH <- c(as.character(species_names$species[grep("SE",species_names$species)]),"RYOY")
@@ -107,11 +107,23 @@ dat.long$year <- 2015
 dat.long <- dat.long %>% 
             rename(site=Site,transect=Transect,observer=Observer,
                   common.name=Species,species=PISCO.Classcode)
- 
+
+
+# Fix some duplicate entries in the data so each species only shows up once per
+# transect
+dat.long <- dat.long %>% 
+                group_by(site, transect, observer, common.name, species, size_class, year) %>%
+                summarise(Count_all = sum(Count)) %>% rename(Count=Count_all)
+
 dat.2015.fish <- dat.long
+
+
+
+
+
 base.dat.2015 <- base.dat
 #########################################################
-################ Repeat for 2016 - 2019
+################ Repeat for 2016 and later
 #########################################################
 colnames(dat.2016.on.fish)[2] <- "YEAR"
 colnames(dat.2016.on.fish)[which(colnames(dat.2016.on.fish)=="SIDE")] <- "AREA"
@@ -193,6 +205,28 @@ dat.2016.plus.fish <- dat.long
 dat.fish <- full_join(dat.2015.fish,dat.2016.plus.fish)
 dat.fish <- dat.fish[-which(dat.fish$species=="RYOY" & dat.fish$size_class=="large"),]
 
+##############################################################
+##### Reconcile different area designations among years ######
+##############################################################
+dat.fish$area <- as.character(dat.fish$area)
+
+dat.fish <- dat.fish %>% ungroup() %>%
+    mutate(
+      area = case_when(
+        site == "Cape Alava" & area %in% c("1","W") ~ "W",
+        site == "Cape Alava" & area %in% c("2","E") ~ "E",
+        site == "Cape Johnson" | site == "Destruction Island" & area %in% c(1,"S") ~ "S",
+        site == "Cape Johnson" | site == "Destruction Island" & area %in% c(2,"N") ~ "N",
+        site == "Neah Bay" | site == "Tatoosh Island" & area %in% c(1,"N") ~ "N",
+        site == "Neah Bay" | site == "Tatoosh Island" & area %in% c(2,"S") ~ "S",
+        TRUE ~ NA_character_
+      )
+    )
+
+# This is a check on labeling
+#dat.fish %>% ungroup() %>% dplyr::select(year, site,area,transect) %>% distinct(year,site,area) %>%
+#    as.data.frame()
+
 # All samples in 2015 were collected at 5m depth
 dat.fish$zone[dat.fish$year == 2015] <- 5
 
@@ -207,6 +241,26 @@ dat.fish$site <- factor(dat.fish$site,
                                     "Tatoosh Island",
                                     "Chibadehl Rocks",
                                     "Neah Bay"))
+
+
+saveRDS(dat.fish,"Fish_2015-2021.rds")
+
+
+
+
+
+
+
+
+
+
+##############################################################
+##############################################################
+##############################################################
+##############################################################
+##############################################################
+##############################################################
+
 
 # GENERATE INDEXES BY SITE and AMONG SITES
 dat.large.fish.summary <- dat.fish %>% filter(size_class=="large" | is.na(size_class)==T) %>%
