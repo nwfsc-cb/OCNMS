@@ -50,6 +50,13 @@ swath.dat <- dat.2015 %>% filter(PISCO.datatype=="swath", data.type=="swath") %>
   group_by(Site,Transect,Observer,Species,PISCO.Classcode,Size.cm,group) %>%
   summarise(Count = sum(Count))  
 
+### Fix one mis-spelling in the 2015 data 
+swath.dat$PISCO.Classcode <- as.character(swath.dat$PISCO.Classcode)
+swath.dat <- swath.dat %>% mutate(PISCO.Classcode = ifelse(PISCO.Classcode=="DOROHD","DORODH",PISCO.Classcode))
+## Replace ASTSPP with STARREC (term used in 2016 and later)
+swath.dat <- swath.dat %>% mutate(PISCO.Classcode = ifelse(PISCO.Classcode=="ASTSPP","STARREC",PISCO.Classcode))
+
+
 # observed species in all years
 SP.all <- data.frame(species=unique(c(as.character(swath.dat$PISCO.Classcode),as.character(dat.2016.on.swath$CLASSCODE))))
 SP.all.common.names <- left_join(SP.all,species_names)
@@ -111,7 +118,8 @@ dat.long <- NULL
       temp$SPECIES <- SP[i]; temp$SPECIES <- unique(temp$SPECIES)[is.na(unique(temp$SPECIES))==F]
     }
     if(nrow(swath.dat %>% filter(SPECIES == SP[i])) ==0){
-      temp  <-  data.frame(base.dat, 
+      GROUP <- species_names %>% filter(species ==SP[i])%>% dplyr::select(group) %>% pull() %>% as.character()
+      temp  <-  data.frame(base.dat %>% filter(group==GROUP), 
                            #Species= SP.all.common.names$common.name[which(SP.all.common.names$species==SP[i])], 
                            SPECIES = SP[i],
                            SIZE=NA, METERS.sampled=10, Count= 0) 
@@ -177,30 +185,37 @@ dat.swath.base <- dat.swath.base %>% ungroup() %>%
       TRUE ~ NA_character_
     )
   )
+
+# This is a long set of transects conducted North to South by Jameal and Ole. We divide them up by placing half in 
+# The northern sub area and half in the southern sub area
+dat.swath.base$area <- as.character(dat.swath.base$area)
+dat.swath.base      <- dat.swath.base %>% ungroup() %>%
+                        mutate(area = ifelse(site=="Cape Johnson" & year ==2017 & is.na(area) & transect <=3, "N",area)) %>%
+                        mutate(area = ifelse(site=="Cape Johnson" & year ==2017 & is.na(area) & transect >3, "S",area))
+
 # Check for area labeling
 # dat.swath.base %>% ungroup() %>% dplyr::select(year, site,area,transect) %>% distinct(year,site,area) %>%
 #       as.data.frame()
 # 
-# dat.swath.base %>% ungroup() %>% dplyr::select(year, site,area,transect) %>% distinct(site,area) %>%
-#   as.data.frame()
-
+ dat.swath.base %>% ungroup() %>% dplyr::select(year, site,area,transect) %>% distinct(year,site,area) %>%
+   as.data.frame()
 
 saveRDS(dat.swath.base,"Swath_2015-2021.rds")
 
+###################################################################
+###################################################################
+###################################################################
+###################################################################
+###################################################################
+###################################################################
+###################################################################
+###################################################################
+###################################################################
+###################################################################
+###################################################################
+###################################################################
 
-# <<<<<<< HEAD
-# A <- ggplot(all.urchin.seastar %>% filter(site %in% c("Neah Bay","Tatoosh Island"))) +
-#     geom_point(aes(x=year,y=Mean,color=site)) +
-#     geom_line(aes(x=year,y=Mean,color=site)) +
-#     geom_errorbar(aes(x=year,ymin=Mean-SE.tot,ymax=Mean+SE.tot,color=site))+
-#     facet_grid(group~.,scales = "free") +
-#     ylab(expression("Mean density (m"^-2*")"))+
-#     xlab("Year") +
-#     scale_color_discrete("Site") +
-#     theme_bw()
-# =======
-# >>>>>>> a7d2dd24a9f92e130851a9793536a4b53e6ab2c1
-
+###################################################################
 # Separate out invertebrates and algae.
 dat.invert <- dat.swath.base %>% filter(group == "Invert")
 dat.algae  <- dat.swath.base %>% filter(group == "Algae")
@@ -226,7 +241,7 @@ dat.invert.density <- dat.invert.density %>% mutate(site=ifelse(site=="Anderson 
 
 #  Pull out urchins and seastar species
 urchin = c("MESFRA","STRDRO", "STRPUR")
-seastar = c("ASTSPP","CROPAP","DERIMB","EVATRO","HENLEV","MEDAEQ","ORTKOE",
+seastar = c("CROPAP","DERIMB","EVATRO","HENLEV","MEDAEQ","ORTKOE",
             "PATMIN","PISBRE","PISGIG","PISOCH","PISSPP","PYCHEL","SOLSTI")
 seastar.2 <- c("LEPSPP","STARREC")
 crab  = c("CANORE","CANSPP","CRYDEC","CRYSIT","LOPMAN","MIMFOL","PUGGRA","PUGPRO","SCYDEC")
@@ -257,8 +272,6 @@ dat.invert.density <- dat.invert.density %>%
            group.name=ifelse(species %in% tunicate,"tunicate",group.name),
            group.name=ifelse(species %in% sponge,"sponge",group.name),
            group.name=ifelse(species %in% anenome,"anenome",group.name))
-
-
 
 write.csv(dat.invert,file="Invert counts.csv",row.names = F)
 write.csv(dat.invert.density,file="Invert densities.csv",row.names = F)
