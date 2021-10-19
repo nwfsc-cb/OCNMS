@@ -50,6 +50,13 @@ swath.dat <- dat.2015 %>% filter(PISCO.datatype=="swath", data.type=="swath") %>
   group_by(Site,Transect,Observer,Species,PISCO.Classcode,Size.cm,group) %>%
   summarise(Count = sum(Count))  
 
+### Fix one mis-spelling in the 2015 data 
+swath.dat$PISCO.Classcode <- as.character(swath.dat$PISCO.Classcode)
+swath.dat <- swath.dat %>% mutate(PISCO.Classcode = ifelse(PISCO.Classcode=="DOROHD","DORODH",PISCO.Classcode))
+## Replace ASTSPP with STARREC (term used in 2016 and later)
+swath.dat <- swath.dat %>% mutate(PISCO.Classcode = ifelse(PISCO.Classcode=="ASTSPP","STARREC",PISCO.Classcode))
+
+
 # observed species in all years
 SP.all <- data.frame(species=unique(c(as.character(swath.dat$PISCO.Classcode),as.character(dat.2016.on.swath$CLASSCODE))))
 SP.all.common.names <- left_join(SP.all,species_names)
@@ -111,7 +118,8 @@ dat.long <- NULL
       temp$SPECIES <- SP[i]; temp$SPECIES <- unique(temp$SPECIES)[is.na(unique(temp$SPECIES))==F]
     }
     if(nrow(swath.dat %>% filter(SPECIES == SP[i])) ==0){
-      temp  <-  data.frame(base.dat, 
+      GROUP <- species_names %>% filter(species ==SP[i])%>% dplyr::select(group) %>% pull() %>% as.character()
+      temp  <-  data.frame(base.dat %>% filter(group==GROUP), 
                            #Species= SP.all.common.names$common.name[which(SP.all.common.names$species==SP[i])], 
                            SPECIES = SP[i],
                            SIZE=NA, METERS.sampled=10, Count= 0) 
