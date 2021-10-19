@@ -121,10 +121,44 @@ fish3 <- fish1d %>% group_by(site,year,zone,species, taxa) %>%
 # Check to make sure all of the site-year-zone combinations have equivalent number of transects.
 fish3 %>% group_by(site,year,zone) %>% distinct(N) %>% as.data.frame()
 
+#######################################################################
+# PULL IN INVERTEBRATES AND ALGAE FOR ANALYSIS.
+#######################################################################
 
-#######################################################################
-# OLE STOPPED HERE on 10.18.2021.
-#######################################################################
+# read in rds file with combined data
+swath0 = readRDS( paste0(Data_Loc,'Swath_2015-2021.rds' ))
+spp_swath <- read.csv("spp_codes_swath.csv")
+#separate into algae and invertebrate data frames.
+
+swath1 <- left_join(swath0,spp_swath)
+
+dat.algae   <- swath1 %>% filter(group=="Algae")
+dat.invert  <- swath1 %>% filter(group=="Invert")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Make Plots of Fish
 library(ggplot2)
