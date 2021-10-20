@@ -103,7 +103,7 @@ fish1b %>% filter(size_class == "small") %>% distinct(taxa)
 fish1c <- fish1b %>% filter(size_class == "small") %>% 
                       group_by(site,year,transect,observer,zone,area) %>% 
                       summarise(Count_all=sum(Count)) %>%
-                      mutate(species="totYOY",taxa="totYOY") %>%
+                      mutate(species="TOTyoy",taxa="TOTyoy") %>%
                       rename(Count=Count_all)
 fish1d <- fish1b %>% full_join(.,fish1c)                       
                     
@@ -115,41 +115,240 @@ fish1d <- fish1b %>% full_join(.,fish1c)
 # fish$se_up = fish$mean + fish$se
 
 # Ole made this to check the aggregating in fish 2.
-fish3 <- fish1d %>% group_by(site,year,zone,species, taxa) %>%
-  summarise(Mean=mean(Count),SD=sd(Count),N=length(Count),SE=SD/sqrt(N))
+fish3 <-  fish1d %>% group_by(site,year,zone,species, taxa) %>%
+              summarise(Mean=mean(Count),SD=sd(Count),N=length(Count),SE=SD/sqrt(N))
 
 # Check to make sure all of the site-year-zone combinations have equivalent number of transects.
 fish3 %>% group_by(site,year,zone) %>% distinct(N) %>% as.data.frame()
+
+fish4 <-  fish1d %>% group_by(site,year,species, taxa) %>%
+              summarise(Mean=mean(Count),SD=sd(Count),N=length(Count),
+                        SE=SD/sqrt(N),SE_var=SE^2)
+
+fish5 <- fish4 %>% group_by(year, species, taxa) %>%
+                    summarise(grand_sum=sum(Mean),
+                        N=length(Mean),
+                        grand_mean= grand_sum / N,
+                        grand_sum_var =sum(SE_var), 
+                        grand_SE = sqrt(grand_sum_var / N^2))
+
+SP.yoy <- c("SEBYTyoy", "Black & Yellowtail",
+            "SECAyoy", "Copper", 
+            #"SEMAyoy", "Quillback", 
+            "SEMYyoy", "Blue" ,
+            #"SENEyoy", "China", 
+            "SEPIyoy", "Canary", 
+            "RYOY", "Unidentified",
+            "TOTyoy", "Total")
+
+SP.yoy <- matrix(SP.yoy,ncol=2,byrow=T) %>% as.data.frame()
+colnames(SP.yoy) <- c("taxa","name")
+
+SP.yoy$name <- as.character(SP.yoy$name)
+SP.yoy$name <- factor(SP.yoy$name,levels=SP.yoy$name)
+######
+
+ggplot(fish5 %>% filter(taxa %in% SP.yoy$taxa) %>% left_join(.,SP.yoy)) +
+    geom_point(aes(x=year,y=grand_mean,color=name),alpha=0.5) + 
+    geom_line(aes(x=year,y=grand_mean,color=name)) +
+    geom_errorbar(aes(x=year,color=name,ymin=grand_mean-grand_SE,ymax=grand_mean+grand_SE),
+                  width=0) +
+    scale_y_continuous(trans="sqrt",breaks=c(0,1,5,10,20,40,60,80),limits=c(0,NA)) +
+    scale_x_continuous(breaks=seq(2015,2021)) +
+    scale_color_viridis_d(option="plasma", end=0.75) +  
+    ylab("Rockfish Recruits") +
+    xlab("Year") +
+    theme_bw() +
+    theme(legend.title=element_blank())
+
+
+ggplot(fish5 %>% filter(species=="TOTyoy")) +
+    geom_point(aes(x=year,y=grand_mean),color="blue") + 
+    geom_line(aes(x=year,y=grand_mean),color="blue") +
+    geom_errorbar(aes(x=year,ymin=grand_mean-grand_SE,ymax=grand_mean+grand_SE),
+                color="blue",width=0) +
+    scale_y_continuous(limits = c(0,80),breaks=c(0,5,10,20,30,40,50,60,70,80),expand=c(0,0.1)) +
+    scale_x_continuous(breaks=seq(2015,2021)) +
+    ylab("Rockfish Recruits (") +
+    xlab("Year") +
+    theme_bw() 
+
+
+
 
 #######################################################################
 # PULL IN INVERTEBRATES AND ALGAE FOR ANALYSIS.
 #######################################################################
 
 # read in rds file with combined data
-swath0 = readRDS( paste0(Data_Loc,'Swath_2015-2021.rds' ))
+swath0 <- readRDS( paste0(Data_Loc,'Swath_2015-2021.rds' ))
 spp_swath <- read.csv("spp_codes_swath.csv")
 #separate into algae and invertebrate data frames.
 
 swath1 <- left_join(swath0,spp_swath)
 
+SITES <- c("Destruction Island","Cape Johnson","Cape Alava","Tatoosh Island", "Neah Bay")
+swath1 <- swath1 %>% filter(site %in% SITES)
+swath1$site <- factor(swath1$sites,levels=SITES)
+
 dat.algae   <- swath1 %>% filter(group=="Algae")
 dat.invert  <- swath1 %>% filter(group=="Invert")
 
+#######################################################################
+## WORK WITH ALGAE FIRST 
+#######################################################################
+
+# Aggregate up to the transect level (within year, site, area, zone)
+algae1 <- dat.algae %>% group_by(year,site,transect,observer,species,zone,area,taxa) %>%
+            summarise(total.count=sum(Count),total.area=sum(Transect.area)) %>% 
+            mutate(density = total.count / total.area )
+# Aggregate up to the area level (within year site, zone) -- treat transects as replicates
+algae2 <- algae1 %>% 
+  group_by(year,site,species,zone,area,taxa) %>%
+  summarise(mean.density=mean(density), 
+            SD = sd(density), 
+            N =length(year),
+            SE= SD/sqrt(N) ) 
+
+# Aggregate up to the site level (within year, zone) -- treat transects as replicates
+algae3 <- algae1 %>% 
+  group_by(year,site,species,zone,taxa) %>%
+  summarise(mean.density=mean(density), 
+            SD = sd(density), 
+            N =length(year),
+            SE= SD/sqrt(N) ) 
 
 
 
+#Trim to canopy species
+ canopy <- algae3 %>% filter(taxa=="CANOPY",!species=="EGRMEN")
+ canopy$site <- factor(canopy$site,levels=SITES)
+ 
+ sm = 0.5
+ bg = 1
+ SIZE = cbind(site=SITES,size=c(sm,sm,sm,bg,sm)) %>% as.data.frame()
+ 
+ canopy <- left_join(canopy,SIZE)
+ canopy$size <- as.numeric(as.character(canopy$size))
+  canopy$zone <- factor(canopy$zone)
+ 
+ # Basic time-series by site and zone
+ ggplot(canopy %>% filter(zone==5)) +
+    geom_point(aes(x=year,y=mean.density,color=site),alpha=0.5) +
+    geom_line(aes(x=year,y=mean.density,color=site),alpha=0.5) +
+    geom_errorbar(aes(x=year,ymin=mean.density-SE,ymax=mean.density+SE,color=site),width=0) +
+    facet_grid(rows="species",scales="free_y") +
+    scale_x_continuous(breaks=seq(2015,2021)) +
+    scale_y_continuous(expression("Stipe density (stipe m"^-2*")")) +
+    scale_color_viridis_d(option="plasma",end=0.75)+
+    theme_bw()
+
+ # Basic time-series by site and zone
+ ggplot(canopy %>% filter(zone==10)) +
+   geom_point(aes(x=year,y=mean.density,color=site),alpha=0.5) +
+   geom_line(aes(x=year,y=mean.density,color=site),alpha=0.5) +
+   geom_errorbar(aes(x=year,ymin=mean.density-SE,ymax=mean.density+SE,color=site),width=0) +
+   facet_grid(rows="species",scales="free_y") +
+   scale_x_continuous(breaks=seq(2015,2021)) +
+   scale_y_continuous(expression("Stipe density (stipe m"^-2*")")) +
+   scale_color_viridis_d(option="plasma",end=0.75)+
+   theme_bw()
+ 
+ # Basic time-series by site and zone TATOOSH FOCUS
+ ggplot(canopy %>% filter(site=="Tatoosh Island",species=="NERLUE")) +
+   geom_point(aes(x=year,y=mean.density,color=zone),alpha=0.5) +
+   geom_line(aes(x=year,y=mean.density,color=zone),alpha=0.5) +
+   geom_errorbar(aes(x=year,ymin=mean.density-SE,ymax=mean.density+SE,color=zone),width=0) +
+   #facet_grid(rows="species",scales="free_y") +
+   scale_x_continuous(breaks=seq(2015,2021)) +
+   scale_y_continuous(expression("Stipe density (stipe m"^-2*")"),limits=c(0,NA)) +
+   scale_color_viridis_d("Depth (m)",option="plasma",end=0.75)+
+   #scale_point_viridis_d("Depth (m)",option="plasma",end=0.75)+
+   ggtitle("Tatoosh Island") +
+   theme_bw()
+ 
+### Bivariate and summed Plot of the two major canopy species.
+ 
+ mac_ner <- algae1 %>% filter(species %in% c("NERLUE","MACPYR"))
+ 
+ mac_ner1 <- mac_ner %>% group_by(year,site,zone,area) %>%
+              summarise(mean.density=mean(density), 
+                SD = sd(density), 
+                N =length(year),
+                SE= SD/sqrt(N) ) 
+
+  mac_ner2 <- mac_ner %>% group_by(year,site,zone) %>%
+    summarise(mean.density=mean(density), 
+             SD = sd(density), 
+             N =length(year),
+             SE= SD/sqrt(N) ) 
+ 
+  # Basic time-series by site and zone
+  all_canopy_zone <- ggplot(mac_ner2 ) +
+    geom_point(aes(x=year,y=mean.density,color=site),alpha=0.5) +
+    geom_line(aes(x=year,y=mean.density,color=site),alpha=0.5) +
+    geom_errorbar(aes(x=year,ymin=mean.density-SE,ymax=mean.density+SE,color=site),width=0) +
+    facet_grid(rows="zone",scales="free_y") +
+    scale_x_continuous(breaks=seq(2015,2021)) +
+    scale_y_continuous(expression("Stipe density (stipe m"^-2*")")) +
+    scale_color_viridis_d(option="plasma",end=0.75)+
+    theme_bw()
+
+  
+  
+  #######################################################################
+  ## WORK WITH IVERTEBRATES
+  #######################################################################
+  
+  # Aggregate up to the transect level (within year, site, area, zone)
+  invert1 <- dat.invert %>% group_by(year,site,transect,observer,species,zone,area,taxa) %>%
+    summarise(total.count=sum(Count),total.area=sum(Transect.area)) %>% 
+    mutate(density = total.count / total.area )
 
 
-
-
-
-
-
-
-
-
-
-
+  # Aggregate up to the area level (within year, site, zone) -- treat transects as replicates
+  invert2 <- invert1 %>% 
+    group_by(year,site,species,zone,area,taxa) %>%
+    summarise(mean.density=mean(density), 
+              SD = sd(density), 
+              N =length(year),
+              SE= SD/sqrt(N) ) 
+  
+  # Zoom in on urchins
+  urchin1 <- invert1 %>% filter(taxa=="URCHIN") %>%
+    group_by(year,site,transect,observer,zone,area,taxa) %>%
+    summarise(tot.density = sum(density)) %>% 
+    group_by(year,site,zone,area,taxa) %>%
+    summarise(mean.density=mean(tot.density), 
+              SD = sd(tot.density), 
+              N =length(year),
+              SE= SD/sqrt(N) ) 
+  
+  
+  urchin2 <- invert1 %>% filter(taxa=="URCHIN") %>%
+    group_by(year,site,transect,observer,area,zone,taxa) %>%
+    summarise(tot.density = sum(density)) %>% 
+    group_by(year,site,zone,taxa) %>%
+    summarise(mean.density=mean(tot.density), 
+              SD = sd(tot.density), 
+              N =length(year),
+              SE= SD/sqrt(N) ) 
+  
+  
+    ggplot() +
+      geom_point(data= urchin1,
+                 aes(x=year,y=mean.density,color=site),alpha=0.2) +
+      geom_point(data= urchin2,
+                 aes(x=year,y=mean.density,color=site),alpha=0.5) +
+      geom_line(data= urchin2,
+                 aes(x=year,y=mean.density,color=site),alpha=0.5) +
+      geom_errorbar(data=urchin2,aes(x=year,ymin=mean.density-SE,ymax=mean.density+SE,color=site),width=0) +
+      facet_grid(rows="zone") + #,scales="free_y") +
+      scale_x_continuous(breaks=seq(2015,2021)) +
+      scale_y_continuous(expression("Urchin density (m"^-2*")")) +
+      scale_color_viridis_d(option="plasma",end=0.75)+
+      theme_bw()
+        
 
 
 

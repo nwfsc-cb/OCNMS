@@ -60,7 +60,7 @@ swath.dat <- swath.dat %>% mutate(PISCO.Classcode = ifelse(PISCO.Classcode=="AST
 # observed species in all years
 SP.all <- data.frame(species=unique(c(as.character(swath.dat$PISCO.Classcode),as.character(dat.2016.on.swath$CLASSCODE))))
 SP.all.common.names <- left_join(SP.all,species_names)
-
+       
 #####
 dat.long <- NULL
 SP <- SP.all[SP.all != "NO_ORG" & SP.all != "NOT_DONE"]
@@ -83,6 +83,19 @@ dat.long$year <- 2015
 dat.long <- dat.long %>% 
   rename(site=Site,transect=Transect,observer=Observer,
          common.name=Species,species=PISCO.Classcode)
+
+# manually remove an oddball observation from Jameal, 2015, destruction Is., for the three main canopy species.
+dat.long <- dat.long %>% 
+                    mutate(Transect.area = 
+                             ifelse(observer=="JS"& transect==2 & group=="Algae" &
+                                      site=="Destruction Island SW" & species %in% c("PTECAL","NERLUE","MACPYR") &
+                                      Transect.area ==60, -99,Transect.area)) %>%
+                    mutate(Transect.area = 
+                            ifelse(observer=="JS"& transect==2 & group=="Algae" &
+                                      site=="Destruction Island SW" & !species %in% c("PTECAL","NERLUE","MACPYR") &
+                                      Transect.area ==10, -99,Transect.area)) %>%
+                    filter(!Transect.area==-99)
+                                 
 
 dat.2015.swath  <-  dat.long
 dat.2015.swath.count <- dat.long %>% group_by(site,transect,observer,Transect.area,common.name,species,year,group) %>%
