@@ -401,8 +401,6 @@ saveRDS(algae3, file = paste0(Data_Loc,"Summarized_Data_Kelp_year_zone_spp.rds")
     scale_color_viridis_d(option="plasma",end=0.75)+
     theme_bw()
 
-  
-  
   #######################################################################
   ## WORK WITH IVERTEBRATES
   #######################################################################
@@ -430,8 +428,8 @@ saveRDS(algae3, file = paste0(Data_Loc,"Summarized_Data_Kelp_year_zone_spp.rds")
               SD = sd(tot.density), 
               N =length(year),
               SE= SD/sqrt(N) ) 
-  
-  
+ 
+
   urchin2 <- invert1 %>% filter(taxa=="URCHIN") %>%
     group_by(year,site,transect,observer,area,zone,taxa) %>%
     summarise(tot.density = sum(density)) %>% 
@@ -462,6 +460,7 @@ saveRDS(algae3, file = paste0(Data_Loc,"Summarized_Data_Kelp_year_zone_spp.rds")
 
 
 
+##################### OLD ##############################
 
 
 
