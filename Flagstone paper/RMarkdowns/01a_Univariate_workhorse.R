@@ -1,5 +1,5 @@
 # data handling
-library(knitr)
+# library(knitr)
 # library(tidyr)
 library(dplyr)
 library(tidyverse)
@@ -7,11 +7,11 @@ library(stringr)
 # library(tinytex)
 library(RColorBrewer)
 # display.brewer.all(colorblindFriendly = TRUE)
-library(readxl)
+#library(readxl)
 
 # stats packages etc
-library(vegan)
-library(BiodiversityR)
+#library(vegan)
+#library(BiodiversityR)
 # library(pracma)
 # library(factoextra)
 
@@ -25,8 +25,11 @@ Other_Files = paste0(HomeFile,"/Flagstone paper/Other Files/")
 
 setwd(Data_Loc)
 
-spp_code = data.frame(read.csv( paste0(Data_Loc,"spp_codes.csv") ))
-inv_code = data.frame(read.csv( paste0(Data_Loc,"invert_groups.csv") ))
+### species codes here 
+
+fish_codes = data.frame(read.csv( paste0(Data_Loc,"spp_codes_fish.csv") ))
+swath_codes = data.frame(read.csv( paste0(Data_Loc,"spp_codes_swath.csv") ))
+kelp_codes = data.frame(read.csv( paste0(Data_Loc,"spp_codes_kelp.csv") ))
 
 ### common graphing settings ####
 
@@ -47,9 +50,24 @@ kelp.depth = 5
 fish.depth = c(5,10)
 invert.depth = 5
 
-####################################################
-########### START WITH FISH ########################
-####################################################
+settings = list(min.vis = min.vis,
+                years = years,
+                pch = pch,
+                col=col,
+                sites = sites,
+                year.pch = year.pch,
+                site.col = site.col,
+                kelp.deph = kelp.depth,
+                fish.depth = fish.depth,
+                invert.depth = invert.depth,
+                fish_codes = fish_codes,
+                swath_codes = swath_codes)
+
+saveRDS(settings, file = paste0(Data_Loc,'settings.RDS') )
+
+
+############## Fish - bring in an manipulate ########################
+
 
 # read in rds file with combined data
 fish0 = readRDS( paste0(Data_Loc,'Fish_2015-2021.rds' ))
@@ -59,7 +77,7 @@ fish0 = readRDS( paste0(Data_Loc,'Fish_2015-2021.rds' ))
 
 # add in taxa groupings
 # add in yoy designator and fix some names
-fish0 <- fish0 %>% left_join(.,spp_code %>% dplyr::select(code,group),by=c("species"="code")) %>%
+fish0 <- fish0 %>% left_join(.,fish_code %>% dplyr::select(code,group),by=c("species"="code")) %>%
             rename(taxa=group)
 fish0 <- fish0 %>% mutate(taxa=case_when(is.na(size_class)==TRUE ~ as.character(taxa),
                                          size_class=="large" ~ as.character(taxa),
@@ -111,13 +129,6 @@ fish1c <- fish1b %>% filter(size_class == "small") %>%
                       rename(Count=Count_all)
 fish1d <- fish1b %>% full_join(.,fish1c)                       
                     
-# double check specific averaging process here 
-# fish2 = aggregate( Count ~ site + zone + year + taxa, data = fish1c, FUN = mean )
-# colnames(fish2)[ncol(fish2)] <- 'mean'
-# fish = Sum_Stats('mean ~ year +  taxa', fish2)
-# fish$se_lo = fish$mean - fish$se
-# fish$se_up = fish$mean + fish$se
-
 # Ole made this to check the aggregating in fish 2.
 fish3 <-  fish1d %>% group_by(site,year,zone,species, taxa) %>%
               summarise(Mean=mean(Count),SD=sd(Count),N=length(Count),SE=SD/sqrt(N))
@@ -125,9 +136,13 @@ fish3 <-  fish1d %>% group_by(site,year,zone,species, taxa) %>%
 # Check to make sure all of the site-year-zone combinations have equivalent number of transects.
 fish3 %>% group_by(site,year,zone) %>% distinct(N) %>% as.data.frame()
 
-fish4 <-  fish1d %>% group_by(site,year,species, taxa) %>%
+
+### calculate means and se for species ####
+
+fish4 <-  fish1d %>% group_by(site,year,species,taxa) %>%
               summarise(Mean=mean(Count),SD=sd(Count),N=length(Count),
                         SE=SD/sqrt(N),SE_var=SE^2)
+saveRDS(fish4, paste0(Data_Loc,'Summarized_Data_Fish_site_year_species.rds'))
 
 fish5 <- fish4 %>% group_by(year, species, taxa) %>%
                     summarise(grand_sum=sum(Mean),
@@ -135,6 +150,25 @@ fish5 <- fish4 %>% group_by(year, species, taxa) %>%
                         grand_mean= grand_sum / N,
                         grand_sum_var =sum(SE_var), 
                         grand_SE = sqrt(grand_sum_var / N^2))
+saveRDS(fish5, paste0(Data_Loc,'Summarized_Data_Fish_year_species.rds'))
+
+#### calculate means se for taxa #######
+# lump by taxa for some plotting analysis.
+# greenlings lumped in current plots
+
+fish_taxa_Year_site <-  fish1d %>% group_by(site,year,taxa) %>%
+  summarise(Mean=mean(Count),SD=sd(Count),N=length(Count),
+            SE=SD/sqrt(N),SE_var=SE^2)
+saveRDS(fish_taxa_Year_site, paste0(Data_Loc,'Summarized_Data_Fish_site_year_taxa.rds'))
+
+fish_taxa_year <-fish_taxa_Year_site %>% group_by(year,taxa) %>%
+  summarise(grand_sum=sum(Mean),
+            N=length(Mean),
+            grand_mean= grand_sum / N,
+            grand_sum_var =sum(SE_var), 
+            grand_SE = sqrt(grand_sum_var / N^2))
+saveRDS(fish_taxa_year, paste0(Data_Loc,'Summarized_Data_Fish_year_taxa.rds'))
+
 # display.brewer.all(colorblindFriendly = TRUE)
 fish.col = c(RColorBrewer::brewer.pal(n = 12, name = "Paired"))
 
@@ -160,10 +194,10 @@ SP.yoy$name <- factor(SP.yoy$name,levels=SP.yoy$name)
 # supposedly colorblindfriendly
 # tried to match colors to fish
 
-graphics.off()
-jpeg(paste0(Fig_Loc,'Rockfish-YOY-timeseries.jpg'), units = 'in', res = 300, height=3, width = 3.5)
+# graphics.off()
+# jpeg(paste0(Fig_Loc,'Rockfish-YOY-timeseries.jpg'), units = 'in', res = 300, height=3, width = 3.5)
 
-ggplot(fish5 %>% filter(taxa %in% SP.yoy$taxa) %>% left_join(.,SP.yoy)) +
+ggplot(fish_taxa_year %>% filter(taxa %in% SP.yoy$taxa) %>% left_join(.,SP.yoy)) +
     geom_point(aes(x=year,y=grand_mean,color=name)) + 
     geom_line(aes(x=year,y=grand_mean,color=name)) +
     geom_errorbar(aes(x=year,color=name,ymin=grand_mean-grand_SE,ymax=grand_mean+grand_SE),
@@ -179,7 +213,7 @@ ggplot(fish5 %>% filter(taxa %in% SP.yoy$taxa) %>% left_join(.,SP.yoy)) +
           legend.background = element_blank(),
           legend.position = c(0.8, 0.7),
           legend.text = element_text(size = 7))
-dev.off()
+# dev.off()
 
 # ggplot(fish5 %>% filter(species=="TOTyoy")) +
 #     geom_point(aes(x=year,y=grand_mean),color="blue") + 
@@ -196,13 +230,10 @@ dev.off()
 #### Plot large fish ####
 # display.brewer.all(colorblindFriendly = TRUE)
 
-## note: greenlings mess up the plot. I think they need to be summarized
-## by taxa not species. 
-
 fish.col = c(RColorBrewer::brewer.pal(n = 12, name = "Paired"))
 
 fish.taxa <- c("OPEL", "Lingcod",     fish.col[10],
-               #"HEXA", "Greenlings", fish.col[4],
+               "HEXA", "Greenlings", fish.col[4],
                "SCMA" ,"Cabazon",     fish.col[8],
                "SECA", "Copper RF",   fish.col[12],
                "SENE", "Blue RF",     fish.col[2],
@@ -215,10 +246,10 @@ colnames(fish.taxa) <- c("taxa","name","col")
 fish.taxa$name <- as.character(fish.taxa$name)
 fish.taxa$name <- factor(fish.taxa$name,levels=fish.taxa$name)
 
-graphics.off()
-jpeg(paste0(Fig_Loc,'Fish-timeseries.jpg'), units = 'in', res = 300, height=3, width = 3.5)
+# graphics.off()
+# jpeg(paste0(Fig_Loc,'Fish-timeseries.jpg'), units = 'in', res = 300, height=3, width = 3.5)
 
-ggplot(fish5 %>% filter(taxa %in% fish.taxa$taxa) %>% left_join(.,fish.taxa)) +
+ggplot(fish_taxa_year %>% filter(taxa %in% fish.taxa$taxa) %>% left_join(.,fish.taxa)) +
   geom_point(aes(x=year,y=grand_mean,color=name)) + 
   geom_line(aes(x=year,y=grand_mean,color=name)) +
   geom_errorbar(aes(x=year,color=name,ymin=grand_mean-grand_SE,ymax=grand_mean+grand_SE),
@@ -234,7 +265,7 @@ ggplot(fish5 %>% filter(taxa %in% fish.taxa$taxa) %>% left_join(.,fish.taxa)) +
         legend.background = element_blank(),
         legend.position = c(0.7, 0.45),
         legend.text = element_text(size = 7))
-dev.off()
+# dev.off()
 
 
 #######################################################################
@@ -243,53 +274,70 @@ dev.off()
 
 # read in rds file with combined data
 swath0 <- readRDS( paste0(Data_Loc,'Swath_2015-2021.rds' ))
-spp_swath <- read.csv("spp_codes_swath.csv")
-#separate into algae and invertebrate data frames.
+# spp_swath <- read.csv( paste0(Data_Loc,"spp_codes_swath.csv"))
+# separate into algae and invertebrate data frames.
 
-swath1 <- left_join(swath0,spp_swath)
+# swath1 <- left_join(swath0,spp_swath)
+# just bring in higher level taxa designation
+# swath0$taxa = swath_codes$taxa[ match(swath0$species, swath_codes$CLASSCODE) ]
 
-SITES <- c("Destruction Island","Cape Johnson","Cape Alava","Tatoosh Island", "Neah Bay")
-swath1 <- swath1 %>% filter(site %in% SITES)
-swath1$site <- factor(swath1$sites,levels=SITES)
+swath1 <- swath0 %>% filter(site %in% sites)
+
+swath1$site <- factor(swath1$site,levels=sites)
 
 dat.algae   <- swath1 %>% filter(group=="Algae")
+# functional groupings for algae
+# nick made up the kelp_codes file. Ole should check FGs.
+dat.algae$fun_gr = kelp_codes$functinal_group[ match(dat.algae$species, kelp_codes$species) ]
+
 dat.invert  <- swath1 %>% filter(group=="Invert")
+# higher taxa groupings for inverts; for grouping later
+dat.invert$taxa = swath_codes$taxa[ match(dat.invert$species, swath_codes$CLASSCODE) ]
 
 #######################################################################
 ## WORK WITH ALGAE FIRST 
 #######################################################################
 
+
+### species level ####
 # Aggregate up to the transect level (within year, site, area, zone)
-algae1 <- dat.algae %>% group_by(year,site,transect,observer,species,zone,area,taxa) %>%
+algae1 <- dat.algae %>% group_by(year,site,transect,observer,species,zone,area,fun_gr) %>%
             summarise(total.count=sum(Count),total.area=sum(Transect.area)) %>% 
             mutate(density = total.count / total.area )
+saveRDS(algae1, file = paste0(Data_Loc,"Summarized_Data_Kelp_year_site_area_zone_spp.rds"))
+
 # Aggregate up to the area level (within year site, zone) -- treat transects as replicates
 algae2 <- algae1 %>% 
-  group_by(year,site,species,zone,area,taxa) %>%
+  group_by(year,site,species,zone,area,fun_gr) %>%
   summarise(mean.density=mean(density), 
             SD = sd(density), 
             N =length(year),
             SE= SD/sqrt(N) ) 
+saveRDS(algae2, file = paste0(Data_Loc,"Summarized_Data_Kelp_year_site_zone_spp.rds"))
+
 
 # Aggregate up to the site level (within year, zone) -- treat transects as replicates
 algae3 <- algae1 %>% 
-  group_by(year,site,species,zone,taxa) %>%
+  group_by(year,site,species,zone,fun_gr) %>%
   summarise(mean.density=mean(density), 
             SD = sd(density), 
             N =length(year),
             SE= SD/sqrt(N) ) 
+saveRDS(algae3, file = paste0(Data_Loc,"Summarized_Data_Kelp_year_zone_spp.rds"))
 
 #Trim to canopy species
- canopy <- algae3 %>% filter(taxa=="CANOPY",!species=="EGRMEN")
- canopy$site <- factor(canopy$site,levels=SITES)
+ canopy <- algae3 %>% filter(fun_gr=="canopy",!species=="EGRMEN")
+ canopy$site <- factor(canopy$site,levels=sites)
  
  sm = 0.5
  bg = 1
- SIZE = cbind(site=SITES,size=c(sm,sm,sm,bg,sm)) %>% as.data.frame()
+ SIZE = cbind(site=sites,size=c(sm,sm,sm,bg,sm)) %>% as.data.frame()
  
  canopy <- left_join(canopy,SIZE)
  canopy$size <- as.numeric(as.character(canopy$size))
   canopy$zone <- factor(canopy$zone)
+  
+  
  
  # Basic time-series by site and zone
  ggplot(canopy %>% filter(zone==5)) +

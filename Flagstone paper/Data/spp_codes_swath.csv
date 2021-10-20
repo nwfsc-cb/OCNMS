@@ -1,0 +1,69 @@
+CLASSCODE,species,common_name,total_count,group,functional_group,group_rare,taxa
+ACAHUD,Acanthodoris hudsoni,white nudibranch,28,large_nudibranch,large_nudibranch,mollusk,nudibranch
+ACANAN,Acanthodoris nanaimo,Nanaimo horned dorid,2,large_nudibranch,large_nudibranch,mollusk,nudibranch
+ACMMIT,Acmaea mitra,white cap limpet,73,shelled_gastropod,shelled_mollusk,mollusk,shelled gastropod
+ANTELE,Anthopleura elegantissima,aggregating anemone,1,small_anemone,small_anemone,anemone,anemone
+ANTXAN,Anthopleura xanthogrammica,giant green anemone,149,large_anemone,large_anemone,anemone,anemone
+BALNUB,Balanus nubilis,giant acorn barnacle,2142,large_barnacle,large_barnacle,barnacle,barnacle
+CANORE,Cancer oregonensis,pygmy rock crab,15,crabs,crabs,mobile_invert,crabs
+CANSPP,Cancer spp.,cancer crab,33,crabs,crabs,mobile_invert,crabs
+CERFOL,Ceratostoma foliatum,leafy hornmouth,891,shelled_gastropod,shelled_mollusk,mollusk,shelled gastropod
+CHITON,small chitons,small chitons,142,chiton,shelled_mollusk,mollusk,chiton
+CLAMSP,misc clams,misc clams,1,bivalve,shelled_mollusk,mollusk,bivalve
+CRAARB,Craniella arb,grey tennis ball sponge,15,sponge,sponge,sponge,sponge
+CRAGIG,Crassadoma gigantea,rock scallop,473,bivalve,shelled_mollusk,mollusk,bivalve
+CROPAP,Crossaster papposus,common sunstar,1,med_sea_star,seastar,med_sea_star,medium star
+CRYSIT,Cryptolithoides sitchensis,umbrella crab,13,crabs,crabs,mobile_invert,crabs
+CRYSTE,Cryptochiton stelleri,gumboot chiton,82,chiton,shelled_mollusk,mollusk,chiton
+CUCMIN,Cucumaria miniata,orange sea cucumber,1299,orange_cucumber,sea_cucumber,sea_cucumber,cucumber
+DERIMB,Dermasterias imbricata,leather star,791,leather_star,seastar,med_sea_star,leather star
+DIASAN,Dialula sandiegensis,San Diego dorid,10,med_nudibranch,med_nudibranch,mollusk,nudibranch
+DIOASP,Diodora aspera,rough keyhole limpet,340,shelled_gastropod,shelled_mollusk,mollusk,shelled gastropod
+DIRALB,Dirona albolineata,white lined nudibranch,95,med_nudibranch,med_nudibranch,mollusk,nudibranch
+DORODH,Doris odhneri,white knight dorid nudibranch,66,large_nudibranch,large_nudibranch,mollusk,nudibranch
+ENTDOF,Enteroctopus dofleini,giant Pacific octopus,1,octopus,octopus,mollusk,octopus
+EPIPRO,Epiactis prolifera,brooding anemonae,60,small_anemone,small_anemone,anemone,anemone
+EUPQUI,Eupentacta quinquesemita,white sea cucumber,177,sea_cucumber,sea_cucumber,sea_cucumber,cucumber
+EVATRO,Evasterias troschelii,mottled star,99,large_sea_star,seastar,large_sea_star,large star
+FUSORE,Fusitriton oregonensis,Oregon hairy triton,4,shelled_gastropod,shelled_mollusk,mollusk,shelled gastropod
+HENLEV,Henricia leviuscula,blood star,1344,blood_star,seastar,med_sea_star,blood star
+HERCRA,Hermissenda crassicornis,opalescent nudibranch,12,med_nudibranch,med_nudibranch,mollusk,nudibranch
+JANFUS,Janolus fuscus,nudibranch,35,med_nudibranch,med_nudibranch,mollusk,nudibranch
+LEPSPP,Lepasterias spp.,brood seastar,186,brood_sea_star,seastar,med_sea_star,brood star
+LIMCOC,Limacia cockerelli,Cockerells dorid,1,med_nudibranch,med_nudibranch,mollusk,nudibranch
+LIRDIR,Lirabuccinum dirum,dire whelk,75,shelled_gastropod,shelled_mollusk,mollusk,shelled gastropod
+LOPMAN,Lopholithodes mandtii,Puget Sound king crab,2,crabs,crabs,mobile_invert,crabs
+MEDAEQ,Mediaster aequalis,red seastar,7,med_sea_star,seastar,med_sea_star,medium star
+MESFRA,Mesocentrotus franciscanus,red urchin,1478,red_urchin ,urchin,urchin,red urchin
+METGIG,Metridium giganteum,giant plumose anemone,3,large_anemone,large_anemone,anemone,anemone
+METSPP,Metridium spp.,white plumed anemones,195,large_anemone,large_anemone,anemone,anemone
+MIMFOL,Mimulus foliatus,mimicking crab,3,crabs,crabs,mobile_invert,crabs
+MYTCAL,Mytilus californianus,California mussel,17,shelled_mollusk,shelled_mollusk,mollusk,shelled mussel
+NO_ORG,No organisms,No organisms,0,no_org,,,no_org
+NUCLAM,Nucella lamellosa,whelk,2876,shelled_gastropod,shelled_mollusk,mollusk,shelled gastropod
+ORTKOE,Orthasterias koehleri,rainbow star,62,large_sea_star,seastar,large_sea_star,large star
+PAGSPP,Pagurus spp,hermit crabs,48,hermit_crabs,crabs,mobile_invert,hermit_crabs
+PARCAL,Parastichopus californicus,California sea cucumber,23,Cal_cuc,sea_cucumber,sea_cucumber,cucumber
+PATMIN,Patiria miniata,bat star,135,med_sea_star,seastar,med_sea_star,medium star
+PELNOB,Peltodoris nobilis,Pacific sea lemon,64,large_nudibranch,large_nudibranch,mollusk,nudibranch
+PISBRE,Pisaster brevispinus,short spined star,7,large_sea_star,seastar,large_sea_star,Pisaster
+PISGIG,Pisaster giganteus,giant spined star,1,large_sea_star,seastar,large_sea_star,Pisaster
+PISOCH,Pisaster ochraceous,ochre star,266,P_ochraceous,seastar,large_sea_star,Pisaster
+PODSPP,Pododesmus spp. ,jungle shells,6,bivalve,shelled_mollusk,mollusk,bivalve
+PUGGRA,Pugettia gracilis,graceful kelp crab,25,kelp_crab,crabs,mobile_invert,kelp crab
+PUGPRO,Pugettia producta,kelp crab,23,kelp_crab,crabs,mobile_invert,kelp crab
+PYCHEL,Pycnopodia helianthoides,sunflower star,8,large_sea_star,seastar,large_sea_star,Pynopodia
+SCALLOP,scallop,scallop,1,bivalve,shelled_mollusk,mollusk,bivalve
+SCYDEC,Scyra spp.,decorator crab - moss crab,109,crabs,crabs,mobile_invert,crabs
+SOLSTI,Solaster stimpsoni,orange sun star,14,large_sea_star,seastar,large_sea_star,large star
+STARREC,sea star recruits,sea star recruits,69,sea_star_YOY,seastar,med_sea_star,sea_star_YOY
+STRDRO,Strongylocentrotus droebachiensis,green urchin,840,green_urchin,urchin,urchin,green urchin
+STRPUR,Strongylocentrotus purpuratus,purple urchin,3611,purple_urchin,urchin,urchin,purple urchin
+STYMON,Styela montereyensis,stalked tunicate,1215,tunicate,tunicate,tunicate,tunicate
+TEGSPP,Tegula spp.,turban snails,23,shelled_gastropod,shelled_mollusk,mollusk,shelled gastropod
+TRICAT,Triopha catalinae,sea clown nudibranch,31,med_nudibranch,med_nudibranch,mollusk,nudibranch
+UNIDSP,mobile_invert_unident,mobile_invert_unident,6,mobile_invert,mobile_invert,mobile_invert,mobile_invert
+URTCRA,Urticina crassicornis,Christmas anemone,10,large_anemone,large_anemone,anemone,anemone
+URTLOF,Urticina lofotensis,white-spotted rose anemone,12,large_anemone,large_anemone,anemone,anemone
+URTPIS,Urticina piscivora,fish-eating anemone,9,large_anemone,large_anemone,anemone,anemone
+URTSPP,Urticina spp.,Urticina spp.,297,large_anemone,large_anemone,anemone,anemone

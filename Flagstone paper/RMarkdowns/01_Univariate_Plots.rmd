@@ -13,6 +13,14 @@ output:
 fontsize: 11pt
 
 ---
+```{r run-univariate-workhorse-rds }
+# This script imports fish data, does manipulations.
+# Imports Invert and Algae Data, does manipulations.
+# I added some specific data imports so we don't have to run the univariate workhorse each time
+
+# source("01a_Univariate_workhorse.R")
+```
+
 
 ```{r SETUP, include=FALSE}
 # A bunch of initial set up junk
@@ -22,20 +30,21 @@ fontsize: 11pt
 ##### knitr stuff and libraries ####
 # tools in use 
 library(knitr)
-# library(tidyr)
-# library(dplyr)
 library(tidyverse)
 library(stringr)
-# library(tinytex)
 library(RColorBrewer)
+# library(tidyr)
+# library(dplyr)
+# library(tinytex) # for pdf output
+
 # display.brewer.all(colorblindFriendly = TRUE)
-library(readxl)
+#vlibrary(readxl)
 
 # stats packages etc
-library(vegan)
-library(BiodiversityR)
-library(pracma)
-library(factoextra)
+# library(vegan)
+# library(BiodiversityR)
+# library(pracma)
+# library(factoextra)
 
 # options
 knitr::opts_chunk$set(
@@ -51,7 +60,6 @@ knitr::opts_chunk$set(
   fig.align='center'
   
   )
-# opts_knit$set(eval.after = "fig.cap")
 
 # just to keep track of when I ran things.
 
@@ -62,20 +70,25 @@ capture.output(Last_Run, file = 'Last_Run.txt')
 
 par(ps=10, cex=1)
 
-source("R-functions-ocnms.r")
-
 # Paths for files
-HomeFile = getwd()
+
+HomeFile = HomeFile = "C:/Users/nick.tolimieri/Documents/GitHub/OCNMS/"
 Fig_Loc = paste0(HomeFile,"/Flagstone paper/Plots/")
 Data_Loc = paste0(HomeFile,"/Flagstone paper/Data/")
 Results_Loc = paste0(HomeFile,"/Flagstone paper/Results/")
 Other_Files = paste0(HomeFile,"/Flagstone paper/Other Files/")
 
+source("R-functions-ocnms.r")
 
 ```
 
 ```{r triggers-and-settings}
-min.vis = 2.0
+
+# provided in Univariate_workhorse, sourced above
+settings = readRDS( paste0(Data_Loc,'settings.RDS') )
+
+min.vis = settings$min.vis
+
 years = 2015:2021
 pch = c(9, 4, 8 , 21, 22, 24, 25 )
 col = RColorBrewer::brewer.pal(n = 12, name = "Paired")[c(2,4,6,10,12,7,8)]
@@ -88,86 +101,148 @@ colnames(site.col) <- c('site', 'col')
 
 #### species depths #####
 
-kelp.depth = 5
-fish.depth = c(5,10)
-invert.depth = 5
+kelp.depth = settings$kelp.deph
+fish.depth = settings$fish.depth
+invert.depth = settings$invert.depth
 
-###########################
+fish_codes = settings$fish_codes
+swath_codes = settings$swath_codes
+
+### combine settings and save out for multivariate file  ####
+# will overwrite settings file from Univariate_workhorse
+
+settings = list(min.vis = min.vis,
+                years = years,
+                pch = pch,
+                col=col,
+                sites=sites,
+                year.pch = year.pch,
+                site.col = site.col,
+                kelp.deph = kelp.depth,
+                fish.depth = fish.depth,
+                invert.depth = invert.depth,
+                fish_codes = fish_codes,
+                swath_codes = swath_codes)
+
+saveRDS(settings, file = paste0(Data_Loc,'settings.RDS') )
+
+
 ```
-
-
 
 # Import and manipulate data a bit
 
-For the fish data 
+Minimum vis for fish analysis = `r min.vis`-m
 
-* There is some renaming of things and lumping all SEFL and SEBYT yoy into just YTBLyoy
-* Put in some fake visibility data for 2015. By my recollection, Destruction Island was horrible in 2015. So we should drop it for the fish data. 
-* Then select only sites with visibility of 2.0 or greater.
-* Finally, subset out only the five (5) sites for analyses.
+Kelp depths = `r kelp.depth` -m
+Fish depths = `r fish.depth` -m
+Inv  depths = `r invert.depth` -m
 
-
-Fish Depth = `r fish.depth` meters
-Kelp Depth = `r kelp.depth` meters
-Invert Depth = `r invert.depth` meters  
-
-```{r fish-import-rds }
-# This script import fish data, does manipulations
-# Imports Invert and Algae Data, does manipulations.
-# Sweet
-
-source("01a_Univariate_workhorse.R")
-```
+Visibility data for 2015 are fake. DI was bad and set at 1.0 m; other sites set at 3.0 m
 
 # Time series
+
+## Rockfish YOY
+
+```{r rockfish-yoy, fig.width=5, fig.height=3.5}
+
+fish_taxa_year <- readRDS(paste0(Data_Loc,'Summarized_Data_Fish_year_taxa.rds'))
+
+fish.col = c(RColorBrewer::brewer.pal(n = 12, name = "Paired"))
+
+SP.yoy <- c("SEBYTyoy", "Black & Yellowtail",  'black',
+            "SECAyoy", "Copper",               fish.col[12],
+            #"SEMAyoy", "Quillback",            fish.col[10],
+            "SEMYyoy", "Blue" ,                fish.col[2],
+            #"SENEyoy", "China",                fish.col[10],
+            "SEPIyoy", "Canary",               fish.col[6],
+            "RYOY", "Unidentified",            fish.col[9],
+            "TOTyoy", "Total",                 fish.col[10])
+
+SP.yoy <- matrix(SP.yoy,ncol=3,byrow=T) %>% as.data.frame()
+colnames(SP.yoy) <- c("taxa","name",'col')
+
+SP.yoy$name <- as.character(SP.yoy$name)
+SP.yoy$name <- factor(SP.yoy$name,levels=SP.yoy$name)
+
+yoy.plot <- ggplot(fish_taxa_year %>% filter(taxa %in% SP.yoy$taxa) %>% left_join(.,SP.yoy)) +
+    geom_point(aes(x=year,y=grand_mean,color=name)) + 
+    geom_line(aes(x=year,y=grand_mean,color=name)) +
+    geom_errorbar(aes(x=year,color=name,ymin=grand_mean-grand_SE,ymax=grand_mean+grand_SE),
+                  width=0) +
+    scale_y_continuous(trans="sqrt",breaks=c(0,1,5,10,20,40,60,80),limits=c(0,NA)) +
+    scale_x_continuous(breaks=seq(2015,2021)) +
+    #scale_color_viridis_d(option="plasma", end=0.75) + 
+    scale_color_manual(values=SP.yoy$col)+
+    ylab("Rockfish Recruits") +
+    xlab("Year") +
+    theme_bw() +
+    theme(legend.title=element_blank(),
+          legend.background = element_blank(),
+          #legend.position = c(0.8, 0.7),
+          #legend.text = element_text(size = 7)
+          )
+
+yoy.plot
+
+```
 
 ## Fish
 
 Fish depth = `r fish.depth`
 
-```{r fish-ts-2pane, fig.width=4.5, fig.height=5}
+```{r fish, fig.width=5, fig.height=3.5}
 
-print()
+fish_taxa_year <- readRDS(paste0(Data_Loc,'Summarized_Data_Fish_year_taxa.rds'))
 
+fish.col = c(RColorBrewer::brewer.pal(n = 12, name = "Paired"))
+
+fish.taxa <- c("OPEL", "Lingcod",     fish.col[10],
+               "HEXA", "Greenlings", fish.col[4],
+               "SCMA" ,"Cabazon",     fish.col[8],
+               "SECA", "Copper RF",   fish.col[12],
+               "SENE", "Blue RF",     fish.col[2],
+               "SEFL", "Yellowtail RF", fish.col[7],
+               "SEME", 'Black RF',    'black')
+
+fish.taxa <- matrix(fish.taxa,ncol=3,byrow=T) %>% as.data.frame()
+colnames(fish.taxa) <- c("taxa","name","col")
+
+fish.taxa$name <- as.character(fish.taxa$name)
+fish.taxa$name <- factor(fish.taxa$name,levels=fish.taxa$name)
+
+
+fish.plot <- ggplot(fish_taxa_year %>% filter(taxa %in% fish.taxa$taxa) %>% left_join(.,fish.taxa)) +
+  geom_point(aes(x=year,y=grand_mean,color=name)) + 
+  geom_line(aes(x=year,y=grand_mean,color=name)) +
+  geom_errorbar(aes(x=year,color=name,ymin=grand_mean-grand_SE,ymax=grand_mean+grand_SE),
+                width=0) +
+  scale_y_continuous(trans="sqrt",breaks=c(0,1,5,10,20,40,60,80),limits=c(0,NA)) +
+  scale_x_continuous(breaks=seq(2015,2021)) +
+  #scale_color_viridis_d(option="plasma", end=0.75) + 
+  scale_color_manual(values=fish.taxa$col)+
+  ylab("Fish") +
+  xlab("Year") +
+  theme_bw() +
+  theme(legend.title=element_blank(),
+        legend.background = element_blank(),
+        #legend.position = c(0.7, 0.5),
+        #legend.text = element_text(size = 7)
+        )
+fish.plot
 ```
+```{r combined-fish-yoy, fig.width=5, fig.height=4}
 
-A second version splitting out the SEME (blacks) because they are abundant.
+g1 <- ggplotGrob(fish.plot)
+g2 <- ggplotGrob(yoy.plot)
 
-```{r fish-ts-4pane, fig.width=4.5, fig.height=6}
-library(ggplot2)
-library(gtable)
-library(gridExtra)
+g <- rbind(g1, g2, size = "first")
 
-all.colors =  RColorBrewer::brewer.pal(n = 12, name = "Paired")
-fish.col = all.colors[ c(3,4,8,12,11,2) ]
-yoy.col = all.colors[c(10,12,6,4)]
-
-uni.fish2 = fish[ fish$taxa %in% c("OPEL", "HEXA", "SECA", "SCMA" ,"SENE", "SEFL"),] 
-yoy.fish2 = fish[ fish$taxa %in% c("SECAyoy","SEPIyoy", "RYOY"),]
-
-fish.plot = species.plot(uni.fish2, group.var = 'taxa', years = 2015:2021, 
-                     Ylim = NA, Ylab = fish.ylabel, Colors = fish.col )
-yoy.plot = species.plot(yoy.fish2, group.var = 'taxa', years = 2015:2021, 
-                     Ylab = fish.ylabel,Ylim = NA, Colors = yoy.col)
-
-black = species.plot(fish[fish$taxa =="SEME",], group.var = 'taxa', years = 2015:2021, 
-                     Ylim = NA, Ylab = fish.ylabel, Colors = 'black')
-ytbl = species.plot(fish[fish$taxa %in% c("totYOY","YTBLyoy"),], group.var = 'taxa', years = 2015:2021, 
-                     Ylim = NA, Ylab = fish.ylabel, Colors = c('darkgrey', "black") )
-
-g1 <- ggplotGrob(black)
-g3 <- ggplotGrob(ytbl)
-g2 <- ggplotGrob(fish.plot)
-g4 <- ggplotGrob(yoy.plot)
-
-g <- rbind(g1, g2, g3, g4, size = "first")
-
-g$widths <- grid::unit.pmax(g1$widths, g2$width, g2$widths, g4$widths)
+g$widths <- grid::unit.pmax(g1$widths, g2$widths)
 grid::grid.newpage()
 grid::grid.draw(g)
-# grid.arrange(g1, g2, g3, g4, ncol=2, nrow =2)
 
 ```
+
 ## Swath: Kelp & Inverts
 
 Kelp depth = `r kelp.depth`
