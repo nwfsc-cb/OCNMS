@@ -114,23 +114,19 @@ Invert Depth = `r invert.depth` meters
 ```{r fish-import-rds }
 # This script import fish data, does manipulations
 # Imports Invert and Algae Data, does manipulations.
+# Sweet
 
 source("01a_Univariate_workhorse.R")
 ```
 
 # Time series
 
-1. There are multiple size classes. Data are first summed by transect for each spp.
-2. Take the log(x+1) mean for site x year
-3. Take the mean of #2 for year. So, the mean of sites
-4. plotted data are log(x+1)
-5. Additional output not in this file shows species abundance by year x site or year x site x depth just to look.
-
 ## Fish
 
 Fish depth = `r fish.depth`
 
 ```{r fish-ts-2pane, fig.width=4.5, fig.height=5}
+
 print()
 
 ```

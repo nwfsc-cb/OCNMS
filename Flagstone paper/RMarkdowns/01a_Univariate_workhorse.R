@@ -1,3 +1,4 @@
+# data handling
 library(knitr)
 # library(tidyr)
 library(dplyr)
@@ -11,25 +12,23 @@ library(readxl)
 # stats packages etc
 library(vegan)
 library(BiodiversityR)
-library(pracma)
-library(factoextra)
+# library(pracma)
+# library(factoextra)
 
-
-# Paths for files
-HomeFile = "/Users/ole.shelton/Github/OCNMS"
+# Paths for files ####
+HomeFile = "C:/Users/nick.tolimieri/Documents/GitHub/OCNMS/" # 
+# HomeFile = "/Users/ole.shelton/Github/OCNMS"
 Fig_Loc = paste0(HomeFile,"/Flagstone paper/Plots/")
 Data_Loc = paste0(HomeFile,"/Flagstone paper/Data/")
 Results_Loc = paste0(HomeFile,"/Flagstone paper/Results/")
 Other_Files = paste0(HomeFile,"/Flagstone paper/Other Files/")
 
 setwd(Data_Loc)
-spp_code = data.frame(read.csv("spp_codes.csv"))
 
-########START WITH FISH.
-# import fish data. wide format
+spp_code = data.frame(read.csv( paste0(Data_Loc,"spp_codes.csv") ))
+inv_code = data.frame(read.csv( paste0(Data_Loc,"invert_groups.csv") ))
 
-# read in rds file with combined data
-fish0 = readRDS( paste0(Data_Loc,'Fish_2015-2021.rds' ))
+### common graphing settings ####
 
 min.vis = 2.0
 years = 2015:2021
@@ -38,7 +37,7 @@ col = RColorBrewer::brewer.pal(n = 12, name = "Paired")[c(2,4,6,10,12,7,8)]
 year.pch = data.frame(cbind(years, pch,col))
 
 sites = c("Neah Bay","Tatoosh Island","Cape Alava","Cape Johnson","Destruction Island")
-col = RColorBrewer::brewer.pal(n = 12, name = "Paired")[c(2,4,6, 10,12)]
+col = RColorBrewer::brewer.pal(n = 12, name = "Paired")[c(2,4,6,10,12)]
 site.col = data.frame(cbind(sites,col))
 colnames(site.col) <- c('site', 'col')
 
@@ -48,7 +47,12 @@ kelp.depth = 5
 fish.depth = c(5,10)
 invert.depth = 5
 
-###########################
+####################################################
+########### START WITH FISH ########################
+####################################################
+
+# read in rds file with combined data
+fish0 = readRDS( paste0(Data_Loc,'Fish_2015-2021.rds' ))
 
 # fix a spp name
 #fish0$species[ fish0$species == 'SEBYT'] <- 'SEFL'
@@ -77,7 +81,7 @@ fish_yt <- fish0 %>% filter(taxa=="SEBYTyoy") %>%
                 
 fish0 <- fish0 %>% filter(!taxa == "SEBYTyoy") %>% full_join(.,fish_yt)
 
-# subset visibility
+# subset visibility ####
 # add fake vis for 2015
 fish0$vis_m[ fish0$year == 2015 ] <- 3
 # poor vis at destruction in year 1.
@@ -93,7 +97,7 @@ fish1 = fish0 %>% filter(site %in% c("Destruction Island", "Cape Johnson","Cape 
 # drop low vis sites/transects and set depth
 fish1a = fish1[fish1$vis_m >= min.vis, ]
 
-# set depth
+# select depth ####
 fish1b = fish1a[fish1a$zone %in% fish.depth,]
 
 # calculate total yoy by site, transect, observer, and year
@@ -131,49 +135,106 @@ fish5 <- fish4 %>% group_by(year, species, taxa) %>%
                         grand_mean= grand_sum / N,
                         grand_sum_var =sum(SE_var), 
                         grand_SE = sqrt(grand_sum_var / N^2))
+# display.brewer.all(colorblindFriendly = TRUE)
+fish.col = c(RColorBrewer::brewer.pal(n = 12, name = "Paired"))
 
-SP.yoy <- c("SEBYTyoy", "Black & Yellowtail",
-            "SECAyoy", "Copper", 
-            #"SEMAyoy", "Quillback", 
-            "SEMYyoy", "Blue" ,
-            #"SENEyoy", "China", 
-            "SEPIyoy", "Canary", 
-            "RYOY", "Unidentified",
-            "TOTyoy", "Total")
+SP.yoy <- c("SEBYTyoy", "Black & Yellowtail",  'black',
+            "SECAyoy", "Copper",               fish.col[12],
+            #"SEMAyoy", "Quillback",            fish.col[10],
+            "SEMYyoy", "Blue" ,                fish.col[2],
+            #"SENEyoy", "China",                fish.col[10],
+            "SEPIyoy", "Canary",               fish.col[6],
+            "RYOY", "Unidentified",            fish.col[9],
+            "TOTyoy", "Total",                 fish.col[10])
 
-SP.yoy <- matrix(SP.yoy,ncol=2,byrow=T) %>% as.data.frame()
-colnames(SP.yoy) <- c("taxa","name")
+SP.yoy <- matrix(SP.yoy,ncol=3,byrow=T) %>% as.data.frame()
+colnames(SP.yoy) <- c("taxa","name",'col')
 
 SP.yoy$name <- as.character(SP.yoy$name)
 SP.yoy$name <- factor(SP.yoy$name,levels=SP.yoy$name)
-######
+
+###### FISH PLOTS ####
+
+#### Plot YOY rockfish ####
+
+# supposedly colorblindfriendly
+# tried to match colors to fish
+
+graphics.off()
+jpeg(paste0(Fig_Loc,'Rockfish-YOY-timeseries.jpg'), units = 'in', res = 300, height=3, width = 3.5)
 
 ggplot(fish5 %>% filter(taxa %in% SP.yoy$taxa) %>% left_join(.,SP.yoy)) +
-    geom_point(aes(x=year,y=grand_mean,color=name),alpha=0.5) + 
+    geom_point(aes(x=year,y=grand_mean,color=name)) + 
     geom_line(aes(x=year,y=grand_mean,color=name)) +
     geom_errorbar(aes(x=year,color=name,ymin=grand_mean-grand_SE,ymax=grand_mean+grand_SE),
                   width=0) +
     scale_y_continuous(trans="sqrt",breaks=c(0,1,5,10,20,40,60,80),limits=c(0,NA)) +
     scale_x_continuous(breaks=seq(2015,2021)) +
-    scale_color_viridis_d(option="plasma", end=0.75) +  
+    #scale_color_viridis_d(option="plasma", end=0.75) + 
+    scale_color_manual(values=SP.yoy$col)+
     ylab("Rockfish Recruits") +
     xlab("Year") +
     theme_bw() +
-    theme(legend.title=element_blank())
+    theme(legend.title=element_blank(),
+          legend.background = element_blank(),
+          legend.position = c(0.8, 0.7),
+          legend.text = element_text(size = 7))
+dev.off()
 
+# ggplot(fish5 %>% filter(species=="TOTyoy")) +
+#     geom_point(aes(x=year,y=grand_mean),color="blue") + 
+#     geom_line(aes(x=year,y=grand_mean),color="blue") +
+#     geom_errorbar(aes(x=year,ymin=grand_mean-grand_SE,ymax=grand_mean+grand_SE),
+#                 color="blue",width=0) +
+#     scale_y_continuous(limits = c(0,80),breaks=c(0,5,10,20,30,40,50,60,70,80),expand=c(0,0.1)) +
+#     scale_x_continuous(breaks=seq(2015,2021)) +
+#     ylab("Rockfish Recruits (") +
+#     xlab("Year") +
+#     theme_bw() 
+# 
 
-ggplot(fish5 %>% filter(species=="TOTyoy")) +
-    geom_point(aes(x=year,y=grand_mean),color="blue") + 
-    geom_line(aes(x=year,y=grand_mean),color="blue") +
-    geom_errorbar(aes(x=year,ymin=grand_mean-grand_SE,ymax=grand_mean+grand_SE),
-                color="blue",width=0) +
-    scale_y_continuous(limits = c(0,80),breaks=c(0,5,10,20,30,40,50,60,70,80),expand=c(0,0.1)) +
-    scale_x_continuous(breaks=seq(2015,2021)) +
-    ylab("Rockfish Recruits (") +
-    xlab("Year") +
-    theme_bw() 
+#### Plot large fish ####
+# display.brewer.all(colorblindFriendly = TRUE)
 
+## note: greenlings mess up the plot. I think they need to be summarized
+## by taxa not species. 
 
+fish.col = c(RColorBrewer::brewer.pal(n = 12, name = "Paired"))
+
+fish.taxa <- c("OPEL", "Lingcod",     fish.col[10],
+               #"HEXA", "Greenlings", fish.col[4],
+               "SCMA" ,"Cabazon",     fish.col[8],
+               "SECA", "Copper RF",   fish.col[12],
+               "SENE", "Blue RF",     fish.col[2],
+               "SEFL", "Yellowtail RF", fish.col[7],
+               "SEME", 'Black RF',    'black')
+
+fish.taxa <- matrix(fish.taxa,ncol=3,byrow=T) %>% as.data.frame()
+colnames(fish.taxa) <- c("taxa","name","col")
+
+fish.taxa$name <- as.character(fish.taxa$name)
+fish.taxa$name <- factor(fish.taxa$name,levels=fish.taxa$name)
+
+graphics.off()
+jpeg(paste0(Fig_Loc,'Fish-timeseries.jpg'), units = 'in', res = 300, height=3, width = 3.5)
+
+ggplot(fish5 %>% filter(taxa %in% fish.taxa$taxa) %>% left_join(.,fish.taxa)) +
+  geom_point(aes(x=year,y=grand_mean,color=name)) + 
+  geom_line(aes(x=year,y=grand_mean,color=name)) +
+  geom_errorbar(aes(x=year,color=name,ymin=grand_mean-grand_SE,ymax=grand_mean+grand_SE),
+                width=0) +
+  scale_y_continuous(trans="sqrt",breaks=c(0,1,5,10,20,40,60,80),limits=c(0,NA)) +
+  scale_x_continuous(breaks=seq(2015,2021)) +
+  #scale_color_viridis_d(option="plasma", end=0.75) + 
+  scale_color_manual(values=fish.taxa$col)+
+  ylab("Fish") +
+  xlab("Year") +
+  theme_bw() +
+  theme(legend.title=element_blank(),
+        legend.background = element_blank(),
+        legend.position = c(0.7, 0.45),
+        legend.text = element_text(size = 7))
+dev.off()
 
 
 #######################################################################
@@ -217,8 +278,6 @@ algae3 <- algae1 %>%
             SD = sd(density), 
             N =length(year),
             SE= SD/sqrt(N) ) 
-
-
 
 #Trim to canopy species
  canopy <- algae3 %>% filter(taxa=="CANOPY",!species=="EGRMEN")

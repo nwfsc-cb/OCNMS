@@ -66,8 +66,6 @@ adonis2.correction <- function(data.file){
 
 #### ordination code ####
 
-# does not work. CAPdiscrim doesn't "see" df_matrix event hough it is made
-
 run.multivar.nt <- function(data.file, drop2015 = TRUE, spp, data.transform = NA, nperm = 999, 
                             outname = 'Results-' ){
      
@@ -137,7 +135,7 @@ run.multivar.nt <- function(data.file, drop2015 = TRUE, spp, data.transform = NA
 
 ### Plot capscale ordinations/summarize data ####
 
-Plot_Ordination <- function( data.file , ord.file, Yform, Xform,method = "CAPdiscrim",
+Plot_Ordination <- function( data.file , ord.file, Yform, Xform, method = "CAPdiscrim",
                              Xlim=NA, Ylim=NA, Xlim2 = NA, Ylim2=NA, Xlab = "Axis 1", Ylab = "Axis 2", 
                              min.score = 0.0, plot.species = TRUE, spp.separate = FALSE, 
                              fig.legend=NA, legend.pos='topleft', sppcol='red', bg.equals.col=TRUE){
@@ -165,12 +163,13 @@ Plot_Ordination <- function( data.file , ord.file, Yform, Xform,method = "CAPdis
      
      if(!is.na(fig.legend)){legend(legend.pos, legend = fig.legend, bty='n')}
      
-     if(method == "CAPdiscrim"){spp_scores = ord.file$cproj}else{spp_scores = scores(ord.file)$species}
-     if(plot.species==TRUE){ 
+     if(method == "CAPdiscrim"){spp_scores = ord.file$cproj}else{spp_scores = ord.file$CCA$biplot}
+     
+     if(plot.species == TRUE){ 
           spp_scores1 = spp_scores[ abs(spp_scores[,1]) > min.score | abs(spp_scores[,2]) > min.score, ]
           text(spp_scores1[,1] , spp_scores1[,2], rownames(spp_scores1), cex=0.8 , col=sppcol)
      }
-     if(spp.separate==TRUE){
+     if(spp.separate == TRUE){
           spp_scores1 = spp_scores[ abs(spp_scores[,1]) > min.score | abs(spp_scores[,2]) > min.score, ]
           if(is.na(Xlim2)[1] | is.na(Ylim2)[1] ){
                plot(spp_scores1[,1] , spp_scores1[,2], pch="" , xlab=Xlab, ylab=Ylab)}else{
@@ -401,4 +400,22 @@ species.plot.SxYxD <- function(data.file ,
 
 # plot1 = species.plot.SxY(data.file = fishx[fishx$taxa=="SEME",])
 # plot1
+
+#### matrix transform pre ecole::bray0 ####
+
+# for transforming all RxC for subsetted data matrix prior to distance estimation
+
+matrix.transform <- function(data.file, data.transform = 'none'){
+     
+     if(data.transform == 'none'){ df = data.file }
+     if(is.na(data.transform) == TRUE){ df = data.file }
+     if(data.transform == "sqrt"){df = data.file^(1/2)}
+     if(data.transform == "4th-root"){df = data.file^(1/4)}
+     if(data.transform == "log"){df = log(data.file+1) }
+     return(df)
+     
+}
+
+
+
 
