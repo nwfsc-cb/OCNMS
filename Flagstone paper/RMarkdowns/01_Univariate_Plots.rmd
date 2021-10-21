@@ -43,15 +43,17 @@ library(ggpubr)
 # library(pracma)
 # library(factoextra)
 source("R-functions-ocnms.r")
+
+
 # Paths for files
 setwd('..')
 HomeFile = getwd()
 # HomeFile = "C:/Users/nick.tolimieri/Documents/GitHub/OCNMS/"
 
-Fig_Loc = paste0(HomeFile,"/Flagstone paper/Plots/")
-Data_Loc = paste0(HomeFile,"/Flagstone paper/Data/")
-Results_Loc = paste0(HomeFile,"/Flagstone paper/Results/")
-Other_Files = paste0(HomeFile,"/Flagstone paper/Other Files/")
+Fig_Loc = paste0(HomeFile,"/Plots/")
+Data_Loc = paste0(HomeFile,"/Data/")
+Results_Loc = paste0(HomeFile,"/Results/")
+Other_Files = paste0(HomeFile,"/Other Files/")
 
 # options
 knitr::opts_chunk$set(
@@ -77,13 +79,7 @@ capture.output(Last_Run, file = 'Last_Run.txt')
 
 par(ps=10, cex=1)
 
-# Paths for files
 
-HomeFile = HomeFile = "C:/Users/nick.tolimieri/Documents/GitHub/OCNMS/"
-Fig_Loc = paste0(HomeFile,"/Flagstone paper/Plots/")
-Data_Loc = paste0(HomeFile,"/Flagstone paper/Data/")
-Results_Loc = paste0(HomeFile,"/Flagstone paper/Results/")
-Other_Files = paste0(HomeFile,"/Flagstone paper/Other Files/")
 
 ```
 
