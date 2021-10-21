@@ -243,8 +243,7 @@ saveRDS(fish_taxa_year, paste0(Data_Loc,'Summarized_Data_Fish_year_taxa.rds'))
 
 #### for multivariate stuff below
 
-fish_transect_taxa <-  fish_transect %>% group_by(site,year,area, zone, transect, taxa) %>%
-                       summarise(Count = sum(Count))
+
 
 
 
@@ -394,9 +393,10 @@ dat.invert$taxa = swath_codes$taxa[ match(dat.invert$species, swath_codes$CLASSC
 
 ```
 
-```{r more-kelp}
 
-algae1 <- dat.algae %>% group_by(year,site,transect,observer,species,zone,area,fun_gr) %>%
+```{r more-kelp}
+# removed 'observer' because it leads to multiple transects per transect...fucks up transition to wide
+algae1 <- dat.algae %>% group_by(year,site,transect,species,zone,area,fun_gr) %>%
             summarise(total.count=sum(Count),total.area=sum(Transect.area)) %>% 
             mutate(density = total.count / total.area )
 kelp_transect <- algae1
@@ -410,7 +410,7 @@ algae2 <- algae1 %>%
             N =length(year),
             SE= SD/sqrt(N) ) 
 saveRDS(algae2, file = paste0(Data_Loc,"Summarized_Data_Kelp_year_site_zone_spp.rds"))
-
+# kelp_area = algae2
 
 # Aggregate up to the site level (within year, zone) -- treat transects as replicates
 algae3 <- algae1 %>% 
@@ -617,11 +617,6 @@ invert_transect <- dat.invert %>% group_by(year,site,transect,observer,species,z
     summarise(total.count=sum(Count),total.area=sum(Transect.area)) %>% 
     mutate(density = total.count / total.area )
 saveRDS(invert_transect, file=paste0(Data_Loc , "Summarized_Data_Inverts_year_site_zone_area_transect_taxa.rds") )
-
-# combine at taxa level for multivariate analyses
-invert_transect_taxa <- dat.invert %>% group_by(year,site,transect,observer,zone,area,taxa,grp2) %>%
-    summarise(total.count=sum(Count),total.area=sum(Transect.area)) %>% 
-    mutate(density = total.count / total.area )
 
 # Aggregate up to the area level (within year, site, zone) -- treat transects as replicates
 invert_area <- invert_transect %>% 
@@ -939,9 +934,23 @@ Output data files to use for multivariate ordinations.
 Use these files and not raw files. Kelp and invert data have been converted to density to account for different transect lengths etc.
 
 ```{r spit-out-kelp-fish-4-multivariate, include = FALSE}
-fish_transect$area[fish_transect$year == 2015] <- 1
-kelp_transect$area[kelp_transect$year == 2015] <- 1
 
+# comnbine fish spp into higher level taxa at the transect level
+# fish_transect calculated above
+fish_transect_taxa <-  fish_transect %>% group_by(site,year,area, zone, transect, taxa) %>%
+                       summarise(Count = sum(Count))
+
+# comnbine fish spp into higher level taxa at the transect level
+# dat.invert is raw file subsetted to just inverts
+invert_transect_taxa <- dat.invert %>% group_by(year,site,transect,zone,area,taxa) %>%
+    summarise(total.count=sum(Count),total.area=sum(Transect.area)) %>% 
+    mutate(density = total.count / total.area )
+
+# fake areas for 2015
+fish_transect_taxa$area[fish_transect_taxa$year == 2015] <- "N"
+kelp_transect$area[kelp_transect$year == 2015] <- "N"
+invert_transect_taxa$area[invert_transect_taxa$year == 2015] <- "N"
+#### various combos ####
 
 k1 <-  kelp_transect %>% group_by(site,year,area, zone, species) %>% 
                   summarise(Mean=mean(density),SD=sd(density),N=length(density), 
@@ -951,26 +960,29 @@ k1 <-  kelp_transect %>% group_by(site,year,area, zone, species) %>%
 f1 <-  fish_transect_taxa %>% group_by(site,year,area, zone, taxa) %>%
                   summarise(Mean=mean(Count),SD=sd(Count),N=length(Count), SE=SD/sqrt(N),SE_var=SE^2)
 
-i1 <-  kelp_transect %>% group_by(site,year,area, zone, species) %>% 
+i1 <-  invert_transect_taxa %>% group_by(site,year,area, zone, taxa) %>% 
                   summarise(Mean=mean(density),SD=sd(density),N=length(density), 
                             SE=SD/sqrt(N),SE_var=SE^2)
-
-# joined at the area level because transects aren't the same
-
 # Output for capscale analyses
+# fish-kelp joined at the area level because transects aren't the same
 fish_kelp <- f1 %>% full_join(. , y=k1) %>% rename(mean= Mean)
 saveRDS(fish_kelp, paste0(Data_Loc, "Data_Fish_Kelp_transect_long.rds") )
 fish_kelp <- fish_kelp[,c('year','site','area','zone','taxa','mean')]
 fish_kelp <- pivot_wider(fish_kelp, names_from = taxa, values_from = mean, values_fill = 0)
 saveRDS(fish_kelp, paste0(Data_Loc, "Data_Fish_Kelp_transect_wide.rds") )
 
-# combine inverts at transect level
+# combine inverts and kelp at transect level
 kelp_transect$taxa <- kelp_transect$species # create categroy
-
 invert_kelp <- kelp_transect %>% full_join(., y=invert_transect_taxa)
 saveRDS(invert_kelp, paste0(Data_Loc,"Data_Invert_Kelp_transect_long.rds") )
 
-invert_kelp <- invert_kelp[,c('year','site','area','zone','taxa','density')]
+invert_kelp <- invert_kelp[,c('year','site','area','transect','zone','taxa','density')]
+
+invert_kelp$n = 1
+x = aggregate( n ~ year + site + area + transect + zone +taxa, data = invert_kelp , FUN = sum)
+
+
+
 invert_kelp <- na.omit(invert_kelp)
 invert_kelp$taxa <- str_replace(invert_kelp$taxa, " ","_")
 invert_kelp <- pivot_wider(invert_kelp, names_from = taxa, values_from = density, values_fill = 0)
@@ -989,6 +1001,8 @@ saveRDS(kelp_wide, paste0(Data_Loc,   "Data_KELP_wide") )
 invert_wide = pivot_wider(invert_transect_taxa[,c('year','site','transect','area','zone','density','taxa')] ,
                         values_from = density, names_from = taxa, values_fill = 0 )
 saveRDS(invert_transect_taxa, paste0(Data_Loc,"Data_INVERT_wide.rds") )
+
+
 
 
 ```
