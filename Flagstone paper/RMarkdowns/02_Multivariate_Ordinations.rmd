@@ -19,8 +19,12 @@ fontsize: 11pt
 rm(list = ls())
 
 ##### knitr stuff and libraries ####
+source("R-functions-ocnms.r")
 
+# Set directories
+setwd('..') # will swithch back next chunk but HomeFile will stay.
 HomeFile = getwd()
+# HomeFile = "C:/Users/nick.tolimieri/Documents/GitHub/OCNMS/"
 Fig_Loc = paste0(HomeFile,"/Figures/")
 Data_Loc = paste0(HomeFile,"/Data/")
 Results_Loc = paste0(HomeFile,"/Results/")
@@ -73,7 +77,7 @@ capture.output(Last_Run, file = 'Last_Run.txt') # over-writes previous file
 par(ps=10, cex=1)
 
 # load some external functions
-source("R-functions-ocnms.r")
+# source("R-functions-ocnms.r")
 
 ```
 
@@ -84,7 +88,7 @@ source("R-functions-ocnms.r")
 # bring in settings from previous univariate figure or set
 # maintain consistency between files
 
-settings = readRDS('settings.rds')
+settings = readRDS(paste0(Data_Loc,'settings.rds') )
 
 min.vis = as.numeric(settings['min.vis'])
 years = as.numeric(unlist(settings['years']))
@@ -94,16 +98,9 @@ sites = site.col$site
 year.pch = data.frame(settings['year.pch'])
 colnames(year.pch) = c('year','pch','col')
 
-
-# if(is.na(data.transform) == FALSE){
-#           if(data.transform == "sqrt"){df = data.file1[,spp]^(1/2)}
-#           if(data.transform == "4th-root"){df = data.file1[,spp]^(1/4)}
-#           if(data.transform == "log"){df = log(data.file1[,spp]+1) }
-#      }
-
 # Set common stuff for ordinations here ####
 # Options are: NA, "sqrt", "4th-root","log"
-# for 'log' the transform is actually log(x+1), need the log+1 becaue of zeros.
+# for 'log' the transform is actually log(x+1), need the log+1 because of zeros.
 
 kelp.transform = 'log'
 fish.transform = 'log'
@@ -112,8 +109,9 @@ nperm  = 999
 
 # Some csv files for naming later
 
-spp_code =  data.frame(read.csv("spp_codes.csv", header = TRUE))
-invert_code = data.frame(read.csv("invert_groups.csv", header = TRUE))
+fish_codes = data.frame(read.csv( paste0(Data_Loc,"spp_codes_fish.csv") ))
+swath_codes = data.frame(read.csv( paste0(Data_Loc,"spp_codes_swath.csv") ))
+kelp_codes = data.frame(read.csv( paste0(Data_Loc,"spp_codes_kelp.csv") ))
 
 ```
 
@@ -540,6 +538,8 @@ saveRDS(list(cap1,df), file = paste0(Results_Loc,'Invert-Kelp-Ordination.rds'))
 ```
 
 ## All capscales (dbRDA) plotted together
+
+
 
 ```{r capscale-combined, fig.width=6, fig.height=8}
 
