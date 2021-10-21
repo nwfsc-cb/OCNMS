@@ -84,6 +84,7 @@ run.multivar.nt <- function(data.file, drop2015 = TRUE, spp, data.transform = NA
      ## capscale 
      CAPid = as.factor(paste(data.file1$site , data.file1$zone , data.file1$year, sep = "_") )
      CAPfile = data.frame(cbind(CAPid,data.file1))
+     colnames(CAPfile)[1] <- 'CAPid'
      
      #library(ecole)
      df_matrix <- ecole::bray0(df)
@@ -139,7 +140,6 @@ Plot_Ordination <- function( data.file , ord.file, Yform, Xform, method = "CAPdi
                              Xlim=NA, Ylim=NA, Xlim2 = NA, Ylim2=NA, Xlab = "Axis 1", Ylab = "Axis 2", 
                              min.score = 0.0, plot.species = TRUE, spp.separate = FALSE, 
                              fig.legend=NA, legend.pos='topleft', sppcol='red', bg.equals.col=TRUE){
-     
      form1 = paste0(Yform, '1', Xform)
      form2 = paste0(Yform, '2', Xform)
      df_1 = Sum_Stats( form1 , data.file )

@@ -91,7 +91,7 @@ settings = readRDS( paste0(Data_Loc,'settings.RDS') )
 min.vis = 2
 
 years = 2015:2021
-pch = c(9, 4, 8 , 21, 22, 24, 25 )
+pch = c(8 , 21, 22, 23, 24, 4, 25 )
 col = RColorBrewer::brewer.pal(n = 12, name = "Paired")[c(2,4,6,10,12,7,8)]
 year.pch = data.frame(cbind(years, pch,col))
 
@@ -962,10 +962,10 @@ i1 <-  invert_transect_taxa %>% group_by(site,year,area, zone, taxa) %>%
 # Output for capscale analyses
 # fish-kelp joined at the area level because transects aren't the same
 fish_kelp <- f1 %>% full_join(. , y=k1) %>% rename(mean= Mean)
-saveRDS(fish_kelp, paste0(Data_Loc, "Data_Fish_Kelp_transect_long.rds") )
+saveRDS(fish_kelp, paste0(Data_Loc, "Data_Fish_Kelp_area_long.rds") )
 fish_kelp <- fish_kelp[,c('year','site','area','zone','taxa','mean')]
 fish_kelp <- pivot_wider(fish_kelp, names_from = taxa, values_from = mean, values_fill = 0)
-saveRDS(fish_kelp, paste0(Data_Loc, "Data_Fish_Kelp_transect_wide.rds") )
+saveRDS(fish_kelp, paste0(Data_Loc, "Data_Fish_Kelp_area_wide.rds") )
 
 # combine inverts and kelp at transect level
 kelp_transect$taxa <- kelp_transect$species # create categroy
@@ -977,10 +977,8 @@ invert_kelp <- invert_kelp[,c('year','site','area','transect','zone','taxa','den
 invert_kelp$n = 1
 x = aggregate( n ~ year + site + area + transect + zone +taxa, data = invert_kelp , FUN = sum)
 
-
-
 invert_kelp <- na.omit(invert_kelp)
-invert_kelp$taxa <- str_replace(invert_kelp$taxa, " ","_")
+# invert_kelp$taxa <- str_replace(invert_kelp$taxa, " ","_")
 invert_kelp <- pivot_wider(invert_kelp, names_from = taxa, values_from = density, values_fill = 0)
 saveRDS(invert_kelp, paste0(Data_Loc,"Data_Invert_Kelp_transect_wide.rds") )
 
@@ -988,15 +986,15 @@ saveRDS(invert_kelp, paste0(Data_Loc,"Data_Invert_Kelp_transect_wide.rds") )
 
 fish_wide = pivot_wider(fish_transect_taxa[,c('year','site','transect','area','zone','Count','taxa')] ,
                         values_from = Count, names_from = taxa, values_fill = 0 )
-saveRDS(fish_wide, paste0(Data_Loc,  "Data_FISH_taxa_wide") )
+saveRDS(fish_wide, paste0(Data_Loc,  "Data_FISH_taxa_wide.rds") )
 
 kelp_wide = pivot_wider(kelp_transect[,c('year','site','transect','area','zone','taxa','density')] ,
                         values_from = density, names_from = taxa, values_fill = 0 )
-saveRDS(kelp_wide, paste0(Data_Loc,   "Data_KELP_wide") )
+saveRDS(kelp_wide, paste0(Data_Loc,   "Data_KELP_wide.rds") )
 
 invert_wide = pivot_wider(invert_transect_taxa[,c('year','site','transect','area','zone','density','taxa')] ,
                         values_from = density, names_from = taxa, values_fill = 0 )
-saveRDS(invert_transect_taxa, paste0(Data_Loc,"Data_INVERT_wide.rds") )
+saveRDS(invert_wide, paste0(Data_Loc,"Data_INVERT_wide.rds") )
 
 
 
