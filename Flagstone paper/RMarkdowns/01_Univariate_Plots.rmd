@@ -18,7 +18,7 @@ fontsize: 11pt
 ```{r SETUP, include=FALSE}
 # A bunch of initial set up junk
 
-#rm(list = ls())
+rm(list = ls())
 
 # pre-run some stuff ####
 # source("01a_Univariate_workhorse.R")
@@ -29,9 +29,7 @@ library(knitr)
 library(tidyverse)
 library(stringr)
 library(RColorBrewer)
-library(ggpubr)
-#devtools::install_github("DesiQuintans/desiderata")
-#library(desiderata)
+library(ggpubr) 
 # library(tidyr)
 # library(dplyr)
 # library(tinytex) # for pdf output
@@ -94,7 +92,7 @@ source("R-functions-ocnms.r")
 # provided in Univariate_workhorse, sourced above
 settings = readRDS( paste0(Data_Loc,'settings.RDS') )
 
-min.vis = settings$min.vis
+min.vis = 2
 
 years = 2015:2021
 pch = c(9, 4, 8 , 21, 22, 24, 25 )
@@ -108,10 +106,12 @@ colnames(site.col) <- c('site', 'col')
 
 #### species depths #####
 
-kelp.depth = settings$kelp.deph
-fish.depth = settings$fish.depth
-invert.depth = settings$invert.depth
-
+kelp.depth = 5
+fish.depth = c(5,10)
+invert.depth = 5
+# set for labelling plots below
+depth.labs = c('5-m','10-m')
+names(depth.labs) = c(5,10)
 ### species codes here 
 
 fish_codes = data.frame(read.csv( paste0(Data_Loc,"spp_codes_fish.csv") ))
@@ -430,32 +430,34 @@ saveRDS(algae3, file = paste0(Data_Loc,"Summarized_Data_Kelp_year_zone_spp.rds")
 ```
 
 
-## Canopy kelp 5 meters
+## Canopy kelp 
 
-```{r canopy-kelp-site-year, fig.width=5, fig.height=5}
+```{r canopy-kelp-site-year, fig.width=6.5, fig.height=4}
 
 canopy$site = factor(canopy$site, levels = sites)
- # Basic time-series by site and zone
- kelp1 = ggplot(canopy %>% filter(zone==5)) +
+
+# Basic time-series by site and zone
+ kelp1 = ggplot(canopy ) +
     geom_point(aes(x=year,y=mean.density,color=site)) +
     geom_line(aes(x=year,y=mean.density,color=site)) +
     geom_errorbar(aes(x=year,ymin=mean.density-SE,ymax=mean.density+SE,color=site),width=0) +
-    facet_grid(rows="species",scales="free_y") +
+    facet_grid(species ~ zone,scales="free_y", labeller = labeller(zone=depth.labs)) +
     scale_x_continuous(breaks=seq(2015,2021)) +
     xlab("Year")+
     scale_y_continuous(expression("Stipe density (stipe m"^-2*")")) +
     # scale_color_viridis_d(option="plasma",end=0.75)+
     scale_color_manual(values = site.col$col)+
     theme_bw()+
-    theme(legend.title = element_blank())
+    theme(legend.title = element_blank(),
+          strip.background = element_blank())
 
-kelp1
+kelp1+ rotate_x_text(angle = 45)
 ```
 ## Caonopy kelp 5 m only
 
 ```{r canopy-kelp-site-zone, fig.width=5, fig.height=5}
  # Basic time-series by site and zone
- kelp2 = ggplot(canopy %>% filter(zone==10)) +
+ kelp2 = ggplot(canopy %>% filter(zone==5)) +
    geom_point(aes(x=year,y=mean.density,color=site)) +
    geom_line(aes(x=year,y=mean.density,color=site)) +
    geom_errorbar(aes(x=year,ymin=mean.density-SE,ymax=mean.density+SE,color=site),width=0) +
@@ -469,6 +471,7 @@ kelp1
 kelp2
 ```
 ## Nerocystis at Tatoosh
+
 ```{r canopy-kelp-tatoosh , fig.width=5, fig.height=3.5}
  # Basic time-series by site and zone TATOOSH FOCUS
 kelp3 =  ggplot(canopy %>% filter(site=="Tatoosh Island",species=="NERLUE")) +
@@ -486,7 +489,7 @@ kelp3
 ```
 ## Nero and Macro 
 
-```{r nero-macro}
+```{r nero-macro , fig.height=3.5, fig.width=5}
 kelp_year_site_area <- 
   readRDS(  paste0(Data_Loc,"Summarized_Data_Kelp_year_site_area_zone_spp.rds") )
 
@@ -499,25 +502,88 @@ mac_ner1 <- mac_ner %>% group_by(year,site,zone,area) %>%
                 SD = sd(density), 
                 N =length(year),
                 SE= SD/sqrt(N) ) 
-mac_ner2 <- mac_ner %>% group_by(year,site,zone) %>%
+mac_ner_zone <- mac_ner %>% group_by(year,site,zone) %>%
     summarise(mean.density=mean(density), 
              SD = sd(density), 
              N =length(year),
              SE= SD/sqrt(N) ) 
  
   # Basic time-series by site and zone
-  all_canopy_zone <- ggplot(mac_ner2 ) +
+  all_canopy_zone <- ggplot(mac_ner_zone ) +
     geom_point(aes(x=year,y=mean.density,color=site)) +
     geom_line(aes(x=year,y=mean.density,color=site)) +
     geom_errorbar(aes(x=year,ymin=mean.density-SE,ymax=mean.density+SE,color=site),width=0) +
-    facet_grid(rows="zone",scales="free_y") +
+    facet_grid(rows="zone",scales="free_y", labeller = labeller(zone = depth.labs)) +
     scale_x_continuous(breaks=seq(2015,2021)) +
     scale_y_continuous(expression("Stipe density (stipe m"^-2*")")) +
     # scale_color_viridis_d(option="plasma",end=0.75)+
     scale_color_manual(values = site.col$col)+
     theme_bw()+
-    theme(legend.title = element_blank())
+    theme(legend.title = element_blank(), 
+          strip.background = element_blank())
  all_canopy_zone
+```
+## Big three
+
+Plot the big 3 species: Macro, Nero, Ptero
+
+```{r big3, fig.width=6, fig.height=4}
+ # big three species
+ big3spp = c('MACPYR', 'NERLUE', 'PTECAL')
+ big3 <- algae3 %>% filter(species %in% big3spp)
+ big3$site <- factor(big3$site,levels=sites)
+ 
+ kelp.labs = c('Macrocystis','Nerocystis','Pterogophora')
+ names(kelp.labs) <- big3spp
+ 
+ 
+ big3$site = factor(big3$site, levels = sites)
+ # Basic time-series by site and zone
+ kelp1 = 
+   # ggplot(big3 %>%  filter(zone==5)) +
+   ggplot(big3) +
+    geom_point(aes(x=year,y=mean.density,color=site)) +
+    geom_line(aes(x=year,y=mean.density,color=site)) +
+    geom_errorbar(aes(x=year,ymin=mean.density-SE,ymax=mean.density+SE,color=site),width=0) +
+    facet_grid(species ~ zone,scales="free_y", labeller = labeller(zone=depth.labs , species=kelp.labs)) +
+    scale_x_continuous(breaks=seq(2015,2021)) +
+    xlab("Year")+
+    scale_y_continuous(expression("Stipe density (stipe m"^-2*")")) +
+    # scale_color_viridis_d(option="plasma",end=0.75)+
+    scale_color_manual(values = site.col$col)+
+    theme_bw()+
+    theme(legend.title = element_blank(),
+          strip.background = element_blank())
+
+kelp1 + rotate_x_text(angle = 45)
+
+```
+
+```{r big3-5m, fig.width=4.5, fig.height=4}
+ # big three species
+ big3spp = c('MACPYR', 'NERLUE', 'PTECAL')
+ big3 <- algae3 %>% filter(species %in% big3spp)
+ big3$site <- factor(big3$site,levels=sites)
+ 
+ big3$site = factor(big3$site, levels = sites)
+ # Basic time-series by site and zone
+ kelp1 = 
+   # ggplot(big3 %>%  filter(zone==5)) +
+   ggplot(big3 %>% filter(zone==5)) +
+    geom_point(aes(x=year,y=mean.density,color=site)) +
+    geom_line(aes(x=year,y=mean.density,color=site)) +
+    geom_errorbar(aes(x=year,ymin=mean.density-SE,ymax=mean.density+SE,color=site),width=0) +
+    facet_grid(rows='species' ,scales="free_y", labeller = labeller(species=kelp.labs)) +
+    scale_x_continuous(breaks=seq(2015,2021)) +
+    xlab("Year")+
+    scale_y_continuous(expression("Stipe density (stipe m"^-2*")")) +
+    # scale_color_viridis_d(option="plasma",end=0.75)+
+    scale_color_manual(values = site.col$col)+
+    theme_bw()+
+    theme(legend.title = element_blank(), strip.background = element_blank())
+
+kelp1 + rotate_x_text(angle = 45)
+
 ```
 
 # INVERTEBRATES
@@ -559,7 +625,7 @@ invert_area <- invert_transect %>%
 
 Ole will want to clean up the figure
 
-```{r urchins-combined, fig.width=5, fig.height=4}
+```{r total-urchins, fig.width=5, fig.height=3.5}
   # Zoom in on urchins
 urchin1 <- invert_transect %>% filter(grp2=="URCHIN") %>%
     group_by(year,site,transect,observer,zone,area,grp2) %>%
@@ -570,7 +636,7 @@ urchin1 <- invert_transect %>% filter(grp2=="URCHIN") %>%
               N =length(year),
               SE= SD/sqrt(N) ) 
  
-urchin2 <- invert_transect %>% filter(grp2=="URCHIN") %>%
+urchin_zone <- invert_transect %>% filter(grp2=="URCHIN") %>%
     group_by(year,site,transect,observer,area,zone,grp2) %>%
     summarise(tot.density = sum(density)) %>% 
     group_by(year,site,zone,grp2) %>%
@@ -581,17 +647,18 @@ urchin2 <- invert_transect %>% filter(grp2=="URCHIN") %>%
   
 ggplot() +
      # geom_point(data= urchin1,aes(x=year,y=mean.density,color=site)) +
-      geom_point(data= urchin2,aes(x=year,y=mean.density,color=site)) +
-      geom_line(data= urchin2,
+      geom_point(data=urchin_zone,aes(x=year,y=mean.density,color=site)) +
+      geom_line(data= urchin_zone,
                  aes(x=year,y=mean.density,color=site)) +
-      geom_errorbar(data=urchin2,aes(x=year,ymin=mean.density-SE,ymax=mean.density+SE,color=site),width=0) +
-      facet_grid(rows="zone") + #,scales="free_y") +
+      geom_errorbar(data=urchin_zone,
+                    aes(x=year,ymin=mean.density-SE,ymax=mean.density+SE,color=site),width=0) +
+      facet_grid(rows="zone", labeller = labeller(zone=depth.labs )) +
       scale_x_continuous(breaks=seq(2015,2021)) +
       scale_y_continuous(expression("Urchin density (m"^-2*")")) +
       # scale_color_viridis_d(option="plasma",end=0.75)+
       scale_color_manual(values = site.col$col)+
       theme_bw()+
-      theme(legend.title = element_blank())
+      theme(legend.title = element_blank(), strip.background = element_blank())
    
 
 ```
@@ -600,7 +667,7 @@ ggplot() +
 
 Probably worth dropping into the supplement to show that it was mostly purple urchins. Partly interesting because there is no purple urchin fishery, but there is a red one. I think.
 
-```{r urchins-by-species, fig.width=6.5, fig.height=4}
+```{r urchins-combined, fig.width=6.5, fig.height=4}
 
 urchins_all <- invert_transect %>% filter(grp2=="URCHIN") %>%
     group_by(year,site,transect,observer,zone,area,taxa) %>%
@@ -622,22 +689,26 @@ urchins_all$taxa = factor(urchins_all$taxa, levels = c('Purple urchin','Red urch
 
 urchin5  <- filter(urchins_all , zone == 5)
 urchin10 <- filter(urchins_all , zone == 10)
+depth.labs = c('5-m','10-m')
+names(depth.labs) = c(5,10)
 
 urchin_plot_all <- ggplot(data=urchins_all,aes(x=year, y= mean.density, col = site)) +
                     #geom_point(data=urchin5,aes(x=year, y= mean.density, col = site) ) +
                     #geom_line(data=urchin5, aes(x=year, y= mean.density, col = site) ) +
                     geom_point() +
                     geom_line()+
-                    geom_errorbar(data=urchin5,
+                    geom_errorbar(data=urchins_all,
                                   aes(x=year,ymin=mean.density-SE,ymax=mean.density+SE,color=site),width=0) +
                     #facet_grid(rows="taxa") + 
-                    facet_grid( taxa ~ zone) +
+                    facet_grid( taxa ~ zone , 
+                                labeller = labeller(zone = depth.labs) ) +#,scales="free_y") +
                     scale_color_manual(values = site.col$col) +
                     scale_x_continuous("Year", breaks=seq(2015,2021)) +
                     scale_y_continuous(expression("Urchin density (m"^-2*")")) +
                     theme_bw()+
                     theme(legend.title = element_blank(),
-                          axis.text.x = element_text(size=10))
+                          axis.text.x = element_text(size=10),
+                          strip.background = element_blank())
   
 urchin_plot_all + rotate_x_text(angle = 45)
 
@@ -646,10 +717,10 @@ facet_grid(rows="zone") + #,scales="free_y") +
 
 ## Seastars
 
-```{r seastars-sum}
+```{r total-seastars}
 
 
-star_sum <- invert_transect %>% filter(grp2=="STAR") %>%
+star_zone <- invert_transect %>% filter(grp2=="STAR") %>%
     group_by(year,site,transect,observer,area,zone,grp2) %>%
     summarise(tot.density = sum(density)) %>% 
     group_by(year,site,zone,grp2) %>%
@@ -659,10 +730,10 @@ star_sum <- invert_transect %>% filter(grp2=="STAR") %>%
               SE= SD/sqrt(N) ) 
 
 ggplot() +
-      geom_point(data= star_sum,aes(x=year,y=mean.density,color=site)) +
-      geom_line(data= star_sum,
+      geom_point(data= star_zone,aes(x=year,y=mean.density,color=site)) +
+      geom_line(data= star_zone,
                  aes(x=year,y=mean.density,color=site)) +
-      geom_errorbar(data=star_sum,aes(x=year,ymin=mean.density-SE,ymax=mean.density+SE,color=site),width=0) +
+      geom_errorbar(data=star_zone,aes(x=year,ymin=mean.density-SE,ymax=mean.density+SE,color=site),width=0) +
       facet_grid(rows="zone") + #,scales="free_y") +
       scale_x_continuous(breaks=seq(2015,2021)) +
       scale_y_continuous(expression("Star density (m"^-2*")")) +
@@ -695,7 +766,7 @@ stars_plot_all <- ggplot(data=stars_all,aes(x=year, y= mean.density, col = site)
                     geom_errorbar(data=urchin5,
                                   aes(x=year,ymin=mean.density-SE,ymax=mean.density+SE,color=site),width=0) +
                     #facet_grid(rows="taxa") + 
-                    facet_grid( taxa ~ zone) +
+                    facet_grid( taxa ~ zone, scales="free_y") +
                     scale_color_manual(values = site.col$col) +
                     scale_x_continuous("Year", breaks=seq(2015,2021)) +
                     scale_y_continuous(expression("Urchin density (m"^-2*")")) +
@@ -705,12 +776,152 @@ stars_plot_all <- ggplot(data=stars_all,aes(x=year, y= mean.density, col = site)
 stars_plot_all
 
 ```
+# COMBINED KELP - URCHIN - SEASTAR PLOTS 
 
+## By site and zone
+
+```{r kelp-urchin-stars-site-zone}
+
+mac_ner_zone$grp2 = 'CANOPY KELP'
+
+ystrip = c('Canopy kelps','Urchins','Seastars')
+names(ystrip) =  c('CANOPY KELP','URCHIN','STAR')
+
+# join to facet later
+kus <-  mac_ner_zone %>%
+               full_join(., y=star_zone) %>% 
+               full_join(., y=urchin_zone) %>%
+               mutate(density = mean.density)
+# set plot order
+kus$site <- factor(kus$site, levels = sites)
+kus$grp2 = factor(kus$grp2, levels = c('CANOPY KELP','URCHIN','STAR'))
+kus_plot <- ggplot(kus, mapping = aes(x = year, y=density, color = site)) + 
+  geom_point() +
+  geom_line() +
+  geom_errorbar(kus,mapping=aes(x=year,ymin=density-SE,ymax=density+SE,color=site),width=0) +
+  facet_grid(grp2 ~ zone, scales="free_y", labeller = labeller(zone=depth.labs, grp2 = ystrip ) ) +
+  scale_color_manual(values = site.col$col) +
+  scale_x_continuous("Year", breaks=seq(2015,2021)) +
+  scale_y_continuous(expression("Density (m"^-2*")")) +
+  theme_bw()+
+  theme(legend.title = element_blank(), strip.background = element_blank())                  
+                   
+
+kus_plot+ rotate_x_text(angle = 45)
+
+```
+## By year and zone summarized across sites
+
+```{r kelp-urchin-stars-zone, fig.width=5, fig.height=4}
+
+kus_year_zone   <- kus %>% group_by(year,zone,grp2) %>%
+                      summarise(density=mean(density),
+                         SD = sd(density), N =length(year),SE= SD/sqrt(N) )
+
+# not sure why, but won't calculate SD
+# frustrating a fuck.
+
+SD = aggregate( density ~ year + grp2 +zone , data = kus, FUN=sd)
+SD$density = SD$density/sqrt(5)
+SE = SD %>% rename(SE = density)
+
+kus_year_zone <- kus_year_zone %>%
+                left_join(.,SE, by=c('year'='year','grp2'='grp2','zone'='zone')) %>%
+                rename(SE = SE.y)
+
+
+kus_year_zone_plot <- ggplot(kus_year_zone, mapping = aes(x = year, y=density)) + 
+  geom_point() +
+  geom_line() +
+  geom_errorbar(kus_year_zone,mapping=aes(x=year,ymin=density-SE,ymax=density+SE),width=0) +
+  facet_grid(grp2 ~ zone, scales="free_y",labeller = labeller(zone = depth.labs, grp2=ystrip)) +
+  # scale_color_manual(values = site.col$col) +
+  scale_x_continuous("Year", breaks=seq(2015,2021)) +
+  scale_y_continuous(expression("Density (m"^-2*")")) +
+  theme_bw()+
+  theme(legend.title = element_blank(), strip.background = element_blank())                  
+                   
+
+kus_year_zone_plot+ rotate_x_text(angle = 45)
+
+```
+## Summarized across sites; 5 m and 10 m depths combined
+
+```{r kelp-urchin-stars-zone-5-10, fig.width=3.5, fig.height=4}
+
+kus_year   <- kus %>% group_by(year,grp2) %>%
+                      summarise( density=mean(density),
+                         SD = sd(density), N =length(site), SE= SD/sqrt(N) )
+# not sure why, but won't calculate SD
+# frustrating a fuck.
+
+SD = aggregate( density ~ year + grp2 , data = kus, FUN=sd)
+SD$density = SD$density/sqrt(5)
+SE = SD %>% rename(SE = density)
+
+kus_year <- kus_year %>%
+                left_join(.,SE, by=c('year'='year','grp2'='grp2')) %>%
+                rename(SE = SE.y)
+
+kus_year_plot <- ggplot(kus_year, mapping = aes(x = year, y=density)) + 
+  geom_point() +
+  geom_line() +
+  geom_errorbar(kus_year,mapping=aes(x=year,ymin=density-SE,ymax=density+SE),width=0) +
+  facet_grid(rows = 'grp2' , scales="free_y", labeller = labeller(grp2 = ystrip) ) +
+  # scale_color_manual(values = site.col$col) +
+  scale_x_continuous("Year", breaks=seq(2015,2021)) +
+  scale_y_continuous(expression("Density (m"^-2*")")) +
+  theme_bw()+
+  theme(legend.title = element_blank(), strip.background = element_blank())                  
+                   
+
+kus_year_plot
+
+```
+## Summarized across sites; 5-m depth zone only
+
+```{r kelp-urchin-stars-5, fig.width=3.5, fig.height=4}
+
+kus_year5m   <- kus %>% filter(., zone==5) %>% # 5-m depth only
+                      group_by(year,grp2) %>%
+                      summarise(density=mean(density),
+                         SD = sd(density), 
+                         N  = length(site),
+                         SE = SD/sqrt(N) )
+# not sure why, but won't calculate SD
+# frustrating a fuck.
+
+SD = aggregate( density ~ year + grp2 , data = kus, FUN=sd)
+SD$density = SD$density/sqrt(5)
+SE = SD %>% rename(SE = density)
+
+kus_year5m <- kus_year5m %>%
+                left_join(.,SE, by=c('year'='year','grp2'='grp2')) %>%
+                rename(SE = SE.y)
+
+
+
+kus_year_plot5 <- ggplot(kus_year5m, mapping = aes(x = year, y=density)) + 
+  geom_point() +
+  geom_line() +
+  geom_errorbar(kus_year5m,mapping=aes(x=year,ymin=density-SE,ymax=density+SE),width=0) +
+  facet_grid(rows = 'grp2' , scales="free_y", labeller=labeller(grp2=ystrip)) +
+  # scale_color_manual(values = site.col$col) +
+  scale_x_continuous("Year", breaks=seq(2015,2021)) +
+  scale_y_continuous(expression("Density (m"^-2*")")) +
+  theme_bw()+
+  theme(legend.title = element_blank(), strip.background = element_blank())                  
+                   
+
+kus_year_plot5
+
+```
 # Output data for multivariate statistics
 
-
-
 ## Combine kelp, fish, and inverts for capscale analysis
+
+Not yet transformed to wide format in order to retain SD & SE info upon saving out. 
+Transform in the Multiariate analysis rmd.
 
 ```{r spit-out-kelp-fish-4-multivariate, include = FALSE}
 fish_transect$area[fish_transect$year == 2015] <- 1
@@ -732,7 +943,7 @@ i1 <-  kelp_transect %>% group_by(site,year,area, zone, species) %>%
 # joined at the area level because transects aren't the same
 
 # Output for capscale analyses
-fish_kelp <- f1 %>% full_join(. , y=k1)
+fish_kelp <- f1 %>% full_join(. , y=k1) 
 saveRDS(fish_kelp, paste0(Data_Loc, "Multivariate_Data_Fish_Kelp.rds") )
 # combine inverts at transect level
 
@@ -745,6 +956,18 @@ saveRDS(kelp_transect, paste0(Data_Loc,  "Multivariate_Data_KELP.rds") )
 saveRDS(invert_transect, paste0(Data_Loc,"Multivariate_Data_INVERT_Kelp.rds") )
 
 ```
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
