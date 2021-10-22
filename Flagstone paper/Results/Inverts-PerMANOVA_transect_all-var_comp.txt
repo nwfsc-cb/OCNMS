@@ -1,9 +1,0 @@
-          df1 df2        MS         F            P          vc       prop
-zone        1  NA 1.0018108        NA           NA          NA         NA
-site        4  16 7.9143489 19.548971 5.294951e-06 0.136565651 0.45020597
-year        4  16 0.6003979  1.483023 2.538218e-01 0.003556227 0.01172355
-zone:site   4  NA 0.8593218        NA           NA          NA         NA
-zone:year   4  NA 0.3295899        NA           NA          NA         NA
-site:year  16 260 0.4048473  2.911525 1.984752e-04 0.024168578 0.07967478
-Residuals 260  NA 0.1390499        NA           NA 0.139049929 0.45839570
-Total     293  NA 0.2813890        NA           NA          NA         NA

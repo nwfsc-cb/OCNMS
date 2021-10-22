@@ -1,0 +1,131 @@
+---
+title: "Kelp vs Urchins"
+author: Nick Toimieri
+date: sys.date()
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 3
+    number_sections: true
+    fig_caption: true
+fontsize: 11pt
+
+---
+
+```{r SETUP, include=FALSE}
+# A bunch of initial set up junk
+
+rm(list = ls())
+
+##### knitr stuff and libraries ####
+source("R-functions-ocnms.r")
+
+# Paths for files
+setwd('..')
+HomeFile = getwd()
+# HomeFile = "C:/Users/nick.tolimieri/Documents/GitHub/OCNMS/"
+
+Fig_Loc = paste0(HomeFile,"/Plots/")
+Data_Loc = paste0(HomeFile,"/Data/")
+Results_Loc = paste0(HomeFile,"/Results/")
+Other_Files = paste0(HomeFile,"/Other Files/")
+
+# tools in use 
+library(knitr)
+# library(tidyr)
+# library(dplyr)
+library(tidyverse)
+library(stringr)
+library(tinytex) # for pdfs
+library(RColorBrewer)
+# display.brewer.all(colorblindFriendly = TRUE)
+library(readxl)
+
+# stats packages etc
+library(vegan)
+library(BiodiversityR)
+# library(pracma)
+# library(factoextra)
+
+# install.packages("remotes")
+# for Bray curtis with no spp in common.
+# remotes::install_github("phytomosaic/ecole")
+library(ecole)
+
+# options
+knitr::opts_chunk$set(
+  fig.path = Fig_Loc,
+  cache.path = 'cache/graphics-', 
+  echo=FALSE,
+  error=FALSE,
+  include = TRUE,
+  dev='png',
+  dpi=300,
+  warning=FALSE,
+  #out.width = '100%',
+  fig.align='center'
+  
+  )
+
+# just to keep track of when I ran things.
+
+Last_Run0 = Sys.time()
+Last_Run = str_replace(Last_Run0, ":", ".")
+Last_Run = str_replace(Last_Run, ":", ".")
+capture.output(Last_Run, file = 'Last_Run.txt') # over-writes previous file
+
+par(ps=10, cex=1)
+
+# load some external functions
+# source("R-functions-ocnms.r")
+
+```
+
+# Triggers and settings
+
+```{r Triggers-and-Settings}
+
+# bring in settings from previous univariate figure or set
+# maintain consistency between files
+
+settings = readRDS(paste0(Data_Loc,'settings.rds') )
+
+min.vis = as.numeric(settings['min.vis'])
+years = as.numeric(unlist(settings['years']))
+site.col = data.frame(settings['site.col'])
+colnames(site.col) = c('site','col')
+sites = site.col$site
+year.pch = data.frame(settings['year.pch'])
+colnames(year.pch) = c('year','pch','col')
+
+# Set common stuff for ordinations here ####
+# Options are: NA, "sqrt", "4th-root","log"
+# for 'log' the transform is actually log(x+1), need the log+1 because of zeros.
+
+kelp.transform = 'log'
+fish.transform = 'log'
+invert.transform = 'log'
+nperm  = 999
+
+# Some csv files for naming later
+
+fish_codes = data.frame(read.csv( paste0(Data_Loc,"spp_codes_fish.csv") ))
+swath_codes = data.frame(read.csv( paste0(Data_Loc,"spp_codes_swath.csv") ))
+kelp_codes = data.frame(read.csv( paste0(Data_Loc,"spp_codes_kelp.csv") ))
+
+```
+
+# Import Data
+
+```{r import-kelp-urchins}
+
+
+
+
+```
+
+
+
+
+

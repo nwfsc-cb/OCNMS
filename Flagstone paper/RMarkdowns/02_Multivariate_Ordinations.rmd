@@ -106,7 +106,7 @@ colnames(year.pch) = c('year','pch','col')
 kelp.transform = 'log'
 fish.transform = 'log'
 invert.transform = 'log'
-nperm  = 0
+nperm  = 999
 
 # Some csv files for naming later
 
@@ -161,16 +161,16 @@ inverts$pch = year.pch$pch[match(inverts$year, year.pch$year) ]
 # Ordinations
 
 ```{r ordinations, include = FALSE}
-run.ord = TRUE
+run.ord = FALSE
 
-if(run.ord == TRUE){
+
 
 ## these analyses are run at the transect level
 ## later graphing may summarize them at different scales
 
 fish.spp =   c("OPEL", "HEXA", "SECA", "SCMA" ,"SENE", "SEME", 'EMBI','GOBI')
 
-yoy.spp =        c("SECAyoy", "SEMAyoy", "SEPIyoy", "SEMYyoy", "SENEyoy", "SEBYTyoy","RYOY")
+yoy.spp =    c("SECAyoy", "SEPIyoy", "SEMYyoy", "SEBYTyoy","RYOY")
 
 invert.taxa = c("anemone", "blood star","brood star", "chiton", "crabs", "cucumber","green urchin",      "hermit_crabs" , "kelp crab","large star","leather star" , "medium star", "nudibranch","Pisaster" ,         "purple urchin" ,"Pynopodia","red urchin", "shelled gastropod","sponge", "tunicate")
 
@@ -181,37 +181,38 @@ kelp <- data.frame(kelp)
 fish <- data.frame(fish)
 inverts <- data.frame(inverts)
 
-print("Working on kelp ordination")
-kelp_ord = run.multivar.nt( data.file = kelp, drop2015 = TRUE, nperm=nperm,
+if(run.ord == TRUE){
+  print("Working on kelp ordination")
+    kelp_ord = run.multivar.nt( data.file = kelp, drop2015 = TRUE, nperm=nperm,
                         spp = kelp.spp,
                         data.transform = kelp.transform,
                         outname = paste0( Results_Loc, "Kelp-")
                         )
-saveRDS(kelp_ord,file = paste0(Results_Loc,"Kelp-ordination-n",nperm,"-",kelp.transform,".rds"))
+  saveRDS(kelp_ord,file = paste0(Results_Loc,"Kelp-ordination-n",nperm,"-",kelp.transform,".rds"))
 
-print("Working on fish ordination")
-fish_ord = run.multivar.nt( data.file = fish, drop2015 = TRUE, nperm=nperm,
+  print("Working on fish ordination")
+  fish_ord = run.multivar.nt( data.file = fish, drop2015 = TRUE, nperm=nperm,
                         spp = fish.spp,
                         data.transform = fish.transform,
                         outname = paste0( Results_Loc, "Fish-")
                         )
-saveRDS(fish_ord,file = paste0(Results_Loc,"Fish-ordination-n",nperm,"-",fish.transform,".rds"))
+  saveRDS(fish_ord,file = paste0(Results_Loc,"Fish-ordination-n",nperm,"-",fish.transform,".rds"))
 
-print("Working on Sebastes YOY ordination")
-yoy_ord = run.multivar.nt( data.file = fish,  drop2015 = TRUE, nperm=nperm,
+  print("Working on Sebastes YOY ordination")
+  yoy_ord = run.multivar.nt( data.file = fish,  drop2015 = TRUE, nperm=nperm,
                         spp = yoy.spp,
                         data.transform = fish.transform,
                         outname = paste0( Results_Loc, "YOY-")
                         )
-saveRDS(yoy_ord,file = paste0(Results_Loc,"YOY-ordination-n",nperm,"-",fish.transform,".rds"))
+  saveRDS(yoy_ord,file = paste0(Results_Loc,"YOY-ordination-n",nperm,"-",fish.transform,".rds"))
 
-print("Working on invert ordination")
-invert_ord = run.multivar.nt( data.file = inverts, drop2015 = TRUE, nperm=nperm,
+  print("Working on invert ordination")
+  invert_ord = run.multivar.nt( data.file = inverts, drop2015 = TRUE, nperm=nperm,
                         spp = invert.taxa,
                         data.transform = invert.transform,
                         outname = paste0( Results_Loc, "Inverts-")
                         )
-saveRDS(invert_ord,file = paste0(Results_Loc,"Invert-ordination-n",nperm,"-",invert.transform,".rds"))
+  saveRDS(invert_ord,file = paste0(Results_Loc,"Invert-ordination-n",nperm,"-",invert.transform,".rds"))
 
 }else{ # reload previously run files to save time
      kelp_ord    <- readRDS( paste0(Results_Loc,"Kelp-ordination-n",nperm,"-",kelp.transform,".rds"))
@@ -231,52 +232,6 @@ Fish transform = `r fish.transform`
 YOY transform = `r fish.transform`
 
 Note if 'log', then log(x+1) because of all the zeros.
-
-
-```{r ordinations-plots, fig.width=6, fig.height=6}
-
-# par( mfrow = c(2,2), pty='s' , mar = c(2,4,0,0))
-# 
-# xy=c(-7,7)
-# xy2 = c(-1.2, 1.2)
-# var.ylim = c(0,0.8)
-# var.cex = 0.7
-# plotspp = TRUE
-# sppseparate = FALSE
-# sppcol = 'black'
-# 
-# 
-# 
-# Plot_Ordination( data.file = kelp_ord$cap.df , ord.file = kelp_ord$cap, min.score = 0.2,
-#                  Yform = 'LD', Xform =  ' ~ site + year + col + pch',
-#                  Xlim = xy, Ylim=xy, Xlim2 = xy2, Ylim2=xy2,
-#                  plot.species = plotspp , spp.separate = sppseparate, fig.legend = 'Kelp', sppcol = sppcol)
-# 
-# legend('topright', legend=site.col$site, pch=19, col=site.col$col, bty='n', cex=0.8 )
-# 
-# # invets
-# Plot_Ordination( data.file = invert_ord$cap.df , ord.file = invert_ord$cap, min.score = 0.2,
-#                  Yform = 'LD', Xform =  ' ~ site + year + col + pch',
-#                  Xlim = xy, Ylim=xy, Xlim2 = xy2, Ylim2=xy2,
-#                  plot.species = TRUE , spp.separate = sppseparate, fig.legend = 'Inverts', sppcol = sppcol)
-# 
-# 
-# Plot_Ordination( data.file = fish_ord$cap.df , ord.file = fish_ord$cap, min.score = 0.2,
-#                  Yform = 'LD', Xform =  ' ~ site + year + col + pch',
-#                  Xlim = c(-3,3), Ylim=c(-3,3), Xlim2 = xy2, Ylim2=xy2,
-#                  plot.species = plotspp , spp.separate = sppseparate, fig.legend = 'Fish', sppcol = sppcol)
-# 
-# yr = year.pch[year.pch$year != 2015 & year.pch$year!=2020 ,]
-# legend('topright', legend=yr$year, pch=as.numeric(yr$pch), col='darkgrey',pt.bg = 'darkgray', bty='n', cex=0.8 )
-# 
-# # sebastes
-# Plot_Ordination( data.file = yoy_ord$cap.df , ord.file = yoy_ord$cap, min.score = 0.2,
-#                  Yform = 'LD', Xform =  ' ~ site + year + col + pch',
-#                  Xlim = c(-3.5,3.5), Ylim=c(-3.5, 3.5), Xlim2 = xy2, Ylim2=xy2,
-#                  plot.species = plotspp , spp.separate = sppseparate, fig.legend = 'Sebastes YOY', sppcol = sppcol)
-
-
-```
 
 
 Separate Sites and Species plots for clarity.
@@ -385,6 +340,7 @@ if(set.depth.5m == TRUE){print('This analysis includes only 5-m depth.')}else{
 # distance-based redundancy analysis
 
 df0 = data.frame(readRDS(paste0(Data_Loc,'Data_Fish_Kelp_area_wide.rds')))
+df0 = df0 %>% filter(year != 2015)
 
 # fish.spp = set above
 # kelp.spp = set above
@@ -408,7 +364,8 @@ cap.fish = matrix.transform(dfx,  transform )
 fish.matrix =  ecole::bray0(cap.fish)
 
 cap1 = capscale( fish.matrix ~ MACPYR + NERLUE + PTECAL , data = df )
-anova(cap1)
+fish_cap = anova(cap1)
+fish_pval = fish_cap[4]
 
 par( ps=10, cex = 1, pty='s')
 ordiplot(cap1, xlim=c(-6,6), ylim=c(-6,6) )
@@ -424,13 +381,17 @@ legend('topleft' , legend = site.col$site, pch=19, col = site.col$col, bty='n', 
 fish.cap <- cap1
 fish.df <- df
 
-saveRDS(list(cap1,df), file = paste0(Results_Loc,'Fish-Kelp-Ordination',transform,".rds") )
+saveRDS(list(cap1,df, fish_cap), file = paste0(Results_Loc,'Fish-Kelp-Ordination',transform,".rds") )
+
+
 
 ```
 
 Fish data  were `r transform` transformed for the analysis prior to calculating the dissimilartiy matrix.
 
 Fish included were `r fish.spp`
+
+Years included were `r levels(as.factor(df0$year))`
 
 
 ## Just Sebastes YOY 
@@ -440,7 +401,7 @@ Fish included were `r fish.spp`
 # distance-based redundancy analysis
 
 df0 = data.frame(readRDS(paste0(Data_Loc,'Data_Fish_Kelp_area_wide.rds')))
-
+df0 = df0 %>% filter(year != 2015)
 # fish.spp = set above
 # kelp.spp = set above
 
@@ -459,7 +420,8 @@ yoy.fish = matrix.transform(dfx,  transform )
 fish.matrix =  ecole::bray0(yoy.fish)
 
 cap1 = capscale( fish.matrix ~ MACPYR + NERLUE + PTECAL , data = df, dist="bray" )
-anova(cap1)
+yoy_cap <- anova(cap1)
+yoy_pval = yoy_cap[4]
 
 par( ps=10, cex = 1, pty='s')
 ordiplot(cap1, xlim=c(-6,6), ylim=c(-6,6) )
@@ -475,20 +437,22 @@ legend('topleft' , legend = site.col$site, pch=19, col = site.col$col, bty='n', 
 yoy.cap <- cap1
 yoy.df <- df
 
-saveRDS(list(cap1,df), file = paste0(Results_Loc,'YOY-Kelp-Ordination',transform,".rds"))
+saveRDS(list(cap1,df, yoy_cap), file = paste0(Results_Loc,'YOY-Kelp-Ordination',transform,".rds"))
 
 ```
 YOY data  were `r transform` transformed for the analysis prior to calculating the dissimilartiy matrix.
 
-YOY included were `r fish.spp`
+YOY included were `r yoy.spp`
 
+Years included were `r levels(as.factor(df0$year))`
 
 # Swath and Kelp ordinations
 
 ```{r invert-kelp}
 
-df = data.frame(readRDS( paste0( Data_Loc,"Data_Invert_Kelp_transect_wide.rds" ) ))
-
+df = data.frame(readRDS( paste0( Data_Loc,"Data_Inverts_Kelp_transect_wide.rds" ) ))
+df = df %>% filter(year != 2015)
+df = na.omit(df)
 transform = invert.transform # to allow different transform if desired.
 
 dfx = df[,invert.taxa]
@@ -497,7 +461,8 @@ cap.inv = matrix.transform(dfx,  transform )
 invert.matrix = ecole::bray0(cap.inv)
 
 cap1 = capscale( invert.matrix ~ MACPYR + NERLUE + PTECAL , data = df)
-anova(cap1)
+inv_cap <- anova(cap1)
+inv_pval <- inv_cap[4]
 
 lims = 4
 
@@ -516,7 +481,7 @@ legend('topleft' , legend = site.col$site, pch=19, col = site.col$col, bty='n', 
 inv.cap <- cap1
 inv.df <- df
 
-saveRDS(list(cap1,df), file = paste0(Results_Loc,'Invert-Kelp-Ordination.rds'))
+saveRDS(list(cap1,df, inv_cap), file = paste0(Results_Loc,'Invert-Kelp-Ordination.rds'))
 
 
 
@@ -551,16 +516,19 @@ Plot_Ordination( data.file = fish.df , ord.file = fish.cap, min.score = min.scor
                  Yform = 'CAP', Xform =  ' ~ site + year + col + pch', bg.equals.col = TRUE,
                  Xlim = c(-lims,lims), Ylim=c(-lims, lims), Xlim2 = xy2, Ylim2=xy2,
                  plot.species = plotspp , spp.separate = sppseparate, fig.legend = 'Fish', sppcol = sppcol)
+text(-3.5 , 2.7 , paste0('p = ', fish_pval[1,1]) , pos=4 )
 
 Plot_Ordination( data.file = yoy.df , ord.file = yoy.cap, min.score = min.score, method = 'capscale',
                  Yform = 'CAP', Xform =  ' ~ site + year +  col + pch', bg.equals.col = TRUE,
                  Xlim = c(-5,5), Ylim=c(-5, 5), Xlim2 = xy2, Ylim2=xy2,
                  plot.species = plotspp , spp.separate = sppseparate, fig.legend = 'Sebastes YOY', sppcol = sppcol)
+text(-4.3 , 3.5 , paste0('p = ', yoy_pval[1,1]) , pos=4 )
 
 Plot_Ordination( data.file = inv.df , ord.file = inv.cap, min.score = min.score, method = 'capscale',
                  Yform = 'CAP', Xform =  ' ~ site + year + col + pch', bg.equals.col = TRUE,
                  Xlim = c(-lims,lims), Ylim=c(-lims, lims), Xlim2 = xy2, Ylim2=xy2,
                  plot.species = plotspp , spp.separate = sppseparate, fig.legend = 'Invertebrates', sppcol = sppcol)
+text(-3.5 , 2.7 , paste0('p = ', inv_pval[1,1]) , pos=4 )
 
 # legend in extra space
 plot(1:10 , 1:10, pch = "" , xlab = NA, ylab = NA, xaxt = 'n', yaxt = 'n' , bty='n')
