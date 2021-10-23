@@ -412,7 +412,7 @@ p
 ## Just Adult Fishes
 
 ```{r set-depth}
-set.depth.5m = TRUE
+set.depth.5m = FALSE
 
 if(set.depth.5m == TRUE){print('This analysis includes only 5-m depth.')}else{
       print('This analysis includes 5 & 10 m') }
