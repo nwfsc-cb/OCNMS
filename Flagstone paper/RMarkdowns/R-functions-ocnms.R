@@ -136,7 +136,7 @@ run.multivar.nt <- function(data.file, drop2015 = TRUE, spp, data.transform = NA
 
 ### Plot capscale ordinations/summarize data ####
 
-Plot_Ordination <- function( data.file , ord.file, Yform, Xform, method = "CAPdiscrim",
+Plot_Ordination <- function( data.file , ord.file, plot.comm.scores=FALSE, comm.col = 'black',Yform, Xform, pval=NA, pval.pos ="topright",method = "CAPdiscrim",
                              Xlim=NA, Ylim=NA, Xlim2 = NA, Ylim2=NA, Xlab = "Axis 1", Ylab = "Axis 2", 
                              min.score = 0.0, plot.species = TRUE, spp.separate = FALSE, 
                              fig.legend=NA, legend.pos='topleft', sppcol='red', bg.equals.col=TRUE){
@@ -159,9 +159,18 @@ Plot_Ordination <- function( data.file , ord.file, Yform, Xform, method = "CAPdi
      arrows( df_1$mean, df_2$mean+df_2$se , df_1$mean , df_2$mean-df_2$se, col = df_1$col, length = 0)
      segments( par()$usr[1],0,par()$usr[2],0, lty = 'dotted', lwd = 0.5)
      segments( 0, par()$usr[3],0,par()$usr[4], lty = 'dotted', lwd = 0.5)
-     # spp spp scores
      
+     # spp spp scores
      if(!is.na(fig.legend)){legend(legend.pos, legend = fig.legend, bty='n')}
+     if(!is.na(pval)){legend(pval.pos, legend = pval, bty="n")}
+     
+     # for plotting dependent community scores from capscale
+     if(plot.comm.scores == TRUE){
+         x = scores(ord.file)
+         comm.scores = x$species
+         comm.scores = data.frame(comm.scores)
+         comm.scores$species = rownames(comm.scores)
+     }
      
      if(method == "CAPdiscrim"){spp_scores = ord.file$cproj}else{spp_scores = ord.file$CCA$biplot}
      
@@ -169,11 +178,17 @@ Plot_Ordination <- function( data.file , ord.file, Yform, Xform, method = "CAPdi
           spp_scores1 = spp_scores[ abs(spp_scores[,1]) > min.score | abs(spp_scores[,2]) > min.score, ]
           text(spp_scores1[,1] , spp_scores1[,2], rownames(spp_scores1), cex=0.8 , col=sppcol)
      }
+     
      if(spp.separate == TRUE){
           spp_scores1 = spp_scores[ abs(spp_scores[,1]) > min.score | abs(spp_scores[,2]) > min.score, ]
           if(is.na(Xlim2)[1] | is.na(Ylim2)[1] ){
-               plot(spp_scores1[,1] , spp_scores1[,2], pch="" , xlab=Xlab, ylab=Ylab)}else{
+               plot(spp_scores1[,1] , spp_scores1[,2], pch="" , xlab=Xlab, ylab=Ylab)
+          if(plot.comm.scores==TRUE){
+              text(comm.scores[,1],comm.scores[,2],comm.scores$species, col = comm.col)}
+              }else{
                     plot(spp_scores1[,1] , spp_scores1[,2], pch="" , xlim = Xlim2, ylim = Ylim2 , xlab=Xlab, ylab=Ylab)
+                    if(plot.comm.scores==TRUE){
+                      text(comm.scores[,1],comm.scores[,2],comm.scores$species, col = comm.col)}
                }
           
           text(spp_scores1[,1] , spp_scores1[,2], rownames(spp_scores1), cex=0.8 , col=sppcol)

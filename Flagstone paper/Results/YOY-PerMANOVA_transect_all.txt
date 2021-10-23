@@ -5,13 +5,13 @@ Number of permutations: 999
 
 adonis2(formula = df_matrix ~ zone + site + year + zone * site + zone * year + site * year, data = data.file1, permutations = nperm, by = "term")
            Df SumOfSqs      R2       F Pr(>F)    
-zone        1    0.241 0.00633  2.9695  0.031 *  
-site        4    1.364 0.03584  4.2059  0.002 ** 
-year        4   10.818 0.28421 33.3561  0.001 ***
-zone:site   4    0.744 0.01954  2.2934  0.023 *  
-zone:year   4    0.417 0.01095  1.2850  0.228    
-site:year  15    2.670 0.07015  2.1954  0.001 ***
-Residual  269   21.810 0.57300                   
-Total     301   38.063 1.00000                   
+zone        1    0.244 0.00642  3.0217  0.038 *  
+site        4    1.375 0.03623  4.2630  0.001 ***
+year        4   10.820 0.28504 33.5408  0.001 ***
+zone:site   4    0.739 0.01948  2.2922  0.024 *  
+zone:year   4    0.413 0.01088  1.2805  0.247    
+site:year  15    2.674 0.07044  2.2103  0.001 ***
+Residual  269   21.695 0.57151                   
+Total     301   37.961 1.00000                   
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
