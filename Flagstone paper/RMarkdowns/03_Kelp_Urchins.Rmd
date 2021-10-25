@@ -120,12 +120,112 @@ kelp_codes = data.frame(read.csv( paste0(Data_Loc,"spp_codes_kelp.csv") ))
 
 ```{r import-kelp-urchins}
 
+df_transect1 = readRDS(paste0(Data_Loc,'Data_Inverts_Kelp_transect_wide.rds')) %>% 
+              filter(site %in% sites) 
+              
+df_transect2 = df_transect1[,c('site','year','transect','area','zone', 
+                             'NERLUE','MACPYR', 'PTECAL',
+                             'purple urchin','red urchin','green urchin')]
+
+df_transect =  df_transect2 %>%
+                  pivot_longer(NERLUE:PTECAL , names_to = 'kelp_spp', values_to = 'kelp_density') %>%
+                    mutate(kelp_spp = factor(kelp_spp, levels=c('MACPYR','NERLUE','PTECAL'))) %>%
+                  pivot_longer('purple urchin':'green urchin' , 
+                               names_to = 'urchin_spp', values_to = 'urchin_density') %>%
+                    mutate(urchin_spp = factor(urchin_spp, 
+                                               levels=c('purple urchin','red urchin','green urchin'))) 
+
+
 
 
 
 ```
 
+# BY SPECIES
+
+## Transect level
+
+```{r kelp-vs-urchins-transet}
+library(cowplot)
+library(viridis)
+
+
+pl <- df_transect %>%
+     filter(zone == 5) %>%
+  ggplot(aes(urchin_density,kelp_density,col=site))+
+  # geom_point(size=2.5, pch=kelp_urchins_long$yr)+
+  geom_point(size=1)+
+  theme_minimal()+
+  # scale_color_manual(values=color5 , pch=kelp_urchins_long$yr)+
+  scale_color_manual(values=site.col$col )+
+  facet_grid(urchin_spp ~ kelp_spp)+
+  theme_bw()+
+  theme( legend.title = element_blank(),
+         legend.text = element_text(size = 7),
+         legend.key.size =  unit(0.25,"point"),
+         legend.background = element_blank(),
+         axis.text = element_text( size = 8 ),
+         axis.text.x = element_text( size = 8 ),
+         strip.background = element_blank(),
+         strip.text = element_text(size = 8),
+         strip.placement = "inside",
+         panel.grid  = element_blank(),
+         panel.spacing = unit(0.5, "lines"),
+         )+
+  labs(x="Urchin Density",y=("Log (Kelp Density+1)"),col="Site")
+pl
+
+
+
+```
+## Site level 
+
+```{r kelp-urchins-site}
+
+
+
+kelp_site   <- df_transect %>% group_by(year, site, zone, kelp_spp) %>% 
+               summarise(kelp_mean = mean(kelp_density) ) 
+                # rename(mean = kelp_mean) %>%
+                # rename(spp = kelp_spp)
+                # 
+urchin_site <- df_transect %>% group_by(year, site, zone,  urchin_spp) %>% 
+               summarise(urchin_mean = mean(urchin_density) ) 
+                # rename(mean = urchin_mean) %>%
+                # rename(spp = urchin_spp)
+
+
+
+df_site <- kelp_site %>% left_join(., urchin_site, by=c('year'='year', 'site'='site','zone'='zone'))
+dim(df_site)
+
+
+pl <- df_site %>%
+     filter(zone == 5) %>%
+  ggplot(aes(urchin_density,kelp_density,col=site))+
+  # geom_point(size=2.5, pch=kelp_urchins_long$yr)+
+  geom_point(size=1)+
+  theme_minimal()+
+  # scale_color_manual(values=color5 , pch=kelp_urchins_long$yr)+
+  scale_color_manual(values=site.col$col )+
+  facet_grid(urchin_spp ~ kelp_spp)+
+  theme_bw()+
+  theme( legend.title = element_blank(),
+         legend.text = element_text(size = 7),
+         legend.key.size =  unit(0.25,"point"),
+         legend.background = element_blank(),
+         axis.text = element_text( size = 8 ),
+         axis.text.x = element_text( size = 8 ),
+         strip.background = element_blank(),
+         strip.text = element_text(size = 8),
+         strip.placement = "inside",
+         panel.grid  = element_blank(),
+         panel.spacing = unit(0.5, "lines"),
+         )+
+  labs(x="Urchin Density",y=("Log (Kelp Density+1)"),col="Site")
+pl
 
 
 
 
+```

@@ -849,8 +849,8 @@ names(ystrip) =  c('CANOPY KELP','URCHIN','STAR')
 
 # join to facet later
 kus <-  mac_ner_zone %>%
-               full_join(., y=star_zone) %>% 
-               full_join(., y=urchin_zone) %>%
+               full_join(., y=star_zone, by=c('site','year','zone') ) %>% 
+               full_join(., y=urchin_zone,  by=c('site','year','zone')) %>%
                mutate(density = mean.density)
 # set plot order
 kus$site <- factor(kus$site, levels = sites)
@@ -886,7 +886,7 @@ SD$density = SD$density/sqrt(5)
 SE = SD %>% rename(SE = density)
 
 kus_year_zone <- kus_year_zone %>%
-                left_join(.,SE, by=c('year'='year','grp2'='grp2','zone'='zone')) %>%
+                left_join(.,SE, by=c('year','grp2','zone')) %>%
                 rename(SE = SE.y)
 
 
@@ -920,7 +920,7 @@ SD$density = SD$density/sqrt(5)
 SE = SD %>% rename(SE = density)
 
 kus_year <- kus_year %>%
-                left_join(.,SE, by=c('year'='year','grp2'='grp2')) %>%
+                left_join(.,SE, by=c('year','grp2')) %>%
                 rename(SE = SE.y)
 
 kus_year_plot <- ggplot(kus_year, mapping = aes(x = year, y=density)) + 
@@ -1056,10 +1056,13 @@ saveRDS(fish_kelp_wide, file=paste0(Data_Loc,'Data_Fish_Kelp_area_wide.rds'))
 ##### invert_kelp ####
 # combine at transect level because on the same transects
 
-invert_kelp_wide <- invert_wide_transect %>% left_join(kelp_wide_transect, 
+# note, there are no algae data for Neah Bay S in 2016.
+
+invert_kelp_wide <- invert_wide_transect %>% full_join(kelp_wide_transect, 
                     by=c('site'='site','year'='year','area'='area','zone'='zone', 'transect'='transect'))
 
 saveRDS(invert_kelp_wide, file=paste0(Data_Loc,'Data_Inverts_Kelp_transect_wide.rds'))
+
 
 ```
 
