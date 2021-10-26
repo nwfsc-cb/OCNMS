@@ -7,12 +7,18 @@ library(tidyverse)
 library(here)
 library(viridis)
 
-# df from Nick, email sent 10-13-2021 0909. represent raw means for year x site x depth x area by taxa/species.
-# I believe the fish data have been filtered to include only transects that meet min viz criteria (2.0m)
-# fish_kelp <- read_rds(here::here('Flagstone paper','Data','Data_Fish_x_Kelp.RDS'))
 # df from Nick, email sent 10-21-2021 2301
 fish_kelp <- read_rds(here::here('Flagstone paper','Data','Data_Fish_Kelp_area_wide.rds'))
 glimpse(fish_kelp)
+
+unique(fish_kelp$year)
+
+### analysis prior to 10-26-2021 below here
+
+# df from Nick, email sent 10-13-2021 0909. represent raw means for year x site x depth x area by taxa/species.
+# I believe the fish data have been filtered to include only transects that meet min viz criteria (2.0m)
+fish_kelp <- read_rds(here::here('Flagstone paper','Data','Data_Fish_x_Kelp.RDS'))
+
 
 unique(fish_kelp$year.x)
 # 2015 data are MIA, drop NA
