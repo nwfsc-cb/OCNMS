@@ -1,5 +1,5 @@
 ---
-title: "Multivariate Analyses for Fish and Inverts"
+title: "Univariate data manipulation and plots"
 author: Nick Toimieri
 date: sys.date()
 output: 
