@@ -438,6 +438,8 @@ saveRDS(algae3, file = paste0(Data_Loc,"Summarized_Data_Kelp_year_zone_spp.rds")
 
 ## Canopy kelp 
 
+Ole needs to check the definitions of canopy kelp here.  I took this from his code, which wasn't finished.
+
 ```{r canopy-kelp-site-year, fig.width=6.5, fig.height=4}
 
 canopy$site = factor(canopy$site, levels = sites)
@@ -459,6 +461,7 @@ canopy$site = factor(canopy$site, levels = sites)
 
 kelp1+ rotate_x_text(angle = 45)
 ```
+
 ## Caonopy kelp 5 m only
 
 ```{r canopy-kelp-site-zone, fig.width=5, fig.height=5}
@@ -476,6 +479,7 @@ kelp1+ rotate_x_text(angle = 45)
    theme(legend.title = element_blank())
 kelp2
 ```
+
 ## Nerocystis at Tatoosh
 
 ```{r canopy-kelp-tatoosh , fig.width=5, fig.height=3.5}
@@ -493,6 +497,7 @@ kelp3 =  ggplot(canopy %>% filter(site=="Tatoosh Island",species=="NERLUE")) +
 kelp3
 
 ```
+
 ## Nero and Macro 
 
 ```{r nero-macro , fig.height=3.5, fig.width=5}
@@ -529,7 +534,8 @@ mac_ner_zone <- mac_ner %>% group_by(year,site,zone) %>%
           strip.background = element_blank())
  all_canopy_zone
 ```
-## Big three
+
+## Big three: Nero, Macro, Ptero
 
 Plot the big 3 species: Macro, Nero, Ptero
 
@@ -565,6 +571,8 @@ kelp1 + rotate_x_text(angle = 45)
 
 ```
 
+### Big three 5 m only  
+
 ```{r big3-5m, fig.width=4.5, fig.height=4}
  # big three species
  big3spp = c('MACPYR', 'NERLUE', 'PTECAL')
@@ -592,6 +600,7 @@ kelp1 + rotate_x_text(angle = 45)
 
 ```
 
+### Big three - Coastwide
 
 ```{r kelp-coastwide, fig.height=3.5, fig.width=5}
 
@@ -620,6 +629,9 @@ kelp_coast <- ggplot( dfx , aes(x=year, y=Mean, color=species)) +
 
 kelp_coast
 ```
+
+### Coastwide 5m only  
+
 
 ```{r kelp-coastwide-5m, fig.height=3, fig.width=5}
 
@@ -650,6 +662,7 @@ kelp_coast5 <- ggplot( dfx5 , aes(x=year, y=Mean, color=species)) +
 
 kelp_coast5
 ```
+
 # INVERTEBRATES
 
 
@@ -776,7 +789,7 @@ urchin_plot_all <- ggplot(data=urchins_all,aes(x=year, y= mean.density, col = si
 urchin_plot_all + rotate_x_text(angle = 45)
 
 ```
-facet_grid(rows="zone") + #,scales="free_y") +
+ 
 
 ## Seastars
 
@@ -808,7 +821,9 @@ ggplot() +
 
 
 ```
+
 Ugly..no aliby..
+
 
 ```{r seastars-all}
 
@@ -839,9 +854,11 @@ stars_plot_all <- ggplot(data=stars_all,aes(x=year, y= mean.density, col = site)
 stars_plot_all
 
 ```
-# COMBINED KELP - URCHIN - SEASTAR PLOTS 
 
-## By site and zone
+# COMBINED KELP - URCHIN - SEASTAR PLOTS   
+
+## By site and zone  
+
 
 ```{r kelp-urchin-stars-site-zone}
 
@@ -873,7 +890,10 @@ kus_plot <- ggplot(kus, mapping = aes(x = year, y=density, color = site)) +
 kus_plot+ rotate_x_text(angle = 45)
 
 ```
-## By year and zone summarized across sites
+ 
+ 
+## By year and zone summarized across sites  
+
 
 ```{r kelp-urchin-stars-zone, fig.width=5, fig.height=4}
 
@@ -908,7 +928,9 @@ kus_year_zone_plot <- ggplot(kus_year_zone, mapping = aes(x = year, y=density)) 
 kus_year_zone_plot+ rotate_x_text(angle = 45)
 
 ```
-## Summarized across sites; 5 m and 10 m depths combined
+
+## Summarized across sites; 5 m and 10 m depths combined  
+
 
 ```{r kelp-urchin-stars-zone-5-10, fig.width=3.5, fig.height=4}
 
@@ -941,7 +963,8 @@ kus_year_plot <- ggplot(kus_year, mapping = aes(x = year, y=density)) +
 kus_year_plot
 
 ```
-## Summarized across sites; 5-m depth zone only
+   
+## Summarized across sites; 5-m depth zone only  
 
 ```{r kelp-urchin-stars-5, fig.width=3.5, fig.height=4}
 
@@ -979,9 +1002,10 @@ kus_year_plot5 <- ggplot(kus_year5m, mapping = aes(x = year, y=density)) +
 kus_year_plot5
 
 ```
-# Output data for multivariate statistics
+  
+# Output data for multivariate statistics  
 
-## Combine kelp, fish, and inverts for capscale analysis
+## Combine kelp, fish, and inverts for capscale analysis  
 
 Not yet transformed to wide format in order to retain SD & SE info upon saving out. 
 Transform in the Multiariate analysis rmd.
@@ -1069,7 +1093,10 @@ saveRDS(invert_kelp_wide, file=paste0(Data_Loc,'Data_Inverts_Kelp_transect_wide.
 
 ```
 
-Quick view of what species to include in kelp ordinations. Basically only the big three have any abundance.
+# Quick view of what species to include in kelp ordinations. Basically only the big three have any abundance.
+
+## Algae  
+
 
 ```{r quick-kelp-plots, fig.width=6, fig.height=8}
 
@@ -1086,6 +1113,9 @@ ggplot( kelpx , aes(x=year, y = Mean ) ) +
 
 ```
 
+## Fish  
+
+Note, the y-axes are very different 
 
 ```{r quick-fish-plots, fig.width=6.5, fig.height=8}
 
