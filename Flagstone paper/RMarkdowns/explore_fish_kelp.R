@@ -6,14 +6,130 @@
 library(tidyverse)
 library(here)
 library(viridis)
+library(janitor)
 
 # df from Nick, email sent 10-21-2021 2301
 fish_kelp <- read_rds(here::here('Flagstone paper','Data','Data_Fish_Kelp_area_wide.rds'))
 glimpse(fish_kelp)
 
-unique(fish_kelp$year)
+# a tabyl of site x area, split into a list by year
+fish_kelp %>%
+  tabyl(site, area, year) #hmm, there are some year-sites with no area designations (eg, 2015 DI)
+fish_kelp %>%
+  tabyl(site, zone, year) #hmm, there are some year-sites with no zone designations (eg, 2015 DI)
+
+# jameal thinks these issues are a result of filters nick used in upstream code (eg, excluding site-years with bad viz)
+
+sort(unique(fish_kelp$year))
+sort(unique(fish_kelp$site)) #need to drop levels
+sort(unique(fish_kelp$area)) 
+sort(unique(fish_kelp$zone)) 
+
+# do a bit of cleanup, make summed kelps and fish and kelp occurrence and conditional abundance columns
+
+# YOYs: SEBYTyoy (black yellowtail), SECAyoy (copper), SEMAyoy (quill), SEMYyoy (blue), SENEyoy (china), SEPIyoy (canary)
+# black rocks: SEME
+# kelps: MACPYR, NERLUE, PTECAL, canopy_kelp, three_kelps, ner_pte, and diff_ner_pte
+
+fish_kelp <- fish_kelp %>%
+  mutate(
+    site = droplevels(site),
+    canopy_kelp = NERLUE + MACPYR,
+    three_kelps = canopy_kelp + PTECAL,
+    ner_pte = NERLUE + PTECAL,
+    diff_ner_pte = NERLUE - PTECAL
+  ) %>%
+  select(
+    year, site, area, zone,
+    SEBYTyoy, SECAyoy, SEPIyoy, TOTyoy, SEME,
+    MACPYR, NERLUE, PTECAL, canopy_kelp, three_kelps, ner_pte, diff_ner_pte
+  ) %>%
+  mutate(
+    SEBYTyoy_pres = ifelse(SEBYTyoy > 0, 1, 0),
+    SECAyoy_pres = ifelse(SECAyoy > 0, 1, 0),
+    SEPIyoy_pres = ifelse(SEPIyoy > 0, 1, 0),
+    TOTyoy_pres = ifelse(TOTyoy > 0, 1, 0),
+    SEME_pres = ifelse(SEME > 0, 1, 0),
+    MACPYR_pres = ifelse(MACPYR > 0, 1, 0), 
+    NERLUE_pres = ifelse(NERLUE > 0, 1, 0), 
+    PTECAL_pres = ifelse(PTECAL > 0, 1, 0),
+    three_kelps_pres = ifelse(three_kelps > 0, 1, 0),
+    canopy_kelp_pres = ifelse(canopy_kelp > 0, 1, 0),
+    ner_pte_pres = ifelse(ner_pte > 0, 1, 0),
+    SEBYTyoy_cond_abund = ifelse(SEBYTyoy > 0, SEBYTyoy, NA),
+    SECAyoy_cond_abund = ifelse(SECAyoy > 0, SECAyoy, NA),
+    SEPIyoy_cond_abund = ifelse(SEPIyoy > 0, SEPIyoy, NA),
+    TOTyoy_cond_abund = ifelse(TOTyoy > 0, TOTyoy, NA),
+    SEME_cond_abund = ifelse(SEME > 0, SEME, NA)
+  )
+
+# pick up here
+# figure out how to loop through fish names and kelp names, inserting them into generic code for plotting. maybe purrr?
+# do we want kelp_pres vs yoy_abundance/pres?
+# keep thinking about this
+
+# Abundance
+fish_kelp %>%
+  ggplot() +
+  geom_point(aes(x=canopy_kelp, y = SEBYTyoy, color = as.factor(zone), shape = as.factor(site))) +
+  scale_color_viridis(discrete = T)  +
+  xlab("Canopy Kelp Density") +
+  ylab("Black and Yellowtail YOY") +
+  theme_classic()
+
+# Occurrence
+# https://www.ericrscott.com/post/plot-logistic-regressions/
+fish_kelp %>%
+  filter(is.na(zone) == FALSE) %>%
+  ggplot(aes(x=canopy_kelp,y = SEBYTyoy_pres, color = as.factor(site))) +
+  #geom_jitter(aes(y = YTBLyoy_occur, color = as.factor(site.x))) +
+  stat_summary_bin(geom = "point", fun = mean, aes(y = SEBYTyoy_pres)) + # , bins = 60
+  facet_grid(rows = vars(zone)) +
+  scale_color_viridis(discrete = T, name = "")  +
+  xlab("Canopy Kelp Density") +
+  ylab("Black and Yellowtail YOY") +
+  theme_classic()  
+
+fish_kelp %>%
+  filter(is.na(zone) == FALSE) %>%
+  ggplot(aes(x=PTECAL,y = SEPIyoy_pres, color = as.factor(site))) +
+  #geom_jitter(aes(y = YTBLyoy_occur, color = as.factor(site.x))) +
+  stat_summary_bin(geom = "point", fun = mean, aes(y = SEPIyoy_pres)) + # , bins = 60
+  facet_grid(rows = vars(zone)) +
+  scale_color_viridis(discrete = T, name = "")  +
+  xlab("Pterygophora Density") +
+  ylab("Canary YOY") +
+  theme_classic()  
+
+# canary YOY abundance if kelp present
+  
+
+# Conditional abundance
+# try faceting a bit with positive data only
+
+fish_kelp %>%
+  filter(is.na(zone) == FALSE) %>%
+  ggplot(aes(x=canopy_kelp, y = SEBYTyoy_cond_abund, color = as.factor(site))) +
+  geom_point() +
+  #geom_smooth(method = lm) + 
+  facet_grid(rows = vars(zone)) +
+  #scale_x_log10() +
+  #scale_y_log10() +
+  scale_color_viridis(discrete = T, name = "")  +
+  xlab("Canopy Kelp Density") +
+  ylab("Black and Yellowtail YOY") +
+  theme_classic()
+
+
+
+
+######################################################
+######################################################
+######################################################
 
 ### analysis prior to 10-26-2021 below here
+
+######################################################
 
 # df from Nick, email sent 10-13-2021 0909. represent raw means for year x site x depth x area by taxa/species.
 # I believe the fish data have been filtered to include only transects that meet min viz criteria (2.0m)
