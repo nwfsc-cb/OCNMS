@@ -1,842 +1,58 @@
-<<<<<<< HEAD
 ---
-title: "Multivariate Analyses for Fish and Inverts"
+title: "Univariate data manipulation and plots"
 author: Nick Toimieri
 date: sys.date()
 output: 
   html_document:
     toc: true
     toc_float: true
-    toc_depth: 3
+    toc_depth: 5
     number_sections: true
     fig_caption: true
 fontsize: 11pt
 
 ---
 
-```{r SETUP, include=FALSE}
-# A bunch of initial set up junk
-
-#rm(list = ls())
-
-##### knitr stuff and libraries ####
-# tools in use 
-library(knitr)
-# library(tidyr)
-# library(dplyr)
-library(tidyverse)
-library(stringr)
-# library(tinytex)
-library(RColorBrewer)
-# display.brewer.all(colorblindFriendly = TRUE)
-library(readxl)
-
-# stats packages etc
-library(vegan)
-library(BiodiversityR)
-library(pracma)
-library(factoextra)
-
-# options
-knitr::opts_chunk$set(
-  fig.path = Fig_Loc,
-  cache.path = 'cache/graphics-', 
-  echo=FALSE,
-  error=FALSE,
-  include = TRUE,
-  dev='png',
-  dpi=300,
-  warning=FALSE,
-  #out.width = '100%',
-  fig.align='center'
-  
-  )
-# opts_knit$set(eval.after = "fig.cap")
-
-# just to keep track of when I ran things.
-
-Last_Run0 = Sys.time()
-Last_Run = str_replace(Last_Run0, ":", ".")
-Last_Run = str_replace(Last_Run, ":", ".")
-capture.output(Last_Run, file = 'Last_Run.txt')
-
-par(ps=10, cex=1)
-
-source("R-functions-ocnms.r")
-
-# Paths for files
-HomeFile = getwd()
-Fig_Loc = paste0(HomeFile,"/Flagstone paper/Plots/")
-Data_Loc = paste0(HomeFile,"/Flagstone paper/Data/")
-Results_Loc = paste0(HomeFile,"/Flagstone paper/Results/")
-Other_Files = paste0(HomeFile,"/Flagstone paper/Other Files/")
-
-
-```
-
-```{r triggers-and-settings}
-min.vis = 2.0
-years = 2015:2021
-pch = c(9, 4, 8 , 21, 22, 24, 25 )
-col = RColorBrewer::brewer.pal(n = 12, name = "Paired")[c(2,4,6,10,12,7,8)]
-year.pch = data.frame(cbind(years, pch,col))
-
-sites = c("Neah Bay","Tatoosh Island","Cape Alava","Cape Johnson","Destruction Island")
-col = RColorBrewer::brewer.pal(n = 12, name = "Paired")[c(2,4,6, 10,12)]
-site.col = data.frame(cbind(sites,col))
-colnames(site.col) <- c('site', 'col')
-
-#### species depths #####
-
-kelp.depth = 5
-fish.depth = c(5,10)
-invert.depth = 5
-
-###########################
-```
-
-
-
-# Import and manipulate data a bit
-
-For the fish data 
-
-* There is some renaming of things and lumping all SEFL and SEBYT yoy into just YTBLyoy
-* Put in some fake visibility data for 2015. By my recollection, Destruction Island was horrible in 2015. So we should drop it for the fish data. 
-* Then select only sites with visibility of 2.0 or greater.
-* Finally, subset out only the five (5) sites for analyses.
-
-
-Fish Depth = `r fish.depth` meters
-Kelp Depth = `r kelp.depth` meters
-Invert Depth = `r invert.depth` meters  
-
-```{r fish-import-rds }
-# This script import fish data, does manipulations
-# Imports Invert and Algae Data, does manipulations.
-
-source("01a_Univariate_workhorse.R")
-```
-
-# Time series
-
-1. There are multiple size classes. Data are first summed by transect for each spp.
-2. Take the log(x+1) mean for site x year
-3. Take the mean of #2 for year. So, the mean of sites
-4. plotted data are log(x+1)
-5. Additional output not in this file shows species abundance by year x site or year x site x depth just to look.
-
-## Fish
-
-Fish depth = `r fish.depth`
-
-```{r fish-ts-2pane, fig.width=4.5, fig.height=5}
-print()
-
-```
-
-A second version splitting out the SEME (blacks) because they are abundant.
-
-```{r fish-ts-4pane, fig.width=4.5, fig.height=6}
-library(ggplot2)
-library(gtable)
-library(gridExtra)
-
-all.colors =  RColorBrewer::brewer.pal(n = 12, name = "Paired")
-fish.col = all.colors[ c(3,4,8,12,11,2) ]
-yoy.col = all.colors[c(10,12,6,4)]
-
-uni.fish2 = fish[ fish$taxa %in% c("OPEL", "HEXA", "SECA", "SCMA" ,"SENE", "SEFL"),] 
-yoy.fish2 = fish[ fish$taxa %in% c("SECAyoy","SEPIyoy", "RYOY"),]
-
-fish.plot = species.plot(uni.fish2, group.var = 'taxa', years = 2015:2021, 
-                     Ylim = NA, Ylab = fish.ylabel, Colors = fish.col )
-yoy.plot = species.plot(yoy.fish2, group.var = 'taxa', years = 2015:2021, 
-                     Ylab = fish.ylabel,Ylim = NA, Colors = yoy.col)
-
-black = species.plot(fish[fish$taxa =="SEME",], group.var = 'taxa', years = 2015:2021, 
-                     Ylim = NA, Ylab = fish.ylabel, Colors = 'black')
-ytbl = species.plot(fish[fish$taxa %in% c("totYOY","YTBLyoy"),], group.var = 'taxa', years = 2015:2021, 
-                     Ylim = NA, Ylab = fish.ylabel, Colors = c('darkgrey', "black") )
-
-g1 <- ggplotGrob(black)
-g3 <- ggplotGrob(ytbl)
-g2 <- ggplotGrob(fish.plot)
-g4 <- ggplotGrob(yoy.plot)
-
-g <- rbind(g1, g2, g3, g4, size = "first")
-
-g$widths <- grid::unit.pmax(g1$widths, g2$width, g2$widths, g4$widths)
-grid::grid.newpage()
-grid::grid.draw(g)
-# grid.arrange(g1, g2, g3, g4, ncol=2, nrow =2)
-
-```
-## Swath: Kelp & Inverts
-
-Kelp depth = `r kelp.depth`
-
-```{r swath-alage}
-
-swath0 = readRDS( paste0( Data_Loc,'Swath_2015-2021.rds' ))
-
-swath1 = aggregate( Count ~  site  + year + zone + species + group , data=swath0, FUN = mean)
-colnames(swath1)[ncol(swath1)] <- 'mean'
-swath1$mean = as.numeric(swath1$mean)
-# swath  = aggregate( Count ~ year + species + group , data = swath1, FUN = mean)
-
-### kelp depth selection ####
-swath2 = swath1[ swath1$zone %in% kelp.depth,]
-
-# algae 5 m depth only
-
-algae = Sum_Stats('mean ~ year + species + group' , swath2[swath2$species %in% c("MACPYR", "NERLUE", "PTECAL"),] )
-algae$se_up = algae$mean+algae$se
-algae$se_lo = algae$mean-algae$se
-```
-
-Invert depth = `r invert.depth`
-
-```{r swath-invets}
-# bring in swath. Same as algae data
-
-swath0 = readRDS( paste0( Data_Loc,'Swath_2015-2021.rds' ))
-
-urchins = c('MESFRA', 'STRPUR', 'STRDRO')
-stars =   c('PISOCH','PISBRE', 'PISGIG','DERIMB','PYCHEL')
-anenome = c('URTSPP', 'URTLOF', 'URTPIS','URTCRA', 'METSPP' , 'METGIG', 'ANTXAN','ANTELE')
-cucs    = c('CUCMIN','PARCAL', 'EUPQUI')
-
-swath0$taxa = swath0$species
-swath0$taxa[swath0$taxa %in% c('PISOCH','PISBRE', 'PISGIG')] <- 'PISAST'
-swath0$taxa[swath0$taxa %in% anenome] <- 'ANENOM'
-swath0$taxa[swath0$taxa %in% c('CUCMIN','PARCAL', 'EUPQUI')] <- 'CUCUMB'
-
-invert.spp = c(urchins, stars, anenome, cucs)
-
-invert1 = aggregate( Count ~ site + zone + year + species + taxa , 
-                     data = swath0[swath0$species %in% invert.spp, ], FUN = mean)
-# invert1$zone = as.character(invert1$zone)
-
-colnames(invert1)[ncol(invert1)] <- 'mean'
-invert2 = invert1[invert1$zone %in% invert.depth,]
-
-inverts =  Sum_Stats(' mean~ year + taxa' , invert2)
-inverts$se_up = inverts$mean + inverts$se
-inverts$se_lo = inverts$mean - inverts$se
-
-```
-
-
-```{r kelp-invert-ts , fig.width= 4.5 , fig.height= 6 }
-
-kelp.col = all.colors[c(2,4,6)]
-urchin.col = all.colors[c(6,4,10)]
-invert.col = all.colors[c(2,4,6,8,10)]
-     
-algae.plot  = species.plot(algae, group.var = 'species', years = 2015:2021, 
-                     Ylim = NA, Ylab = "Stipes per transect" , Colors = kelp.col)
-x = inverts[inverts$taxa %in% urchins,]
-urchin.plot =  species.plot(inverts[inverts$taxa %in% urchins,], group.var = 'taxa', years = 2015:2021, 
-                     Ylim = NA, Ylab = "No. per transect", Colors = urchin.col )
-
-inverts.plot =  species.plot(inverts[inverts$taxa %in% c('PISAST','PYCHEL','DERIMB','ANENOM','CUCUMB'),], group.var = 'taxa', years = 2015:2021, Ylim = NA, Ylab = "No. per transect" , Colors = invert.col)
-
-
-g1 <- ggplotGrob(algae.plot)
-g2 <- ggplotGrob(urchin.plot)
-g3 <- ggplotGrob(inverts.plot)
-
-g <- rbind(g1, g2, g3, size = "first")
-
-g$widths <- grid::unit.pmax(g1$widths, g2$widths, g2$widths)
-grid::grid.newpage()
-grid::grid.draw(g)
-# grid.arrange(g1, g2, g3, g4, ncol=1, nrow =4)
-```
-
-# EXTRA FIGURES - Univariate Plots just to see
-
-Not plotted here but output. Outputted to a subfolder for perusal.
-```{r run-additional-figures}
-
-run.additional.figures = FALSE
-
-```
-
-## Site x Year
-
-```{r, univariate-plots-fish}
-
-if(run.additional.figures == TRUE){
-
-
-new.file = paste0(Fig_Loc,"Fish-Site-x-Year/")
-dir.create(new.file)
-# fish1 does not delete low vis data
-
-fish.log = aggregate( log(Count+1) ~ site + year +  taxa , data = fish1, FUN = mean )
-colnames(fish.log)[ncol(fish.log)] <- 'mean'
-
-fish.mean = aggregate( Count ~ site + year +  taxa , data = fish1, FUN = mean )
-colnames(fish.mean)[ncol(fish.mean)] <- 'mean'
-
-spp = as.character(levels(as.factor(fish.log$taxa)))
-
-for(i in 1:length(spp)){
-     graphics.off()
-     
-     jpeg(paste0(new.file,spp[i],"-site_by_year.jpg"))
-     df1 = fish.log[fish.log$taxa==spp[i],]
-     plot1 = species.plot.SxY(data.file = df1, Ylab = 'Log(x+1)')
-     
-     df2 = fish.mean[fish.mean$taxa==spp[i],]
-     plot2 = species.plot.SxY(data.file = df2, Ylab = 'Arith.Mean')
-     
-     g1 <- ggplotGrob(plot1)
-     g2 <- ggplotGrob(plot2) 
-     g <- rbind(g1, g2, size = "first")
-
-     g$widths <- grid::unit.pmax(g1$widths, g2$widths)
-     grid::grid.newpage()
-     grid::grid.draw(g)
-     graphics.off()
-}
-
-}
-```
-
-
-```{r univariate-plots-swath}
-
-if(run.additional.figures == TRUE){
-
-new.file = paste0(Fig_Loc,"Swath-Site-x-Year/")
-dir.create(new.file)
-# fish1a does not delete low vis data
-swathx = swath0
-# swathx = swath1[swath1$zone == 5,]
-swathx$taxa = swathx$species
-
-swath.log = aggregate( log(Count+1) ~ site + year +  taxa , data = swathx, FUN = mean )
-colnames(swath.log)[ncol(swath.log)] <- 'mean'
-
-swath.mean = aggregate( Count ~ site + year +  taxa , data = swathx, FUN = mean )
-colnames(swath.mean)[ncol(swath.mean)] <- 'mean'
-
-spp = as.character(levels(as.factor(swath.log$taxa)))
-
-for(i in 1:length(spp)){
-     graphics.off()
-     
-     jpeg(paste0(new.file,spp[i],"-site_by_year.jpg"))
-     df1 = swath.log[swath.log$taxa==spp[i],]
-     plot1 = species.plot.SxY(data.file = df1, Ylab = 'Log(x+1)')
-     
-     df2 = swath.mean[swath.mean$taxa==spp[i],]
-     plot2 = species.plot.SxY(data.file = df2, Ylab = 'Arith.Mean')
-     
-     g1 <- ggplotGrob(plot1)
-     g2 <- ggplotGrob(plot2) 
-     g <- rbind(g1, g2, size = "first")
-
-     g$widths <- grid::unit.pmax(g1$widths, g2$widths)
-     grid::grid.newpage()
-     grid::grid.draw(g)
-     
-     graphics.off()
-}
-
-}
-```
-
-## A subset of specific year x site comparisons.
-
-Kelp plot includes only 5-m. 
-
-
-```{r kelp-site-year, fig.width=4.5, fig.height=6}
-swathx = swath0
-# swathx = swath1[swath1$zone == 5,]
-swathx$taxa = swathx$species
-
-kelp.ylabel = "Stipes per transect"
-
-swath5 = aggregate(Count ~ site + year +  taxa , data = swathx[swathx$zone==5,], FUN = mean )
-colnames(swath5)[ncol(swath5)] <- "mean"
-
-macro = swath5[swath5$taxa=="MACPYR",]
-nereo = swath5[swath5$taxa=="NERLUE",]
-ptero = swath5[swath5$taxa=="PTECAL",]
-
-macro = species.plot.SxY(data.file = macro, Ylab = kelp.ylabel)
-nereo = species.plot.SxY(data.file = nereo, Ylab = kelp.ylabel)
-ptero = species.plot.SxY(data.file = ptero, Ylab = kelp.ylabel)
-     
-
-g1 <- ggplotGrob(macro)
-g2 <- ggplotGrob(nereo)
-g3 <- ggplotGrob(ptero) 
-g <- rbind(g1, g2, g3, size = "first")
-
-g$widths <- grid::unit.pmax(g1$widths, g2$widths, g3$widths)
-grid::grid.newpage()
-grid::grid.draw(g)
-     
-
-```
-
-```{r urchinsp-site-year, fig.width=4.5, fig.height=6}
-
-swath5 = aggregate( Count ~ site + year +  taxa , data = swathx[swathx$zone==5,], FUN = mean )
-colnames(swath5)[ncol(swath5)] <- "mean"
-
-urchin.ylab = "No. per transect"
-
-purp = swath5[swath5$taxa=="STRPUR",]
-red = swath5[swath5$taxa=="MESFRA",]
-green = swath5[swath5$taxa=="STRDRO",]
-
-purp = species.plot.SxY(data.file = purp, Ylab = urchin.ylab )
-red = species.plot.SxY(data.file = red, Ylab = urchin.ylab )
-green = species.plot.SxY(data.file = green, Ylab = urchin.ylab )
-     
-g1 <- ggplotGrob(purp)
-g2 <- ggplotGrob(red)
-g3 <- ggplotGrob(green) 
-g <- rbind(g1, g2, g3, size = "first")
-
-g$widths <- grid::unit.pmax(g1$widths, g2$widths, g3$widths)
-grid::grid.newpage()
-grid::grid.draw(g)
-     
-
-```
-
-## Site x Year x Depth
-
-
-```{r fish-site-year-depth}
-
-if(run.additional.figures == TRUE){
-
-new.file = paste0(Fig_Loc,"Fish-Site-x-Year-x-Depth/")
-dir.create(new.file)
-
-fish.log = aggregate(log(Count+1) ~ year + site + zone + species, data=fish1, FUN=mean)
-colnames(fish.log)[ncol(fish.log)]<- 'mean'
-fish.log$taxa = fish.log$species
-
-fish.mean = aggregate(Count ~ year + site + zone + species, data=fish1, FUN=mean)
-colnames(fish.mean)[ncol(fish.mean)]<- 'mean'
-fish.mean$taxa = fish.mean$species
-
-spp <- levels(as.factor(fish.log$taxa))
-     
-for(i in 1:length(spp)){
-     
-     graphics.off()
-     
-     jpeg(paste0(new.file,spp[i],"-site_by_year_by_depth.jpg"))
-     
-     df1 = fish.log[fish.log$taxa == spp[i], ]
-     df2 = fish.mean[fish.mean$taxa == spp[i], ]
-     
-     plot1 = species.plot.SxYxD(df1 , Ylab = 'Log(x+1)')
-     plot2 = species.plot.SxYxD(df2 , Ylab = 'Arth. mean')
-     
-     g1 <- ggplotGrob(plot1)
-     g2 <- ggplotGrob(plot2) 
-     g <- rbind(g1, g2, size = "first")
-
-     g$widths <- grid::unit.pmax(g1$widths, g2$widths)
-     grid::grid.newpage()
-     grid::grid.draw(g)
-     graphics.off()
-     
-}    
-
-}
-     
-```     
-
-```{r swath-site-year-depth}
-if(run.additional.figures == TRUE){
-     
-     new.file = paste0(Fig_Loc,"Swath-Site-x-Year-x-Depth/")
-dir.create(new.file)
-
-swath.log = aggregate(log(Count+1) ~ year + site + zone + species, data=swath0, FUN=mean)
-colnames(swath.log)[ncol(swath.log)]<- 'mean'
-swath.log$taxa = swath.log$species
-
-swath.mean = aggregate(Count ~ year + site + zone + species, data=swath0, FUN=mean)
-colnames(swath.mean)[ncol(swath.mean)]<- 'mean'
-swath.mean$taxa = swath.mean$species
-
-spp <- levels(as.factor(swath.log$taxa))
-     
-for(i in 1:length(spp)){
-     
-     graphics.off()
-     
-     jpeg(paste0(new.file,spp[i],"-site_by_year_by_depth.jpg"))
-     
-     df1 = swath.log[swath.log$taxa == spp[i], ]
-     df2 = swath.mean[swath.mean$taxa == spp[i], ]
-     
-     plot1 = species.plot.SxYxD(df1 , Ylab = 'Log(x+1)')
-     plot2 = species.plot.SxYxD(df2 , Ylab = 'Arth. mean')
-     
-     g1 <- ggplotGrob(plot1)
-     g2 <- ggplotGrob(plot2) 
-     g <- rbind(g1, g2, size = "first")
-
-     g$widths <- grid::unit.pmax(g1$widths, g2$widths)
-     grid::grid.newpage()
-     grid::grid.draw(g)
-     graphics.off()
-     
-}    
-
-}
-```   
-
-
-# Fish YOY and Kelp 
-
-
-```{r fish-kelp}
-###### fish ####
-########fish1 includes all spp and five sites but no deletion of low ivs.
-
-# drop low vis sites/transects
-fish1a = fish1[fish1$vis_m >= min.vis, ]
-
-# double check specific averaging process here 
-
-fish_area = aggregate( Count ~ site + zone + year + area + taxa, data = fish1a, FUN = mean )
-colnames(fish_area)[ncol(fish_area)] <- 'mean'
-fish_area_wide = pivot_wider(fish_area , names_from = taxa , values_from = mean)
-fishid = paste(fish_area_wide$site, 
-               fish_area_wide$year,
-               fish_area_wide$zone,
-               fish_area_wide$area, sep="_")
-# fish wide format, with "area"
-fish_wide = data.frame(cbind(fishid, fish_area_wide))
-colnames(fish_wide)[1] <- 'id'
-### kelp #####
-
-kelp_area = aggregate( Count ~ site + zone + year + area + taxa, data = swath0, FUN = mean )
-colnames(kelp_area)[ncol(kelp_area)] <- 'mean'
-kelp_area = kelp_area[kelp_area$taxa %in% c("MACPYR", "NERLUE", "PTECAL"),]
-kelp_area_wide = pivot_wider(kelp_area , names_from = taxa , values_from = mean)
-kelpid = paste(kelp_area_wide$site, 
-               kelp_area_wide$year,
-               kelp_area_wide$zone,
-               kelp_area_wide$area, sep="_")
-#kelp wide format, with "area"
-kelp_wide = data.frame(cbind(kelpid, kelp_area_wide))
-colnames(kelp_wide)[1] <- 'id'
-
-fish_kelp0 = merge(fish_wide, kelp_wide, all = TRUE, by='id')
-# remove some duplicates
-cn = colnames(fish_kelp0)
-x = match(c('site.y','zone.y', 'year.y', 'area.y'),cn)
- 
-# combined fish and kelp file ####
-# combined at the 'area': site x year x depth x area
-fish_kelp = fish_kelp0[,-x]
-
-saveRDS(fish_kelp , paste0(Data_Loc,'Data_Fish_x_Kelp.rds') )
-
-```
-## Some preliminary plots
-
-Both fish and kelp data in these plots are log(x+1) means for Year x Site x Depth x Area.
-
-Kelp are either total kelp (NERLUE+ MACPYR+PTECAL), canopy kelp (NERLUE+ MACPYR), or understory kelp (PTECAL)
-
-At present, I've only done a few plots of yellow tail & black and coppers. 
-
-```{r fish-and-kelp, fig.height=8, fig.width = 6}
-
-fish_kelp$canopy_kelp = fish_kelp$NERLUE + fish_kelp$MACPYR
-fish_kelp$kelp = fish_kelp$NERLUE + fish_kelp$MACPYR + fish_kelp$PTECAL
-fish_kelp$year.x = as.factor(fish_kelp$year.x)
-fish_kelp <- fish_kelp[ !is.na(fish_kelp$year.x), ]
-
-
-plotquick <- function(data.file , X , Y , Xlab =' kelp', leg.pos="none"){
-              
-              cn<-colnames(data.file)
-              x = match(X,cn)
-              y = match(Y,cn)
-              colnames(data.file)[x] <- "X"
-              colnames(data.file)[y] <- "Y"
-              p1 = ggplot(data.file, aes(x=X, y=Y, color = year.x) ) +
-                    geom_point() +
-                    scale_color_manual(values = col) +
-                    xlab(Xlab)+
-                    ylab(Y)+
-                    theme_bw()+
-                    theme( legend.title = element_blank(), 
-                           legend.position = leg.pos )
-     
-              return(p1)
-}
-
-ytb.kelp.plot       <- plotquick(data.file = fish_kelp, X = 'kelp', Y = 'YTBLyoy' , 
-                                 Xlab = "Total kelps")
-ytb.canopy.plot     <- plotquick(data.file = fish_kelp, X = 'canopy_kelp', Y = 'YTBLyoy',
-                                 Xlab = 'Canopy kelps')
-ytb.understory.plot <- plotquick(data.file = fish_kelp, X = 'PTECAL', Y = 'YTBLyoy',
-                                 Xlab = 'Understory kelps')
-
-cop.kelp.plot       <- plotquick(data.file = fish_kelp, X = 'kelp', Y = 'SECAyoy', 
-                                 Xlab = 'Toal kelps', leg.pos= c(0.8, 0.66))
-cop.canopy.plot     <- plotquick(data.file = fish_kelp, X = 'canopy_kelp', Y = 'SECAyoy',
-                                 Xlab = 'Canopy kelps')
-cop.understory.plot <- plotquick(data.file = fish_kelp, X = 'PTECAL', Y = 'SECAyoy',
-                                 Xlab = 'Understory kelps')
-
-grid.arrange(
-     ytb.kelp.plot, 
-     cop.kelp.plot,
-     
-     ytb.canopy.plot,     
-     cop.canopy.plot,
-     
-     ytb.understory.plot, 
-     cop.understory.plot, 
-     
-     nrow = 3, ncol=2
-     )
-
-```
-
-
-# Kelp and Urchins
-
-## Summarized across sites for all years
-
-Pretty strong relationship when averaged across sites within years for total urchins and total kelp. Where there is kelp, there are urchins. 
-
-```{r kelp-vs-urchins, fig.width=3.5, fig.align=3.5}
-
-swath2$mean = as.numeric(as.character(swath2$mean))
-uk = c("MACPYR", "NERLUE", "PTECAL" ,"STRPUR","MESFRA","STRDRO")
-
-swath.yr = aggregate(mean ~ year + species , data=swath2[swath2$species %in% uk,], FUN = mean )
-
-UK = pivot_wider(swath.yr, values_from = 'mean', names_from = 'species')
-
-UK$kelp = UK$MACPYR + UK$NERLUE + UK$PTECAL
-UK$urchins = UK$STRPUR + UK$MESFRA + UK$STRDRO
-UK$year = as.factor(UK$year)
-
-lm1 = lm(urchins ~ kelp, data = UK)
-s1 = summary(lm1)
-
-p1 = ggplot(UK, aes(x = kelp, y=urchins , color = year)) +
-     geom_point(size = 2) +
-     xlab( 'Kelp stypes per transect' ) + 
-     ylab( 'Urchins per transect' ) +
-     geom_smooth(method='lm' , se=TRUE , col = 'black') + 
-     theme_bw()+
-     scale_color_manual(values = c('black',col) ) +
-     theme( legend.title = element_blank() )
-
-p1
-
-```
-Note, vs the original MS there are fewer data here because it is summarized by sites. We cold increase to transect level.  
-
-
-```{r urchins-kelp, fig.width=6, fig.height=4}
-
-swath0 = readRDS( paste0( Data_Loc,'Swath_2015-2021.rds' ))
-
-swath1 = aggregate( Count~ site  + year + zone + species + group , data=swath0, FUN = mean)
-x = ncol(swath1)
-colnames(swath1)[ncol(swath1)] <- 'mean'
-# inverts <- read_csv(here('Data','invert_swath_zonelevel.csv'))
-# kelp <- read_csv(here('Data','algae_swath_zonelevel_lump.csv'))
-
-urchins = swath1 %>% filter(species %in% c('MESFRA', 'STRPUR', 'STRDRO')) %>%
-                     select(year,site,species, zone,mean)
-     
-kelp    = swath1 %>% filter(species %in% c("MACPYR", "NERLUE", "PTECAL")) %>%
-                     select(year,site,species, zone, mean)
-
-kelp_urchins <- kelp %>% select(year,site, species ,zone, mean) %>% 
-                bind_rows(urchins) %>%
-                pivot_wider(names_from='species',values_from= "mean")
-
-library(cowplot)
-library(viridis)
-
-kelp_urchins_long <- kelp_urchins %>%
-     pivot_longer(MACPYR:PTECAL , names_to = 'kelp_spp', values_to = 'kelp_density') %>%
-      # mutate(kelp_spp = str_sub(kelp_spp,6,-1)) %>%
-      mutate(kelp_spp = factor(kelp_spp, levels=c('MACPYR','NERLUE','PTECAL'))) %>%
-     pivot_longer(MESFRA:STRPUR , names_to = 'urchin_spp', values_to = 'urchin_density') %>%
-      # mutate(urchin_spp = str_sub(urchin_spp,6,-1)) %>%
-      mutate(urchin_spp = factor(urchin_spp, levels=c("STRPUR","MESFRA","STRDRO")))        
-
-
-kelp_urchins_long$yr = substr(kelp_urchins_long$year,4,4)
-     
-kelp_urchins_long <- kelp_urchins_long %>%
-     filter(year != 2015) %>%
-     filter(zone == 5) %>%
-     filter(site %in% c('Neah Bay','Tatoosh Island','Cape Alava','Cape Johnson','Destruction Island') ) %>%
-      mutate(site = factor(site, levels=c('Neah Bay','Tatoosh Island','Cape Alava','Cape Johnson','Destruction Island')))
-
-# head(kelp_urchins_long)
-kelp_urchins_long$log_kelp = log(kelp_urchins_long$kelp_density+1)
-par(ps = 10, cex=1)
-
-
-pl <- kelp_urchins_long %>%
-  ggplot(aes(urchin_density, kelp_density, col=site))+
-  geom_point(size=2.5, pch=kelp_urchins_long$yr)+
-  # geom_point(size=1)+
-  theme_minimal()+
-  # scale_color_manual(values=color5 , pch=kelp_urchins_long$yr)+
-  scale_color_manual(values=col)+
-  facet_grid(urchin_spp ~ kelp_spp)+
-  theme_bw()+
-  theme( legend.title = element_blank(),
-         legend.text = element_text(size = 7),
-         legend.key.size =  unit(0.25,"point"),
-         legend.background = element_blank(),
-         axis.text = element_text( size = 8 ),
-         axis.text.x = element_text( size = 8 ),
-         strip.background = element_blank(),
-         strip.text = element_text(size = 8),
-         strip.placement = "inside",
-         panel.grid  = element_blank(),
-         panel.spacing = unit(0.5, "lines"),
-         )+
-  labs(x="Urchin Density",y="Kelp Density",col="Site")
-
-lemon::reposition_legend(pl, 'top right', panel='panel-3-3')
-
-```
-Just re-plotting on a with algae on a log scale. This was our original plotting approach.
-
-```{r}
-
-pl <- kelp_urchins_long %>%
-  ggplot(aes(urchin_density,log_kelp, col=site))+
-  geom_point(size=2.5, pch=kelp_urchins_long$yr)+
-  # geom_point(size=1)+
-  theme_minimal()+
-  # scale_color_manual(values=color5 , pch=kelp_urchins_long$yr)+
-  scale_color_manual(values=col)+
-  facet_grid(urchin_spp ~ kelp_spp)+
-  theme_bw()+
-  theme( legend.title = element_blank(),
-         legend.text = element_text(size = 7),
-         legend.key.size =  unit(0.25,"point"),
-         legend.background = element_blank(),
-         axis.text = element_text( size = 8 ),
-         axis.text.x = element_text( size = 8 ),
-         strip.background = element_blank(),
-         strip.text = element_text(size = 8),
-         strip.placement = "inside",
-         panel.grid  = element_blank(),
-         panel.spacing = unit(0.5, "lines"),
-         )+
-  labs(x="Urchin Density",y=("Log (Kelp Density +1)"),col="Site")
-
-lemon::reposition_legend(pl, 'top right', panel='panel-3-3')
-
-
-
-```
-
-Same figure but for Tatoosh Island only 
-
-```{r kelp-urchins-tatoosh}
-
-kelp_urchins_tatoosh <- kelp_urchins_long %>%
-                         filter(site =="Tatoosh Island")
-
-
-plot1 <- ggplot( kelp_urchins_tatoosh, aes(urchin_density, kelp_density ) ) +
-         # filter(site == "Tatoosh Island") +
-         geom_point( size = 2 , pch = kelp_urchins_tatoosh$yr ) + 
-         labs(x="Urchin Density",y="Kelp Density",col="Site") + 
-         facet_grid(urchin_spp ~ kelp_spp)+
-         theme_bw() 
-
-plot1
-```
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
-
-=======
----
-title: "Multivariate Analyses for Fish and Inverts"
-author: Nick Toimieri
-date: sys.date()
-output: 
-  html_document:
-    toc: true
-    toc_float: true
-    toc_depth: 3
-    number_sections: true
-    fig_caption: true
-fontsize: 11pt
-
----
 
 ```{r SETUP, include=FALSE}
 # A bunch of initial set up junk
 
 rm(list = ls())
 
-##### knitr stuff and libraries ####
+# pre-run some stuff ####
+# source("01a_Univariate_workhorse.R")
 
+##### knitr stuff and libraries ####
+# tools in use 
+library(knitr)
+library(tidyverse)
+library(stringr)
+library(RColorBrewer)
+library(ggpubr) 
+# library(tidyr)
+# library(dplyr)
+# library(tinytex) # for pdf output
+
+# display.brewer.all(colorblindFriendly = TRUE)
+#vlibrary(readxl)
+
+# stats packages etc
+# library(vegan)
+# library(BiodiversityR)
+# library(pracma)
+# library(factoextra)
+source("R-functions-ocnms.r")
+
+
+# Paths for files
+setwd('..')
 HomeFile = getwd()
-Fig_Loc = paste0(HomeFile,"/Figures/")
+# HomeFile = "C:/Users/nick.tolimieri/Documents/GitHub/OCNMS/"
+
+Fig_Loc = paste0(HomeFile,"/Plots/")
 Data_Loc = paste0(HomeFile,"/Data/")
 Results_Loc = paste0(HomeFile,"/Results/")
 Other_Files = paste0(HomeFile,"/Other Files/")
-
-# tools in use 
-library(knitr)
-# library(tidyr)
-# library(dplyr)
-library(tidyverse)
-library(stringr)
-# library(tinytex)
-library(RColorBrewer)
-# display.brewer.all(colorblindFriendly = TRUE)
-library(readxl)
-
-# stats packages etc
-library(vegan)
-library(BiodiversityR)
-library(pracma)
-library(factoextra)
 
 # options
 knitr::opts_chunk$set(
@@ -852,7 +68,6 @@ knitr::opts_chunk$set(
   fig.align='center'
   
   )
-# opts_knit$set(eval.after = "fig.cap")
 
 # just to keep track of when I ran things.
 
@@ -863,14 +78,22 @@ capture.output(Last_Run, file = 'Last_Run.txt')
 
 par(ps=10, cex=1)
 
-source("R-functions-ocnms.r")
+
 
 ```
 
+# Triggers and Settings
+
+
 ```{r triggers-and-settings}
-min.vis = 2.0
+
+# provided in Univariate_workhorse, sourced above
+settings = readRDS( paste0(Data_Loc,'settings.RDS') )
+
+min.vis = 2
+
 years = 2015:2021
-pch = c(9, 4, 8 , 21, 22, 24, 25 )
+pch = c(8 , 21, 22, 23, 24, 4, 25 )
 col = RColorBrewer::brewer.pal(n = 12, name = "Paired")[c(2,4,6,10,12,7,8)]
 year.pch = data.frame(cbind(years, pch,col))
 
@@ -879,870 +102,1040 @@ col = RColorBrewer::brewer.pal(n = 12, name = "Paired")[c(2,4,6, 10,12)]
 site.col = data.frame(cbind(sites,col))
 colnames(site.col) <- c('site', 'col')
 
-spp_code = data.frame(read.csv('spp_codes.csv'))
-
 #### species depths #####
 
 kelp.depth = 5
 fish.depth = c(5,10)
 invert.depth = 5
+# set for labelling plots below
+depth.labs = c('5-m','10-m')
+names(depth.labs) = c(5,10)
+### species codes here 
 
-###########################
+fish_codes = data.frame(read.csv( paste0(Data_Loc,"spp_codes_fish.csv") ))
+swath_codes = data.frame(read.csv( paste0(Data_Loc,"spp_codes_swath.csv") ))
+kelp_codes = data.frame(read.csv( paste0(Data_Loc,"spp_codes_kelp.csv") ))
+
+### combine settings and save out for multivariate file  ####
+# will overwrite settings file from Univariate_workhorse
+
+settings = list(min.vis = min.vis,
+                years = years,
+                pch = pch,
+                col=col,
+                sites=sites,
+                year.pch = year.pch,
+                site.col = site.col,
+                kelp.deph = kelp.depth,
+                fish.depth = fish.depth,
+                invert.depth = invert.depth,
+                fish_codes = fish_codes,
+                swath_codes = swath_codes)
+
+saveRDS(settings, file = paste0(Data_Loc,'settings.RDS') )
+
+
 ```
 
+# Import fish and manipulate data a bit
 
-
-# Import and manipulate data a bit
-
-For the fish data 
-
-* There is some renaming of things and lumping all SEFL and SEBYT yoy into just YTBLyoy
-* Put in some fake visibility data for 2015. By my recollection, Destruction Island was horrible in 2015. So we should drop it for the fish data. 
-* Then select only sites with visibility of 2.0 or greater.
-* Finally, subset out only the five (5) sites for analyses.
-
-
-Fish Depth = `r fish.depth` meters
-Kelp Depth = `r kelp.depth` meters
-Invert Depth = `r invert.depth` meters  
-
-```{r fish-import-rds }
-# import fish data. wide format
-
+```{r import-fish, include=FALSE}
 # read in rds file with combined data
 fish0 = readRDS( paste0(Data_Loc,'Fish_2015-2021.rds' ))
 
-# fix a spp name
-fish0$species[ fish0$species == 'SEBYT'] <- 'SEFL'
-
-# add in taxa groupings
 # add in yoy designator and fix some names
 
-taxa = spp_code$group[ match(fish0$species, spp_code$code)]
+fish0 <- fish0 %>% 
+  left_join(.,fish_codes %>% dplyr::select(code,group),by=c("species"="code")) %>%
+  rename(taxa=group)
 
-taxa1 <- ifelse( is.na(fish0$size_class)==TRUE, taxa, 
-                       ifelse(fish0$size_class == "small", paste0(taxa,"yoy"), taxa))
-fish0$taxa <- taxa1
-fish0$taxa[ fish0$taxa == "RYOYyoy"] <- 'RYOY'
+fish0 <- fish0 %>% mutate(taxa=case_when(is.na(size_class)==TRUE ~ as.character(taxa),
+                                         size_class=="large" ~ as.character(taxa),
+                                         size_class=="small" ~ paste0(taxa,"yoy"))) %>%
+                  mutate(taxa= ifelse(taxa=="RYOYyoy","RYOY",taxa))
 
-# combine YT and black or keep separate?
-fish0$taxa[ fish0$taxa %in% c('SEFLyoy','SEMEyoy')] <- 'YTBLyoy'
+# combine YT and black or keep separate? # COMBINE!
+fish0 %>% filter(taxa %in% c('SEFLyoy','SEMEyoy','SEBYTyoy')) %>% group_by(taxa) %>% 
+        summarise(Tot=sum(Count))
 
-# subset visibility
-# add fake vis for 2015 #####
+fish0$taxa[ fish0$taxa %in% c('SEFLyoy','SEMEyoy')] <- 'SEBYTyoy'
+
+# Aggregate the SEBYTyoy so that there are one, not three, entries for "SEBYTyoy"
+fish_yt <- fish0 %>% filter(taxa=="SEBYTyoy") %>% 
+              group_by(site, transect,observer,
+                       size_class,year,area,zone,vis_m,taxa) %>%
+              summarise(Count_all=sum(Count)) %>% rename(Count=Count_all) %>%
+              mutate(species="SEBYT",common.name=NA)
+                
+fish0 <- fish0 %>% filter(!taxa == "SEBYTyoy") %>% full_join(.,fish_yt)
+
+# subset visibility ####
+# add fake vis for 2015
 fish0$vis_m[ fish0$year == 2015 ] <- 3
 # poor vis at destruction in year 1.
 fish0$vis_m[ fish0$year == 2015 & fish0$site == "Destruction Island"] <- 1
 
-### fix area labels for fish ####
-### match to swath
+# output for multivariate ####
+fish1 = fish0 %>% filter(site %in%  sites)
 
-
-fish0$area[fish0$year == 2015] <- 'W'
-
-fish0$n = 1
-x = aggregate(n ~ year + area + zone + site, data = fish0, FUN = sum)
-
-
-fish0$area[fish0$site %in% c('Cape Alava') & fish0$area == 1] <- 'E'
-fish0$area[fish0$site %in% c('Cape Alava')& fish0$area == 2] <- 'W'
-
-fish0$area[fish0$site %in% c('Destruction Island',
-                             'Cape Johnson') & fish0$area == 1] <- 'S'
-fish0$area[fish0$site %in% c('Destruction Island',
-                             'Cape Johnson') & fish0$area == 2] <- 'N'
-fish0$area[fish0$site %in% c('Tatoosh Island',
-                             'Neah Bay') & fish0$area == 1] <- 'N'
-fish0$area[fish0$site %in% c('Tatoosh Island',
-                             'Neah Bay') & fish0$area == 1] <- 'N'
-# fish0 <- fish0 %>%
-#   mutate(
-#     area = case_when(
-#       site == "Cape Alava" & area == 1 ~ "W",
-#       site == "Cape Alava" & area == 2 ~ "E",
-#       site == "Cape Johnson" | site == "Destruction Island" & area == 1 ~ "S",
-#       site == "Cape Johnson" | site == "Destruction Island" & area == 2 ~ "N",
-#       site == "Neah Bay" | site == "Tatoosh Island" & area == 1 ~ "N",
-#       site == "Neah Bay" | site == "Tatoosh Island" & area == 2 ~ "N",
-#       TRUE ~ NA_character_
-#       )
-#   )
-
-
-
-# output for multivariate 
-saveRDS(fish0, paste0(Data_Loc, "Fish_2015-2021-ntmods.rds"))
-
-# get just five sites
-
-fish1 = fish0[ fish0$site %in% c("Destruction Island", "Cape Johnson","Cape Alava","Tatoosh Island","Neah Bay"),]
-
-# drop low vis sites/transects
+# drop low vis sites/transects and set depth
 fish1a = fish1[fish1$vis_m >= min.vis, ]
 
-# set depth
-
+# select depth ####
 fish1b = fish1a[fish1a$zone %in% fish.depth,]
 
-# calculate total yoy
-x = fish1b[ fish1b$taxa %in% c("SECAyoy","SEPIyoy", "YTBLyoy", "RYOY"),]
-x$taxa = 'totYOY'
-x$species = 'totYOY'
-x$common.name = "total rockfish yoy"
-tyoy = aggregate(Count ~ . , data = x, FUN = sum)
-tyoy = tyoy[,colnames(x)]                 
+# calculate total yoy by site, transect, observer, and year
+fish1b %>% filter(size_class == "small") %>% distinct(taxa)
+# all of the small taxa are rockfish YOY.
 
-fish1c = rbind(fish1b , tyoy)
+fish1c <- fish1b %>% filter(size_class == "small") %>% 
+                      group_by(site,year,transect,observer,zone,area) %>% 
+                      summarise(Count_all=sum(Count)) %>%
+                      mutate(species="TOTyoy",taxa="TOTyoy") %>%
+                      rename(Count=Count_all)
+fish1d <- fish1b %>% full_join(.,fish1c) 
 
-# double check specific averaging process here 
+# for combining below
 
-fish2 = aggregate( Count ~ site + zone + year + taxa , data = fish1c, FUN = mean )
-colnames(fish2)[ncol(fish2)] <- 'mean'
-fish = Sum_Stats('mean ~ year +  taxa', fish2)
-fish$se_lo = fish$mean - fish$se
-fish$se_up = fish$mean + fish$se
+fish_transect <- fish1d
+                    
+# Ole made this to check the aggregating in fish 2.
+fish3 <-  fish1d %>% group_by(site,year,zone,species, taxa) %>%
+              summarise(Mean=mean(Count),SD=sd(Count),N=length(Count),SE=SD/sqrt(N))
+
+# Check to make sure all of the site-year-zone combinations have equivalent number of transects.
+fish3 %>% group_by(site,year,zone) %>% distinct(N) %>% as.data.frame()
+
+
+### calculate means and se for species ####
+
+fish4 <-  fish1d %>% group_by(site,year,species,taxa) %>%
+              summarise(Mean=mean(Count),SD=sd(Count),N=length(Count),
+                        SE=SD/sqrt(N),SE_var=SE^2)
+saveRDS(fish4, paste0(Data_Loc,'Summarized_Data_Fish_site_year_species.rds'))
+
+fish5 <- fish4 %>% group_by(year, species, taxa) %>%
+                    summarise(grand_sum=sum(Mean),
+                        N=length(Mean),
+                        grand_mean= grand_sum / N,
+                        grand_sum_var =sum(SE_var), 
+                        grand_SE = sqrt(grand_sum_var / N^2))
+saveRDS(fish5, paste0(Data_Loc,'Summarized_Data_Fish_year_species.rds'))
+
+#### calculate means se for taxa #######
+# lump by taxa for some plotting analysis.
+# greenlings lumped in current plots
+
+fish_taxa_Year_site <-  fish_transect %>% group_by(site,year,taxa) %>%
+  summarise(Mean=mean(Count),SD=sd(Count),N=length(Count),
+            SE=SD/sqrt(N),SE_var=SE^2)
+saveRDS(fish_taxa_Year_site, paste0(Data_Loc,'Summarized_Data_Fish_site_year_taxa.rds'))
+
+fish_taxa_year <-fish_taxa_Year_site %>% group_by(year,taxa) %>%
+  summarise(grand_sum=sum(Mean),
+            N=length(Mean),
+            grand_mean= grand_sum / N,
+            grand_sum_var =sum(SE_var), 
+            grand_SE = sqrt(grand_sum_var / N^2))
+saveRDS(fish_taxa_year, paste0(Data_Loc,'Summarized_Data_Fish_year_taxa.rds'))
+
+#### for multivariate stuff below
+
+
+
+
+
+
 
 ```
 
-# Time series
+Minimum vis for fish analysis = `r min.vis`-m
 
-1. There are multiple size classes. Data are first summed by transect for each spp.
-2. Take the log(x+1) mean for site x year
-3. Take the mean of #2 for year. So, the mean of sites
-4. plotted data are log(x+1)
-5. Additional output not in this file shows species abundance by year x site or year x site x depth just to look.
+Kelp depths = `r kelp.depth` -m
+Fish depths = `r fish.depth` -m
+Inv  depths = `r invert.depth` -m
+
+Visibility data for 2015 are fake. DI was bad and set at 1.0 m; other sites set at 3.0 m
+
+# FISH
+
+## Rockfish YOY
+
+```{r rockfish-yoy, fig.width=5, fig.height=3.5}
+
+fish_taxa_year <- readRDS(paste0(Data_Loc,'Summarized_Data_Fish_year_taxa.rds'))
+
+fish.col = c(RColorBrewer::brewer.pal(n = 12, name = "Paired"))
+
+SP.yoy <- c("SEBYTyoy", "Black & Yellowtail",  'black',
+            "SECAyoy", "Copper",               fish.col[12],
+            #"SEMAyoy", "Quillback",            fish.col[10],
+            "SEMYyoy", "Blue" ,                fish.col[2],
+            #"SENEyoy", "China",                fish.col[10],
+            "SEPIyoy", "Canary",               fish.col[6],
+            "RYOY", "Unidentified",            fish.col[9],
+            "TOTyoy", "Total",                 fish.col[10])
+
+SP.yoy <- matrix(SP.yoy,ncol=3,byrow=T) %>% as.data.frame()
+colnames(SP.yoy) <- c("taxa","name",'col')
+
+SP.yoy$name <- as.character(SP.yoy$name)
+SP.yoy$name <- factor(SP.yoy$name,levels=SP.yoy$name)
+
+yoy.plot <- ggplot(fish_taxa_year %>% filter(taxa %in% SP.yoy$taxa) %>% left_join(.,SP.yoy)) +
+    geom_point(aes(x=year,y=grand_mean,color=name)) + 
+    geom_line(aes(x=year,y=grand_mean,color=name)) +
+    geom_errorbar(aes(x=year,color=name,ymin=grand_mean-grand_SE,ymax=grand_mean+grand_SE),
+                  width=0) +
+    scale_y_continuous(trans="sqrt",breaks=c(0,1,5,10,20,40,60,80),limits=c(0,NA)) +
+    scale_x_continuous(breaks=seq(2015,2021)) +
+    #scale_color_viridis_d(option="plasma", end=0.75) + 
+    scale_color_manual(values=SP.yoy$col)+
+    ylab("Rockfish Recruits") +
+    xlab("Year") +
+    theme_bw() +
+    theme(legend.title=element_blank(),
+          legend.background = element_blank(),
+          #legend.position = c(0.8, 0.7),
+          #legend.text = element_text(size = 7)
+          )
+
+```
 
 ## Fish
 
 Fish depth = `r fish.depth`
 
-```{r fish-ts-2pane, fig.width=4.5, fig.height=5}
+```{r fish, fig.width=5, fig.height=3.5}
 
-# library(ggplot2)
-# library(gtable)
-# library(gridExtra)
-# 
-# 
-# fish.ylabel = "No. per transect"
-# all.colors =  RColorBrewer::brewer.pal(n = 12, name = "Paired")
-# fish.col = all.colors[ c(3,4,8,12,11,11,2) ]
-# fish.col[6] <- 'black'
-# yoy.col = all.colors[c(10,12,6,6,'black')]
-# yoy.col[4] <- 'black'  
-#      
-# uni.fish = fish[ fish$taxa %in% c("OPEL", "HEXA", "SECA", "SCMA" ,"SENE", "SEME", "SEFL"),]    
-# 
-# fish.plot = species.plot(uni.fish, group.var = 'taxa', years = 2015:2021, 
-#                      Ylim = NA, Ylab = fish.ylabel , Colors = fish.col)
-# 
-# yoy.fish = fish[ fish$taxa %in% c("SECAyoy","SEPIyoy", "YTBLyoy", "RYOY", "totYOY"),]
-# 
-# 
-# yoy.plot = species.plot(yoy.fish, group.var = 'taxa', years = 2015:2021, 
-#                      Ylab = fish.ylabel ,Ylim = NA, Colors = yoy.col)
-# 
-# g2 <- ggplotGrob(fish.plot)
-# g3 <- ggplotGrob(yoy.plot)
-# g <- rbind(g2, g3, size = "first")
-# 
-# g$widths <- grid::unit.pmax(g2$widths, g3$widths)
-# grid::grid.newpage()
-# grid::grid.draw(g)
+fish_taxa_year <- readRDS(paste0(Data_Loc,'Summarized_Data_Fish_year_taxa.rds'))
 
+fish.col = c(RColorBrewer::brewer.pal(n = 12, name = "Paired"))
+
+fish.taxa <- c("OPEL", "Lingcod",     fish.col[10],
+               "HEXA", "Greenlings", fish.col[4],
+               "SCMA" ,"Cabazon",     fish.col[8],
+               "SECA", "Copper RF",   fish.col[12],
+               "SENE", "Blue RF",     fish.col[2],
+               "SEFL", "Yellowtail RF", fish.col[7],
+               "SEME", 'Black RF',    'black')
+
+fish.taxa <- matrix(fish.taxa,ncol=3,byrow=T) %>% as.data.frame()
+colnames(fish.taxa) <- c("taxa","name","col")
+
+fish.taxa$name <- as.character(fish.taxa$name)
+fish.taxa$name <- factor(fish.taxa$name,levels=fish.taxa$name)
+
+
+fish.plot <- ggplot(fish_taxa_year %>% filter(taxa %in% fish.taxa$taxa) %>% left_join(.,fish.taxa)) +
+  geom_point(aes(x=year,y=grand_mean,color=name)) + 
+  geom_line(aes(x=year,y=grand_mean,color=name)) +
+  geom_errorbar(aes(x=year,color=name,ymin=grand_mean-grand_SE,ymax=grand_mean+grand_SE),
+                width=0) +
+  scale_y_continuous(trans="sqrt",breaks=c(0,1,5,10,20,40,60,80),limits=c(0,NA)) +
+  scale_x_continuous(breaks=seq(2015,2021)) +
+  #scale_color_viridis_d(option="plasma", end=0.75) + 
+  scale_color_manual(values=fish.taxa$col)+
+  ylab("Fish") +
+  xlab("Year") +
+  theme_bw() +
+  theme(legend.title=element_blank(),
+        legend.background = element_blank(),
+        #legend.position = c(0.7, 0.5),
+        #legend.text = element_text(size = 7)
+        )
 
 ```
+## Fish and YOY plot 
 
-A second version splitting out the SEME (blacks) because they are abundant.
 
-```{r fish-ts-4pane, fig.width=4.5, fig.height=6}
-library(ggplot2)
-library(gtable)
-library(gridExtra)
-fish.ylabel = "No. per transect"
-all.colors =  RColorBrewer::brewer.pal(n = 12, name = "Paired")
-fish.col = all.colors[ c(3,4,8,12,11,2) ]
-yoy.col = all.colors[c(10,12,6,4)]
+```{r combined-fish-yoy, fig.width=5, fig.height=4}
 
-uni.fish2 = fish[ fish$taxa %in% c("OPEL", "HEXA", "SECA", "SCMA" ,"SENE", "SEFL"),] 
-yoy.fish2 = fish[ fish$taxa %in% c("SECAyoy","SEPIyoy", "RYOY"),]
+g1 <- ggplotGrob(fish.plot)
+g2 <- ggplotGrob(yoy.plot)
 
-fish.plot = species.plot(uni.fish2, group.var = 'taxa', years = 2015:2021, 
-                     Ylim = NA, Ylab = fish.ylabel, Colors = fish.col )
-yoy.plot = species.plot(yoy.fish2, group.var = 'taxa', years = 2015:2021, 
-                     Ylab = fish.ylabel,Ylim = NA, Colors = yoy.col)
+g <- rbind(g1, g2, size = "first")
 
-black = species.plot(fish[fish$taxa =="SEME",], group.var = 'taxa', years = 2015:2021, 
-                     Ylim = NA, Ylab = fish.ylabel, Colors = 'black')
-ytbl = species.plot(fish[fish$taxa %in% c("totYOY","YTBLyoy"),], group.var = 'taxa', years = 2015:2021, 
-                     Ylim = NA, Ylab = fish.ylabel, Colors = c('darkgrey', "black") )
-
-g1 <- ggplotGrob(black)
-g3 <- ggplotGrob(ytbl)
-g2 <- ggplotGrob(fish.plot)
-g4 <- ggplotGrob(yoy.plot)
-
-g <- rbind(g1, g2, g3, g4, size = "first")
-
-g$widths <- grid::unit.pmax(g1$widths, g2$width, g2$widths, g4$widths)
+g$widths <- grid::unit.pmax(g1$widths, g2$widths)
 grid::grid.newpage()
 grid::grid.draw(g)
-# grid.arrange(g1, g2, g3, g4, ncol=2, nrow =2)
 
 ```
-## Swath: Kelp & Inverts
+
+# ALGAE
 
 Kelp depth = `r kelp.depth`
 
-```{r swath-alage}
+```{r swath-data-import}
 
-swath0 = readRDS( paste0( Data_Loc,'Swath_2015-2021.rds' ))
+# read in rds file with combined data
+swath0 <- readRDS( paste0(Data_Loc,'Swath_2015-2021.rds' ))
+# spp_swath <- read.csv( paste0(Data_Loc,"spp_codes_swath.csv"))
+# separate into algae and invertebrate data frames.
 
-# correct a names
-swath0$site[swath0$site == "Destruction Island SW"] <- 'Destruction Island'
+# swath1 <- left_join(swath0,spp_swath)
+# just bring in higher level taxa designation
+# swath0$taxa = swath_codes$taxa[ match(swath0$species, swath_codes$CLASSCODE) ]
 
-swath0$area[swath0$year == 2015] <- 'W'
-swath0$n=1
-x = aggregate(n ~ year + area + zone + site, data = fish0, FUN = sum)
+swath1 <- swath0 %>% filter(site %in% sites)
 
-swath0$area[swath0$site %in% c('Cape Alava') & swath0$area == 1] <- 'E'
-swath0$area[swath0$site %in% c('Cape Alava')& swath0$area == 2] <- 'W'
+swath1$site <- factor(swath1$site,levels=sites)
 
-swath0$area[swath0$site %in% c('Destruction Island',
-                             'Cape Johnson') & swath0$area == 1] <- 'S'
-swath0$area[swath0$site %in% c('Destruction Island',
-                             'Cape Johnson') & swath0$area == 2] <- 'N'
-swath0$area[swath0$site %in% c('Tatoosh Island',
-                             'Neah Bay') & swath0$area == 1] <- 'N'
-swath0$area[swath0$site %in% c('Tatoosh Island',
-                             'Neah Bay') & swath0$area == 1] <- 'N'
-# swath0 <- swath0 %>%
+dat.algae   <- swath1 %>% filter(group=="Algae")
+# functional groupings for algae
+# nick made up the kelp_codes file. Ole should check FGs.
+dat.algae$fun_gr = kelp_codes$functinal_group[ match(dat.algae$species, kelp_codes$species) ]
 
-saveRDS(swath0, file=paste0(Data_Loc,'Swath_2015-2021-ntmods.rds'))
-
-swath1 = aggregate( Count ~  site  + year + zone + species + group , data=swath0, FUN = mean)
-colnames(swath1)[ncol(swath1)] <- 'mean'
-swath1$mean = as.numeric(swath1$mean)
-# swath  = aggregate( Count ~ year + species + group , data = swath1, FUN = mean)
-
-### kelp depth selection ####
-swath2 = swath1[ swath1$zone %in% kelp.depth,]
-
-# algae 5 m depth only
-
-algae = Sum_Stats('mean ~ year + species + group' , swath2[swath2$species %in% c("MACPYR", "NERLUE", "PTECAL"),] )
-algae$se_up = algae$mean+algae$se
-algae$se_lo = algae$mean-algae$se
-```
-
-Invert depth = `r invert.depth`
-
-```{r swath-invets}
-# bring in swath. Same as algae data
-
-urchins = c('MESFRA', 'STRPUR', 'STRDRO')
-stars =   c('PISOCH','PISBRE', 'PISGIG','DERIMB','PYCHEL')
-anenome = c('URTSPP', 'URTLOF', 'URTPIS','URTCRA', 'METSPP' , 'METGIG', 'ANTXAN','ANTELE')
-cucs    = c('CUCMIN','PARCAL', 'EUPQUI')
-
-swath0$taxa = swath0$species
-swath0$taxa[swath0$taxa %in% c('PISOCH','PISBRE', 'PISGIG')] <- 'PISAST'
-swath0$taxa[swath0$taxa %in% anenome] <- 'ANENOM'
-swath0$taxa[swath0$taxa %in% c('CUCMIN','PARCAL', 'EUPQUI')] <- 'CUCUMB'
-
-invert.spp = c(urchins, stars, anenome, cucs)
-
-invert1 = aggregate( Count ~ site + zone + year + species + taxa , 
-                     data = swath0[swath0$species %in% invert.spp, ], FUN = mean)
-# invert1$zone = as.character(invert1$zone)
-
-colnames(invert1)[ncol(invert1)] <- 'mean'
-invert2 = invert1[invert1$zone %in% invert.depth,]
-
-inverts =  Sum_Stats(' mean~ year + taxa' , invert2)
-inverts$se_up = inverts$mean + inverts$se
-inverts$se_lo = inverts$mean - inverts$se
+dat.invert  <- swath1 %>% filter(group=="Invert")
+# higher taxa groupings for inverts; for grouping later
+dat.invert$taxa = swath_codes$taxa[ match(dat.invert$species, swath_codes$CLASSCODE) ]
 
 ```
 
 
-```{r kelp-invert-ts , fig.width= 4.5 , fig.height= 6 }
-
-kelp.col = all.colors[c(2,4,6)]
-urchin.col = all.colors[c(6,4,10)]
-invert.col = all.colors[c(2,4,6,8,10)]
-     
-algae.plot  = species.plot(algae, group.var = 'species', years = 2015:2021, 
-                     Ylim = NA, Ylab = "Stipes per transect" , Colors = kelp.col)
-x = inverts[inverts$taxa %in% urchins,]
-urchin.plot =  species.plot(inverts[inverts$taxa %in% urchins,], group.var = 'taxa', years = 2015:2021, 
-                     Ylim = NA, Ylab = "No. per transect", Colors = urchin.col )
-
-inverts.plot =  species.plot(inverts[inverts$taxa %in% c('PISAST','PYCHEL','DERIMB','ANENOM','CUCUMB'),], group.var = 'taxa', years = 2015:2021, Ylim = NA, Ylab = "No. per transect" , Colors = invert.col)
-
-
-g1 <- ggplotGrob(algae.plot)
-g2 <- ggplotGrob(urchin.plot)
-g3 <- ggplotGrob(inverts.plot)
-
-g <- rbind(g1, g2, g3, size = "first")
-
-g$widths <- grid::unit.pmax(g1$widths, g2$widths, g2$widths)
-grid::grid.newpage()
-grid::grid.draw(g)
-# grid.arrange(g1, g2, g3, g4, ncol=1, nrow =4)
-```
-
-# EXTRA FIGURES - Univariate Plots just to see
-
-Not plotted here but output. Outputted to a subfolder for perusal.
-```{r run-additional-figures}
-
-run.additional.figures = FALSE
-
-```
-
-## Site x Year
-
-```{r, univariate-plots-fish}
-
-if(run.additional.figures == TRUE){
-
-
-new.file = paste0(Fig_Loc,"Fish-Site-x-Year/")
-dir.create(new.file)
-# fish1 does not delete low vis data
-
-fish.log = aggregate( log(Count+1) ~ site + year +  taxa , data = fish1, FUN = mean )
-colnames(fish.log)[ncol(fish.log)] <- 'mean'
-
-fish.mean = aggregate( Count ~ site + year +  taxa , data = fish1, FUN = mean )
-colnames(fish.mean)[ncol(fish.mean)] <- 'mean'
-
-spp = as.character(levels(as.factor(fish.log$taxa)))
-
-for(i in 1:length(spp)){
-     graphics.off()
-     
-     jpeg(paste0(new.file,spp[i],"-site_by_year.jpg"))
-     df1 = fish.log[fish.log$taxa==spp[i],]
-     plot1 = species.plot.SxY(data.file = df1, Ylab = 'Log(x+1)')
-     
-     df2 = fish.mean[fish.mean$taxa==spp[i],]
-     plot2 = species.plot.SxY(data.file = df2, Ylab = 'Arith.Mean')
-     
-     g1 <- ggplotGrob(plot1)
-     g2 <- ggplotGrob(plot2) 
-     g <- rbind(g1, g2, size = "first")
-
-     g$widths <- grid::unit.pmax(g1$widths, g2$widths)
-     grid::grid.newpage()
-     grid::grid.draw(g)
-     graphics.off()
-}
-
-}
-```
-
-
-```{r univariate-plots-swath}
-
-if(run.additional.figures == TRUE){
-
-new.file = paste0(Fig_Loc,"Swath-Site-x-Year/")
-dir.create(new.file)
-# fish1a does not delete low vis data
-swathx = swath0
-# swathx = swath1[swath1$zone == 5,]
-swathx$taxa = swathx$species
-
-swath.log = aggregate( log(Count+1) ~ site + year +  taxa , data = swathx, FUN = mean )
-colnames(swath.log)[ncol(swath.log)] <- 'mean'
-
-swath.mean = aggregate( Count ~ site + year +  taxa , data = swathx, FUN = mean )
-colnames(swath.mean)[ncol(swath.mean)] <- 'mean'
-
-spp = as.character(levels(as.factor(swath.log$taxa)))
-
-for(i in 1:length(spp)){
-     graphics.off()
-     
-     jpeg(paste0(new.file,spp[i],"-site_by_year.jpg"))
-     df1 = swath.log[swath.log$taxa==spp[i],]
-     plot1 = species.plot.SxY(data.file = df1, Ylab = 'Log(x+1)')
-     
-     df2 = swath.mean[swath.mean$taxa==spp[i],]
-     plot2 = species.plot.SxY(data.file = df2, Ylab = 'Arith.Mean')
-     
-     g1 <- ggplotGrob(plot1)
-     g2 <- ggplotGrob(plot2) 
-     g <- rbind(g1, g2, size = "first")
-
-     g$widths <- grid::unit.pmax(g1$widths, g2$widths)
-     grid::grid.newpage()
-     grid::grid.draw(g)
-     
-     graphics.off()
-}
-
-}
-```
-
-## A subset of specific year x site comparisons.
-
-Kelp plot includes only 5-m. 
-
-
-```{r kelp-site-year, fig.width=4.5, fig.height=6}
-swathx = swath0
-# swathx = swath1[swath1$zone == 5,]
-swathx$taxa = swathx$species
-
-kelp.ylabel = "Stipes per transect"
-
-swath5 = aggregate(Count ~ site + year +  taxa , data = swathx[swathx$zone==5,], FUN = mean )
-colnames(swath5)[ncol(swath5)] <- "mean"
-
-macro = swath5[swath5$taxa=="MACPYR",]
-nereo = swath5[swath5$taxa=="NERLUE",]
-ptero = swath5[swath5$taxa=="PTECAL",]
-
-macro = species.plot.SxY(data.file = macro, Ylab = kelp.ylabel)
-nereo = species.plot.SxY(data.file = nereo, Ylab = kelp.ylabel)
-ptero = species.plot.SxY(data.file = ptero, Ylab = kelp.ylabel)
-     
-
-g1 <- ggplotGrob(macro)
-g2 <- ggplotGrob(nereo)
-g3 <- ggplotGrob(ptero) 
-g <- rbind(g1, g2, g3, size = "first")
-
-g$widths <- grid::unit.pmax(g1$widths, g2$widths, g3$widths)
-grid::grid.newpage()
-grid::grid.draw(g)
-     
-
-```
-
-```{r urchinsp-site-year, fig.width=4.5, fig.height=6}
-
-swath5 = aggregate( Count ~ site + year +  taxa , data = swathx[swathx$zone==5,], FUN = mean )
-colnames(swath5)[ncol(swath5)] <- "mean"
-
-urchin.ylab = "No. per transect"
-
-purp = swath5[swath5$taxa=="STRPUR",]
-red = swath5[swath5$taxa=="MESFRA",]
-green = swath5[swath5$taxa=="STRDRO",]
-
-purp = species.plot.SxY(data.file = purp, Ylab = urchin.ylab )
-red = species.plot.SxY(data.file = red, Ylab = urchin.ylab )
-green = species.plot.SxY(data.file = green, Ylab = urchin.ylab )
-     
-g1 <- ggplotGrob(purp)
-g2 <- ggplotGrob(red)
-g3 <- ggplotGrob(green) 
-g <- rbind(g1, g2, g3, size = "first")
-
-g$widths <- grid::unit.pmax(g1$widths, g2$widths, g3$widths)
-grid::grid.newpage()
-grid::grid.draw(g)
-     
-
-```
-
-## Site x Year x Depth
-
-
-```{r fish-site-year-depth}
-
-if(run.additional.figures == TRUE){
-
-new.file = paste0(Fig_Loc,"Fish-Site-x-Year-x-Depth/")
-dir.create(new.file)
-
-fish.log = aggregate(log(Count+1) ~ year + site + zone + species, data=fish1, FUN=mean)
-colnames(fish.log)[ncol(fish.log)]<- 'mean'
-fish.log$taxa = fish.log$species
-
-fish.mean = aggregate(Count ~ year + site + zone + species, data=fish1, FUN=mean)
-colnames(fish.mean)[ncol(fish.mean)]<- 'mean'
-fish.mean$taxa = fish.mean$species
-
-spp <- levels(as.factor(fish.log$taxa))
-     
-for(i in 1:length(spp)){
-     
-     graphics.off()
-     
-     jpeg(paste0(new.file,spp[i],"-site_by_year_by_depth.jpg"))
-     
-     df1 = fish.log[fish.log$taxa == spp[i], ]
-     df2 = fish.mean[fish.mean$taxa == spp[i], ]
-     
-     plot1 = species.plot.SxYxD(df1 , Ylab = 'Log(x+1)')
-     plot2 = species.plot.SxYxD(df2 , Ylab = 'Arth. mean')
-     
-     g1 <- ggplotGrob(plot1)
-     g2 <- ggplotGrob(plot2) 
-     g <- rbind(g1, g2, size = "first")
-
-     g$widths <- grid::unit.pmax(g1$widths, g2$widths)
-     grid::grid.newpage()
-     grid::grid.draw(g)
-     graphics.off()
-     
-}    
-
-}
-     
-```     
-
-
-
-```{r swath-site-year-depth}
-if(run.additional.figures == TRUE){
-     
-     new.file = paste0(Fig_Loc,"Swath-Site-x-Year-x-Depth/")
-dir.create(new.file)
-
-swath.log = aggregate(log(Count+1) ~ year + site + zone + species, data=swath0, FUN=mean)
-colnames(swath.log)[ncol(swath.log)]<- 'mean'
-swath.log$taxa = swath.log$species
-
-swath.mean = aggregate(Count ~ year + site + zone + species, data=swath0, FUN=mean)
-colnames(swath.mean)[ncol(swath.mean)]<- 'mean'
-swath.mean$taxa = swath.mean$species
-
-spp <- levels(as.factor(swath.log$taxa))
-     
-for(i in 1:length(spp)){
-     
-     graphics.off()
-     
-     jpeg(paste0(new.file,spp[i],"-site_by_year_by_depth.jpg"))
-     
-     df1 = swath.log[swath.log$taxa == spp[i], ]
-     df2 = swath.mean[swath.mean$taxa == spp[i], ]
-     
-     plot1 = species.plot.SxYxD(df1 , Ylab = 'Log(x+1)')
-     plot2 = species.plot.SxYxD(df2 , Ylab = 'Arth. mean')
-     
-     g1 <- ggplotGrob(plot1)
-     g2 <- ggplotGrob(plot2) 
-     g <- rbind(g1, g2, size = "first")
-
-     g$widths <- grid::unit.pmax(g1$widths, g2$widths)
-     grid::grid.newpage()
-     grid::grid.draw(g)
-     graphics.off()
-     
-}    
-
-}
-```   
-
-
-# Fish YOY and Kelp 
-
-Problems here...with matching up rows. The area has different names in the fish and kelp files.
-
-```{r fish-kelp-combine}
-###### fish ####
-########fish1 includes all spp and five sites but no deletion of low ivs.
-
-fishx1 = fish1[fish1$site %in% sites,]
-swathx = swath0[swath0$site %in% sites,]
-# drop low vis sites/transects
-
-
-# x = aggregate( vis_m ~ year+zone+area+site, data=fishx1, FUN = range)
-
-
-fishx = fishx1
-
-#fishx = fishx1[fishx1$vis_m >= min.vis, ]
-
-# double check specific averaging process here 
-
-fish_area = aggregate( Count ~ site + zone + year + area + taxa, data = fishx, FUN = mean )
-colnames(fish_area)[ncol(fish_area)] <- 'mean'
-fish_area_wide = pivot_wider(fish_area , names_from = taxa , values_from = mean, values_fill = 0)
-fishid = paste(fish_area_wide$site, 
-               fish_area_wide$year,
-               fish_area_wide$zone,
-               fish_area_wide$area, sep="_")
-# fish wide format, with "area"
-fish_wide = data.frame(cbind(fishid, fish_area_wide))
-colnames(fish_wide)[1] <- 'id'
-### kelp #####
-
-kelp_area = aggregate( Count ~ site + zone + year + area + taxa, data = swathx, FUN = mean )
-colnames(kelp_area)[ncol(kelp_area)] <- 'mean'
-kelp_area = kelp_area[kelp_area$taxa %in% c("MACPYR", "NERLUE", "PTECAL"),]
-kelp_area_wide = pivot_wider(kelp_area , names_from = taxa , values_from = mean, values_fill = 0)
-kelpid = paste(kelp_area_wide$site, 
-               kelp_area_wide$year,
-               kelp_area_wide$zone,
-               kelp_area_wide$area, sep="_")
-#kelp wide format, with "area"
-kelp_wide = data.frame(cbind(kelpid, kelp_area_wide))
-colnames(kelp_wide)[1] <- 'id'
-
-fish_kelp0 = merge(fish_wide, kelp_wide, all = TRUE, by='id')
-# remove some duplicates
-cn = colnames(fish_kelp0)
-x = match(c('site.y','zone.y', 'year.y', 'area.y'),cn)
+```{r more-kelp}
+# removed 'observer' because it leads to multiple transects per transect...fucks up transition to wide
+algae1 <- dat.algae %>% group_by(year,site,transect,species,zone,area,fun_gr) %>%
+            summarise(total.count=sum(Count),total.area=sum(Transect.area)) %>% 
+            mutate(density = total.count / total.area )
+kelp_transect <- algae1
+saveRDS(algae1, file = paste0(Data_Loc,"Summarized_Data_Kelp_year_site_area_zone_spp.rds"))
+
+# Aggregate up to the area level (within year site, zone) -- treat transects as replicates
+algae2 <- algae1 %>% 
+  group_by(year,site,species,zone,area,fun_gr) %>%
+  summarise(mean.density=mean(density), 
+            SD = sd(density), 
+            N =length(year),
+            SE= SD/sqrt(N) ) 
+saveRDS(algae2, file = paste0(Data_Loc,"Summarized_Data_Kelp_year_site_zone_spp.rds"))
+# kelp_area = algae2
+
+# Aggregate up to the site level (within year, zone) -- treat transects as replicates
+algae3 <- algae1 %>% 
+  group_by(year,site,species,zone,fun_gr) %>%
+  summarise(mean.density=mean(density), 
+            SD = sd(density), 
+            N =length(year),
+            SE= SD/sqrt(N) ) 
+saveRDS(algae3, file = paste0(Data_Loc,"Summarized_Data_Kelp_year_zone_spp.rds"))
+
+#Trim to canopy species
+ canopy <- algae3 %>% filter(fun_gr=="canopy",!species=="EGRMEN")
+ canopy$site <- factor(canopy$site,levels=sites)
  
-# combined fish and kelp file ####
-# combined at the 'area': site x year x depth x area
-fish_kelp = fish_kelp0[,-x]
-
-saveRDS(fish_kelp , paste0(Data_Loc,'Data_Fish_x_Kelp.rds') )
-
-
-```
-
-
-
-## Some preliminary plots
-
-Both fish and kelp data in these plots are log(x+1) means for Year x Site x Depth x Area.
-
-Kelp are either total kelp (NERLUE+ MACPYR+PTECAL), canopy kelp (NERLUE+ MACPYR), or understory kelp (PTECAL)
-
-At present, I've only done a few plots of yellow tail & black and coppers. 
-
-```{r fish-and-kelp, fig.height=8, fig.width = 6}
-
-# fish_kelp$canopy_kelp = fish_kelp$NERLUE + fish_kelp$MACPYR
-# fish_kelp$kelp = fish_kelp$NERLUE + fish_kelp$MACPYR + fish_kelp$PTECAL
-# fish_kelp$year.x = as.factor(fish_kelp$year.x)
-# fish_kelp <- fish_kelp[ !is.na(fish_kelp$year.x), ]
-# 
-# 
-# plotquick <- function(data.file , X , Y , Xlab =' kelp', leg.pos="none"){
-#               
-#               cn<-colnames(data.file)
-#               x = match(X,cn)
-#               y = match(Y,cn)
-#               colnames(data.file)[x] <- "X"
-#               colnames(data.file)[y] <- "Y"
-#               p1 = ggplot(data.file, aes(x=X, y=Y, color = year.x) ) +
-#                     geom_point() +
-#                     scale_color_manual(values = col) +
-#                     xlab(Xlab)+
-#                     ylab(Y)+
-#                     theme_bw()+
-#                     theme( legend.title = element_blank(), 
-#                            legend.position = leg.pos )
-#      
-#               return(p1)
-# }
-# 
-# ytb.kelp.plot       <- plotquick(data.file = fish_kelp, X = 'kelp', Y = 'YTBLyoy' , 
-#                                  Xlab = "Total kelps")
-# ytb.canopy.plot     <- plotquick(data.file = fish_kelp, X = 'canopy_kelp', Y = 'YTBLyoy',
-#                                  Xlab = 'Canopy kelps')
-# ytb.understory.plot <- plotquick(data.file = fish_kelp, X = 'PTECAL', Y = 'YTBLyoy',
-#                                  Xlab = 'Understory kelps')
-# 
-# cop.kelp.plot       <- plotquick(data.file = fish_kelp, X = 'kelp', Y = 'SECAyoy', 
-#                                  Xlab = 'Toal kelps', leg.pos= c(0.8, 0.66))
-# cop.canopy.plot     <- plotquick(data.file = fish_kelp, X = 'canopy_kelp', Y = 'SECAyoy',
-#                                  Xlab = 'Canopy kelps')
-# cop.understory.plot <- plotquick(data.file = fish_kelp, X = 'PTECAL', Y = 'SECAyoy',
-#                                  Xlab = 'Understory kelps')
-# 
-# grid.arrange(
-#      ytb.kelp.plot, 
-#      cop.kelp.plot,
-#      
-#      ytb.canopy.plot,     
-#      cop.canopy.plot,
-#      
-#      ytb.understory.plot, 
-#      cop.understory.plot, 
-#      
-#      nrow = 3, ncol=2
-#      )
+ sm = 0.5
+ bg = 1
+ SIZE = cbind(site=sites,size=c(sm,sm,sm,bg,sm)) %>% as.data.frame()
+ 
+ canopy <- left_join(canopy,SIZE)
+ canopy$size <- as.numeric(as.character(canopy$size))
+ canopy$zone <- factor(canopy$zone)
+  
 
 ```
 
 
-# Kelp and Urchins
+## Canopy kelp 
 
-## Summarized across sites for all years
+Ole needs to check the definitions of canopy kelp here.  I took this from his code, which wasn't finished.
 
-Pretty strong relationship when averaged across sites within years for total urchins and total kelp. Where there is kelp, there are urchins. 
+```{r canopy-kelp-site-year, fig.width=6.5, fig.height=4}
 
-```{r kelp-vs-urchins, fig.width=3.5, fig.height==3.5}
+canopy$site = factor(canopy$site, levels = sites)
 
-swath2$mean = as.numeric(as.character(swath2$mean))
-uk = c("MACPYR", "NERLUE", "PTECAL" ,"STRPUR","MESFRA","STRDRO")
+# Basic time-series by site and zone
+ kelp1 = ggplot(canopy ) +
+    geom_point(aes(x=year,y=mean.density,color=site)) +
+    geom_line(aes(x=year,y=mean.density,color=site)) +
+    geom_errorbar(aes(x=year,ymin=mean.density-SE,ymax=mean.density+SE,color=site),width=0) +
+    facet_grid(species ~ zone,scales="free_y", labeller = labeller(zone=depth.labs)) +
+    scale_x_continuous(breaks=seq(2015,2021)) +
+    xlab("Year")+
+    scale_y_continuous(expression("Stipe density (stipe m"^-2*")")) +
+    # scale_color_viridis_d(option="plasma",end=0.75)+
+    scale_color_manual(values = site.col$col)+
+    theme_bw()+
+    theme(legend.title = element_blank(),
+          strip.background = element_blank())
 
-swath.yr = aggregate(mean ~ year + species , data=swath2[swath2$species %in% uk,], FUN = mean )
-
-UK = pivot_wider(swath.yr, values_from = 'mean', names_from = 'species')
-
-UK$kelp = UK$MACPYR + UK$NERLUE + UK$PTECAL
-UK$urchins = UK$STRPUR + UK$MESFRA + UK$STRDRO
-UK$year = as.factor(UK$year)
-
-lm1 = lm(urchins ~ kelp, data = UK)
-s1 = summary(lm1)
-
-p1 = ggplot(UK, aes(x = kelp, y=urchins , color = year)) +
-     geom_point(size = 2) +
-     xlab( 'Kelp stypes per transect' ) + 
-     ylab( 'Urchins per transect' ) +
-     geom_smooth(method='lm' , se=TRUE , col = 'black') + 
-     theme_bw()+
-     scale_color_manual(values = c('black',col) ) +
-     theme( legend.title = element_blank() )
-
-p1
-s1
+kelp1+ rotate_x_text(angle = 45)
 ```
-Note, vs the original MS there are fewer data here because it is summarized by sites. We cold increase to transect level.  
 
+## Caonopy kelp 5 m only
 
-```{r urchins-kelp, fig.width=6, fig.height=4}
-
-swath0 = readRDS( paste0( Data_Loc,'Swath_2015-2021.rds' ))
-
-swath1 = aggregate( Count~ site  + year + zone + species + group , data=swath0, FUN = mean)
-x = ncol(swath1)
-colnames(swath1)[ncol(swath1)] <- 'mean'
-# inverts <- read_csv(here('Data','invert_swath_zonelevel.csv'))
-# kelp <- read_csv(here('Data','algae_swath_zonelevel_lump.csv'))
-
-urchins = swath1 %>% filter(species %in% c('MESFRA', 'STRPUR', 'STRDRO')) %>%
-                     select(year,site,species, zone,mean)
-     
-kelp    = swath1 %>% filter(species %in% c("MACPYR", "NERLUE", "PTECAL")) %>%
-                     select(year,site,species, zone, mean)
-
-kelp_urchins <- kelp %>% select(year,site, species ,zone, mean) %>% 
-                bind_rows(urchins) %>%
-                pivot_wider(names_from='species',values_from= "mean")
-
-library(cowplot)
-library(viridis)
-
-kelp_urchins_long <- kelp_urchins %>%
-     pivot_longer(MACPYR:PTECAL , names_to = 'kelp_spp', values_to = 'kelp_density') %>%
-      # mutate(kelp_spp = str_sub(kelp_spp,6,-1)) %>%
-      mutate(kelp_spp = factor(kelp_spp, levels=c('MACPYR','NERLUE','PTECAL'))) %>%
-     pivot_longer(MESFRA:STRPUR , names_to = 'urchin_spp', values_to = 'urchin_density') %>%
-      # mutate(urchin_spp = str_sub(urchin_spp,6,-1)) %>%
-      mutate(urchin_spp = factor(urchin_spp, levels=c("STRPUR","MESFRA","STRDRO")))        
-
-
-kelp_urchins_long$yr = substr(kelp_urchins_long$year,4,4)
-     
-kelp_urchins_long <- kelp_urchins_long %>%
-     filter(year != 2015) %>%
-     filter(zone == 5) %>%
-     filter(site %in% c('Neah Bay','Tatoosh Island','Cape Alava','Cape Johnson','Destruction Island') ) %>%
-      mutate(site = factor(site, levels=c('Neah Bay','Tatoosh Island','Cape Alava','Cape Johnson','Destruction Island')))
-
-# head(kelp_urchins_long)
-kelp_urchins_long$log_kelp = log(kelp_urchins_long$kelp_density+1)
-par(ps = 10, cex=1)
-
-
-pl <- kelp_urchins_long %>%
-  ggplot(aes(urchin_density, kelp_density, col=site))+
-  geom_point(size=2.5, pch=kelp_urchins_long$yr)+
-  # geom_point(size=1)+
-  theme_minimal()+
-  # scale_color_manual(values=color5 , pch=kelp_urchins_long$yr)+
-  scale_color_manual(values=col)+
-  facet_grid(urchin_spp ~ kelp_spp)+
-  theme_bw()+
-  theme( legend.title = element_blank(),
-         legend.text = element_text(size = 7),
-         legend.key.size =  unit(0.25,"point"),
-         legend.background = element_blank(),
-         axis.text = element_text( size = 8 ),
-         axis.text.x = element_text( size = 8 ),
-         strip.background = element_blank(),
-         strip.text = element_text(size = 8),
-         strip.placement = "inside",
-         panel.grid  = element_blank(),
-         panel.spacing = unit(0.5, "lines"),
-         )+
-  labs(x="Urchin Density",y="Kelp Density",col="Site")
-
-lemon::reposition_legend(pl, 'top right', panel='panel-3-3')
-
+```{r canopy-kelp-site-zone, fig.width=5, fig.height=5}
+ # Basic time-series by site and zone
+ kelp2 = ggplot(canopy %>% filter(zone==5)) +
+   geom_point(aes(x=year,y=mean.density,color=site)) +
+   geom_line(aes(x=year,y=mean.density,color=site)) +
+   geom_errorbar(aes(x=year,ymin=mean.density-SE,ymax=mean.density+SE,color=site),width=0) +
+   facet_grid(rows="species",scales="free_y") +
+   scale_x_continuous(breaks=seq(2015,2021)) +
+   scale_y_continuous(expression("Stipe density (stipe m"^-2*")")) +
+   # scale_color_viridis_d(option="plasma",end=0.75)+
+   scale_color_manual(values = site.col$col)+
+   theme_bw()+
+   theme(legend.title = element_blank())
+kelp2
 ```
-Just re-plotting on a with algae on a log scale. This was our original plotting approach.
 
-```{r}
+## Nerocystis at Tatoosh
 
-pl <- kelp_urchins_long %>%
-  ggplot(aes(urchin_density,log_kelp, col=site))+
-  geom_point(size=2.5, pch=kelp_urchins_long$yr)+
-  # geom_point(size=1)+
-  theme_minimal()+
-  # scale_color_manual(values=color5 , pch=kelp_urchins_long$yr)+
-  scale_color_manual(values=col)+
-  facet_grid(urchin_spp ~ kelp_spp)+
-  theme_bw()+
-  theme( legend.title = element_blank(),
-         legend.text = element_text(size = 7),
-         legend.key.size =  unit(0.25,"point"),
-         legend.background = element_blank(),
-         axis.text = element_text( size = 8 ),
-         axis.text.x = element_text( size = 8 ),
-         strip.background = element_blank(),
-         strip.text = element_text(size = 8),
-         strip.placement = "inside",
-         panel.grid  = element_blank(),
-         panel.spacing = unit(0.5, "lines"),
-         )+
-  labs(x="Urchin Density",y=("Log (Kelp Density +1)"),col="Site")
-
-lemon::reposition_legend(pl, 'top right', panel='panel-3-3')
-
-
+```{r canopy-kelp-tatoosh , fig.width=5, fig.height=3.5}
+ # Basic time-series by site and zone TATOOSH FOCUS
+kelp3 =  ggplot(canopy %>% filter(site=="Tatoosh Island",species=="NERLUE")) +
+   geom_point(aes(x=year,y=mean.density,color=zone),alpha=0.5) +
+   geom_line(aes(x=year,y=mean.density,color=zone),alpha=0.5) +
+   geom_errorbar(aes(x=year,ymin=mean.density-SE,ymax=mean.density+SE,color=zone),width=0) +
+   #facet_grid(rows="species",scales="free_y") +
+   scale_x_continuous(breaks=seq(2015,2021)) +
+   scale_y_continuous(expression("Stipe density (stipe m"^-2*")"),limits=c(0,NA)) +
+   scale_color_viridis_d("Depth (m)",option="plasma",end=0.75)+
+   ggtitle("Tatoosh Island") +
+   theme_bw()
+kelp3
 
 ```
 
-Same figure but for Tatoosh Island only 
+## Nero and Macro 
 
-```{r kelp-urchins-tatoosh}
+```{r nero-macro , fig.height=3.5, fig.width=5}
+kelp_year_site_area <- 
+  readRDS(  paste0(Data_Loc,"Summarized_Data_Kelp_year_site_area_zone_spp.rds") )
 
-kelp_urchins_tatoosh <- kelp_urchins_long %>%
-                         filter(site =="Tatoosh Island")
+kelp_year_site_area$site = factor(kelp_year_site_area$site, levels = sites)
 
-
-plot1 <- ggplot( kelp_urchins_tatoosh, aes(urchin_density, kelp_density ) ) +
-         # filter(site == "Tatoosh Island") +
-         geom_point( size = 2 , pch = kelp_urchins_tatoosh$yr ) + 
-         labs(x="Urchin Density",y="Kelp Density",col="Site") + 
-         facet_grid(urchin_spp ~ kelp_spp)+
-         theme_bw() 
-
-plot1
+mac_ner <- kelp_year_site_area %>% filter(species %in% c("NERLUE","MACPYR"))
+ 
+mac_ner1 <- mac_ner %>% group_by(year,site,zone,area) %>%
+              summarise(mean.density=mean(density), 
+                SD = sd(density), 
+                N =length(year),
+                SE= SD/sqrt(N) ) 
+mac_ner_zone <- mac_ner %>% group_by(year,site,zone) %>%
+    summarise(mean.density=mean(density), 
+             SD = sd(density), 
+             N =length(year),
+             SE= SD/sqrt(N) ) 
+ 
+  # Basic time-series by site and zone
+  all_canopy_zone <- ggplot(mac_ner_zone ) +
+    geom_point(aes(x=year,y=mean.density,color=site)) +
+    geom_line(aes(x=year,y=mean.density,color=site)) +
+    geom_errorbar(aes(x=year,ymin=mean.density-SE,ymax=mean.density+SE,color=site),width=0) +
+    facet_grid(rows="zone",scales="free_y", labeller = labeller(zone = depth.labs)) +
+    scale_x_continuous(breaks=seq(2015,2021)) +
+    scale_y_continuous(expression("Stipe density (stipe m"^-2*")")) +
+    # scale_color_viridis_d(option="plasma",end=0.75)+
+    scale_color_manual(values = site.col$col)+
+    theme_bw()+
+    theme(legend.title = element_blank(), 
+          strip.background = element_blank())
+ all_canopy_zone
 ```
 
+## Big three: Nero, Macro, Ptero
+
+Plot the big 3 species: Macro, Nero, Ptero
+
+```{r big3, fig.width=6, fig.height=4}
+ # big three species
+ big3spp = c('MACPYR', 'NERLUE', 'PTECAL')
+ big3 <- algae3 %>% filter(species %in% big3spp)
+ big3$site <- factor(big3$site,levels=sites)
+ 
+ kelp.labs = c('Macrocystis','Nerocystis','Pterogophora')
+ names(kelp.labs) <- big3spp
+ 
+ 
+ big3$site = factor(big3$site, levels = sites)
+ # Basic time-series by site and zone
+ kelp1 = 
+   # ggplot(big3 %>%  filter(zone==5)) +
+   ggplot(big3) +
+    geom_point(aes(x=year,y=mean.density,color=site)) +
+    geom_line(aes(x=year,y=mean.density,color=site)) +
+    geom_errorbar(aes(x=year,ymin=mean.density-SE,ymax=mean.density+SE,color=site),width=0) +
+    facet_grid(species ~ zone,scales="free_y", labeller = labeller(zone=depth.labs , species=kelp.labs)) +
+    scale_x_continuous(breaks=seq(2015,2021)) +
+    xlab("Year")+
+    scale_y_continuous(expression("Stipe density (stipe m"^-2*")")) +
+    # scale_color_viridis_d(option="plasma",end=0.75)+
+    scale_color_manual(values = site.col$col)+
+    theme_bw()+
+    theme(legend.title = element_blank(),
+          strip.background = element_blank())
+
+kelp1 + rotate_x_text(angle = 45)
+
+```
+
+### Big three 5 m only  
+
+```{r big3-5m, fig.width=4.5, fig.height=4}
+ # big three species
+ big3spp = c('MACPYR', 'NERLUE', 'PTECAL')
+ big3 <- algae3 %>% filter(species %in% big3spp)
+ big3$site <- factor(big3$site,levels=sites)
+ 
+ big3$site = factor(big3$site, levels = sites)
+ # Basic time-series by site and zone
+ kelp1 = 
+   # ggplot(big3 %>%  filter(zone==5)) +
+   ggplot(big3 %>% filter(zone==5)) +
+    geom_point(aes(x=year,y=mean.density,color=site)) +
+    geom_line(aes(x=year,y=mean.density,color=site)) +
+    geom_errorbar(aes(x=year,ymin=mean.density-SE,ymax=mean.density+SE,color=site),width=0) +
+    facet_grid(rows='species' ,scales="free_y", labeller = labeller(species=kelp.labs)) +
+    scale_x_continuous(breaks=seq(2015,2021)) +
+    xlab("Year")+
+    scale_y_continuous(expression("Stipe density (stipe m"^-2*")")) +
+    # scale_color_viridis_d(option="plasma",end=0.75)+
+    scale_color_manual(values = site.col$col)+
+    theme_bw()+
+    theme(legend.title = element_blank(), strip.background = element_blank())
+
+kelp1 + rotate_x_text(angle = 45)
+
+```
+
+### Big three - Coastwide
+
+```{r kelp-coastwide, fig.height=3.5, fig.width=5}
+
+# mean coastwide across depths
+
+dfx <- big3 %>% group_by(year, species) %>%
+                summarise(Mean = mean(mean.density), 
+                          SD = sd(mean.density),
+                          N = length(year),
+                          SE = SD/sqrt(N)
+                )
+
+kelp_coast <- ggplot( dfx , aes(x=year, y=Mean, color=species)) +
+                geom_point() +
+                geom_line() +
+                geom_errorbar(aes(x=year,
+                                       ymin=Mean-SE,
+                                       ymax=Mean+SE,color=species),width=0) +
+                scale_color_manual(values = site.col$col)+
+                scale_x_continuous(breaks=seq(2015,2021)) +
+                xlab("Year")+
+                scale_y_continuous(expression("Stipe density (stipe m"^-2*")")) +
+                theme_bw()+
+                theme( legend.title = element_blank(), strip.background = element_blank())+
+                ggtitle('Kelps 5 and 10 m')
+
+kelp_coast
+```
+
+### Coastwide 5m only  
 
 
+```{r kelp-coastwide-5m, fig.height=3, fig.width=5}
+
+# mean coastwide across depths
+
+dfx5 <- big3 %>% group_by(year, species) %>% filter(zone == 5) %>%
+                summarise(Mean = mean(mean.density), 
+                          SD = sd(mean.density),
+                          N = length(year),
+                          SE = SD/sqrt(N)
+                )
+
+kelp_coast5 <- ggplot( dfx5 , aes(x=year, y=Mean, color=species)) +
+                geom_point() +
+                geom_line() +
+                geom_errorbar(aes(x=year,
+                                       ymin=Mean-SE,
+                                       ymax=Mean+SE,color=species),width=0) +
+                scale_color_manual(values = site.col$col)+
+                scale_x_continuous(breaks=seq(2015,2021)) +
+                xlab("Year")+
+                scale_y_continuous(expression("Stipe density (stipe m"^-2*")")) +
+                theme_bw()+
+                ggtitle('Kelps 5-m')+
+                theme( legend.title = element_blank(), 
+                       strip.background = element_blank()) 
+                
+
+kelp_coast5
+```
+
+# INVERTEBRATES
 
 
+```{r invert-data}
+# data imported above with kelps
+
+# set proper site order
+dat.invert$site = factor(dat.invert$site, levels = sites)
+
+# add a column to sum urchins and seastars
+u = grep('urchin', dat.invert$taxa)
+dat.invert$grp2 = 'no'
+dat.invert$grp2[u] <- 'URCHIN'
+
+s = grep('star', dat.invert$taxa)
+dat.invert$grp2[s] = 'STAR'
+dat.invert$grp2[dat.invert$grp2 %in% c('Pisaster','Pynopodia')] <- 'STAR'
 
 
+# Aggregate up to the transect level (within year, site, area, zone)
+invert_transect <- dat.invert %>% group_by(year,site,transect,observer,species,zone,area,taxa,grp2) %>%
+    summarise(total.count=sum(Count),total.area=sum(Transect.area)) %>% 
+    mutate(density = total.count / total.area )
+saveRDS(invert_transect, file=paste0(Data_Loc , "Sumized_Data_Inverts_year_site_zone_area_transect_taxa.rds") )
 
+# Aggregate up to the area level (within year, site, zone) -- treat transects as replicates
+invert_area <- invert_transect %>% 
+    group_by(year,site,species,zone,area,taxa) %>%
+    summarise(mean.density=mean(density), 
+              SD = sd(density), 
+              N =length(year),
+              SE= SD/sqrt(N) ) 
+```
+
+## Summed Urchins 
+
+Ole will want to clean up the figure
+
+```{r total-urchins, fig.width=5, fig.height=3.5}
+  # Zoom in on urchins
+urchin1 <- invert_transect %>% filter(grp2=="URCHIN") %>%
+    group_by(year,site,transect,observer,zone,area,grp2) %>%
+    summarise(tot.density = sum(density)) %>% 
+    group_by(year,site,zone,area,grp2) %>%
+    summarise(mean.density=mean(tot.density), 
+              SD = sd(tot.density), 
+              N =length(year),
+              SE= SD/sqrt(N) ) 
+ 
+urchin_zone <- invert_transect %>% filter(grp2=="URCHIN") %>%
+    group_by(year,site,transect,observer,area,zone,grp2) %>%
+    summarise(tot.density = sum(density)) %>% 
+    group_by(year,site,zone,grp2) %>%
+    summarise(mean.density=mean(tot.density), 
+              SD = sd(tot.density), 
+              N =length(year),
+              SE= SD/sqrt(N) ) 
+  
+ggplot() +
+     # geom_point(data= urchin1,aes(x=year,y=mean.density,color=site)) +
+      geom_point(data=urchin_zone,aes(x=year,y=mean.density,color=site)) +
+      geom_line(data= urchin_zone,
+                 aes(x=year,y=mean.density,color=site)) +
+      geom_errorbar(data=urchin_zone,
+                    aes(x=year,ymin=mean.density-SE,ymax=mean.density+SE,color=site),width=0) +
+      facet_grid(rows="zone", labeller = labeller(zone=depth.labs )) +
+      scale_x_continuous(breaks=seq(2015,2021)) +
+      scale_y_continuous(expression("Urchin density (m"^-2*")")) +
+      # scale_color_viridis_d(option="plasma",end=0.75)+
+      scale_color_manual(values = site.col$col)+
+      theme_bw()+
+      theme(legend.title = element_blank(), strip.background = element_blank())
+   
+
+```
+
+## Urchins by species
+
+Probably worth dropping into the supplement to show that it was mostly purple urchins. Partly interesting because there is no purple urchin fishery, but there is a red one. I think.
+
+```{r urchins-combined, fig.width=6.5, fig.height=4}
+
+urchins_all <- invert_transect %>% filter(grp2=="URCHIN") %>%
+    group_by(year,site,transect,observer,zone,area,taxa) %>%
+    summarise(tot.density = sum(density)) %>% 
+    group_by(year,site,zone,taxa) %>%
+    summarise(mean.density=mean(tot.density), 
+              SD = sd(tot.density), 
+              N =length(year),
+              SE= SD/sqrt(N) )
+# fix some names
+
+urchins_all$taxa[urchins_all$taxa=='purple urchin'] <- 'Purple urchin'
+urchins_all$taxa[urchins_all$taxa=='red urchin'] <- 'Red urchin'
+urchins_all$taxa[urchins_all$taxa=='green urchin'] <- 'Green urchin'
+
+# set factor level order
+urchins_all$taxa = factor(urchins_all$taxa, levels = c('Purple urchin','Red urchin','Green urchin'))
+# plot 
+
+urchin5  <- filter(urchins_all , zone == 5)
+urchin10 <- filter(urchins_all , zone == 10)
+depth.labs = c('5-m','10-m')
+names(depth.labs) = c(5,10)
+
+urchin_plot_all <- ggplot(data=urchins_all,aes(x=year, y= mean.density, col = site)) +
+                    #geom_point(data=urchin5,aes(x=year, y= mean.density, col = site) ) +
+                    #geom_line(data=urchin5, aes(x=year, y= mean.density, col = site) ) +
+                    geom_point() +
+                    geom_line()+
+                    geom_errorbar(data=urchins_all,
+                                  aes(x=year,ymin=mean.density-SE,ymax=mean.density+SE,color=site),width=0) +
+                    #facet_grid(rows="taxa") + 
+                    facet_grid( taxa ~ zone , 
+                                labeller = labeller(zone = depth.labs) ) +#,scales="free_y") +
+                    scale_color_manual(values = site.col$col) +
+                    scale_x_continuous("Year", breaks=seq(2015,2021)) +
+                    scale_y_continuous(expression("Urchin density (m"^-2*")")) +
+                    theme_bw()+
+                    theme(legend.title = element_blank(),
+                          axis.text.x = element_text(size=10),
+                          strip.background = element_blank())
+  
+urchin_plot_all + rotate_x_text(angle = 45)
+
+```
  
 
+## Seastars
+
+```{r total-seastars}
+
+
+star_zone <- invert_transect %>% filter(grp2=="STAR") %>%
+    group_by(year,site,transect,observer,area,zone,grp2) %>%
+    summarise(tot.density = sum(density)) %>% 
+    group_by(year,site,zone,grp2) %>%
+    summarise(mean.density=mean(tot.density), 
+              SD = sd(tot.density), 
+              N =length(year),
+              SE= SD/sqrt(N) ) 
+
+ggplot() +
+      geom_point(data= star_zone,aes(x=year,y=mean.density,color=site)) +
+      geom_line(data= star_zone,
+                 aes(x=year,y=mean.density,color=site)) +
+      geom_errorbar(data=star_zone,aes(x=year,ymin=mean.density-SE,ymax=mean.density+SE,color=site),width=0) +
+      facet_grid(rows="zone") + #,scales="free_y") +
+      scale_x_continuous(breaks=seq(2015,2021)) +
+      scale_y_continuous(expression("Star density (m"^-2*")")) +
+      # scale_color_viridis_d(option="plasma",end=0.75)+
+      scale_color_manual(values = site.col$col)+
+      theme_bw()+
+      theme(legend.title = element_blank())
 
 
 
+```
+
+Ugly..no aliby..
+
+
+```{r seastars-all}
+
+stars_all <- invert_transect %>% filter(.,grp2 == 'STAR') %>%
+    group_by(year,site,transect,observer,zone,area,taxa) %>%
+    summarise(tot.density = sum(density)) %>% 
+    group_by(year,site,zone,taxa) %>%
+    summarise(mean.density=mean(tot.density), 
+              SD = sd(tot.density), 
+              N =length(year),
+              SE= SD/sqrt(N) )
+
+stars_plot_all <- ggplot(data=stars_all,aes(x=year, y= mean.density, col = site)) +
+                    #geom_point(data=urchin5,aes(x=year, y= mean.density, col = site) ) +
+                    #geom_line(data=urchin5, aes(x=year, y= mean.density, col = site) ) +
+                    geom_point() +
+                    geom_line()+
+                    geom_errorbar(data=urchin5,
+                                  aes(x=year,ymin=mean.density-SE,ymax=mean.density+SE,color=site),width=0) +
+                    #facet_grid(rows="taxa") + 
+                    facet_grid( taxa ~ zone, scales="free_y") +
+                    scale_color_manual(values = site.col$col) +
+                    scale_x_continuous("Year", breaks=seq(2015,2021)) +
+                    scale_y_continuous(expression("Urchin density (m"^-2*")")) +
+                    theme_bw()+
+                    theme(legend.title = element_blank())
+  
+stars_plot_all
+
+```
+
+# COMBINED KELP - URCHIN - SEASTAR PLOTS   
+
+## By site and zone  
+
+
+```{r kelp-urchin-stars-site-zone}
+
+mac_ner_zone$grp2 = 'CANOPY KELP'
+
+ystrip = c('Canopy kelps','Urchins','Seastars')
+names(ystrip) =  c('CANOPY KELP','URCHIN','STAR')
+
+# join to facet later
+kus <-  mac_ner_zone %>%
+               full_join(., y=star_zone, by=c('site','year','zone') ) %>% 
+               full_join(., y=urchin_zone,  by=c('site','year','zone')) %>%
+               mutate(density = mean.density)
+# set plot order
+kus$site <- factor(kus$site, levels = sites)
+kus$grp2 = factor(kus$grp2, levels = c('CANOPY KELP','URCHIN','STAR'))
+kus_plot <- ggplot(kus, mapping = aes(x = year, y=density, color = site)) + 
+  geom_point() +
+  geom_line() +
+  geom_errorbar(kus,mapping=aes(x=year,ymin=density-SE,ymax=density+SE,color=site),width=0) +
+  facet_grid(grp2 ~ zone, scales="free_y", labeller = labeller(zone=depth.labs, grp2 = ystrip ) ) +
+  scale_color_manual(values = site.col$col) +
+  scale_x_continuous("Year", breaks=seq(2015,2021)) +
+  scale_y_continuous(expression("Density (m"^-2*")")) +
+  theme_bw()+
+  theme(legend.title = element_blank(), strip.background = element_blank())                  
+                   
+
+kus_plot+ rotate_x_text(angle = 45)
+
+```
+ 
+ 
+## By year and zone summarized across sites  
+
+
+```{r kelp-urchin-stars-zone, fig.width=5, fig.height=4}
+
+kus_year_zone   <- kus %>% group_by(year,zone,grp2) %>%
+                      summarise(density=mean(density),
+                         SD = sd(density), N =length(year),SE= SD/sqrt(N) )
+
+# not sure why, but won't calculate SD
+# frustrating a fuck.
+
+SD = aggregate( density ~ year + grp2 +zone , data = kus, FUN=sd)
+SD$density = SD$density/sqrt(5)
+SE = SD %>% rename(SE = density)
+
+kus_year_zone <- kus_year_zone %>%
+                left_join(.,SE, by=c('year','grp2','zone')) %>%
+                rename(SE = SE.y)
+
+
+kus_year_zone_plot <- ggplot(kus_year_zone, mapping = aes(x = year, y=density)) + 
+  geom_point() +
+  geom_line() +
+  geom_errorbar(kus_year_zone,mapping=aes(x=year,ymin=density-SE,ymax=density+SE),width=0) +
+  facet_grid(grp2 ~ zone, scales="free_y",labeller = labeller(zone = depth.labs, grp2=ystrip)) +
+  # scale_color_manual(values = site.col$col) +
+  scale_x_continuous("Year", breaks=seq(2015,2021)) +
+  scale_y_continuous(expression("Density (m"^-2*")")) +
+  theme_bw()+
+  theme(legend.title = element_blank(), strip.background = element_blank())                  
+                   
+
+kus_year_zone_plot+ rotate_x_text(angle = 45)
+
+```
+
+## Summarized across sites; 5 m and 10 m depths combined  
+
+
+```{r kelp-urchin-stars-zone-5-10, fig.width=3.5, fig.height=4}
+
+kus_year   <- kus %>% group_by(year,grp2) %>%
+                      summarise( density=mean(density),
+                         SD = sd(density), N =length(site), SE= SD/sqrt(N) )
+# not sure why, but won't calculate SD
+# frustrating a fuck.
+
+SD = aggregate( density ~ year + grp2 , data = kus, FUN=sd)
+SD$density = SD$density/sqrt(5)
+SE = SD %>% rename(SE = density)
+
+kus_year <- kus_year %>%
+                left_join(.,SE, by=c('year','grp2')) %>%
+                rename(SE = SE.y)
+
+kus_year_plot <- ggplot(kus_year, mapping = aes(x = year, y=density)) + 
+  geom_point() +
+  geom_line() +
+  geom_errorbar(kus_year,mapping=aes(x=year,ymin=density-SE,ymax=density+SE),width=0) +
+  facet_grid(rows = 'grp2' , scales="free_y", labeller = labeller(grp2 = ystrip) ) +
+  # scale_color_manual(values = site.col$col) +
+  scale_x_continuous("Year", breaks=seq(2015,2021)) +
+  scale_y_continuous(expression("Density (m"^-2*")")) +
+  theme_bw()+
+  theme(legend.title = element_blank(), strip.background = element_blank())                  
+                   
+
+kus_year_plot
+
+```
+   
+## Summarized across sites; 5-m depth zone only  
+
+```{r kelp-urchin-stars-5, fig.width=3.5, fig.height=4}
+
+kus_year5m   <- kus %>% filter(., zone==5) %>% # 5-m depth only
+                      group_by(year,grp2) %>%
+                      summarise(density=mean(density),
+                         SD = sd(density), 
+                         N  = length(site),
+                         SE = SD/sqrt(N) )
+# not sure why, but won't calculate SD
+# frustrating a fuck.
+
+SD = aggregate( density ~ year + grp2 , data = kus, FUN=sd)
+SD$density = SD$density/sqrt(5)
+SE = SD %>% rename(SE = density)
+
+kus_year5m <- kus_year5m %>%
+                left_join(.,SE, by=c('year'='year','grp2'='grp2')) %>%
+                rename(SE = SE.y)
 
 
 
+kus_year_plot5 <- ggplot(kus_year5m, mapping = aes(x = year, y=density)) + 
+  geom_point() +
+  geom_line() +
+  geom_errorbar(kus_year5m,mapping=aes(x=year,ymin=density-SE,ymax=density+SE),width=0) +
+  facet_grid(rows = 'grp2' , scales="free_y", labeller=labeller(grp2=ystrip)) +
+  # scale_color_manual(values = site.col$col) +
+  scale_x_continuous("Year", breaks=seq(2015,2021)) +
+  scale_y_continuous(expression("Density (m"^-2*")")) +
+  theme_bw()+
+  theme(legend.title = element_blank(), strip.background = element_blank())                  
+                   
+
+kus_year_plot5
+
+```
+  
+# Output data for multivariate statistics  
+
+## Combine kelp, fish, and inverts for capscale analysis  
+
+Not yet transformed to wide format in order to retain SD & SE info upon saving out. 
+Transform in the Multiariate analysis rmd.
+
+Output data files to use for multivariate ordinations. 
+
+Use these files and not raw files. Kelp and invert data have been converted to density to account for different transect lengths etc.
+
+```{r spit-out-kelp-fish-4-multivariate, include = FALSE}
+
+# comnbine fish spp into higher level taxa at the transect level
+# fish_transect calculated above
+fish_transect_taxa <-  fish_transect %>% group_by(site,year,area, zone, transect, taxa) %>%
+                       summarise(Count = sum(Count))
+
+# comnbine inverts spp into higher level taxa at the transect level
+# dat.invert is raw file subsetted to just inverts
+invert_transect_taxa <- dat.invert %>% group_by(year,site,transect,zone,area,taxa) %>%
+    summarise(total.count=sum(Count),total.area=sum(Transect.area)) %>% 
+    mutate(density = total.count / total.area )
+
+# fake areas for 2015
+fish_transect_taxa$area[fish_transect_taxa$year == 2015] <- "N"
+kelp_transect$area[kelp_transect$year == 2015] <- "N"
+invert_transect_taxa$area[invert_transect_taxa$year == 2015] <- "N"
 
 
->>>>>>> f92b1749a40482600ee9c46c016207f452ef2310
+#### output for CAPdiscrim analyses or nMDS ####
+#### all transect level but with fish and inverts summed by higher taxa
+
+fish_wide_transect = pivot_wider(fish_transect_taxa[,c('year','site','transect','area','zone','Count','taxa')] ,
+                        values_from = Count, names_from = taxa, values_fill = 0 )
+saveRDS(fish_wide_transect, paste0(Data_Loc,  "Data_FISH_taxa_wide.rds") )
+
+kelp_wide_transect = kelp_transect[,c('year','site','transect','area','zone','species','density')] %>%
+                      rename(taxa = species) %>%
+                      pivot_wider( values_from = density, names_from = taxa, values_fill = 0 )
+saveRDS(kelp_wide_transect, paste0(Data_Loc,   "Data_KELP_wide.rds") )
+
+invert_wide_transect = pivot_wider(invert_transect_taxa[,c('year','site','transect','area','zone','density','taxa')] ,
+                        values_from = density, names_from = taxa, values_fill = 0 )
+saveRDS(invert_wide_transect, paste0(Data_Loc,"Data_INVERT_wide.rds") )
+
+
+#### capscale analyses ####
+#### fish_kelp ####
+#### summarize fish and kelp by area because not on same transects
+
+
+kelp_area <-  kelp_transect %>% group_by(site,year,area, zone, species) %>% 
+                  summarise(Mean=mean(density),SD=sd(density),N=length(density), 
+                            SE=SD/sqrt(N),SE_var=SE^2) %>%
+                  mutate(taxa = species) 
+
+fish_area <-  fish_transect_taxa %>% group_by(site,year,area, zone, taxa) %>%
+                  summarise(Mean=mean(Count),SD=sd(Count),N=length(Count), SE=SD/sqrt(N),SE_var=SE^2)
+
+kelp_wide = kelp_area[,c('year','site','area','zone','taxa','Mean')] %>%
+                    rename(mean = Mean) %>%
+                    pivot_wider( .,values_from = mean, names_from = taxa, values_fill = 0 )
+
+fish_wide = fish_area[,c('year','site','area','zone','Mean','taxa')] %>%
+                    rename(mean = Mean)%>%
+                    pivot_wider(. ,values_from = mean, names_from = taxa, values_fill = 0 )
+
+# file has all fish data and some NA's for the kelp data (at depth where no kelp transects)
+# set to zeros?
+# right join would have NA's for zero visibilty sites. Use left join
+
+fish_kelp_wide <- fish_wide %>% left_join(kelp_wide, by=c('site'='site','year'='year','area'='area','zone'='zone'))
+
+saveRDS(fish_kelp_wide, file=paste0(Data_Loc,'Data_Fish_Kelp_area_wide.rds'))
+
+
+##### invert_kelp ####
+# combine at transect level because on the same transects
+
+# note, there are no algae data for Neah Bay S in 2016.
+
+invert_kelp_wide <- invert_wide_transect %>% full_join(kelp_wide_transect, 
+                    by=c('site'='site','year'='year','area'='area','zone'='zone', 'transect'='transect'))
+
+saveRDS(invert_kelp_wide, file=paste0(Data_Loc,'Data_Inverts_Kelp_transect_wide.rds'))
+
+
+```
+
+# Quick view of what species to include in kelp ordinations. Basically only the big three have any abundance.
+
+## Algae  
+
+
+```{r quick-kelp-plots, fig.width=6, fig.height=8}
+
+kelpx <- kelp_transect %>% group_by(species,year) %>% summarise(Mean = mean(density))
+                    
+ggplot( kelpx , aes(x=year, y = Mean ) ) +
+        geom_point() +
+        facet_wrap(facets = 'species', ncol=2) +# , scales = 'free_y')+
+        theme_bw()+
+        theme( strip.background = element_blank(),
+               strip.placement = "inside"  )
+
+
+
+```
+
+## Fish  
+
+Note, the y-axes are very different 
+
+```{r quick-fish-plots, fig.width=6.5, fig.height=8}
+
+fishx <- fish_transect_taxa %>% group_by(taxa,year) %>% summarise(Mean = mean(Count))
+                    
+ggplot( fishx , aes(x=year, y = Mean ) ) +
+        geom_point() +
+        facet_wrap(facets = 'taxa', ncol=4 , scales = 'free_y')+
+        theme_bw()+
+        theme( strip.background = element_blank(),
+               strip.placement = "inside"  )
+
+
+```
+  
+### NOTES  
+for multivariate analysis; cut and paste to that file
+
+fish.spp =   c("OPEL", "HEXA", "SECA", "SCMA" ,"SENE", "SEME", 'EMBI','GOBI')
+
+yoy.spp =    c("SECAyoy", "SEPIyoy", "SEMYyoy", "SEBYTyoy","RYOY")
+
+
