@@ -63,64 +63,162 @@ fish_kelp <- fish_kelp %>%
     SEME_cond_abund = ifelse(SEME > 0, SEME, NA)
   )
 
-# pick up here
-# figure out how to loop through fish names and kelp names, inserting them into generic code for plotting. maybe purrr?
-# do we want kelp_pres vs yoy_abundance/pres?
-# keep thinking about this
-
-# Abundance
-fish_kelp %>%
-  ggplot() +
-  geom_point(aes(x=canopy_kelp, y = SEBYTyoy, color = as.factor(zone), shape = as.factor(site))) +
-  scale_color_viridis(discrete = T)  +
-  xlab("Canopy Kelp Density") +
-  ylab("Black and Yellowtail YOY") +
-  theme_classic()
-
-# Occurrence
-# https://www.ericrscott.com/post/plot-logistic-regressions/
-fish_kelp %>%
-  filter(is.na(zone) == FALSE) %>%
-  ggplot(aes(x=canopy_kelp,y = SEBYTyoy_pres, color = as.factor(site))) +
-  #geom_jitter(aes(y = YTBLyoy_occur, color = as.factor(site.x))) +
-  stat_summary_bin(geom = "point", fun = mean, aes(y = SEBYTyoy_pres)) + # , bins = 60
+# look at distributions of kelps
+ggplot(data=fish_kelp) +
+  geom_density(aes(NERLUE)) +
+  theme_bw()
+ggplot(data=fish_kelp) +
+  geom_density(aes(MACPYR)) +
+  theme_bw()
+ggplot(data=fish_kelp) +
+  geom_density(aes(PTECAL)) +
+  theme_bw()
+ggplot(data=fish_kelp) +
+  geom_density(aes(three_kelps)) +
   facet_grid(rows = vars(zone)) +
-  scale_color_viridis(discrete = T, name = "")  +
-  xlab("Canopy Kelp Density") +
-  ylab("Black and Yellowtail YOY") +
-  theme_classic()  
+  theme_bw()
 
-fish_kelp %>%
-  filter(is.na(zone) == FALSE) %>%
-  ggplot(aes(x=PTECAL,y = SEPIyoy_pres, color = as.factor(site))) +
-  #geom_jitter(aes(y = YTBLyoy_occur, color = as.factor(site.x))) +
-  stat_summary_bin(geom = "point", fun = mean, aes(y = SEPIyoy_pres)) + # , bins = 60
-  facet_grid(rows = vars(zone)) +
-  scale_color_viridis(discrete = T, name = "")  +
-  xlab("Pterygophora Density") +
-  ylab("Canary YOY") +
-  theme_classic()  
-
-# canary YOY abundance if kelp present
+### 1
+# function for abundance and conditional abundance
+bivariate_plot_abund <- function(kelp_sp, fish_sp, trans="none"){
+  df <- fish_kelp %>% 
+    filter(is.na(zone) == FALSE) %>% 
+    select(year, site, area, zone, kelp_sp, fish_sp)
+  
+  # if(trans=="log"){
+  #   df %<>%
+  #     mutate(across(all_of(c("dens","upper","lower")),~pmax(.x,0))) %>% 
+  #     mutate(across(all_of(c("dens","upper","lower")),~log(.x+1)))
+  # }
+  
+  xl <- ifelse(trans=="log","Log Density (count/sq. m + 1)","Kelp Density (count/sq. m)")
+  yl <- ifelse(trans=="log","Log Density (count/sq. m + 1)","YOY Density (count/sq. m)")
+  
+  pl <- df %>% 
+    ggplot(aes(x=.data[[kelp_sp]], y = .data[[fish_sp]], color = as.factor(site)))+
+    geom_point() +
+    facet_grid(rows = vars(zone)) + #nrow=1
+    #scale_x_log10() +
+    #scale_y_log10() +
+    scale_color_viridis(discrete = T, name = "")  +
+    labs(x=xl,y=yl,col="Site",
+         title=paste0(fish_sp," as a function of\n",kelp_sp)) +
+    theme_classic()
+  print(pl)
+  ggsave(here::here('Flagstone paper', 
+                    'Plots', 
+                    'explore_fish_kelp', 
+                    paste0(fish_sp," as a function of ",kelp_sp,".pdf")))
   
 
-# Conditional abundance
-# try faceting a bit with positive data only
+}
+# test function
+bivariate_plot_abund(kelp_sp = "PTECAL",fish_sp = "SEBYTyoy", trans="none")
 
-fish_kelp %>%
-  filter(is.na(zone) == FALSE) %>%
-  ggplot(aes(x=canopy_kelp, y = SEBYTyoy_cond_abund, color = as.factor(site))) +
-  geom_point() +
-  #geom_smooth(method = lm) + 
-  facet_grid(rows = vars(zone)) +
-  #scale_x_log10() +
-  #scale_y_log10() +
-  scale_color_viridis(discrete = T, name = "")  +
-  xlab("Canopy Kelp Density") +
-  ylab("Black and Yellowtail YOY") +
-  theme_classic()
+# it works!
+# loop over all desired fish and kelp species
+abund_combos <- expand.grid(kelps = names(fish_kelp[,c(10:16, 22:27)]),
+                     fishes = names(fish_kelp[,c(5:9, 28:32)]))
 
+purrr::walk(kelp_sp = abund_combos$kelps, fish_sp = abund_combos$fishes, bivariate_plot, trans="none")
 
+### 2
+# function for occurrence
+# # https://www.ericrscott.com/post/plot-logistic-regressions/
+bivariate_plot_occur <- function(kelp_sp, fish_sp, trans="none"){
+  df <- fish_kelp %>% 
+    filter(is.na(zone) == FALSE) %>% 
+    select(year, site, area, zone, kelp_sp, fish_sp)
+  
+  # if(trans=="log"){
+  #   df %<>%
+  #     mutate(across(all_of(c("dens","upper","lower")),~pmax(.x,0))) %>% 
+  #     mutate(across(all_of(c("dens","upper","lower")),~log(.x+1)))
+  # }
+  
+  xl <- ifelse(trans=="log","Log Density (count/sq. m + 1)","Kelp Density (count/sq. m)")
+  yl <- ifelse(trans=="log","Log Density (count/sq. m + 1)","YOY Probability of Occurrence")
+  
+  pl <- df %>% 
+    filter(is.na(zone) == FALSE) %>%
+    ggplot(aes(x=.data[[kelp_sp]],y = .data[[fish_sp]], color = as.factor(site))) +
+    stat_summary_bin(geom = "point", fun = mean, aes(y = .data[[fish_sp]])) + # , bins = 60
+    facet_grid(rows = vars(zone)) +
+    scale_color_viridis(discrete = T, name = "")  +
+    labs(x=xl,y=yl,col="Site",
+         title=paste0(fish_sp," occurrence as a function of\n",kelp_sp)) +
+    theme_classic()
+  
+  print(pl)
+  
+  ggsave(here::here('Flagstone paper', 
+                    'Plots', 
+                    'explore_fish_kelp', 
+                    paste0(fish_sp," occurrence as a function of ",kelp_sp,".pdf")))
+  
+  
+}
+# test function
+bivariate_plot_occur(kelp_sp = "PTECAL",fish_sp = "SEBYTyoy_pres", trans="none")
+
+# it works!
+# loop over all desired fish and kelp species
+occur_combos <- expand.grid(kelps = names(fish_kelp[,c(10:16, 22:27)]),
+                            fishes = names(fish_kelp[,c(17:21)]))
+
+purrr::walk2(.x = occur_combos$kelps, .y = occur_combos$fishes, .f=bivariate_plot_occur, trans="none")
+
+######################################################
+
+# # Abundance
+# fish_kelp %>%
+#   ggplot() +
+#   geom_point(aes(x=canopy_kelp, y = SEBYTyoy, color = as.factor(zone), shape = as.factor(site))) +
+#   scale_color_viridis(discrete = T)  +
+#   xlab("Canopy Kelp Density") +
+#   ylab("Black and Yellowtail YOY") +
+#   theme_classic()
+# 
+# # Occurrence
+# # https://www.ericrscott.com/post/plot-logistic-regressions/
+# fish_kelp %>%
+#   filter(is.na(zone) == FALSE) %>%
+#   ggplot(aes(x=canopy_kelp,y = SEBYTyoy_pres, color = as.factor(site))) +
+#   #geom_jitter(aes(y = YTBLyoy_occur, color = as.factor(site.x))) +
+#   stat_summary_bin(geom = "point", fun = mean, aes(y = SEBYTyoy_pres)) + # , bins = 60
+#   facet_grid(rows = vars(zone)) +
+#   scale_color_viridis(discrete = T, name = "")  +
+#   xlab("Canopy Kelp Density") +
+#   ylab("Black and Yellowtail YOY") +
+#   theme_classic()  
+# 
+# fish_kelp %>%
+#   filter(is.na(zone) == FALSE) %>%
+#   ggplot(aes(x=PTECAL,y = SEPIyoy_pres, color = as.factor(site))) +
+#   #geom_jitter(aes(y = YTBLyoy_occur, color = as.factor(site.x))) +
+#   stat_summary_bin(geom = "point", fun = mean, aes(y = SEPIyoy_pres)) + # , bins = 60
+#   facet_grid(rows = vars(zone)) +
+#   scale_color_viridis(discrete = T, name = "")  +
+#   xlab("Pterygophora Density") +
+#   ylab("Canary YOY") +
+#   theme_classic()  
+# 
+# # canary YOY abundance if kelp present
+# 
+# # Conditional abundance
+# # try faceting a bit with positive data only
+# fish_kelp %>%
+#   filter(is.na(zone) == FALSE) %>%
+#   ggplot(aes(x=canopy_kelp, y = SEBYTyoy_cond_abund, color = as.factor(site))) +
+#   geom_point() +
+#   #geom_smooth(method = lm) + 
+#   facet_grid(rows = vars(zone)) +
+#   #scale_x_log10() +
+#   #scale_y_log10() +
+#   scale_color_viridis(discrete = T, name = "")  +
+#   xlab("Canopy Kelp Density") +
+#   ylab("Black and Yellowtail YOY") +
+#   theme_classic()
 
 
 ######################################################
