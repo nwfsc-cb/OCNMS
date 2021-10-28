@@ -211,7 +211,9 @@ non-metric MDS just to have a look. Kind of ugly. No aliby. Both depths.
 
 ```{r nMDS-plots, fig.width=6, fig.height=6}
 
+run.nmds = FALSE
 
+if(run.nmds == TRUE){
 mds_run_plot <- function( original.file, species,title, legend.pos){
   # remove rows with NA.
   df = na.omit(original.file)
@@ -251,7 +253,7 @@ mds_fish = mds_run_plot( df0, fish.spp, 'Fish','topleft' )
 df0 = fish[, c('site','year','zone','pch','col',yoy.spp)]
 mds_yoy = mds_run_plot( df0, yoy.spp, 'Sebastes YOY','bottomleft' )
 
-
+}
 
 ```
 
@@ -269,14 +271,13 @@ I ran things twice:
 ## later graphing may summarize them at different scales
 
 kelp_depth = fish_depth = invert_depth = '_5&10m_'
-
-
+nperm = 999
 run.ord = TRUE
 
 if(run.ord == TRUE){
   print("Working on kelp ordination")
     kelp_ord = run.multivar.nt( data.file = kelp, drop2015 = TRUE, nperm=nperm,
-                        spp = kelp.spp, 
+                        spp = kelp.spp, both_zones = TRUE,
                         data.transform = kelp.transform,
                         outname = paste0( Results_Loc, "Kelp-")
                         )
@@ -284,7 +285,7 @@ if(run.ord == TRUE){
 
   print("Working on fish ordination")
   fish_ord = run.multivar.nt( data.file = fish, drop2015 = TRUE, nperm=nperm,
-                        spp = fish.spp,
+                        spp = fish.spp, both_zones = TRUE,
                         data.transform = fish.transform,
                         outname = paste0( Results_Loc, "Fish-")
                         )
@@ -292,7 +293,7 @@ if(run.ord == TRUE){
 
   print("Working on Sebastes YOY ordination")
   yoy_ord = run.multivar.nt( data.file = fish,  drop2015 = TRUE, nperm=nperm,
-                        spp = yoy.spp,
+                        spp = yoy.spp, both_zones = TRUE,
                         data.transform = fish.transform,
                         outname = paste0( Results_Loc, "YOY-")
                         )
@@ -300,7 +301,7 @@ if(run.ord == TRUE){
 
   print("Working on invert ordination")
   invert_ord = run.multivar.nt( data.file = inverts, drop2015 = TRUE, nperm=nperm,
-                        spp = invert.taxa,
+                        spp = invert.taxa, both_zones = TRUE,
                         data.transform = invert.transform,
                         outname = paste0( Results_Loc, "Inverts-")
                         )
@@ -308,13 +309,13 @@ if(run.ord == TRUE){
 
 }else{ # reload previously run files to save time
      kelp_ord    <- readRDS(
-       paste0(Results_Loc,"Kelp-ordination-n",nperm,"-",kelp.transform,kelp_depth,".rds"))
+       paste0(Results_Loc,"Kelp-ordination-n",nperm,"-",kelp.transform, kelp_depth,".rds"))
      fish_ord   <- readRDS( 
-       paste0(Results_Loc,"Fish-ordination-n",nperm,"-",fish.transform,fish_depth,".rds"))
+       paste0(Results_Loc,"Fish-ordination-n",nperm,"-",fish.transform, fish_depth,".rds"))
      yoy_ord    <- readRDS(
-       paste0(Results_Loc,"YOY-ordination-n",nperm,"-",fish.transform,fish_depth,".rds"))
+       paste0(Results_Loc,"YOY-ordination-n",nperm,"-",fish.transform, fish_depth,".rds"))
      invert_ord <- readRDS( 
-       paste0(Results_Loc,"Invert-ordination-n",nperm,"-",invert.transform,invert_depth,".rds"))
+       paste0(Results_Loc,"Invert-ordination-n",nperm,"-",invert.transform, invert_depth,".rds"))
 }
 
 ```
@@ -333,19 +334,19 @@ Note if 'log', then log(x+1) because of all the zeros.
 
 Separate Sites and Species plots for clarity.
 
+Note: spp score must be min of abs(0.2) to show up on plot. So only black and blue show up on yoy plot.
 
-
-```{r ordinations-plots-separate-spp-panes, fig.width=6, fig.height=8}
+```{r Figure-3, fig.width=6, fig.height=8}
 
 par( mfrow = c(4,2), pty='s' , mar = c(2,4,0,0) )
 
 xy=c(-7,7)
-xy2 = c(-1.2, 1.2)
+xy2 = c(-1.7, 1.7)
 var.ylim = c(0,0.8)
 var.cex = 0.7
 plotspp = FALSE
 sppseparate = TRUE
-sppcol = 'red'
+sppcol = 'black'
 
 
 p_kelp = ifelse( kelp_ord$cap$manova$stats[1,6]<0.001 , "p < 0.001",
@@ -361,15 +362,18 @@ p_yoy = ifelse( yoy_ord$cap$manova$stats[1,6]<0.001 , "p < 0.001",
          paste0("p < ", round(yoy_ord$cap$manova$stats[1,6],3)))
 
 
-# rownames(kelp_ord$cap$cproj) <- c('Macrocystis','Nerocystis','Pterogophora')
+
 rownames(invert_ord$cap$cproj) <- str_replace( rownames(invert_ord$cap$cproj), "[.]" , " ")
 rownames(fish_ord$cap$cproj) <- str_replace( rownames(fish_ord$cap$cproj), "[.]" , " ")
 
-
+# check the rownames
+# rownames(yoy_ord$cap$cproj)
+# relabel
+rownames(yoy_ord$cap$cproj) <- c('copper','canary','blue','black/yellowtail','rockfish yoy')
 
 Plot_Ordination( data.file = kelp_ord$cap.df , ord.file = kelp_ord$cap, min.score = 0.2,
                  Yform = 'LD', Xform =  ' ~ site + year + col + pch', pval = p_kelp,
-                 Xlim = c(-3,3), Ylim=c(-3,3), Xlim2 = xy2, Ylim2=xy2,
+                 Xlim = c(-3,3), Ylim=c(-3,3), Xlim2 = xy2, Ylim2=xy2, scores.cex = 1.0, scores.font = 3,
                  plot.species = plotspp , spp.separate = sppseparate, fig.legend = 'Kelp', sppcol = sppcol)
 
 legend('bottomright', legend=site.col$site, pch=19, col=site.col$col, bty='n', cex=0.8 )
@@ -379,7 +383,7 @@ legend('bottomleft', legend=yr$year, pch=as.numeric(yr$pch), col='darkgrey',pt.b
 
 # invets
 Plot_Ordination( data.file = invert_ord$cap.df , ord.file = invert_ord$cap, min.score = 0.2, pval = p_inv, 
-                 Yform = 'LD', Xform =  ' ~ site + year + col + pch',
+                 Yform = 'LD', Xform =  ' ~ site + year + col + pch',scores.cex = 1.0,
                  Xlim = xy, Ylim=xy, Xlim2 = xy2, Ylim2=xy2,
                  plot.species = FALSE , spp.separate = sppseparate, fig.legend = 'Inverts', sppcol = sppcol)
 
@@ -394,7 +398,7 @@ Plot_Ordination( data.file = invert_ord$cap.df , ord.file = invert_ord$cap, min.
 # fish
 Plot_Ordination( data.file = fish_ord$cap.df , ord.file = fish_ord$cap, min.score = 0.2,
                  Yform = 'LD', Xform =  ' ~ site + year + col + pch', pval = p_fish,
-                 Xlim = c(-3,3), Ylim=c(-3,3), Xlim2 = xy2, Ylim2=xy2,
+                 Xlim = c(-3,3), Ylim=c(-3,3), Xlim2 = xy2, Ylim2=xy2,scores.cex = 1.0,
                  plot.species = plotspp , spp.separate = sppseparate, fig.legend = 'Fish', sppcol = sppcol)
 
 
@@ -402,8 +406,11 @@ Plot_Ordination( data.file = fish_ord$cap.df , ord.file = fish_ord$cap, min.scor
 # sebastes
 Plot_Ordination( data.file = yoy_ord$cap.df , ord.file = yoy_ord$cap, min.score = 0.2,
                  Yform = 'LD', Xform =  ' ~ site + year + col + pch', pval = p_yoy,
-                 Xlim = c(-5,5), Ylim=c(-5, 5), Xlim2 = xy2, Ylim2=xy2,
+                 Xlim = c(-5,5), Ylim=c(-5, 5), Xlim2 = xy2, Ylim2=xy2,scores.cex = 1.0,
                  plot.species = plotspp , spp.separate = sppseparate, fig.legend = 'Sebastes YOY', sppcol = sppcol)
+
+
+# yoy_ord$cap$cproj
 
 
 
@@ -411,7 +418,7 @@ Plot_Ordination( data.file = yoy_ord$cap.df , ord.file = yoy_ord$cap, min.score 
 
 ### Explained variance figure YSD
 
-``` {r explained-variance, fig.width=4.5, fig.height=3.5}
+``` {r Figure-4, fig.width=4.5, fig.height=3.5}
 
 axislabels = c('D', "S",'Y','SD','DY','SY','Res')
 
@@ -458,7 +465,7 @@ fish5   = fish %>% filter(zone == 5)
 invert5 = inverts %>% filter(zone == 5)
 
 
-run.ord = TRUE
+run.ord = FALSE
 
 if(run.ord == TRUE){
   print("Working on kelp ordination")
@@ -467,7 +474,7 @@ if(run.ord == TRUE){
                         data.transform = kelp.transform,
                         outname = paste0( Results_Loc, "Kelp-")
                         )
-  saveRDS(kelp_ord,file = paste0(Results_Loc,"Kelp-ordination-n",nperm,"-",kelp.transform,kelp_depth,".rds"))
+  saveRDS(kelp_ord,file = paste0(Results_Loc,"Kelp-ordination-n",nperm,"-",kelp.transform,kelp.depth,".rds"))
 
   print("Working on fish ordination")
   fish_ord = run.multivar.nt( data.file = fish, drop2015 = TRUE, nperm=nperm,
@@ -475,7 +482,7 @@ if(run.ord == TRUE){
                         data.transform = fish.transform,
                         outname = paste0( Results_Loc, "Fish-")
                         )
-  saveRDS(fish_ord,file = paste0(Results_Loc,"Fish-ordination-n",nperm,"-",fish.transform,fish_depth,".rds"))
+  saveRDS(fish_ord,file = paste0(Results_Loc,"Fish-ordination-n",nperm,"-",fish.transform,fish.depth,".rds"))
 
   print("Working on Sebastes YOY ordination")
   yoy_ord = run.multivar.nt( data.file = fish,  drop2015 = TRUE, nperm=nperm,
@@ -483,7 +490,7 @@ if(run.ord == TRUE){
                         data.transform = fish.transform,
                         outname = paste0( Results_Loc, "YOY-")
                         )
-  saveRDS(yoy_ord,file = paste0(Results_Loc,"YOY-ordination-n",nperm,"-",fish.transform,fish_depth,".rds"))
+  saveRDS(yoy_ord,file = paste0(Results_Loc,"YOY-ordination-n",nperm,"-",fish.transform,fish.depth,".rds"))
 
   print("Working on invert ordination")
   invert_ord = run.multivar.nt( data.file = inverts, drop2015 = TRUE, nperm=nperm,
@@ -491,17 +498,17 @@ if(run.ord == TRUE){
                         data.transform = invert.transform,
                         outname = paste0( Results_Loc, "Inverts-")
                         )
-  saveRDS(invert_ord,file = paste0(Results_Loc,"Invert-ordination-n",nperm,"-",invert.transform,invert_depth,".rds"))
+  saveRDS(invert_ord,file = paste0(Results_Loc,"Invert-ordination-n",nperm,"-",invert.transform,invert.depth,".rds"))
 
 }else{ # reload previously run files to save time
      kelp_ord    <- readRDS(
-       paste0(Results_Loc,"Kelp-ordination-n",nperm,"-",kelp.transform,kelp_depth,".rds"))
+       paste0(Results_Loc,"Kelp-ordination-n",nperm,"-",kelp.transform,kelp.depth,".rds"))
      fish_ord   <- readRDS( 
-       paste0(Results_Loc,"Fish-ordination-n",nperm,"-",fish.transform,fish_depth,".rds"))
+       paste0(Results_Loc,"Fish-ordination-n",nperm,"-",fish.transform,fish.depth,".rds"))
      yoy_ord    <- readRDS(
-       paste0(Results_Loc,"YOY-ordination-n",nperm,"-",fish.transform,fish_depth,".rds"))
+       paste0(Results_Loc,"YOY-ordination-n",nperm,"-",fish.transform,fish.depth,".rds"))
      invert_ord <- readRDS( 
-       paste0(Results_Loc,"Invert-ordination-n",nperm,"-",invert.transform,invert_depth,".rds"))
+       paste0(Results_Loc,"Invert-ordination-n",nperm,"-",invert.transform,invert.depth,".rds"))
 }
 
 ```

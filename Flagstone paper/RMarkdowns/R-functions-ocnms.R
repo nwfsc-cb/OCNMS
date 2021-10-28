@@ -76,7 +76,7 @@ run.multivar.nt <- function(data.file, drop2015 = TRUE, spp, data.transform = NA
      df = data.file1[,spp]
      if(is.na(data.transform) == TRUE){df = data.file1[,spp]}
      if(is.na(data.transform) == FALSE){
-          if(data.transform == "sqrt"){df = data.file1[,spp]^(1/2)}
+          if(data.transform == "sqrt"){df = sqrt(data.file1[,spp])}
           if(data.transform == "4th-root"){df = data.file1[,spp]^(1/4)}
           if(data.transform == "log"){df = log(data.file1[,spp]+1) }
      }
@@ -144,7 +144,7 @@ run.multivar.nt <- function(data.file, drop2015 = TRUE, spp, data.transform = NA
 
 Plot_Ordination <- function( data.file , ord.file, plot.comm.scores=FALSE, comm.col = 'black',Yform, Xform, pval=NA, pval.pos ="topright",method = "CAPdiscrim",
                              Xlim=NA, Ylim=NA, Xlim2 = NA, Ylim2=NA, Xlab = "Axis 1", Ylab = "Axis 2", 
-                             min.score = 0.0, plot.species = TRUE, spp.separate = FALSE, 
+                             min.score = 0.0, plot.species = TRUE, spp.separate = FALSE,scores.cex = 1,scores.font=1, 
                              fig.legend=NA, legend.pos='topleft', sppcol='red', bg.equals.col=TRUE){
      form1 = paste0(Yform, '1', Xform)
      form2 = paste0(Yform, '2', Xform)
@@ -182,7 +182,7 @@ Plot_Ordination <- function( data.file , ord.file, plot.comm.scores=FALSE, comm.
      
      if(plot.species == TRUE){ 
           spp_scores1 = spp_scores[ abs(spp_scores[,1]) > min.score | abs(spp_scores[,2]) > min.score, ]
-          text(spp_scores1[,1] , spp_scores1[,2], rownames(spp_scores1), cex=0.8 , col=sppcol)
+          text(spp_scores1[,1] , spp_scores1[,2], rownames(spp_scores1), font = scores.font, cex=scores.cex , col=sppcol)
      }
      
      if(spp.separate == TRUE){
@@ -197,7 +197,7 @@ Plot_Ordination <- function( data.file , ord.file, plot.comm.scores=FALSE, comm.
                       text(comm.scores[,1],comm.scores[,2],comm.scores$species, col = comm.col)}
                }
           
-          text(spp_scores1[,1] , spp_scores1[,2], rownames(spp_scores1), cex=0.8 , col=sppcol)
+          text(spp_scores1[,1] , spp_scores1[,2], rownames(spp_scores1), font = scores.font, cex=scores.cex , col=sppcol)
           segments( par()$usr[1],0,par()$usr[2],0, lty = 'dotted', lwd = 0.5)
           segments( 0, par()$usr[3],0,par()$usr[4], lty = 'dotted', lwd = 0.5)
      }
