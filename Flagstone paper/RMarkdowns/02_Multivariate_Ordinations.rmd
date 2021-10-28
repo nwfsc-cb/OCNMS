@@ -106,7 +106,7 @@ colnames(year.pch) = c('year','pch','col')
 kelp.transform = 'sqrt'
 fish.transform = 'sqrt'
 invert.transform = 'sqrt'
-nperm  = 0
+nperm  = 999
 
 # Some csv files for naming later
 
