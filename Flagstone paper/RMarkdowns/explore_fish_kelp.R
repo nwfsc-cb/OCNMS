@@ -97,6 +97,7 @@ bivariate_plot_abund <- function(kelp_sp, fish_sp, trans="none"){
   pl <- df %>% 
     ggplot(aes(x=.data[[kelp_sp]], y = .data[[fish_sp]], color = as.factor(site)))+
     geom_point() +
+    geom_smooth(aes(x=.data[[kelp_sp]],y = .data[[fish_sp]], group=1)) +
     facet_grid(rows = vars(zone)) + #nrow=1
     #scale_x_log10() +
     #scale_y_log10() +
@@ -117,10 +118,12 @@ bivariate_plot_abund(kelp_sp = "PTECAL",fish_sp = "SEBYTyoy", trans="none")
 
 # it works!
 # loop over all desired fish and kelp species
-abund_combos <- expand.grid(kelps = names(fish_kelp[,c(10:16, 22:27)]),
-                     fishes = names(fish_kelp[,c(5:9, 28:32)]))
+abund_combos <- crossing(
+  kelps = names(fish_kelp[,c(10:16)]),
+  fishes = names(fish_kelp[,c(5:9, 28:32)])
+  ) # kelps 22:27 are kelp occurrence --> not useful
 
-purrr::walk(kelp_sp = abund_combos$kelps, fish_sp = abund_combos$fishes, bivariate_plot, trans="none")
+purrr::walk2(.x = abund_combos$kelps, .y = abund_combos$fishes, .f=bivariate_plot_abund, trans="none")
 
 ### 2
 # function for occurrence
@@ -136,6 +139,14 @@ bivariate_plot_occur <- function(kelp_sp, fish_sp, trans="none"){
   #     mutate(across(all_of(c("dens","upper","lower")),~log(.x+1)))
   # }
   
+  # m <- glm(fish_sp ~ kelp_sp, family = binomial, data = df)
+  # plot_df <- broom::augment(m, type.predict = "response")
+  # 
+  # base <-
+  #   ggplot(plot_df, aes(x = .data[[kelp_sp]])) +
+  #   geom_line(aes(y = .fitted), color = "blue") +
+  #   theme_classic()
+  
   xl <- ifelse(trans=="log","Log Density (count/sq. m + 1)","Kelp Density (count/sq. m)")
   yl <- ifelse(trans=="log","Log Density (count/sq. m + 1)","YOY Probability of Occurrence")
   
@@ -143,11 +154,15 @@ bivariate_plot_occur <- function(kelp_sp, fish_sp, trans="none"){
     filter(is.na(zone) == FALSE) %>%
     ggplot(aes(x=.data[[kelp_sp]],y = .data[[fish_sp]], color = as.factor(site))) +
     stat_summary_bin(geom = "point", fun = mean, aes(y = .data[[fish_sp]])) + # , bins = 60
+    geom_smooth(aes(x=.data[[kelp_sp]],y = .data[[fish_sp]], group=1),
+                method = "glm", 
+                method.args = list(family = "binomial")) +
     facet_grid(rows = vars(zone)) +
     scale_color_viridis(discrete = T, name = "")  +
     labs(x=xl,y=yl,col="Site",
-         title=paste0(fish_sp," occurrence as a function of\n",kelp_sp)) +
-    theme_classic()
+         title=paste0(fish_sp," occurrence as a function of\n",kelp_sp, " with fitted logistic regression")) +
+    theme_classic() #+ 
+    #base
   
   print(pl)
   
@@ -163,8 +178,10 @@ bivariate_plot_occur(kelp_sp = "PTECAL",fish_sp = "SEBYTyoy_pres", trans="none")
 
 # it works!
 # loop over all desired fish and kelp species
-occur_combos <- expand.grid(kelps = names(fish_kelp[,c(10:16, 22:27)]),
-                            fishes = names(fish_kelp[,c(17:21)]))
+occur_combos <- crossing(kelps = names(fish_kelp[,c(10:16)]),
+                         fishes = names(fish_kelp[,c(17:21)])) # 22:27 are kelp presence, but boring
+# expand.grid(kelps = names(fish_kelp[,c(10:16, 22:27)]),
+#                             fishes = names(fish_kelp[,c(17:21)]))
 
 purrr::walk2(.x = occur_combos$kelps, .y = occur_combos$fishes, .f=bivariate_plot_occur, trans="none")
 
