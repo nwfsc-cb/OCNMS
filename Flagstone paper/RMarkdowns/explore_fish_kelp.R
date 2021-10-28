@@ -188,13 +188,13 @@ purrr::walk2(.x = occur_combos$kelps, .y = occur_combos$fishes, .f=bivariate_plo
 ### 3
 # Analysis and plot of Total YOY occurrence vs 3 kelps
 
-m <- glm( TOTyoy_pres ~ three_kelps + zone, 
+m_occur <- glm( TOTyoy_pres ~ three_kelps + zone, 
           family = binomial, 
           data = fish_kelp %>% 
             filter(is.na(zone) == FALSE)
           )
-summary(m)
-plot_df <- broom::augment(m, type.predict = "response")
+summary(m_occur)
+plot_df <- broom::augment(m_occur, type.predict = "response")
 
 base <-
   ggplot(plot_df, aes(x = three_kelps, color = factor(zone))) +
@@ -206,13 +206,13 @@ base + stat_summary_bin(geom = "point", fun = mean, aes(y = TOTyoy_pres), bins=6
 
 p1 <- fish_kelp %>% 
   filter(is.na(zone) == FALSE) %>%
-  ggplot(aes(x=three_kelps,y = TOTyoy_pres, color = as.factor(zone))) +
+  ggplot(aes(x=three_kelps,y = TOTyoy_pres, color = as.factor(site))) +
   stat_summary_bin(geom = "point", fun = mean, aes(y = TOTyoy_pres)) + # , bins = 60
   geom_smooth(aes(x=three_kelps,y = TOTyoy_pres, group=1),
               method = "glm", 
               method.args = list(family = "binomial")) +
   scale_color_viridis(discrete = T, name = "")  +
-  labs(x="Density of 3 kelps",y="Probability of occurrence",col="Zone",
+  labs(x="Density of 3 kelps",y="Probability of occurrence",col="Site",
        title= "Total YOY rockfish occurrence as a function of 3 kelps,\nwith fitted logistic regression") +
   theme_classic() 
 
@@ -221,6 +221,40 @@ print(p1)
 ggsave(here::here('Flagstone paper', 
                   'Plots', 
                   'Total YOY rockfish occurrence as a function of 3 kelps, with fitted logistic regression.pdf'))
+
+### 4
+# Analysis and plot of Total YOY conditional abundance vs 3 kelps
+
+m_condabund <- glm( TOTyoy_cond_abund ~ three_kelps + zone, 
+                    family=gaussian(link=log), 
+          data = fish_kelp %>% 
+            filter(is.na(zone) == FALSE)
+)
+summary(m_condabund)
+plot_df2 <- broom::augment(m_condabund, type.predict = "response")
+
+base <-
+  ggplot(plot_df2, aes(x = three_kelps, color = factor(zone))) +
+  geom_line(aes(y = .fitted), color = "blue") +
+  theme_classic()
+
+base + geom_point(aes(y = TOTyoy_cond_abund), alpha = 0.2)
+
+# this doesn't plot correctly te
+p2 <- fish_kelp %>% 
+  filter(is.na(zone) == FALSE) %>%
+  ggplot(aes(x = three_kelps, y = TOTyoy_cond_abund, color = as.factor(site))) +
+  #geom_smooth(aes(x=three_kelps,y = TOTyoy_cond_abund, group=1)) +
+  scale_color_viridis(discrete = T, name = "")  +
+  labs(x="Density of 3 kelps",y="Conditional density",col="Site",
+       title= "Total YOY rockfish conditional density as a function of 3 kelps") +
+  theme_classic() 
+
+print(p2)
+
+ggsave(here::here('Flagstone paper', 
+                  'Plots', 
+                  'Total YOY rockfish conditional density as a function of 3 kelps.pdf'))
 
 ######################################################
 
