@@ -66,7 +66,7 @@ adonis2.correction <- function(data.file){
 
 #### ordination code ####
 
-run.multivar.nt <- function(data.file, drop2015 = TRUE, spp, data.transform = NA, nperm = 999, 
+run.multivar.nt <- function(data.file, drop2015 = TRUE, spp, data.transform = NA, both_zones = TRUE, nperm = 999, 
                             outname = 'Results-' ){
      
      data.file1 = data.file
@@ -81,9 +81,12 @@ run.multivar.nt <- function(data.file, drop2015 = TRUE, spp, data.transform = NA
           if(data.transform == "log"){df = log(data.file1[,spp]+1) }
      }
      
-     ## capscale 
-     CAPid = as.factor(paste(data.file1$site , data.file1$zone , data.file1$year, sep = "_") )
+     ## CAPdiscrim
+     if(both_zones==TRUE){
+         CAPid = as.factor(paste(data.file1$site , data.file1$zone , data.file1$year, sep = "_") )}else{
+         CAPid = as.factor(paste(data.file1$site , data.file1$year, sep = "_") )}
      CAPfile = data.frame(cbind(CAPid,data.file1))
+     
      colnames(CAPfile)[1] <- 'CAPid'
      
      #library(ecole)
@@ -97,18 +100,21 @@ run.multivar.nt <- function(data.file, drop2015 = TRUE, spp, data.transform = NA
      cap.scores = scores(cap)
      cap.df = data.frame(cbind( data.file1 , cap.scores ) )
 
-     capture.output( cap, paste0(outname,"CAP_site_depth_year.txt") )
-     saveRDS( cap, paste0(outname,"CAP_site_depth_year.rds") )
-     saveRDS( cap.scores , paste( outname,  "cap.scores.rds") )
-     write.csv( cap.df , paste0(outname,  "data_YSD.csv"), row.names = FALSE )
+     # capture.output( cap, paste0("CAPdiscrim_", outname, ".txt") )
+     # saveRDS( cap, paste0(       "CAPdiscrim_", outname, ".rds") )
+     # saveRDS( cap.scores , paste("CAPdiscrim_", outname,  "_scores.rds") )
+     # write.csv( cap.df , paste0( "CAPdiscrim_", outname,  "_data.csv"), row.names = FALSE )
      
      ## permanova
      
      data.file1$year = as.factor(data.file1$year)
      
-     pman = adonis2( df_matrix ~ zone + site + year +
-                                 zone*site + zone*year + site*year, 
+     if(both_zones == TRUE){
+         pman = adonis2( df_matrix ~ zone + site + year +zone*site + zone*year + site*year, 
                                  data = data.file1, by="term", permutations = nperm )
+     }else{ pman = adonis2( df_matrix ~ site + year + site*year, 
+                     data = data.file1, by="term", permutations = nperm )
+     }
      
      pm.tab <- adonis2.correction(pman)
      
@@ -123,14 +129,14 @@ run.multivar.nt <- function(data.file, drop2015 = TRUE, spp, data.transform = NA
      
      ######### convert to random effects
      
-     vcomp = varcompnt( x = pm.tab, y = data.file1)
+     # vcomp = varcompnt( x = pm.tab, y = data.file1)
+     # 
+     # saveRDS(vcomp, file = paste0(outname, 'PerMANOVA_transect_all-var_comp.rds'))
+     # capture.output(vcomp, file =  paste0(outname, 'PerMANOVA_transect_all-var_comp.txt'))
      
-     saveRDS(vcomp, file = paste0(outname, 'PerMANOVA_transect_all-var_comp.rds'))
-     capture.output(vcomp, file =  paste0(outname, 'PerMANOVA_transect_all-var_comp.txt'))
+     results <- list(cap.df , cap, pman) #, vcomp)
      
-     results <- list(cap.df , cap, pman, vcomp)
-     
-     names(results) = c('cap.df','cap','pman', 'vcomp')
+     names(results) = c('cap.df','cap','pman') #, 'vcomp')
      return(results)
 }
 
