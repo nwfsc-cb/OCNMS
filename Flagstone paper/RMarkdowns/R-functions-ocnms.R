@@ -142,10 +142,12 @@ run.multivar.nt <- function(data.file, drop2015 = TRUE, spp, data.transform = NA
 
 ### Plot capscale ordinations/summarize data ####
 
-Plot_Ordination <- function( data.file , ord.file, plot.comm.scores=FALSE, comm.col = 'black',Yform, Xform, pval=NA, pval.pos ="topright",method = "CAPdiscrim",
+Plot_Ordination <- function( data.file , ord.file, plot.comm.scores=FALSE, comm.col = 'black',Yform, 
+                             Xform, pval=NA, pval.pos ="topright",method = "CAPdiscrim",
                              Xlim=NA, Ylim=NA, Xlim2 = NA, Ylim2=NA, Xlab = "Axis 1", Ylab = "Axis 2", 
-                             min.score = 0.0, plot.species = TRUE, spp.separate = FALSE,scores.cex = 1,scores.font=1, 
-                             fig.legend=NA, legend.pos='topleft', sppcol='red', bg.equals.col=TRUE){
+                             min.score = 0.0, plot.species = TRUE, spp.separate = FALSE,
+                             scores.cex = 1,scores.font=1, fig.legend=NA, legend.pos='topleft', 
+                             sppcol='red', bg.equals.col=TRUE){
      form1 = paste0(Yform, '1', Xform)
      form2 = paste0(Yform, '2', Xform)
      df_1 = Sum_Stats( form1 , data.file )
@@ -157,8 +159,10 @@ Plot_Ordination <- function( data.file , ord.file, plot.comm.scores=FALSE, comm.
      }
      
      if(is.na(Xlim[1]) | is.na(Ylim[1])){
-          plot( df_1$mean , df_2$mean, pch = as.numeric(df_1$pch) , col = df_1$col, bg = df_1$bgcol , xlab=Xlab, ylab=Ylab)}else{
-               plot( df_1$mean , df_2$mean, pch = as.numeric(df_1$pch) , col =df_1$col, bg = df_1$bgcol, xlim = Xlim, ylim = Ylim , xlab=Xlab, ylab=Ylab )
+          plot( df_1$mean , df_2$mean, pch = as.numeric(df_1$pch) , col = df_1$col, bg = df_1$bgcol , 
+                xlab=Xlab, ylab=Ylab)}else{
+                    plot( df_1$mean , df_2$mean, pch = as.numeric(df_1$pch) , col =df_1$col, bg = df_1$bgcol, 
+                          xlim = Xlim, ylim = Ylim , xlab=Xlab, ylab=Ylab )
           }
      # error bars
      arrows( df_1$mean+df_1$se , df_2$mean,  df_1$mean-df_1$se , df_2$mean, col = df_1$col, length = 0)

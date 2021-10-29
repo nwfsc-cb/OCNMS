@@ -272,7 +272,7 @@ I ran things twice:
 
 kelp_depth = fish_depth = invert_depth = '_5&10m_'
 nperm = 999
-run.ord = TRUE
+run.ord = FALSE
 
 if(run.ord == TRUE){
   print("Working on kelp ordination")
@@ -336,9 +336,9 @@ Separate Sites and Species plots for clarity.
 
 Note: spp score must be min of abs(0.2) to show up on plot. So only black and blue show up on yoy plot.
 
-```{r Figure-3, fig.width=6, fig.height=8}
+```{r Figure-3, fig.width=4.5, fig.height=8}
 
-par( mfrow = c(4,2), pty='s' , mar = c(2,4,0,0) )
+par( mfrow = c(4,2), pty='s' , mar = c(3.5,1,0,0), mgp=c(2,1,0) )
 
 xy=c(-7,7)
 xy2 = c(-1.7, 1.7)
@@ -347,7 +347,8 @@ var.cex = 0.7
 plotspp = FALSE
 sppseparate = TRUE
 sppcol = 'black'
-
+min.score = 0.2
+scores.cex = 0.8
 
 p_kelp = ifelse( kelp_ord$cap$manova$stats[1,6]<0.001 , "p < 0.001",
          paste0("p < ", round(kelp_ord$cap$manova$stats[1,6],3)))
@@ -371,46 +372,46 @@ rownames(fish_ord$cap$cproj) <- str_replace( rownames(fish_ord$cap$cproj), "[.]"
 # relabel
 rownames(yoy_ord$cap$cproj) <- c('copper','canary','blue','black/yellowtail','rockfish yoy')
 
-Plot_Ordination( data.file = kelp_ord$cap.df , ord.file = kelp_ord$cap, min.score = 0.2,
+# kelps
+Plot_Ordination( data.file = kelp_ord$cap.df , ord.file = kelp_ord$cap, min.score = min.score,
                  Yform = 'LD', Xform =  ' ~ site + year + col + pch', pval = p_kelp,
-                 Xlim = c(-3,3), Ylim=c(-3,3), Xlim2 = xy2, Ylim2=xy2, scores.cex = 1.0, scores.font = 3,
+                 Xlim = c(-3,3), Ylim=c(-3,3), Xlim2 = xy2, Ylim2=xy2, scores.cex = scores.cex, scores.font = 3,
                  plot.species = plotspp , spp.separate = sppseparate, fig.legend = 'Kelp', sppcol = sppcol)
 
-legend('bottomright', legend=site.col$site, pch=19, col=site.col$col, bty='n', cex=0.8 )
+legend('bottomleft', legend=site.col$site, pch=19, col=site.col$col, bty='n', cex=0.8 )
 yr = year.pch[year.pch$year != 2015 & year.pch$year!=2020 ,]
 
-legend('bottomleft', legend=yr$year, pch=as.numeric(yr$pch), col='darkgrey',pt.bg = 'black', bty='n', cex=0.8 )
+legend('topleft', legend=yr$year, pch=as.numeric(yr$pch), col='darkgrey',pt.bg = 'black', bty='n', cex=0.8 )
 
 # invets
-Plot_Ordination( data.file = invert_ord$cap.df , ord.file = invert_ord$cap, min.score = 0.2, pval = p_inv, 
-                 Yform = 'LD', Xform =  ' ~ site + year + col + pch',scores.cex = 1.0,
+Plot_Ordination( data.file = invert_ord$cap.df , ord.file = invert_ord$cap, min.score = min.score, pval = p_inv, 
+                 Yform = 'LD', Xform =  ' ~ site + year + col + pch',scores.cex = scores.cex,
                  Xlim = xy, Ylim=xy, Xlim2 = xy2, Ylim2=xy2,
                  plot.species = FALSE , spp.separate = sppseparate, fig.legend = 'Inverts', sppcol = sppcol)
 
-# spp_scores = data.frame(invert_ord$cap$cproj[c('green urchin',
-#                                                'red urchin',
-#                                                'purple urchin', 
-#                                                'leather star',
-#                                                'brood star',
-#                                                'Pisaster'),])
-# text(spp_scores$LD1, spp_scores$LD2,rownames(spp_scores), col = 'red', cex=0.8)
+z = data.frame(invert_ord$cap$cproj [ c('purple urchin','red urchin','green urchin'),])
+z$spp = rownames(z)
+text( z$LD1 , z$LD2, z$spp, col='red')
+
+
+
 
 # fish
-Plot_Ordination( data.file = fish_ord$cap.df , ord.file = fish_ord$cap, min.score = 0.2,
+Plot_Ordination( data.file = fish_ord$cap.df , ord.file = fish_ord$cap, min.score = min.score,
                  Yform = 'LD', Xform =  ' ~ site + year + col + pch', pval = p_fish,
-                 Xlim = c(-3,3), Ylim=c(-3,3), Xlim2 = xy2, Ylim2=xy2,scores.cex = 1.0,
+                 Xlim = c(-2,2), Ylim=c(-2,2), Xlim2 = xy2, Ylim2=xy2,scores.cex = scores.cex,
                  plot.species = plotspp , spp.separate = sppseparate, fig.legend = 'Fish', sppcol = sppcol)
 
 
 
-# sebastes
-Plot_Ordination( data.file = yoy_ord$cap.df , ord.file = yoy_ord$cap, min.score = 0.2,
+# sebastes yoy
+Plot_Ordination( data.file = yoy_ord$cap.df , ord.file = yoy_ord$cap, min.score = min.score,
                  Yform = 'LD', Xform =  ' ~ site + year + col + pch', pval = p_yoy,
-                 Xlim = c(-5,5), Ylim=c(-5, 5), Xlim2 = xy2, Ylim2=xy2,scores.cex = 1.0,
+                 Xlim = c(-5,5), Ylim=c(-5, 5), Xlim2 = xy2, Ylim2=xy2, scores.cex = scores.cex,
                  plot.species = plotspp , spp.separate = sppseparate, fig.legend = 'Sebastes YOY', sppcol = sppcol)
 
 
-# yoy_ord$cap$cproj
+
 
 
 
@@ -452,7 +453,7 @@ p
 
 ## Ordinations 5-m depth only
 
-```{r ordinations-5m, include = FALSE}
+```{r ordinations-5m, include = FALSE, eval=FALSE}
 ## these analyses are run at the transect level
 ## later graphing may summarize them at different scales
 
@@ -529,7 +530,7 @@ Separate Sites and Species plots for clarity.
 
 
 
-```{r ordinations-plots-separate-spp-panes-5m, fig.width=6, fig.height=8}
+```{r ordinations-plots-separate-spp-panes-5m, fig.width=6, fig.height=8, eval=FALSE}
 
 par( mfrow = c(4,2), pty='s' , mar = c(2,4,0,0) )
 
@@ -603,7 +604,7 @@ Plot_Ordination( data.file = yoy_ord$cap.df , ord.file = yoy_ord$cap, min.score 
 
 ### Explained variance figure 5 m
 
-``` {r explained-variance-5m, fig.width=4.5, fig.height=3.5}
+``` {r explained-variance-5m, fig.width=4.5, fig.height=3.5 , eval = FALSE}
 
 axislabels = c("S",'Y','SY','Res')
 
@@ -623,7 +624,7 @@ hist.col = c(RColorBrewer::brewer.pal(12,'Paired')[c(3,2,6,7)])
 
 library(ggplot2)
 p = ggplot( df , aes(x = x,  y = r2, fill=Spp)) +
-    # geom_point() + 
+    # geom_point() +
     #geom_jitter(size = 4) +
     geom_bar(stat="identity", position=position_dodge(), color='black') +
     scale_fill_manual( values =  hist.col )+
