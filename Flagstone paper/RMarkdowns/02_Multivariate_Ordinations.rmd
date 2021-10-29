@@ -424,14 +424,14 @@ Plot_Ordination( data.file = yoy_ord$cap.df , ord.file = yoy_ord$cap, min.score 
 axislabels = c('D', "S",'Y','SD','DY','SY','Res')
 
 f = data.frame(cbind('Fish' , axislabels, fish_ord$pm[1:7,'R2']))
-s = data.frame(cbind('Sebastes YOY', axislabels,yoy_ord$pm[1:7,'R2']))
+s = data.frame(cbind('Rockfish YOY', axislabels,yoy_ord$pm[1:7,'R2']))
 k = data.frame(cbind('Kelp', axislabels,kelp_ord$pm[1:7,'R2']))
 v = data.frame(cbind('Inverts', axislabels,invert_ord$pm[1:7,'R2']))
 
 df = rbind(f,s,k,v)
 colnames(df) <- c('Spp','x', 'r2')
 df$r2 = as.numeric(df$r2)
-df$Spp <- factor(df$Spp, levels = c("Kelp","Inverts","Fish",'Sebastes YOY'))
+df$Spp <- factor(df$Spp, levels = c("Kelp","Inverts","Fish",'Rockfish YOY'))
 
 df$x <-   factor(df$x , levels = axislabels)
 
