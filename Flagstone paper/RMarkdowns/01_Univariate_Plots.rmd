@@ -31,7 +31,7 @@ library(RColorBrewer)
 library(ggpubr) 
 # library(tidyr)
 # library(dplyr)
-# library(tinytex) # for pdf output
+library(tinytex) # for pdf output
 
 # display.brewer.all(colorblindFriendly = TRUE)
 #vlibrary(readxl)
@@ -273,8 +273,8 @@ SP.yoy <- c("SEBYTyoy", "Black & Yellowtail",  'black',
             "SEMYyoy", "Blue" ,                fish.col[2],
             #"SENEyoy", "China",                fish.col[10],
             "SEPIyoy", "Canary",               fish.col[6],
-            "RYOY", "Unidentified",            fish.col[9],
-            "TOTyoy", "Total",                 fish.col[10])
+            "RYOY", "Unidentified",            'darkgrey') # ,
+            #"TOTyoy", "Total",                 fish.col[10])
 
 SP.yoy <- matrix(SP.yoy,ncol=3,byrow=T) %>% as.data.frame()
 colnames(SP.yoy) <- c("taxa","name",'col')
@@ -291,11 +291,13 @@ yoy.plot <- ggplot(fish_taxa_year %>% filter(taxa %in% SP.yoy$taxa) %>% left_joi
     scale_x_continuous(breaks=seq(2015,2021)) +
     #scale_color_viridis_d(option="plasma", end=0.75) + 
     scale_color_manual(values=SP.yoy$col)+
-    ylab("Rockfish Recruits") +
+    ylab("No. per transect") +
     xlab("Year") +
     theme_bw() +
     theme(legend.title=element_blank(),
           legend.background = element_blank(),
+          #axis.title.y = element_text(size=10),
+          axis.title.y = element_text(size=8)
           #legend.position = c(0.8, 0.7),
           #legend.text = element_text(size = 7)
           )
@@ -332,15 +334,16 @@ fish.plot <- ggplot(fish_taxa_year %>% filter(taxa %in% fish.taxa$taxa) %>% left
   geom_line(aes(x=year,y=grand_mean,color=name)) +
   geom_errorbar(aes(x=year,color=name,ymin=grand_mean-grand_SE,ymax=grand_mean+grand_SE),
                 width=0) +
-  scale_y_continuous(trans="sqrt",breaks=c(0,1,5,10,20,40,60,80),limits=c(0,NA)) +
+  scale_y_continuous(trans="sqrt",breaks=c(0,1,5,10),limits=c(0,10)) +
   scale_x_continuous(breaks=seq(2015,2021)) +
   #scale_color_viridis_d(option="plasma", end=0.75) + 
   scale_color_manual(values=fish.taxa$col)+
-  ylab("Fish") +
-  xlab("Year") +
+  ylab("No. per transect") +
+  xlab("") +
   theme_bw() +
   theme(legend.title=element_blank(),
         legend.background = element_blank(),
+        axis.title.y = element_text(size=8)
         #legend.position = c(0.7, 0.5),
         #legend.text = element_text(size = 7)
         )
@@ -348,19 +351,108 @@ fish.plot <- ggplot(fish_taxa_year %>% filter(taxa %in% fish.taxa$taxa) %>% left
 ```
 ## Fish and YOY plot 
 
+Note: I have yellowtail here, but they are not in the multivariate stuff since we reall only saw them once.
 
-```{r combined-fish-yoy, fig.width=5, fig.height=4}
+```{r fish-yoy, fig.width=5, fig.height=4}
 
-g1 <- ggplotGrob(fish.plot)
-g2 <- ggplotGrob(yoy.plot)
-
-g <- rbind(g1, g2, size = "first")
-
-g$widths <- grid::unit.pmax(g1$widths, g2$widths)
-grid::grid.newpage()
-grid::grid.draw(g)
+ggarrange(
+  fish.plot,yoy.plot,
+  labels = c('a) Fish','b) YOY'), 
+  # labels = 'auto',
+  font.label = list(face='plain', size = 10),
+  hjust = -1.25,
+  vjust = 2,
+  nrow = 2, ncol=1,
+  align = 'v'
+)
 
 ```
+
+## Fish and YOY facet by site x year
+
+
+```{r supplement-fish-site-year, fig.width=5, fig.height=6}
+
+fish_ys = readRDS( paste0(Data_Loc,'Summarized_Data_Fish_site_year_taxa.rds') ) %>% filter(taxa %in% fish.taxa[,1])
+fish_ys$site = factor(fish_ys$site , levels = c("Neah Bay","Tatoosh Island","Cape Alava","Cape Johnson","Destruction Island"))
+
+fish_ys <- fish_ys %>% left_join(.,fish.taxa)
+
+
+ggplot(fish_ys , aes(x = year, y = Mean, color = site)) +
+          geom_point() + 
+          geom_line() + 
+          geom_errorbar(aes(x=year,color=site,ymin=Mean-SE,ymax=Mean+SE),width=0) +
+          scale_x_continuous(breaks=seq(2015,2021)) +
+          scale_color_manual(values=site.col$col)+
+          xlab("")+
+          ylab(" Number per 30x2 m transect")+
+          # facet_grid(rows = 'taxa', scales="free_y") +
+          facet_wrap( ~ name, scales="free",nrow=4) +
+          theme_bw() +
+          theme(  legend.title = element_blank(),
+                  legend.text = element_text(size = 7),
+                  legend.key.size =  unit(0.25,"point"),
+                  legend.background = element_blank(),
+                  legend.position = c(0.7, 0.1),
+                  axis.text = element_text( size = 8 ),
+                  axis.text.x = element_text( size = 8 ),
+                  strip.background = element_blank(),
+                  strip.text = element_text(size = 8),
+                  strip.placement = "inside",
+                  panel.grid  = element_blank(),
+                  panel.spacing = unit(0.5, "lines"),
+         )
+            
+
+
+
+
+```
+
+
+```{r supplement-yoy-site-year, fig.width=5, fig.height=6}
+
+yoy_ys = readRDS( paste0(Data_Loc,'Summarized_Data_Fish_site_year_taxa.rds') ) %>% 
+         filter(taxa %in% SP.yoy[,1]) %>% 
+          left_join(.,SP.yoy)
+
+yoy_ys$site = factor(yoy_ys$site , levels = c("Neah Bay","Tatoosh Island","Cape Alava","Cape Johnson","Destruction Island"))
+
+
+ggplot(yoy_ys , aes(x = year, y = Mean, color = site)) +
+          geom_point() + 
+          geom_line() + 
+          geom_errorbar(aes(x=year,color=site,ymin=Mean-SE,ymax=Mean+SE),width=0) +
+          scale_x_continuous(breaks=seq(2015,2021)) +
+          scale_color_manual(values=site.col$col)+
+          xlab("")+
+          ylab(" Number per 30x2 m transect")+
+          # facet_grid(rows = 'taxa', scales="free_y") +
+          facet_wrap( ~ name, scales="free",nrow=3) +
+          theme_bw() +
+          theme(  legend.title = element_blank(),
+                  legend.text = element_text(size = 7),
+                  legend.key.size =  unit(0.25,"point"),
+                  legend.background = element_blank(),
+                  legend.position = c(0.85, 0.2),
+                  axis.text = element_text( size = 8 ),
+                  axis.text.x = element_text( size = 8 ),
+                  strip.background = element_blank(),
+                  strip.text = element_text(size = 8),
+                  strip.placement = "inside",
+                  panel.grid  = element_blank(),
+                  panel.spacing = unit(0.5, "lines"),
+         )
+            
+
+
+
+
+```
+
+
+
 
 # ALGAE
 
@@ -637,12 +729,16 @@ kelp_coast
 
 # mean coastwide across depths
 
+
 dfx5 <- big3 %>% group_by(year, species) %>% filter(zone == 5) %>%
                 summarise(Mean = mean(mean.density), 
                           SD = sd(mean.density),
                           N = length(year),
                           SE = SD/sqrt(N)
-                )
+                ) 
+dfx5$species[dfx5$species=='MACPYR'] <- 'Macrocystis'  
+dfx5$species[dfx5$species=='NERLUE'] <- 'Nerocystis'  
+dfx5$species[dfx5$species=='PTECAL'] <- 'Pteropophora'  
 
 kelp_coast5 <- ggplot( dfx5 , aes(x=year, y=Mean, color=species)) +
                 geom_point() +
@@ -652,12 +748,15 @@ kelp_coast5 <- ggplot( dfx5 , aes(x=year, y=Mean, color=species)) +
                                        ymax=Mean+SE,color=species),width=0) +
                 scale_color_manual(values = site.col$col)+
                 scale_x_continuous(breaks=seq(2015,2021)) +
-                xlab("Year")+
+                xlab("")+
                 scale_y_continuous(expression("Stipe density (stipe m"^-2*")")) +
+               
                 theme_bw()+
-                ggtitle('Kelps 5-m')+
+                #ggtitle('Kelps 5-m')+
                 theme( legend.title = element_blank(), 
-                       strip.background = element_blank()) 
+                       legend.text = element_text(face='italic'),
+                       strip.background = element_blank(),
+                       axis.title.y = element_text(size=8))
                 
 
 kelp_coast5
@@ -734,7 +833,9 @@ ggplot() +
       # scale_color_viridis_d(option="plasma",end=0.75)+
       scale_color_manual(values = site.col$col)+
       theme_bw()+
-      theme(legend.title = element_blank(), strip.background = element_blank())
+      theme(legend.title = element_blank(), 
+            strip.background = element_blank(),
+            axis.title.y = element_text(size=8))
    
 
 ```
@@ -787,6 +888,35 @@ urchin_plot_all <- ggplot(data=urchins_all,aes(x=year, y= mean.density, col = si
                           strip.background = element_blank())
   
 urchin_plot_all + rotate_x_text(angle = 45)
+
+```
+
+
+```{r urchin-spp-year}
+
+urchin_year <- urchins_all %>% group_by(taxa, year) %>%
+               summarize(Mean = mean(mean.density), 
+                         SD = sd(mean.density), 
+                         N = length(site),
+                         SE = sqrt(SD)/N)
+
+
+
+urchin.plot <- ggplot(urchin_year, aes(x = year, y=Mean, color=taxa)) +
+                geom_point() + 
+                geom_line() + 
+                geom_errorbar(data=urchin_year, 
+                              aes(x=year, ymin=Mean-SE ,ymax=Mean+SE ,  color=taxa),width=0) +
+                scale_color_manual(values = site.col$col[c(4,3,2)]) +
+                scale_x_continuous("", breaks=seq(2015,2021)) +
+                scale_y_continuous(expression("Urchin density (m"^-2*")")) +
+                theme_bw()+
+                theme(legend.title = element_blank(),
+                      axis.text.x = element_text(size=10),
+                      strip.background = element_blank(),
+                      axis.title.y = element_text(size=8))
+
+urchin.plot
 
 ```
  
@@ -1137,5 +1267,59 @@ for multivariate analysis; cut and paste to that file
 fish.spp =   c("OPEL", "HEXA", "SECA", "SCMA" ,"SENE", "SEME", 'EMBI','GOBI')
 
 yoy.spp =    c("SECAyoy", "SEPIyoy", "SEMYyoy", "SEBYTyoy","RYOY")
+
+# SOME USEFUL TABLES
+
+```{r fish-table , results='asis' }
+
+fish_total <- fish_transect %>% group_by(species) %>%
+                                summarise(Total = sum(Count)) %>%
+                                left_join(.,fish_codes, by = c('species' = 'code'))
+# fish_total = na.omit(fish_total)
+
+fish_total$spp <- str_replace(fish_total$spp, "_", " ")
+fish_total$com_name <- str_replace(fish_total$com_name, "_", " ")
+fish_total$spp <- str_replace(fish_total$spp, "[.]", " ")
+
+fish_total <- fish_total[,c('spp', 'com_name', 'group', 'Total')] %>%
+              rename(Species = spp) %>%
+              rename('Common name' = com_name) %>%
+              rename (Group=group)
+library(tinytex)
+#library(xtable)
+library(htmlTable)
+
+# fish_total <- data.frame(fish_total)
+#print(xtable(fish_total , type='html'))
+
+
+htmlTable(fish_total, rnames=FALSE)
+write.csv(fish_total, paste0(Fig_Loc,"Table-Fish-Table.csv"))
+
+#knitr::kable(fish_total)
+
+```
+
+
+```{r Figure-2, fig.width=5, fig.height=7}
+
+# library(ggpubr)
+
+
+ggarrange(
+  kelp_coast5, urchin.plot, fish.plot,yoy.plot,
+  labels = c('a)','b)','c)','d)'), 
+  # labels = 'auto',
+  font.label = list(face='plain', size = 10),
+  hjust = -5,
+  vjust = 2,
+  nrow = 4, ncol=1,
+  align = 'v'
+)
+
+
+```
+
+
 
 
