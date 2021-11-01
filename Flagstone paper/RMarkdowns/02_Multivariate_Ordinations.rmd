@@ -419,9 +419,9 @@ Plot_Ordination( data.file = yoy_ord$cap.df , ord.file = yoy_ord$cap, min.score 
 
 ### Explained variance figure YSD
 
-``` {r Figure-4, fig.width=4.5, fig.height=3.5}
+``` {r Figure-4, fig.width=4.5, fig.height=3}
 
-axislabels = c('D', "S",'Y','SD','DY','SY','Res')
+axislabels = c('D', "S",'Y','SxD','DxY','SxY','Res')
 
 f = data.frame(cbind('Fish' , axislabels, fish_ord$pm[1:7,'R2']))
 s = data.frame(cbind('Rockfish YOY', axislabels,yoy_ord$pm[1:7,'R2']))
@@ -445,7 +445,9 @@ p = ggplot( df , aes(x = x,  y = r2, fill=Spp)) +
     scale_fill_manual( values =  hist.col )+
     ylab('Prop. explained variance') +
     xlab("") +
-     theme_minimal()
+    theme_bw() + 
+    theme( legend.title = element_blank(),
+           legend.text = element_text(size = 8))
 
 p
 
