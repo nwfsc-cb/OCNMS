@@ -171,9 +171,9 @@ fish.spp = c('lingcod', 'greenlings','copper.rockfish','cabazon','blue.rockfish'
 
 
 kelp <- kelp %>% rename('Macrocystis' = 'MACPYR') %>%
-                 rename('Nerocystis' = 'NERLUE') %>%
-                 rename('Pterogophora' = 'PTECAL')
-kelp.spp = c('Macrocystis','Nerocystis','Pterogophora')
+                 rename('Nereocystis' = 'NERLUE') %>%
+                 rename('Pterygophora' = 'PTECAL')
+kelp.spp = c('Macrocystis','Nereocystis','Pterygophora')
 
 # kelp.spp = c('MACPYR','NERLUE','PTECAL')
 
@@ -367,10 +367,22 @@ p_yoy = ifelse( yoy_ord$cap$manova$stats[1,6]<0.001 , "p < 0.001",
 rownames(invert_ord$cap$cproj) <- str_replace( rownames(invert_ord$cap$cproj), "[.]" , " ")
 rownames(fish_ord$cap$cproj) <- str_replace( rownames(fish_ord$cap$cproj), "[.]" , " ")
 
-# check the rownames
-# rownames(yoy_ord$cap$cproj)
-# relabel
-rownames(yoy_ord$cap$cproj) <- c('copper','canary','blue','black/yellowtail','rockfish yoy')
+
+# fix yoy rownames
+rn <- rownames(yoy_ord$cap$cproj)
+rn[rn == 'SECAyoy'] <- 'copper'
+rn[rn == 'SEPIyoy'] <- 'canary'
+rn[rn == 'SEMYyoy'] <- 'blue'
+rn[rn == 'SEBYTyoy'] <- 'black/yellowtail'
+rn[rn == 'RYOY'] <- 'rockfish yoy'
+rownames(yoy_ord$cap$cproj) <- rn
+
+# fix kelp names
+rn <- rownames(kelp_ord$cap$cproj)
+rn[rn == 'Nerocystis'] <- 'Nereocystis'
+rn[rn == 'Pterogophora'] <- 'Pterygophora'
+rownames(kelp_ord$cap$cproj) <- rn
+
 
 # kelps
 Plot_Ordination( data.file = kelp_ord$cap.df , ord.file = kelp_ord$cap, min.score = min.score,

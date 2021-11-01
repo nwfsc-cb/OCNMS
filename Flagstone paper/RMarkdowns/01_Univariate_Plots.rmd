@@ -578,7 +578,7 @@ kelp1+ rotate_x_text(angle = 45)
 kelp2
 ```
 
-## Nerocystis at Tatoosh
+## Nereocystis at Tatoosh
 
 ```{r canopy-kelp-tatoosh , fig.width=5, fig.height=3.5}
  # Basic time-series by site and zone TATOOSH FOCUS
@@ -643,7 +643,7 @@ Plot the big 3 species: Macro, Nero, Ptero
  big3 <- algae3 %>% filter(species %in% big3spp)
  big3$site <- factor(big3$site,levels=sites)
  
- kelp.labs = c('Macrocystis','Nerocystis','Pterogophora')
+ kelp.labs = c('Macrocystis','Nereocystis','Pterygophora')
  names(kelp.labs) <- big3spp
  
  
@@ -663,7 +663,8 @@ Plot the big 3 species: Macro, Nero, Ptero
     scale_color_manual(values = site.col$col)+
     theme_bw()+
     theme(legend.title = element_blank(),
-          strip.background = element_blank())
+          strip.background = element_blank(),
+          strip.text.y = element_text(face='italic'))
 
 kelp1 + rotate_x_text(angle = 45)
 
@@ -743,8 +744,8 @@ dfx5 <- big3 %>% group_by(year, species) %>% filter(zone == 5) %>%
                           SE = SD/sqrt(N)
                 ) 
 dfx5$species[dfx5$species=='MACPYR'] <- 'Macrocystis'  
-dfx5$species[dfx5$species=='NERLUE'] <- 'Nerocystis'  
-dfx5$species[dfx5$species=='PTECAL'] <- 'Pteropophora'  
+dfx5$species[dfx5$species=='NERLUE'] <- 'Nereocystis'  
+dfx5$species[dfx5$species=='PTECAL'] <- 'Pterygophora'  
 
 kelp_coast5 <- ggplot( dfx5 , aes(x=year, y=Mean, color=species)) +
                 geom_point() +
