@@ -336,7 +336,7 @@ Separate Sites and Species plots for clarity.
 
 Note: spp score must be min of abs(0.2) to show up on plot. So only black and blue show up on yoy plot.
 
-```{r Figure-3, fig.width=4.5, fig.height=8}
+```{r Figure-4, fig.width=4.5, fig.height=8}
 
 par( mfrow = c(4,2), pty='s' , mar = c(3.5,1,0,0), mgp=c(2,1,0) )
 
@@ -419,7 +419,7 @@ Plot_Ordination( data.file = yoy_ord$cap.df , ord.file = yoy_ord$cap, min.score 
 
 ### Explained variance figure YSD
 
-``` {r Figure-4, fig.width=4.5, fig.height=3}
+``` {r Figure-5, fig.width=4.5, fig.height=3}
 
 axislabels = c('D', "S",'Y','SxD','DxY','SxY','Res')
 
