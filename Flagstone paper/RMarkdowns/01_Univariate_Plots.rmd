@@ -347,7 +347,7 @@ fish.plot <- ggplot(fish_taxa_year %>% filter(taxa %in% fish.taxa$taxa) %>% left
   theme(legend.title=element_blank(),
         legend.background = element_blank(),
         axis.title.y = element_text(size=8),
-        legend.position = c(0.2, 0.8),
+        #legend.position = c(0.2, 0.8),
         legend.text = element_text(size = 8),
         legend.key.size = unit(0.5,'lines')
         )
@@ -789,7 +789,7 @@ dat.invert$grp2[u] <- 'URCHIN'
 s = grep('star', dat.invert$taxa)
 dat.invert$grp2[s] = 'STAR'
 
-dat.invert$grp2[dat.invert$taxa %in% c('Pisaster','Pynopodia')] <- 'STAR'
+dat.invert$grp2[dat.invert$taxa %in% c('Pisaster','Pycnopodia')] <- 'STAR'
 
 
 # Aggregate up to the transect level (within year, site, area, zone)
@@ -1353,19 +1353,62 @@ library(htmlTable)
 # fish_total <- data.frame(fish_total)
 #print(xtable(fish_total , type='html'))
 
+fish_total <- fish_total[ order(fish_total$Total, decreasing = TRUE),]
+head(fish_total)
 
-htmlTable(fish_total, rnames=FALSE)
 write.csv(fish_total, paste0(Fig_Loc,"Table-Fish-Table.csv"))
 
 #knitr::kable(fish_total)
 
 ```
+```{r kelp-table}
 
+kelp_total <- kelp_transect %>% group_by(species) %>%
+                                summarise(Density = mean(density)) %>%
+                                left_join(.,kelp_codes, by = c('species' = 'species')) %>%
+                                rename(spp = species) %>%
+                                rename(Species = name2) 
+                                
+kelp_total <- kelp_total[,c('Species','Density')]
+kelp_total <- kelp_total[order(kelp_total$Density, decreasing = TRUE ),]
+
+# head(kelp_total)
+# output csv for table in supplement
+write.csv(kelp_total, paste0(Fig_Loc,"Table-Kelp-Table.csv"))
+
+```
+
+
+```{r invert-table}
+
+invert_total <- invert_transect %>% rename(SPP = species) %>%
+                                group_by(SPP) %>%
+                                summarise(Density = mean(density), Total = sum(total.count)) %>%
+                                left_join(.,swath_codes, by = c('SPP' = 'CLASSCODE')) %>%
+                                rename(Taxa = taxa) %>%
+                                rename(Species = species)
+
+
+                                
+invert_total <- invert_total[,c('Species','Taxa','Total','Density')]
+invert_total <- invert_total[ order (invert_total$Total, decreasing = TRUE ),]
+
+head(invert_total)
+# output csv for table in supplement
+write.csv(invert_total, paste0(Fig_Loc,"Table-Inverts-Table.csv"))
+
+```
+
+# Combined Figures for MS
 
 ```{r Figure-2_3Combined, fig.width=6, fig.height=6}
 
 # library(ggpubr)
-
+kelp_coast5 <- kelp_coast5 + theme(legend.position = c(0.30 , 0.85) )
+urchin.plot <- urchin.plot + theme(legend.position = c(0.30 , 0.85) )
+stars_year  <- stars_year  + theme(legend.position = c(0.50 , 0.80) )
+fish.plot   <- fish.plot   + theme(legend.position = c(0.60 , 0.40) ) + guides(color=guide_legend(ncol=2))
+yoy.plot    <- yoy.plot    + theme(legend.position = c(0.70 , 0.70) )
 
 ggarrange(
   kelp_coast5, urchin.plot, stars_year, fish.plot,yoy.plot,
@@ -1384,6 +1427,10 @@ ggarrange(
 ```{r Figure-2, fig.width=4, fig.height=6}
 
 # library(ggpubr)
+
+kelp_coast5 <- kelp_coast5 + theme(legend.position = c(0.22,0.85) )
+urchin.plot <- urchin.plot + theme(legend.position = c(0.22,0.85) )
+stars_year  <- stars_year  + theme(legend.position = c(0.70,0.80) )
 
 
 ggarrange(
@@ -1404,9 +1451,12 @@ ggarrange(
 
 # library(ggpubr)
 
+fish.plot <- fish.plot + theme(legend.position = c(0.35,0.9) )
+
+yoy.plot <- yoy.plot + theme(legend.position =c(0.7,0.8) )
 
 ggarrange(
-  fish.plot,yoy.plot,
+  fish.plot, yoy.plot,
   labels = c('a)','b)','c)','d)', 'e)'), 
   # labels = 'auto',
   font.label = list(face='plain', size = 10),
