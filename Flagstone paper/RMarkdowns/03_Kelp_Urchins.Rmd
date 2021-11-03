@@ -126,7 +126,7 @@ Note: for Neah Bay in 2016
 ```{r import-kelp-urchins}
 
 df_transect1 = readRDS(paste0(Data_Loc,'Data_Inverts_Kelp_transect_wide.rds')) %>% 
-              filter(site %in% sites) 
+               filter(site %in% sites) 
               
 df_transect2 = df_transect1[,c('site','year','transect','area','zone', 
                              'NERLUE','MACPYR', 'PTECAL',
@@ -178,7 +178,7 @@ pl <- df_transect %>%
          panel.grid  = element_blank(),
          panel.spacing = unit(0.5, "lines"),
          )+
-  labs(x="Urchin Density",y=("Log (Kelp Density+1)"),col="Site")
+  labs(x="Urchin density",y=("Kelp density"),col="Site")
 pl
 
 
@@ -189,12 +189,13 @@ pl
 ```{r kelp-urchins-site-5&10m}
 
 kelp_site   <- df_transect %>% group_by(year, site, zone, kelp_spp) %>% 
-               summarise(kelp_mean = mean(kelp_density) ) 
+               summarise(kelp_mean = mean(kelp_density , na.rm = TRUE )   ) 
                 # rename(mean = kelp_mean) %>%
                 # rename(spp = kelp_spp)
-                # 
+
+            # 
 urchin_site <- df_transect %>% group_by(year, site, zone,  urchin_spp) %>% 
-               summarise(urchin_mean = mean(urchin_density) ) 
+               summarise(urchin_mean = mean(urchin_density, na.rm = TRUE) ) 
                 # rename(mean = urchin_mean) %>%
                 # rename(spp = urchin_spp)
 
@@ -203,7 +204,7 @@ urchin_site <- df_transect %>% group_by(year, site, zone,  urchin_spp) %>%
 ### it is joinging all three urchins to each kelp.  
 ### do NOT use for calculation of means etc down line.
 
-df_site <-  left_join(kelp_site, urchin_site, by=c('year', 'site','zone'))
+df_site <-  full_join(kelp_site, urchin_site, by=c('year', 'site','zone'))
 
 dim(df_site)
 dim(kelp_site)
@@ -216,6 +217,7 @@ pl <-  ggplot(df_site, aes(x=urchin_mean, y=kelp_mean, col=site) )+
   # scale_color_manual(values=color5 , pch=kelp_urchins_long$yr)+
   scale_color_manual(values=site.col$col )+
   facet_grid(urchin_spp ~ kelp_spp)+
+  labs(x="Urchin density",y=("Kelp density"),col="Site")+
   theme_bw()+
   theme( legend.title = element_blank(),
          legend.text = element_text(size = 7),
@@ -229,7 +231,7 @@ pl <-  ggplot(df_site, aes(x=urchin_mean, y=kelp_mean, col=site) )+
          panel.grid  = element_blank(),
          panel.spacing = unit(0.5, "lines"),
          )
-  labs(x="Urchin density",y=("Kelp density"),col="Site")
+   
 pl
 
 ```
@@ -241,12 +243,12 @@ pl
 ```{r kelp-urchins-site-5}
 
 kelp_site   <- df_transect %>% group_by(year, site, zone, kelp_spp) %>% 
-               summarise(kelp_mean = mean(kelp_density) ) 
+               summarise(kelp_mean = mean(kelp_density, na.rm = TRUE) ) 
                 # rename(mean = kelp_mean) %>%
                 # rename(spp = kelp_spp)
                 # 
 urchin_site <- df_transect %>% group_by(year, site, zone,  urchin_spp) %>% 
-               summarise(urchin_mean = mean(urchin_density) ) 
+               summarise(urchin_mean = mean(urchin_density, na.rm = TRUE) ) 
                 # rename(mean = urchin_mean) %>%
                 # rename(spp = urchin_spp)
 
@@ -266,7 +268,7 @@ pl <- df_site %>% filter(zone == 5) %>%
   # geom_point(size=2.5, pch=kelp_urchins_long$yr)+
   geom_point(size=1)+
   theme_minimal()+
-  # scale_color_manual(values=color5 , pch=kelp_urchins_long$yr)+
+  labs(x="Urchin density",y=("Kelp density"),col="Site")+
   scale_color_manual(values=site.col$col )+
   facet_grid(urchin_spp ~ kelp_spp)+
   theme_bw()+
@@ -294,12 +296,12 @@ pl
 ```{r kelp-urchins-site-mean-across-depths}
 
 kelp_site   <- df_transect %>% group_by(year, site,  kelp_spp) %>% 
-               summarise(kelp_mean = mean(kelp_density) ) 
+               summarise(kelp_mean = mean(kelp_density, na.rm = TRUE) ) 
                 # rename(mean = kelp_mean) %>%
                 # rename(spp = kelp_spp)
                 # 
 urchin_site <- df_transect %>% group_by(year, site,  urchin_spp) %>% 
-               summarise(urchin_mean = mean(urchin_density) ) 
+               summarise(urchin_mean = mean(urchin_density, kelp_site = TRUE) ) 
                 # rename(mean = urchin_mean) %>%
                 # rename(spp = urchin_spp)
 
@@ -308,7 +310,7 @@ urchin_site <- df_transect %>% group_by(year, site,  urchin_spp) %>%
 ### it is joinging all three urchins to each kelp.  
 ### do NOT use for calculation of means etc down line.
 
-df_site <-  left_join(kelp_site, urchin_site, by=c('year', 'site'))
+df_site <-  full_join(kelp_site, urchin_site, by=c('year', 'site'))
 
 df_site$pch = substring(df_site$year,4,4)
 
@@ -322,6 +324,7 @@ pl <- df_site %>%
   # geom_point(size=1)+
   theme_minimal()+
   scale_color_manual(values=site.col$col )+
+  labs(x="Urchin density",y=("Kelp density"),col="Site")+
   facet_grid(urchin_spp ~ kelp_spp)+
   theme_bw()+
   theme( legend.title = element_blank(),
@@ -336,7 +339,7 @@ pl <- df_site %>%
          panel.grid  = element_blank(),
          panel.spacing = unit(0.5, "lines"),
          )
-  labs(x="Urchin density",y=("Kelp density"),col="Site")
+ 
 pl
 
 
@@ -367,12 +370,52 @@ This plot compared to the previous is interesting.
 2. At the site level, there is a  positive correlation for *Nerocystis* (r = `r cor.nero`) and for *Pterogophora* (r = `r cor.ptero`)at Tatoosh across years. 
 
 
-# TOTAL URCHINS VS TOTAL KELP
+# TATOOSH
+
+## By transect  
+
+```{r tatoosh-kelp-urchins-transect, fig.width=3.5, fig.height=4}
+
+df_tat = df_transect %>% filter( site == 'Tatoosh Island' ) %>%
+                     filter( kelp_spp %in% c("NERLUE",'PTECAL') ) %>%
+                     filter( urchin_spp == "purple urchin")
 
 
-```{r total-urchins-kelp}
-
-
+ggplot( df_tat , aes( x=kelp_density , y=urchin_density )) + 
+  geom_point( size = 3, pch = df_tat$pch , show.legend = FALSE ) +
+  #geom_text(data=df_tat , aes(x=kelp_density,y=urchin_density, label=pch2), size = 3)+
+  facet_wrap(facets = df_tat$kelp_spp, ncol=1)+
+  xlim(0,4)+
+  ylim(0,NA)+
+  xlab("Kelp density") +
+  ylab('Urchin density') +
+  theme_bw()
+  
 ```
 
 
+## Across years
+
+```{r tatoosh-kelp-urchins-site, fig.width=3.5, fig.height=4}
+
+df_tat = df_site %>% filter( site == 'Tatoosh Island' ) %>%
+                     filter( kelp_spp %in% c("NERLUE",'PTECAL') ) %>%
+                     filter( urchin_spp == "purple urchin")
+
+df_tat$pch2 = as.character(df_tat$year)
+
+ku.cor = cor(df_tat$kelp_mean, df_tat$urchin_mean)
+
+ggplot( df_tat , aes( x=kelp_mean , y=urchin_mean )) + 
+  #geom_point( size = 4, pch = df_tat$pch ) +
+  geom_text(data=df_tat , aes(x=kelp_mean,y=urchin_mean, label=pch2), size = 3)+
+  facet_wrap(facets = df_tat$kelp_spp, ncol=1)+
+  xlim(0,4)+
+  ylim(0,NA)+
+  xlab("Kelp density") +
+  ylab('Urchin density') +
+  theme_bw()
+  
+```
+
+Correlation between kelp and urchins summarized across years r = `r ku.cor`.
