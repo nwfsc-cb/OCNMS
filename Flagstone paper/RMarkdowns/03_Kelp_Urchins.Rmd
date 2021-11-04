@@ -390,9 +390,10 @@ df_tat = df_transect %>% filter( site == 'Tatoosh Island' ) %>%
                      filter( urchin_spp == "Purple urchins")
 
 dfx = df_tat %>% filter(kelp_spp == "Nereocystis")
+dfx = na.omit(dfx)
 Y = dfx$urchin_density
 X = dfx$kelp_density
-  
+
 
 m1 <- nls( Y ~ a * exp(k * X), 
            start=list(a=1,k=-1), 
@@ -412,13 +413,18 @@ g1 = mgcv::gam(Y ~ s(X))
 sg1 = summary(g1)
 p1 = predict(g1)
 
+dfx$p1 = as.numeric(p1)
+
+# combine to plot
+df_tat <- df_tat %>% left_join(., dfx)
+
+
 sg1
 
 plot_transect <- ggplot( df_tat , aes( x=kelp_density , y=urchin_density )) + 
   geom_point( size = 3, pch = df_tat$pch , show.legend = FALSE ) +
-  #geom_text(data=df_tat , aes(x=kelp_density,y=urchin_density, label=pch2), size = 3)+
   facet_wrap(facets = df_tat$kelp_spp, ncol=1)+
-  # geom_line(data = subset(df_tat,kelp_spp == "Nereocystis"), aes(x = df_tat$kelp_density , y = p1))+
+  # geom_line(  data=df_tat %>% filter(kelp_spp == "Nereocystis"), aes(x = kelp_density , y = p1))+
   xlim(0,4)+
   ylim(0,NA)+
   xlab("Kelp density") +
