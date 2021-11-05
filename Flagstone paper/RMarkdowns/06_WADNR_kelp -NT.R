@@ -1,11 +1,11 @@
 # Examine overflight data from WADNR
 
 library(tidyverse)
-
+library(ggplot2)
 # data.dir <- "/Users/ole.shelton/Github/OCNMS/Flagstone paper/Data"
 # setwd(data.dir)
 
-# setwd('..')
+setwd('..')
 HomeFile = getwd()
 Data_Loc = paste0(HomeFile,"/Data/")
 Fig_Loc = paste0(HomeFile,"/Plots/")
@@ -100,9 +100,7 @@ kelp.can.long <- kelp.all %>% pivot_longer(.,cols=contains("can"),
                          )
 
 kelp.can.long$species <- factor(kelp.can.long$species, levels=
-                            c("Total",
-                              "Nereocystis",
-                              "Macrocystis"))            
+                                  c("Total","Macrocystis", "Nereocystis"))        
 
 kelp.pl.long <-  kelp.all %>% pivot_longer(.,cols=contains("pl"),
                                      names_to="pl_type",values_to="pl_ha") %>%
@@ -114,9 +112,7 @@ kelp.pl.long <-  kelp.all %>% pivot_longer(.,cols=contains("pl"),
                       )
 
 kelp.pl.long$species <- factor(kelp.pl.long$species, levels=
-                              c("Total",
-                                "Nereocystis",
-                                "Macrocystis"))            
+                              c("Total","Macrocystis", "Nereocystis"))
                   
                   
 
@@ -133,8 +129,8 @@ kelp.pl.long$species <- factor(kelp.pl.long$species, levels=
 
 
 p.canopy <- ggplot(kelp.can.long,aes(y=canopy_ha,x=year,color=species)) +
-    geom_point(alpha=0.5) +
-    geom_line(alpha=0.5) +
+    geom_point() +
+    geom_line() +
     facet_wrap(~site,ncol=2,scale="free") +
     scale_y_continuous("Canopy area (ha)") +
     scale_color_manual(values = site.col$col[c(5,1,2,3)])+
@@ -145,8 +141,8 @@ p.canopy
  
 
 p.plan <- ggplot(kelp.pl.long,aes(y=pl_ha,x=year,color=species)) +
-  geom_point(alpha=0.5) +
-  geom_line(alpha=0.5) +
+  geom_point() +
+  geom_line() +
   facet_wrap(~site,ncol=2,scale="free") +
   scale_y_continuous("Planimeter area (ha)") +
   scale_color_manual(values = site.col$col[c(5,1,2,3)])+

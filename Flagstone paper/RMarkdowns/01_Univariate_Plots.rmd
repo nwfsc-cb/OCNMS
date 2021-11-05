@@ -142,13 +142,14 @@ saveRDS(settings, file = paste0(Data_Loc,'settings.RDS') )
  
 theme_nt   <-   theme(legend.title=element_blank(),
                       legend.background = element_blank(),
-                      axis.title.y = element_text(size=8),
+                      axis.title = element_text(size=8),
                       axis.text.x = element_text(size=8),
                       strip.background = element_blank(),
                       legend.text = element_text(size = 8),
                       legend.key.size = unit(0.5,'lines')
 )
 
+saveRDS(theme_nt, file = paste0(Data_Loc, 'theme_nt.rds') )
 
 ```
 
@@ -1354,6 +1355,7 @@ Imports data file from other R file. Plot just kelp canopy. Add to ggarrange bel
 
 canopy = readRDS( paste0(Data_Loc, "Data_Kelp_Canopy_Long.rds") )
 
+canopy$species = factor(canopy$species, levels = c('Total','Macrocystis','Nereocystis'))
 
 canopy.kelp <- ggplot( canopy %>% filter(., site == 'Coastwide') %>% filter(., year %in% 2015:2021), 
                        aes(x=year, y = canopy_ha, color = species)) +
