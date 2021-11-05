@@ -45,9 +45,9 @@ source("R-functions-ocnms.r")
 
 
 # Paths for files
-setwd('..')
-HomeFile = getwd()
-# HomeFile = "C:/Users/nick.tolimieri/Documents/GitHub/OCNMS/"
+# setwd('..')
+# HomeFile = getwd()
+HomeFile = "C:/Users/nick.tolimieri/Documents/GitHub/OCNMS/Flagstone paper"
 
 Fig_Loc = paste0(HomeFile,"/Plots/")
 Data_Loc = paste0(HomeFile,"/Data/")
@@ -133,6 +133,21 @@ settings = list(min.vis = min.vis,
                 swath_codes = swath_codes)
 
 saveRDS(settings, file = paste0(Data_Loc,'settings.RDS') )
+
+
+```
+
+
+```{r set-global-plotting-theme}
+ 
+theme_nt   <-   theme(legend.title=element_blank(),
+                      legend.background = element_blank(),
+                      axis.title.y = element_text(size=8),
+                      axis.text.x = element_text(size=8),
+                      strip.background = element_blank(),
+                      legend.text = element_text(size = 8),
+                      legend.key.size = unit(0.5,'lines')
+)
 
 
 ```
@@ -298,15 +313,8 @@ yoy.plot <- ggplot(fish_taxa_year %>% filter(taxa %in% SP.yoy$taxa) %>% left_joi
     scale_color_manual(values=SP.yoy$col)+
     ylab("No. per transect") +
     xlab("Year") +
-    theme_bw() +
-    theme(legend.title=element_blank(),
-          legend.background = element_blank(),
-          #axis.title.y = element_text(size=10),
-          axis.title.y = element_text(size=8),
-          legend.position = c(0.7, 0.8),
-          legend.text = element_text(size = 8),
-          legend.key.size = unit(0.75,'lines')
-          )
+    theme_bw() + theme_nt +
+    theme(legend.position = c(0.7, 0.8) )
 
 yoy.plot
 
@@ -348,16 +356,9 @@ fish.plot <- ggplot(fish_taxa_year %>% filter(taxa %in% fish.taxa$taxa) %>% left
   scale_color_manual(values=fish.taxa$col)+
   ylab("No. per transect") +
   xlab("") +
-  theme_bw() +
-  theme(legend.title=element_blank(),
-        legend.background = element_blank(),
-        axis.title.y = element_text(size=8),
-        #legend.position = c(0.2, 0.8),
-        legend.text = element_text(size = 8),
-        legend.key.size = unit(0.5,'lines')
-        )
-# guides(color=guide_legend(ncol=2))
-
+  theme_bw() + theme_nt + 
+  theme(legend.position = c(0.2, 0.8) )
+        
 fish.plot
 ```
 ## Fish and YOY plot 
@@ -400,23 +401,8 @@ ggplot(fish_ys , aes(x = year, y = Mean, color = site)) +
           ylab(" Number per 30x2 m transect")+
           # facet_grid(rows = 'taxa', scales="free_y") +
           facet_wrap( ~ name, scales="free",nrow=4) +
-          theme_bw() +
-          theme(  legend.title = element_blank(),
-                  legend.text = element_text(size = 7),
-                  legend.key.size =  unit(0.25,"point"),
-                  legend.background = element_blank(),
-                  legend.position = c(0.7, 0.1),
-                  axis.text = element_text( size = 8 ),
-                  axis.text.x = element_text( size = 8 ),
-                  strip.background = element_blank(),
-                  strip.text = element_text(size = 8),
-                  strip.placement = "inside",
-                  panel.grid  = element_blank(),
-                  panel.spacing = unit(0.5, "lines"),
-         )
-            
-
-
+          theme_bw() + theme_nt +
+          theme(legend.position = c(0.7, 0.1))
 
 
 ```
@@ -441,20 +427,9 @@ ggplot(yoy_ys , aes(x = year, y = Mean, color = site)) +
           ylab(" Number per 30x2 m transect")+
           # facet_grid(rows = 'taxa', scales="free_y") +
           facet_wrap( ~ name, scales="free",nrow=3) +
-          theme_bw() +
-          theme(  legend.title = element_blank(),
-                  legend.text = element_text(size = 7),
-                  legend.key.size =  unit(0.25,"point"),
-                  legend.background = element_blank(),
-                  legend.position = c(0.85, 0.2),
-                  axis.text = element_text( size = 8 ),
-                  axis.text.x = element_text( size = 8 ),
-                  strip.background = element_blank(),
-                  strip.text = element_text(size = 8),
-                  strip.placement = "inside",
-                  panel.grid  = element_blank(),
-                  panel.spacing = unit(0.5, "lines"),
-         )
+          theme_bw() + theme_nt + 
+          theme(  legend.position = c(0.85, 0.2) )
+                  
             
 
 
@@ -559,9 +534,7 @@ canopy$site = factor(canopy$site, levels = sites)
     scale_y_continuous(expression("Stipe density (stipe m"^-2*")")) +
     # scale_color_viridis_d(option="plasma",end=0.75)+
     scale_color_manual(values = site.col$col)+
-    theme_bw()+
-    theme(legend.title = element_blank(),
-          strip.background = element_blank())
+    theme_bw()+ theme_nt 
 
 kelp1+ rotate_x_text(angle = 45)
 ```
@@ -579,8 +552,7 @@ kelp1+ rotate_x_text(angle = 45)
    scale_y_continuous(expression("Stipe density (stipe m"^-2*")")) +
    # scale_color_viridis_d(option="plasma",end=0.75)+
    scale_color_manual(values = site.col$col)+
-   theme_bw()+
-   theme(legend.title = element_blank())
+   theme_bw()+ theme_nt
 kelp2
 ```
 
@@ -597,7 +569,7 @@ kelp3 =  ggplot(canopy %>% filter(site=="Tatoosh Island",species=="NERLUE")) +
    scale_y_continuous(expression("Stipe density (stipe m"^-2*")"),limits=c(0,NA)) +
    scale_color_viridis_d("Depth (m)",option="plasma",end=0.75)+
    ggtitle("Tatoosh Island") +
-   theme_bw()
+   theme_bw() + theme_nt
 kelp3
 
 ```
@@ -633,9 +605,7 @@ mac_ner_zone <- mac_ner %>% group_by(year,site,zone) %>%
     scale_y_continuous(expression("Stipe density (stipe m"^-2*")")) +
     # scale_color_viridis_d(option="plasma",end=0.75)+
     scale_color_manual(values = site.col$col)+
-    theme_bw()+
-    theme(legend.title = element_blank(), 
-          strip.background = element_blank())
+    theme_bw()+ theme_nt
  all_canopy_zone
 ```
 
@@ -667,10 +637,8 @@ Plot the big 3 species: Macro, Nero, Ptero
     scale_y_continuous(expression("Stipe density (stipe m"^-2*")")) +
     # scale_color_viridis_d(option="plasma",end=0.75)+
     scale_color_manual(values = site.col$col)+
-    theme_bw()+
-    theme(legend.title = element_blank(),
-          strip.background = element_blank(),
-          strip.text.y = element_text(face='italic'))
+    theme_bw()+ theme_nt + 
+    theme(strip.text.y = element_text(face='italic'))
 
 kelp1 + rotate_x_text(angle = 45)
 
@@ -698,8 +666,7 @@ kelp1 + rotate_x_text(angle = 45)
     scale_y_continuous(expression("Stipe density (stipe m"^-2*")")) +
     # scale_color_viridis_d(option="plasma",end=0.75)+
     scale_color_manual(values = site.col$col)+
-    theme_bw()+
-    theme(legend.title = element_blank(), strip.background = element_blank())
+    theme_bw()+ theme_nt
 
 kelp1 + rotate_x_text(angle = 45)
 
@@ -728,8 +695,7 @@ kelp_coast <- ggplot( dfx , aes(x=year, y=Mean, color=species)) +
                 scale_x_continuous(breaks=seq(2015,2021)) +
                 xlab("Year")+
                 scale_y_continuous(expression("Stipe density (stipe m"^-2*")")) +
-                theme_bw()+
-                theme( legend.title = element_blank(), strip.background = element_blank())+
+                theme_bw()+ theme_nt +
                 ggtitle('Kelps 5 and 10 m')
 
 kelp_coast
@@ -764,13 +730,8 @@ kelp_coast5 <- ggplot( dfx5 , aes(x=year, y=Mean, color=species)) +
                 xlab("")+
                 scale_y_continuous(expression("Stipe density (stipe m"^-2*")"), limits = c(0,3)) +
                
-                theme_bw()+
-                #ggtitle('Kelps 5-m')+
-                theme( legend.title = element_blank(), 
-                       legend.text = element_text(face='italic', size = 8),
-                       legend.background = element_blank(),
-                       strip.background = element_blank(),
-                       axis.title.y = element_text(size=8),
+                theme_bw()+ theme_nt + 
+                theme( legend.text = element_text(face = 'italic'),
                        legend.position = c(0.2, 0.8),
                        legend.key.size = unit(0.5,'lines'))
                 
@@ -849,10 +810,7 @@ ggplot() +
       scale_y_continuous(expression("Urchin density (m"^-2*")")) +
       # scale_color_viridis_d(option="plasma",end=0.75)+
       scale_color_manual(values = site.col$col)+
-      theme_bw()+
-      theme(legend.title = element_blank(), 
-            strip.background = element_blank(),
-            axis.title.y = element_text(size=8))
+      theme_bw()+ theme_nt
    
 
 ```
@@ -899,11 +857,7 @@ urchin_plot_all <- ggplot(data=urchins_all,aes(x=year, y= mean.density, col = si
                     scale_color_manual(values = site.col$col) +
                     scale_x_continuous("Year", breaks=seq(2015,2021)) +
                     scale_y_continuous(expression("Urchin density (m"^-2*")")) +
-                    theme_bw()+
-                    theme(legend.title = element_blank(),
-                          axis.text.x = element_text(size=10),
-                          strip.background = element_blank())
-  
+                    theme_bw()+ theme_nt
 urchin_plot_all + rotate_x_text(angle = 45)
 
 ```
@@ -927,15 +881,9 @@ urchin.plot <- ggplot(urchin_year, aes(x = year, y=Mean, color=taxa)) +
                 scale_color_manual(values = site.col$col[c(4,3,2)]) +
                 scale_x_continuous("", breaks=seq(2015,2021)) +
                 scale_y_continuous(expression("Urchin density (m"^-2*")"), limits=c(0,3)) +
-                theme_bw()+
-                theme(legend.title = element_blank(),
-                      legend.text = element_text( size = 8),
-                      axis.text.x = element_text(size=10),
-                      strip.background = element_blank(),
-                      axis.title.y = element_text(size=8),
-                      legend.background = element_blank(),
-                      legend.position = c(0.2, 0.8),
-                       legend.key.size = unit(0.75,'lines'))
+                theme_bw()+ theme_nt +
+                theme(legend.position = c(0.2, 0.8),
+                      legend.key.size = unit(0.75,'lines'))
 
 urchin.plot
 
@@ -966,13 +914,8 @@ ggplot() +
       scale_y_continuous(expression("Star density (m"^-2*")")) +
       # scale_color_viridis_d(option="plasma",end=0.75)+
       scale_color_manual(values = site.col$col)+
-      theme_bw()+
-       theme_bw()+
-                theme(legend.title = element_blank(),
-                      legend.text = element_text( size = 8),
-                      axis.text.x = element_text(size=10),
-                      strip.background = element_blank(),
-                      axis.title.y = element_text(size=8))
+      theme_bw()+ theme_nt
+       
 
 
 
@@ -1003,16 +946,9 @@ stars_year <- ggplot() +
       scale_y_continuous(expression("Star density (m"^-2*")")) +
       # scale_color_viridis_d(option="plasma",end=0.75)+
       scale_color_manual(values = star.col)+
-      theme_bw()+
-      theme(legend.title = element_blank(),
-                      legend.text = element_text( size = 8),
-                      axis.text.x = element_text( size=10),
-                      strip.background = element_blank(),
-                      axis.title.y = element_text(size=8),
-                      legend.position = c(0.7, 0.7),
-                      legend.background = element_blank(),
-                      legend.key.size = unit(0.75,'lines')) +
-                      guides(color=guide_legend(ncol=2))
+      theme_bw()+ theme_nt + 
+      theme(legend.position = c(0.7, 0.7), legend.key.size = unit(0.75,'lines')) +
+      guides(color=guide_legend(ncol=2))
 
 
 stars_year
@@ -1045,8 +981,8 @@ stars_plot_all <- ggplot(data=stars_all,aes(x=year, y= mean.density, col = site)
                     scale_color_manual(values = site.col$col) +
                     scale_x_continuous("Year", breaks=seq(2015,2021)) +
                     scale_y_continuous(expression("Urchin density (m"^-2*")")) +
-                    theme_bw()+
-                    theme(legend.title = element_blank())
+                    theme_bw()+ theme_nt
+                   
   
 stars_plot_all
 
@@ -1080,8 +1016,8 @@ kus_plot <- ggplot(kus, mapping = aes(x = year, y=density, color = site)) +
   scale_color_manual(values = site.col$col) +
   scale_x_continuous("Year", breaks=seq(2015,2021)) +
   scale_y_continuous(expression("Density (m"^-2*")")) +
-  theme_bw()+
-  theme(legend.title = element_blank(), strip.background = element_blank())                  
+  theme_bw()+ theme_nt
+                 
                    
 
 kus_plot+ rotate_x_text(angle = 45)
@@ -1305,10 +1241,8 @@ kelpx <- kelp_transect %>% group_by(species,year) %>% summarise(Mean = mean(dens
 ggplot( kelpx , aes(x=year, y = Mean ) ) +
         geom_point() +
         facet_wrap(facets = 'species', ncol=2) +# , scales = 'free_y')+
-        theme_bw()+
-        theme( strip.background = element_blank(),
-               strip.placement = "inside"  )
-
+        theme_bw()+ theme_nt
+       
 
 
 ```
@@ -1324,9 +1258,7 @@ fishx <- fish_transect_taxa %>% group_by(taxa,year) %>% summarise(Mean = mean(Co
 ggplot( fishx , aes(x=year, y = Mean ) ) +
         geom_point() +
         facet_wrap(facets = 'taxa', ncol=4 , scales = 'free_y')+
-        theme_bw()+
-        theme( strip.background = element_blank(),
-               strip.placement = "inside"  )
+        theme_bw()+ theme_nt
 
 
 ```
@@ -1370,6 +1302,9 @@ write.csv(fish_total, paste0(Fig_Loc,"Table-Fish-Table.csv"))
 #knitr::kable(fish_total)
 
 ```
+
+
+
 ```{r kelp-table}
 
 kelp_total <- kelp_transect %>% group_by(species) %>%
@@ -1409,11 +1344,41 @@ write.csv(invert_total, paste0(Fig_Loc,"Table-Inverts-Table.csv"))
 
 ```
 
+
+# Kelp Canopy
+
+Imports data file from other R file. Plot just kelp canopy. Add to ggarrange below.
+
+
+```{r kelp-canopy}
+
+canopy = readRDS( paste0(Data_Loc, "Data_Kelp_Canopy_Long.rds") )
+
+
+canopy.kelp <- ggplot( canopy %>% filter(., site == 'Coastwide') %>% filter(., year %in% 2015:2021), 
+                       aes(x=year, y = canopy_ha, color = species)) +
+                geom_point() +
+                geom_line() +
+                xlab("") +
+                scale_x_continuous(breaks=seq(2015,2021)) +
+                scale_y_continuous("Canopy area (ha)") +
+                scale_color_manual(values = site.col$col[c(5,1,2,3)])+
+                # scale_color_viridis_d(begin=0,end=0.75,option="plasma") +
+                theme_bw() + theme_nt + 
+                theme(legend.key.size = unit(0.5,'lines') )            
+
+
+canopy.kelp
+
+```
+
+
 # Combined Figures for MS
 
-```{r Figure-2_3Combined, fig.width=6, fig.height=6}
+```{r Figure-2-Combined, fig.width=6, fig.height=6}
 
 # library(ggpubr)
+canopy.kelp <- canopy.kelp + theme(legend.position = c(0.75 , 0.65) )
 kelp_coast5 <- kelp_coast5 + theme(legend.position = c(0.30 , 0.85) )
 urchin.plot <- urchin.plot + theme(legend.position = c(0.30 , 0.85) )
 stars_year  <- stars_year  + theme(legend.position = c(0.50 , 0.80) )
@@ -1421,11 +1386,11 @@ fish.plot   <- fish.plot   + theme(legend.position = c(0.60 , 0.40) ) + guides(c
 yoy.plot    <- yoy.plot    + theme(legend.position = c(0.70 , 0.70) )
 
 ggarrange(
-  kelp_coast5, urchin.plot, stars_year, fish.plot,yoy.plot,
-  labels = c('a)','b)','c)','d)', 'e)'), 
+  canopy.kelp, kelp_coast5, urchin.plot, stars_year, fish.plot,yoy.plot,
+  labels = c('a)','b)','c)','d)', 'e)', 'f)'), 
   # labels = 'auto',
   font.label = list(face='plain', size = 10),
-  hjust = -6,
+  hjust = c(rep(-6,5),-9),
   vjust = 2,
   nrow = 3, ncol=2,
   align = 'v'
