@@ -7,10 +7,21 @@ library(tidyverse)
 library(here)
 library(viridis)
 library(janitor)
+library(lme4) # needed for glmer package
 
 # df from Nick, email sent 10-21-2021 2301
 fish_kelp <- read_rds(here::here('Flagstone paper','Data','Data_Fish_Kelp_area_wide.rds'))
 glimpse(fish_kelp)
+
+# 11-04-2021
+# use df's from ole Fish_2015-2021.rds, Swath_2015-2021.rds
+fish <- read_rds(here::here('Flagstone paper','Data','Fish_2015-2021.rds'))
+glimpse(fish)
+swath <- read_rds(here::here('Flagstone paper','Data','Swath_2015-2021.rds'))
+glimpse(swath)
+# summarise first by yr-site-area-zone across transects, exclude poor viz, check for anything else we should filter
+# join the resulting df's, at yr-site-area-zone level
+
 
 # a tabyl of site x area, split into a list by year
 fish_kelp %>%
@@ -188,12 +199,38 @@ purrr::walk2(.x = occur_combos$kelps, .y = occur_combos$fishes, .f=bivariate_plo
 ### 3
 # Analysis and plot of Total YOY occurrence vs 3 kelps
 
-m_occur <- glm( TOTyoy_pres ~ three_kelps + zone, 
+# make dummy area of transects column. area_transects will differ between fish and kelp. use area_transects from fish, because kelp is predictor.
+fish_kelp <- fish_kelp %>%
+  mutate(
+    area_transects = sample(60:240, 1),
+    year_factor = factor(year)
+  )
+
+# based on multivariate analysis, site not a big deal for TOTyoy. on the other hand, year is a big deal. so we include year asa random effect.
+m_occur_full <- glmer( TOTyoy_pres ~ three_kelps + zone + (1|year_factor), 
           family = binomial, 
+          offset = area_transects/100, # makes the units nicer
           data = fish_kelp %>% 
-            filter(is.na(zone) == FALSE)
+            filter(is.na(zone) == FALSE) %>%
+            filter(is.na(three_kelps) == FALSE) %>% # note that 2017       Cape Alava W 10 has no kelp data. fix later
+            filter(is.na(TOTyoy_pres) == FALSE)
           )
-summary(m_occur)
+summary(m_occur_full)
+AIC(m_occur_full)
+
+# # drop zone. could be problematic b/c too much variability among kelp densities when we drop zone
+# m_occur <- glmer( TOTyoy_pres ~ three_kelps + (1|year_factor), 
+#                        family = binomial, 
+#                        offset = area_transects/100, # makes the units nicer
+#                        data = fish_kelp %>% 
+#                          filter(is.na(zone) == FALSE) %>%
+#                          filter(is.na(three_kelps) == FALSE) %>% # note that 2017       Cape Alava W 10 has no kelp data. fix later
+#                          filter(is.na(TOTyoy_pres) == FALSE)
+# )
+# summary(m_occur)
+# AIC(m_occur)
+
+### plotting
 plot_df <- broom::augment(m_occur, type.predict = "response")
 
 base <-
@@ -223,15 +260,22 @@ ggsave(here::here('Flagstone paper',
                   'Total YOY rockfish occurrence as a function of 3 kelps, with fitted logistic regression.pdf'))
 
 ### 4
-# Analysis and plot of Total YOY conditional abundance vs 3 kelps
+# Analysis and plot of Total YOY abundance vs 3 kelps
+# make sure TOTyoy is count data, use negative binomial model
+# use glm.nb is glmer.nb is wonky, and just make year a fixed effect
 
-m_condabund <- glm( TOTyoy_cond_abund ~ three_kelps + zone, 
-                    family=gaussian(link=log), 
-          data = fish_kelp %>% 
-            filter(is.na(zone) == FALSE)
+m_abund_full <- glmer.nb( TOTyoy ~ three_kelps + zone + (1|year_factor), 
+                       offset = area_transects/100, # makes the units nicer
+                       data = fish_kelp %>% 
+                         filter(is.na(zone) == FALSE) %>%
+                         filter(is.na(three_kelps) == FALSE) %>% # note that 2017       Cape Alava W 10 has no kelp data. fix later
+                         filter(is.na(TOTyoy) == FALSE)
 )
-summary(m_condabund)
-plot_df2 <- broom::augment(m_condabund, type.predict = "response")
+summary(m_abund_full)
+AIC(m_abund_full)
+
+
+plot_df2 <- broom::augment(m_abund_full, type.predict = "response")
 
 base <-
   ggplot(plot_df2, aes(x = three_kelps, color = factor(zone))) +
