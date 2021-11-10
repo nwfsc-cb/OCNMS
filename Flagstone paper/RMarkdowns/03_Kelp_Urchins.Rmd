@@ -41,7 +41,9 @@ library(tinytex) # for pdfs
 library(RColorBrewer)
 # display.brewer.all(colorblindFriendly = TRUE)
 library(readxl)
-
+# library(reprex)
+library(ggpubr)
+# library(ggtext)
 # stats packages etc
 library(vegan)
 library(BiodiversityR)
@@ -868,7 +870,7 @@ ptery.tat
 
 ```
 
-# Figure 6 output for main MS
+# Additional supplement figure
 
 
 ```{r Supplement-kelp-vs-urchins-year, fig.height=6, fig.width=6}
@@ -889,13 +891,13 @@ ggarrange( plot_tot, plot_canopy, plot_macro, plot_nereo,  plot_ptero,
 
 ```
 
+# Figure 6 output for main MS
 
 
-# Additional supplement figure
 ```{r Figure-6, fig.height=4, fig.width=3.5}
 
 
-library(ggpubr)
+
 
 ggarrange(plot_ptero, nereo.tat,
            labels = c('a)','b)'), 
@@ -909,3 +911,111 @@ ggarrange(plot_ptero, nereo.tat,
 
 
 ```
+
+# Combined Figure 6
+
+
+```{r Figure-6-Combined, fig.height=5, fig.width=3.5}
+
+df_tot$group = 'Total'
+df_canopy$group = 'Canopy'
+df_macro$group = "Macrocystis"
+df_nereo$group = "Nereocystis"
+df_ptero$group = "Pterygophora"
+
+df = rbind(df_tot,df_canopy,df_macro,df_nereo,df_ptero)
+df$group = factor(df$group , levels = c('Total','Canopy','Macrocystis',"Nereocystis","Pterygophora"))
+
+# Total kelp stipes
+
+dfx = na.omit(df %>% filter(., group == "Total"))
+X = dfx$Urchins
+Y = dfx$Kelp
+R = cor.test(X,Y)
+rstatement1 = paste0('p = ' , round(R$estimate,2) )
+pstatement1 = paste0('p = ' , round(R$p.value,2) )
+
+
+
+# Pterygophora
+dfx = na.omit(df %>% filter(., group == "Pterygophora"))
+X = dfx$Urchins
+Y = dfx$Kelp
+R = cor.test(X,Y)
+rstatement2 = paste0('p = ' , round(R$estimate,2) )
+pstatement2 = paste0('p = ' , round(R$p.value,2) )
+
+stats.x = 4.5
+
+
+
+plot1 <- ggplot( df , aes(x = Urchins, y = Kelp, color=group)) +
+          geom_point(size = 2)+
+          scale_color_manual(values = site.col$col[c(4,5,1,2,3)],
+                             labels = c('Total','Canopy',
+                                        bquote(italic('Macrocystis')),
+                                        bquote(italic('Nereocystis')),
+                                        bquote(italic('Pterygophora'))),
+                             )+
+          xlab( expression(paste('Urchins per 60 ', m^2) ) )+
+          ylab( expression(paste('Stipes per 60 ', m^2)) )+
+          annotate(geom="text", x=stats.x, y=5.0, 
+                   label = "Total stipes",hjust = 0, color=site.col$col[4], size = 3) +
+          annotate(geom="text", x=stats.x, y=4.3, 
+                   label = rstatement1, hjust = 0, color=site.col$col[4], size = 3) +
+          annotate(geom="text", x=stats.x, y=3.8, 
+                   label = pstatement1, hjust = 0, color=site.col$col[4], size = 3) +
+          
+          annotate(geom="text", x=stats.x, y=3.0, 
+                   label = expression(italic("Pterygophora")), 
+                   hjust = 0, color=site.col$col[3], size = 3) +
+          annotate(geom="text", x=stats.x, y=2.35, 
+                   label = rstatement2, hjust = 0, color=site.col$col[3], size = 3) +
+          annotate(geom="text", x=stats.x, y=1.8, 
+                   label = pstatement2, hjust = 0, color=site.col$col[3], size = 3) +
+          theme_bw() + theme_nt + theme( legend.position = c(0.2, 0.8),
+                                         legend.key.size = unit(0.6,'lines'))
+  
+
+
+ggarrange(plot1, nereo.tat,
+           labels = c('a)','b)'), 
+           font.label = list(face='plain', size = 10),
+           hjust = -5.5,
+           vjust = 2,
+           align = 'v',
+           nrow = 2, ncol=1)
+
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
