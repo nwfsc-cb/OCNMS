@@ -932,7 +932,7 @@ dfx = na.omit(df %>% filter(., group == "Total"))
 X = dfx$Urchins
 Y = dfx$Kelp
 R = cor.test(X,Y)
-rstatement1 = paste0('p = ' , round(R$estimate,2) )
+rstatement1 = paste0('r = ' , round(R$estimate,2) )
 pstatement1 = paste0('p = ' , round(R$p.value,2) )
 
 
@@ -942,7 +942,7 @@ dfx = na.omit(df %>% filter(., group == "Pterygophora"))
 X = dfx$Urchins
 Y = dfx$Kelp
 R = cor.test(X,Y)
-rstatement2 = paste0('p = ' , round(R$estimate,2) )
+rstatement2 = paste0('r = ' , round(R$estimate,2) )
 pstatement2 = paste0('p = ' , round(R$p.value,2) )
 
 stats.x = 4.5
@@ -973,8 +973,8 @@ plot1 <- ggplot( df , aes(x = Urchins, y = Kelp, color=group)) +
                    label = rstatement2, hjust = 0, color=site.col$col[3], size = 3) +
           annotate(geom="text", x=stats.x, y=1.8, 
                    label = pstatement2, hjust = 0, color=site.col$col[3], size = 3) +
-          theme_bw() + theme_nt + theme( legend.position = c(0.2, 0.8),
-                                         legend.key.size = unit(0.6,'lines'))
+          theme_bw() + theme_nt + theme( legend.position = c(0.25, 0.85),
+                                         legend.key.size = unit(0.5,'lines'))
   
 
 
