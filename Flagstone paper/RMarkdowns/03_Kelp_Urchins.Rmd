@@ -161,7 +161,7 @@ df_transect$urchin_spp = factor(df_transect$urchin_spp , levels=c('Purple urchin
 
 ## Transect level, all depths
 
-```{r Supplement-kelp-vs-urchins-transet}
+```{r Supplement-kelp-vs-urchins-transect}
 library(cowplot)
 library(viridis)
 
@@ -171,6 +171,8 @@ pl <- df_transect %>%
      #filter(zone == 5) %>%, 
   ggplot(aes(x=urchin_density,y=kelp_density ,col=site))+
   geom_point(size=2.5, pch=df_transect$pch)+
+  xlab( expression(paste('Urchins per 60 ', m^2) ) )+
+  ylab( expression(paste( 'Kelp stipes per 60 ', m^2)) )+
   # geom_point(size=1)+
   theme_minimal()+
   # scale_color_manual(values=color5 , pch=kelp_urchins_long$yr)+
@@ -178,8 +180,8 @@ pl <- df_transect %>%
   facet_grid(urchin_spp ~ kelp_spp)+
   theme_bw()+ theme_nt + 
   theme( legend.text = element_text(size = 8),
-         strip.text.x = element_text(size = 8, face='italic')) +
-  labs(x="Urchin density", y="Kelp density",col="Site", size=10)
+         strip.text.x = element_text(size = 8, face='italic')) 
+  # labs(x="Urchin density", y="Kelp density",col="Site", size=10)
 pl
 
 
@@ -214,11 +216,13 @@ dim(urchin_site)
 pl <-  ggplot(df_site, aes(x=urchin_mean, y=kelp_mean, col=site) )+
   # geom_point(size=2.5, pch=kelp_urchins_long$yr)+
   geom_point(size=1)+
+  xlab( expression(paste('Urchins per 60 ', m^2) ) )+
+  ylab( expression(paste('Kelp stipes per 60 ', m^2)) )+
   theme_minimal()+
   # scale_color_manual(values=color5 , pch=kelp_urchins_long$yr)+
   scale_color_manual(values=site.col$col )+
   facet_grid(urchin_spp ~ kelp_spp)+
-  labs(x="Urchin density",y=("Kelp density"), col="Site")+
+  # labs(x="Urchin density",y=("Kelp density"), col="Site")+
   theme_bw()+ theme_nt +
   theme( legend.key.size =  unit(1,"point"),
          axis.text = element_text( size = 8 ),
@@ -268,8 +272,10 @@ pl <- df_site %>% filter(zone == 5) %>%
   ggplot(., aes(x=urchin_mean, y=kelp_mean, col=site) )+
   # geom_point(size=2.5, pch=kelp_urchins_long$yr)+
   geom_point(size=1)+
+  xlab( expression(paste('Urchins per 60 ', m^2) ) )+
+  ylab( expression(paste('Kelp stipes per 60 ', m^2)) )+
   theme_minimal()+
-  labs(x="Urchin density",y=("Kelp density"),col="Site")+
+  # labs(x="Urchin density",y=("Kelp density"),col="Site")+
   scale_color_manual(values=site.col$col )+
   facet_grid(urchin_spp ~ kelp_spp)+
   theme_bw()+ theme_nt + 
@@ -317,9 +323,11 @@ pl <- df_site %>%
   ggplot(., aes(x=urchin_mean, y=kelp_mean, col=site) )+
   geom_point(size=2.5, pch=df_site$pch)+
   # geom_point(size=1)+
+  xlab( expression(paste('Urchins per 60 ', m^2) ) )+
+  ylab( expression(paste('Kelp stipes per 60 ', m^2)) )+
   theme_minimal()+
   scale_color_manual(values=site.col$col )+
-  labs(x="Urchin density",y=("Kelp density"),col="Site")+
+  # labs(x="Urchin density",y=("Kelp density"),col="Site")+
   facet_grid(urchin_spp ~ kelp_spp)+
   theme_bw()+ theme_nt + 
   theme( legend.key.size =  unit(0.25,"point"),
@@ -392,8 +400,8 @@ plot_tatoosh_transect <- ggplot( df_tat , aes(x=urchin_density , y=kelp_density 
   facet_wrap(facets = df_tat$kelp_spp, ncol=1)+
   xlim(0,NA)+
   ylim(0,NA)+
-  xlab('Purple urchin density') +
-  ylab("Kelp density") +
+  xlab( expression(paste('Purple urchins per 60 ', m^2) ) )+
+  ylab( expression(paste('Kelp stipes per 60 ', m^2)) )+
   geom_smooth( # subset(df_tat, df_tat$kelp_spp == "Nereocystis"),
                # aes(x = kelp_density, y = urchin_density),
                method = "nls",
@@ -453,8 +461,8 @@ plot_tatoosh_year <- ggplot( df_tat , aes(x=urchin_mean  ,y=kelp_mean)) +
   geom_text(data = z, x = 5, y = 0.5, size = 3, aes(label = pstatement), hjust = 0 )+
   xlim(0,NA)+
   ylim(0,NA)+
-  xlab('Purple urchin density') +
-  ylab("Kelp density") +
+  xlab( expression(paste('Urchins per 60 ', m^2) ) )+
+  ylab( expression(paste('Kelp stipes per 60 ', m^2)) )+
   theme_bw() + theme_nt + 
   theme(  legend.title = element_blank(),
           strip.text.y = element_text(size = 8, face = 'italic'),
@@ -489,8 +497,8 @@ df_tot <- df_transect %>%
 plot_site_tot <- ggplot(df_tot , aes(x = urchins, y = kelp ,  color = site)) +
   geom_point(size = 3 , pch = df_tot$pch) +
   scale_color_manual(values=site.col$col)+
-  xlab('Urchin density') +
-  ylab("Kelp density") +
+  xlab( expression(paste('Urchins per 60 ', m^2) ) )+
+  ylab( expression(paste('Kelp stipes per 60 ', m^2)) )+
   xlim(0,NA) + 
   ylim(0,NA)+
   theme_bw() + theme_nt + 
@@ -531,8 +539,8 @@ plot_tot <- ggplot(df_tot , aes(x = Urchins , y = Kelp )) +
   # geom_point(size = 5 , show.legend = FALSE) +
   geom_text(aes(x=Urchins,y=Kelp, label=year), size = 3)+
   # scale_color_manual(values=site.col$col)+
-  xlab('Urchin density') +
-  ylab("Total kelp stipe density") +
+  xlab( expression(paste('Urchins per 60 ', m^2) ) )+
+  ylab( expression(paste('Kelp stipes per 60 ', m^2)) )+
   xlim(0,NA) + 
   ylim(0,NA)+
   annotate(geom="text", x=4, y=2.5, label= rstatement, position=4, hjust = 0,color="black", size = 3) +
@@ -577,8 +585,8 @@ plot_canopy <- ggplot(df_canopy , aes( x = Urchins, y = Kelp )) +
   # geom_point(size = 5 , show.legend = FALSE) +
   geom_text(aes(x=Urchins,y=Kelp,label=year), size = 3)+
   # scale_color_manual(values=site.col$col)+
-  xlab('Urchin density') +
-  ylab("Canopy kelp stipe density") +
+  xlab( expression(paste('Urchins per 60 ', m^2) ) )+
+  ylab( expression(paste('Canopy kelp stipes per 60 ', m^2)) )+
   xlim(0,NA) + 
   ylim(0,NA)+
   annotate(geom="text", x=3, y=2.25, label= rstatement, hjust = 0, color="black", size = 3) +
@@ -621,7 +629,8 @@ plot_nereo <- ggplot(df_nereo , aes(x = Urchins, y = Kelp )) +
   # geom_point(size = 5 , show.legend = FALSE) +
   geom_text(aes(x=Urchins,y=Kelp, label=year), size = 3)+
   # scale_color_manual(values=site.col$col)+
-  xlab('Urchin density') + ylab("Nereocystis stipe density") +
+  xlab( expression(paste('Urchins per 60 ', m^2) ) )+
+  ylab( expression(paste(italic('Nereocystis'), ' stipes per 60 ', m^2)) )+
   xlim(0,NA) + 
   ylim(0,NA)+
   annotate(geom="text", x=1.25, y=1.0, label= rstatement, hjust = 0, color="black", size = 3) +
@@ -662,8 +671,8 @@ plot_macro <- ggplot(df_macro , aes(x = Urchins , y = Kelp)) +
   # geom_point(size = 5 , show.legend = FALSE) +
   geom_text(aes(x=Urchins,y=Kelp, label=year), size = 3)+
   # scale_color_manual(values=site.col$col)+
-  xlab('Urchin density') +
-  ylab("Macrocystis stipe density") +
+  xlab( expression(paste('Urchins per 60 ', m^2) ) )+
+  ylab( expression(paste(italic('Macrocystis'), ' stipes per 60 ', m^2)) )+
   xlim(0,NA) + 
   ylim(0,NA)+
   annotate(geom="text", x=1.5, y=0.5, label= rstatement, hjust = 0, color="black", size = 3) +
@@ -703,8 +712,8 @@ plot_ptero <- ggplot(df_ptero , aes(x = Urchins, y = Kelp )) +
   # geom_point(size = 5 , show.legend = FALSE) +
   geom_text(aes(x=Urchins,y=Kelp, label=year), size = 3)+
   # scale_color_manual(values=site.col$col)+
-  ylab("Pterygophra stipe density") +
-  xlab('Urchin density') +
+  xlab( expression(paste('Urchins per 60 ', m^2) ) )+
+  ylab( expression(paste(italic('Pterygophora'), ' stipes per 60 ', m^2)) )+
   xlim(0,NA) + 
   ylim(0,NA)+
   annotate(geom="text", x=1.5, y=1.50, label= rstatement, hjust = 0, color="black", size = 3) +
@@ -758,8 +767,8 @@ p.tat = ggplot(dfx , aes(x = urchins, y = kelp)) +
                       formula=y ~ a * exp(k * x),
                       method.args = list(start=c(a=1,k=0) ),
                       se=FALSE) + 
-        xlab('Total urchin density')+
-        ylab('Kelp stipe density') + 
+        xlab( expression(paste('Urchins per 60 ', m^2) ) )+
+        ylab( expression(paste('Kelp stipes per 60 ', m^2)) )+
         theme_bw() + theme_nt
 
 p.tat
@@ -786,9 +795,9 @@ m1 <- nls( Y ~ a * exp(k * X),
                                tol=1e-5,
                                printEval=F,
                                warnOnly=F))
-summary(m1)
-coef(m1)
-AIC(m1)
+#summary(m1)
+#coef(m1)
+#AIC(m1)
 m2 = lm( log(Y+0.01) ~ X ) 
 s2 = summary(m2)
 
@@ -798,14 +807,16 @@ pr = data.frame(cbind(X,p2))
 rstatement = bquote(italic(r)^2 == .(format(s2$r.squared, digits = 2)))
 pstatement = paste0('p = ' , round(s2$coefficients[2,4],3) )
 
+# expression(paste("X comes from ",italic("normal distribution")))
+# epression(paste(italic('Pterygophra'), 'stipe density'))
 
 nereo.tat = ggplot(dfx , aes(x = urchins, y = kelp)) + 
         geom_line(data=pr, aes(x=X,y=p2), color='red') +
         geom_text(data=dfx , aes(x=urchins, y=kelp, label=pch), size = 4)+ 
-        xlab('Urchin density')+
-        ylab('Nereocystis stipe density') +
+        xlab( expression(paste('Urchins per 60 ', m^2) ) )+
+        ylab( expression(paste(italic('Nereocystis'), ' stipes per 60 ', m^2)) )+
         annotate(geom="text", x=15, y=30, label = rstatement, hjust = 0, color="black", size = 3) +
-        annotate(geom="text", x=15, y=27, label= pstatement, hjust = 0, color="black", size = 3) +
+        annotate(geom="text", x=15, y=25, label= pstatement, hjust = 0, color="black", size = 3) +
         theme_bw() + theme_nt
 
 nereo.tat
@@ -847,8 +858,8 @@ pstatement = paste0('p = ' , round(s2$coefficients[2,4],3) )
 ptery.tat = ggplot(dfx , aes(x = urchins, y = kelp)) + 
         geom_line(data=pr, aes(x=X,y=p2), color='red') +
         geom_text(data=dfx , aes(x=urchins, y=kelp, label=pch), size = 4)+ 
-        xlab('Urchin density')+
-        ylab('Pterygophora stipe density') +
+        xlab( expression(paste('Urchins per 60 ', m^2) ) )+
+        ylab( expression(paste(italic('Pterygophora'), ' stipes per 60 ', m^2)) )+
         annotate(geom="text", x=15, y=30, label = rstatement, hjust = 0, color="black", size = 3) +
         annotate(geom="text", x=15, y=27, label= pstatement, hjust = 0, color="black", size = 3) +
         theme_bw() + theme_nt
@@ -857,33 +868,42 @@ ptery.tat
 
 ```
 
-```{r urchins-kelp-tatoosh, fig.height=4, fig.width=5}
+# Figure 6 output for main MS
+
+
+```{r Supplement-kelp-vs-urchins-year, fig.height=6, fig.width=6}
 
 
 library(ggpubr)
 
-ggarrange( nereo.tat, ptery.tat, plot_tatoosh_year)
+ggarrange( plot_tot, plot_canopy, plot_macro, plot_nereo,  plot_ptero,
+           labels = c('a)','b)','c)','d)', 'e)'), 
+           font.label = list(face='plain', size = 10) ,
+           hjust = -5.5,
+           vjust = 2,
+           align = 'v',
+           nrow = 3, ncol=2)
+
 
 
 
 ```
 
 
-# Figure 6 output for main MS
 
-
-```{r Figure-6, fig.height=6, fig.width=6}
+# Additional supplement figure
+```{r Figure-6, fig.height=4, fig.width=3.5}
 
 
 library(ggpubr)
 
-ggarrange( plot_tot, plot_canopy, plot_nereo, plot_macro, plot_ptero,
-           labels = c('a)','b)','c)','d)', 'e)'), 
+ggarrange(plot_ptero, nereo.tat,
+           labels = c('a)','b)'), 
            font.label = list(face='plain', size = 10),
            hjust = -5.5,
            vjust = 2,
            align = 'v',
-           nrow = 3, ncol=2)
+           nrow = 2, ncol=1)
 
 
 
