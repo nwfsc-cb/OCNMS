@@ -56,32 +56,50 @@ s_des <-  ggplot( filter(df, site=="Destruction Island") , aes(x = stars, y = ur
       theme(legend.position = 'none')
 
 
-p_all <-  ggplot( df , aes(x = Pisaster, y = urchins, color = site)) +
+pi_all <-  ggplot( df , aes(x = Pisaster, y = urchins, color = site)) +
      geom_point() + 
      scale_color_manual(values = site.col$col)+
      theme_bw() + theme_nt +
      theme(legend.position = 'none')
 
-p_tat <-  ggplot( filter(df, site=="Tatoosh Island"), aes(x = Pisaster, y = urchins, color = site)) +
+py_all <-  ggplot( df , aes(x = Pycnopodia, y = urchins, color = site)) +
+  geom_point() + 
+  scale_color_manual(values = site.col$col)+
+  theme_bw() + theme_nt +
+  theme(legend.position = 'none')
+
+pi_tat <-  ggplot( filter(df, site=="Tatoosh Island"), aes(x = Pisaster, y = urchins, color = site)) +
      geom_point()+
      scale_color_manual(values = site.col$col[2])+
      theme_bw() + theme_nt +
      theme(legend.position = 'none')
 
-p_des <-  ggplot( filter(df, site=="Destruction Island") , aes(x = Pisaster, y = urchins, col=site) )+
+pi_des <-  ggplot( filter(df, site=="Destruction Island") , aes(x = Pisaster, y = urchins, col=site) )+
      geom_point() + 
      scale_color_manual(values = site.col$col[5])+
      theme_bw() + theme_nt +
      theme(legend.position = 'none' )
 
+py_tat <-  ggplot( filter(df, site=="Tatoosh Island"), aes(x =Pycnopodia, y = urchins, color = site)) +
+  geom_point()+
+  scale_color_manual(values = site.col$col[2])+
+  theme_bw() + theme_nt +
+  theme(legend.position = 'none')
+
+py_des <-  ggplot( filter(df, site=="Destruction Island") , aes(x = Pycnopodia, y = urchins, col=site) )+
+  geom_point() + 
+  scale_color_manual(values = site.col$col[5])+
+  theme_bw() + theme_nt +
+  theme(legend.position = 'none' )
+
 graphics.off() 
 
 pdf( paste0(Fig_Loc, "Stars-vs-Urchins.pdf"), height=6, width = 6)
 
-ggarrange( s_all, p_all, 
-           s_tat, p_tat, 
-           s_des, p_des, 
-           nrow = 3, ncol=2,
+ggarrange( s_all, pi_all, py_all,
+           s_tat, pi_tat, py_tat,
+           s_des, pi_des, py_des,
+           nrow = 3, ncol=3,
            align='v',
            labels = c('a)','b)','c)','d)', 'e)', 'f)'), 
            # labels = 'auto',
