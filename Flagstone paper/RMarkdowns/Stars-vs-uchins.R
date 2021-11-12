@@ -76,7 +76,7 @@ p_des <-  ggplot( filter(df, site=="Destruction Island") , aes(x = Pisaster, y =
 
 graphics.off() 
 
-pdf( psate0(Fig_Loc, "Stars-vs-Urchins.pdf"), height=6, width = 6)
+pdf( paste0(Fig_Loc, "Stars-vs-Urchins.pdf"), height=6, width = 6)
 
 ggarrange( s_all, p_all, 
            s_tat, p_tat, 
