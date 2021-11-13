@@ -9,19 +9,52 @@ library(viridis)
 library(janitor)
 library(lme4) # needed for glmer package
 
-# df from Nick, email sent 10-21-2021 2301
-fish_kelp <- read_rds(here::here('Flagstone paper','Data','Data_Fish_Kelp_area_wide.rds'))
-glimpse(fish_kelp)
+# # df from Nick, email sent 10-21-2021 2301
+# fish_kelp <- read_rds(here::here('Flagstone paper','Data','Data_Fish_Kelp_area_wide.rds'))
+# glimpse(fish_kelp)
 
-# 11-04-2021
-# use df's from ole Fish_2015-2021.rds, Swath_2015-2021.rds
-fish <- read_rds(here::here('Flagstone paper','Data','Fish_2015-2021.rds'))
+# 11-04-2021, 11-12-21
+# run prep_fish_data.R, which uses df from ole Fish_2015-2021.rds 
+fish <- read_rds(here::here('Flagstone paper','Data','fish_2015_2021_year_site_area_zone.rds'))
 glimpse(fish)
-swath <- read_rds(here::here('Flagstone paper','Data','Swath_2015-2021.rds'))
-glimpse(swath)
-# summarise first by yr-site-area-zone across transects, exclude poor viz, check for anything else we should filter
-# join the resulting df's, at yr-site-area-zone level
 
+# run prep_algae_data.R, which uses df from ole Swath_2015-2021.rds
+swath <- read_rds(here::here('Flagstone paper','Data','algae_2015_2021_year_site_area_zone.rds'))
+glimpse(swath)
+
+# STOPPED HERE 11-12-21
+# use each fish  transects as data for neg binom. Use area sampled for each fish transects as weights, use mean kelp density for that area as covariate. Same kelp density for all transects in an area
+
+
+# summarise first by yr-site-area-zone across transects 
+## make a fish df summarised by year-site-area-zone, pivot_wide
+fish_area <- fish %>%
+  group_by(
+    year, site, area, zone, taxa
+  ) %>%
+  summarise(
+    count = mean(count, na.rm=TRUE)
+  )
+
+### NEED TO pivot_wide above
+
+## make a kelp df summarised by year-site-area-zone, pivot_wide
+swath_area <- swath %>%
+  group_by(
+    year, site, area, zone, species
+  ) %>%
+  summarise(
+    density = mean(density, na.rm=TRUE),
+    transect.area = sum(transect.area, na.rm=TRUE)
+  ) %>%
+  mutate(
+    transect.area.weight = transect.area/max(transect.area)
+  )
+
+### NEED TO pivot_wide above
+
+# join the resulting df's, at yr-site-area-zone level
+fish_area %>% swath_area(kelp_wide, by=c('site'='site','year'='year','area'='area','zone'='zone'))
 
 # a tabyl of site x area, split into a list by year
 fish_kelp %>%
@@ -207,6 +240,8 @@ fish_kelp <- fish_kelp %>%
   )
 
 # based on multivariate analysis, site not a big deal for TOTyoy. on the other hand, year is a big deal. so we include year asa random effect.
+# For the logit you want the weights argument, not the offset argument. Essentually you want to treat the 60m^2 as having 6 times the weight as a 10m^2 transect. so I think you can call your 60m2 a weight of 1 and the 20m2 with a weight of 0.33, 10m2 with a weight of 1/6, etc.
+
 m_occur_full <- glmer( TOTyoy_pres ~ three_kelps + zone + (1|year_factor), 
           family = binomial, 
           offset = area_transects/100, # makes the units nicer
@@ -265,7 +300,7 @@ ggsave(here::here('Flagstone paper',
 # use glm.nb is glmer.nb is wonky, and just make year a fixed effect
 
 m_abund_full <- glmer.nb( TOTyoy ~ three_kelps + zone + (1|year_factor), 
-                       offset = area_transects/100, # makes the units nicer
+                       offset = log(area_transects/100), # makes the units nicer
                        data = fish_kelp %>% 
                          filter(is.na(zone) == FALSE) %>%
                          filter(is.na(three_kelps) == FALSE) %>% # note that 2017       Cape Alava W 10 has no kelp data. fix later
