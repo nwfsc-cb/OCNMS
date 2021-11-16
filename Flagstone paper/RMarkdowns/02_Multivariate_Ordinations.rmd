@@ -388,7 +388,7 @@ rownames(kelp_ord$cap$cproj) <- rn
 rn <- rownames(fish_ord$cap$cproj)
 rn[rn == 'blue rockfish'] <- 'Blue RF'
 rn[rn == 'copper rockfish'] <- 'Copper RF'
-rn[rn == 'cabazon'] <- 'Cabazon'
+rn[rn == 'cabazon'] <- 'Cabezon'
 rn[rn == 'black rockfish'] <- 'Black RF'
 rn[rn == 'lingcod'] <- 'Lingcod'
 rn[rn == 'greenlings'] <- 'Greenling'
