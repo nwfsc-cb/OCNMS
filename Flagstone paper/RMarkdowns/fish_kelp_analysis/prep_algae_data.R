@@ -31,22 +31,33 @@ dat.algae$fun_gr = kelp_codes$functional_group[ match(dat.algae$species, kelp_co
 dat.algae$area[dat.algae$year == 2015] <- "D"
 
 dat.algae1 <- dat.algae %>%
-  rename(transect.area = Transect.area, count = Count) %>%
+  rename(transect.area.algae = Transect.area, count = Count) %>%
   # mutate(
   #   transect.area.weight = transect.area/max(transect.area)
   # ) %>% # we do not want weights here at the transect level, we want them at the area level
   select(
-    year, site, area, zone, transect, transect.area, observer, # transect.area.weight, 
+    year, site, area, zone, transect, transect.area.algae, observer, # transect.area.weight, 
     group, fun_gr, common.name, species, count 
     ) %>%
   mutate(
-    density = count/transect.area
+    density = count/transect.area.algae
   )
 glimpse(dat.algae1)
 
+# complete data frame with NAs or zeroes as needed. 
+# as of 2021, this only adds algae to 1 transect at DI in 2015 when we only counted macro, nereo, and ptery.
+dat.algae2 <- dat.algae1 %>%
+  complete(species,
+           nesting(year, site, area, zone, transect, transect.area.algae),
+           fill=list(fun_gr = "COMPLETED",
+                     count = NA,
+                     density = NA)
+  )
+glimpse(dat.algae2)
+
 # make sure everything looks ok. it does
-dat.algae1 %>%
+dat.algae2 %>%
   tabyl(site, area, year)
 
 
-write_rds(dat.algae1, here::here('Flagstone paper','Data','algae_2015_2021_year_site_area_zone.rds'))
+write_rds(dat.algae2, here::here('Flagstone paper','Data','algae_2015_2021_year_site_area_zone.rds'))

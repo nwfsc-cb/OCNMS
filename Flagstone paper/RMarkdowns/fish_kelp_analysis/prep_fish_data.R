@@ -91,10 +91,10 @@ fish1c <- fish1a %>% filter(size_class == "small") %>%
 fish1d <- fish1a %>% full_join(.,fish1c) %>%
   rename(count = Count) %>%
   mutate(
-    transect.area = 60 # all fsih transects are 30m x 2m
+    transect.area.fish = 60 # all fish transects are 30m x 2m
   ) %>%
   select(
-    year, site, area, zone, transect, transect.area, observer, 
+    year, site, area, zone, transect, transect.area.fish, observer, 
     common.name, species, taxa, size_class, count, vis_m
   )
 glimpse(fish1d)
