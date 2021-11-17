@@ -86,21 +86,21 @@ df$site <- factor(df$site, levels=settings$sites)
 
 macro1 <- ggplot( df , aes(x = Macro, y = TOTyoy, color=site)) +
      geom_point() + 
-     xlab( expression(paste(italic('Macro'), ' stipes per 60 ', m^2)) )+
+     xlab( expression(paste(italic('Macro'), ' stipes per ', m^2)) )+
      ylab( expression(paste('Rockfish YOY per 60 ',m^2) )) + 
      scale_color_manual(values = site.col$col) +
      theme_bw() + theme_nt
 
 nereo1 <- ggplot( df , aes(x = Nereo, y = TOTyoy, color=site)) +
      geom_point() + 
-     xlab( expression(paste(italic('Nero'), ' stipes per 60 ', m^2)) )+
+     xlab( expression(paste(italic('Nero'), ' stipes per ', m^2)) )+
      ylab( expression(paste('Rockfish YOY per 60 ',m^2) )) + 
      scale_color_manual(values = site.col$col) +
      theme_bw() + theme_nt
 
 ptery1 <- ggplot( df , aes(x = Ptery, y = TOTyoy, color=site)) +
      geom_point() + 
-     xlab( expression(paste(italic('Ptery'), ' stipes per 60 ', m^2)) )+
+     xlab( expression(paste(italic('Ptery'), ' stipes per ', m^2)) )+
      ylab( expression(paste('Rockfish YOY per 60 ',m^2) )) + 
      scale_color_manual(values = site.col$col) +
      theme_bw() + theme_nt
@@ -153,12 +153,15 @@ dat.algae2 %>% tabyl(site, area, year)
 
 # make match
 df$area[df$year == 2015] <- "D"
-dat.algae3 <- dat.algae2[,c('year','site','area','zone','transect.area.algae')]
-     
-df <- left_join(df, dat.algae3) %>%
-       mutate(transect.area.algae.weight = transect.area.algae/max(transect.area.algae)) 
-
-
+dat.algae3 <- dat.algae2[,c('year','site','area','zone','transect','observer','transect.area.algae')]
+ 
+df1 <- dat.algae3 %>%
+        group_by(site,year,area,zone) %>%
+        summarise(transect.area.algae.sum=sum(transect.area.algae)) %>%
+        mutate(transect.area.algae.weight = transect.area.algae.sum/max(transect.area.algae.sum)) 
+        # the anove is not filtered for vis and will contain some obs for which there
+        # are no fish obs.
+df = left_join(df,df1)                
 
 
 #################### Stats #######################
@@ -173,9 +176,9 @@ m_rand <- glmer( TOTyoy_pres ~  (1|year_factor),
                   weights = transect.area.algae.weight,
                   data = df
 )
-
+summary(m_rand)
 AIC(m_rand)
-
+(three_kelps * zone)
 # model with kelp and zones ####
 m_occur <- glmer( TOTyoy_pres ~ (three_kelps * zone) + (1|year_factor), 
                family = binomial, 
@@ -184,10 +187,7 @@ m_occur <- glmer( TOTyoy_pres ~ (three_kelps * zone) + (1|year_factor),
 )
 
 summary(m_occur)
-anova(m_occur)
-
-# delta AIC for model comparison
-
+AIC(m_occur)
 AIC(m_occur)
 
 p_occur <- predict(m_occur , type = "response")
@@ -200,8 +200,9 @@ df$pch = ifelse(df$zone==5,21,19)
 # plot occurence
 plot_occur <-
      ggplot( df , aes(x=three_kelps,y=p_occur, color = site))+
-     geom_point( pch = df$pch)+
-     xlab(expression("Total kelp stipes per 60 ", m^2)) +
+     geom_point(pch = df$pch)+
+     xlab( expression(paste('Kelp stipes per ', m^2)) )+
+     geom_point(aes(x=three_kelps, y = TOTyoy_pres), color='black') + 
      ylab('Probability of occurence') + 
      geom_smooth(formula = y ~ x,
                  aes(x=three_kelps,y = TOTyoy_pres, group=1),
@@ -210,6 +211,25 @@ plot_occur <-
      scale_color_manual(values = site.col$col) +
      theme_bw() + theme_nt
 plot_occur
+
+### separate by depth
+
+plot_occur2 <-
+        ggplot( df , aes(x=three_kelps,y=p_occur, color = site))+
+        geom_point( pch = df$pch)+
+        geom_point(aes(x=three_kelps, y = TOTyoy_pres), color='black') + 
+        xlab( expression(paste('Kelp stipes per ', m^2)) )+
+        ylab('Probability of occurence') + 
+        facet_wrap(facets = df$zone, nrow = 2)+
+        geom_smooth(formula = y ~ x,
+                    aes(x=three_kelps,y = TOTyoy_pres, group=1),
+                    method = "glm", 
+                    method.args = list(family = "binomial")) +
+        scale_color_manual(values = site.col$col) +
+        theme_bw() + theme_nt
+plot_occur2
+
+
 
 
 ####### Abundance Only ####
@@ -240,7 +260,7 @@ df_pos$pred_abund = pred_abund
 plot_abund <-
      ggplot( df_pos , aes(x=three_kelps,y=pred_abund, color = site))+
      geom_point( pch = df_pos$pch)+
-     xlab(expression("Total kelp stipes per 60 ", m^2)) +
+     xlab( expression(paste('Kelp stipes per ', m^2)) )+
      ylab('Probability of occurence') + 
      # geom_smooth(formula = log(y) ~ x,
      #             aes(x=three_kelps,y = TOTyoy, group=1),
@@ -260,7 +280,7 @@ df$predicted = df$p_occur * df$pred_abund
 plot_predicted <-
      ggplot( df , aes(x=three_kelps,y=predicted, color = site))+
      geom_point( pch = df$pch)+
-     xlab(expression("Total kelp stipes per 60 ", m^2)) +
+     xlab( expression(paste('Kelp stipes per ', m^2)) )+
      ylab('Predicted abundance') + 
      scale_color_manual(values = site.col$col) +
      theme_bw() + theme_nt
