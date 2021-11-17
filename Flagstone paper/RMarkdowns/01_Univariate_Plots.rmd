@@ -146,7 +146,7 @@ theme_nt   <-   theme(legend.title=element_blank(),
                       axis.text.x = element_text(size=8),
                       strip.background = element_blank(),
                       legend.text = element_text(size = 8),
-                      legend.key.size = unit(0.5,'lines')
+                      legend.key.size = unit(0.25,'lines')
 )
 
 saveRDS(theme_nt, file = paste0(Data_Loc, 'theme_nt.rds') )
@@ -697,34 +697,11 @@ kelp_coast <- ggplot( dfx , aes(x=year, y=grand_mean, color=species)) +
                                   ymax=grand_mean+grand_SE, color=species),width=0) +
                 scale_color_manual(values = site.col$col)+
                 scale_x_continuous(breaks=seq(2015,2021)) +
-                xlab("Year")+
+                xlab("")+
                 scale_y_continuous(expression("Kelp stipes m"^-2)) +
                 theme_bw()+ theme_nt +
                 theme( legend.text = element_text(face = 'italic'),
-                       legend.key.size = unit(0.5,'lines')) #+
-                #ggtitle('Kelps 5 and 10 m')
-
-# dfx <- big3 %>% group_by(year, species) %>%
-#                 summarise(Mean = mean(mean.density, na.rm = TRUE), 
-#                           SD = sd(mean.density),
-#                           N = length(year),
-#                           SE = SD/sqrt(N)
-#                 )
-
-# kelp_coast <- ggplot( dfx , aes(x=year, y=Mean, color=species)) +
-#                 geom_point() +
-#                 geom_line() +
-#                 geom_errorbar(aes(x=year,
-#                                        ymin=Mean-SE,
-#                                        ymax=Mean+SE,color=species),width=0) +
-#                 scale_color_manual(values = site.col$col)+
-#                 scale_x_continuous(breaks=seq(2015,2021)) +
-#                 xlab("Year")+
-#                 scale_y_continuous(expression("Stipes m"^-2)) +
-#                 theme_bw()+ theme_nt +
-#                 ggtitle('Kelps 5 and 10 m')
-
-
+                       legend.key.size = unit(0.5,'lines')) 
 
 kelp_coast
 ```
@@ -975,9 +952,9 @@ urchin.plot <- ggplot(urchin_year, aes(x = year, y=grand_mean, color=taxa)) +
                 scale_color_manual(values = site.col$col[c(4,3,2)]) +
                 scale_x_continuous("", breaks=seq(2015,2021)) +
                 scale_y_continuous(expression("Urchins m"^-2), limits=c(0,3)) +
-                theme_bw()+ theme_nt +
-                theme(legend.position = c(0.2, 0.8),
-                      legend.key.size = unit(0.75,'lines'))
+                theme_bw()+ theme_nt 
+                # theme(legend.position = c(0.2, 0.8),
+                #       legend.key.size = unit(0.75,'lines'))
 
 urchin.plot
 
@@ -1050,9 +1027,9 @@ stars_year <- ggplot() +
                                     'Medium star',
                                     bquote(italic('Pisaster')),
                                     bquote(italic('Pycnopodia'))))+
-      theme_bw()+ theme_nt + 
-      theme(legend.position = c(0.7, 0.7), legend.key.size = unit(0.75,'lines')) +
-      guides(color=guide_legend(ncol=2))
+      theme_bw()+ theme_nt  
+      # theme(legend.position = c(0.7, 0.7), legend.key.size = unit(0.75,'lines')) +
+      # guides(color=guide_legend(ncol=2))
 
 
 stars_year
@@ -1486,16 +1463,18 @@ Imports data file from other R file. Plot just kelp canopy. Add to ggarrange bel
 
 canopy = readRDS( paste0(Data_Loc, "Data_Kelp_Canopy_Long.rds") )
 
+year.range = 2015:2021
+
 canopy$species = factor(canopy$species, levels = c('Total','Macrocystis','Nereocystis'))
 
-canopy.kelp <- ggplot( canopy %>% filter(., site == 'Coastwide') %>% filter(., year %in% 1990:2021), 
+canopy.kelp <- ggplot( canopy %>% filter(., site == 'Coastwide') %>% filter(., year %in% year.range), 
                        aes(x=year, y = canopy_ha, color = species)) +
                 geom_point() +
                 geom_line() +
                 xlab("") +
-                xlim(1990,2021)+
+                xlim( min(year.range),max(year.range) )+
                 #scale_x_continuous(breaks=seq(2015,2021)) +
-                scale_x_continuous(breaks=seq(1990,2020,5)) +
+                scale_x_continuous(breaks=seq(2015,2021,1), limits = c(2015,2021)) +
                 scale_y_continuous("Canopy area (ha)") +
                 scale_color_manual(values = site.col$col[c(5,1,2,3)],
                                    labels = c('Total', 
@@ -1513,16 +1492,21 @@ canopy.kelp
 
 # Combined Figures for MS
 
-```{r Figure-2-Combined, fig.width=6, fig.height=6}
+```{r Figure-2, fig.width=6, fig.height=6}
 
 # library(ggpubr)
-canopy.kelp <- canopy.kelp + theme(legend.position = c(0.2 , 0.7) )
-kelp_coast <- kelp_coast + theme(legend.position = c(0.30 , 0.9) )
+canopy.kelp <- canopy.kelp + theme(legend.position = c(0.8 , 0.6) )
+kelp_coast  <- kelp_coast +  
+  scale_y_continuous(expression("Kelp stipes m"^-2), breaks=c(0,1,2), limits=c(0,2.2)) +
+  theme(legend.position = c(0.80 , 0.9) )
 kelp_coast5 <- kelp_coast5 + theme(legend.position = c(0.30 , 0.85) )
 urchin.plot <- urchin.plot + theme(legend.position = c(0.30 , 0.85) )
-stars_year  <- stars_year  + theme(legend.position = c(0.50 , 0.80) )
-fish.plot   <- fish.plot   + theme(legend.position = c(0.60 , 0.40) ) + guides(color=guide_legend(ncol=2))
-yoy.plot    <- yoy.plot    + theme(legend.position = c(0.70 , 0.70) )
+stars_year  <- stars_year  + 
+  scale_y_continuous(expression("Sea stars m"^-2), breaks=c(0,0.1,0.2), limits=c(0,0.2)) +
+  theme(legend.position = c(0.60 , 0.85) ) +
+  guides(color=guide_legend(ncol=2))
+fish.plot   <- fish.plot  + theme(legend.position = c(0.35 , 0.75) ) + guides(color=guide_legend(ncol=2))
+yoy.plot    <- yoy.plot + theme(legend.position = c(0.70 , 0.70) )
 
 ggarrange(
   canopy.kelp, kelp_coast, urchin.plot, stars_year, fish.plot,yoy.plot,
@@ -1538,49 +1522,6 @@ ggarrange(
 
 ```
 
-```{r Figure-2, fig.width=4, fig.height=6}
 
-# library(ggpubr)
-
-kelp_coast5 <- kelp_coast5 + theme(legend.position = c(0.22,0.85) )
-urchin.plot <- urchin.plot + theme(legend.position = c(0.22,0.85) )
-stars_year  <- stars_year  + theme(legend.position = c(0.70,0.80) )
-
-
-ggarrange(
-  kelp_coast5, urchin.plot, stars_year,
-  labels = c('a)','b)','c)','d)', 'e)'), 
-  # labels = 'auto',
-  font.label = list(face='plain', size = 10),
-  hjust = -6,
-  vjust = 2,
-  nrow = 3, ncol=1,
-  align = 'v'
-)
-
-
-```
-
-```{r Figure-3, fig.width=4, fig.height=5}
-
-# library(ggpubr)
-
-fish.plot <- fish.plot + theme(legend.position = c(0.35,0.9) )
-
-yoy.plot <- yoy.plot + theme(legend.position =c(0.7,0.8) )
-
-ggarrange(
-  fish.plot, yoy.plot,
-  labels = c('a)','b)','c)','d)', 'e)'), 
-  # labels = 'auto',
-  font.label = list(face='plain', size = 10),
-  hjust = -5,
-  vjust = 2,
-  nrow = 2, ncol=1,
-  align = 'v'
-)
-
-
-```
 
 
