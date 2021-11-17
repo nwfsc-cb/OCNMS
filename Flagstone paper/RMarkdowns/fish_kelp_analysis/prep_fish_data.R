@@ -88,15 +88,21 @@ fish1c <- fish1a %>% filter(size_class == "small") %>%
   summarise(Count_all=sum(Count, na.rm = TRUE)) %>%
   mutate(species="TOTyoy",taxa="TOTyoy") %>%
   rename(Count=Count_all)
+
 fish1d <- fish1a %>% full_join(.,fish1c) %>%
   rename(count = Count) %>%
   mutate(
     transect.area.fish = 60 # all fish transects are 30m x 2m
-  ) %>%
-  select(
-    year, site, area, zone, transect, transect.area.fish, observer, 
-    common.name, species, taxa, size_class, count, vis_m
-  )
+  ) 
+
+fish1d = fish1d[,c('year', 'site', 'area', 'zone', 'transect', 'transect.area.fish', 'observer', 
+                   'common.name', 'species', 'taxa', 'size_class', 'count', 'vis_m')]
+# %>%
+#   select(
+#     year, site, area, zone, transect, transect.area.fish, observer, 
+#     common.name, species, taxa, size_class, count, vis_m
+#   )
+
 glimpse(fish1d)
 
 # make sure everything looks ok. it does
@@ -105,6 +111,18 @@ fish1d %>%
 # fish1d is a clean transect-level df 
 
 # unique(fish1d$taxa)
+
+# quick data check ###
+fish1e = fish1d[,c('year', 'site', 'area', 'zone', 'transect','taxa', 'count' )]
+fish1e = fish1e %>% group_by(year,site,area,zone,transect,taxa) %>%
+  summarise(transect_mean = mean(count)) %>%
+  group_by(year,site,area,zone, taxa)%>%
+  summarise(Mean = mean(transect_mean))
+
+fishwide =  pivot_wider(fish1e, names_from = taxa, values_from = Mean, values_fill = 0)
+dim(fishwide)
+
+# nrows is 95 but low vis rows not excluded, so mostly ok.
 
 write_rds(fish1d, here::here('Flagstone paper','Data','fish_2015_2021_year_site_area_zone.rds'))
 

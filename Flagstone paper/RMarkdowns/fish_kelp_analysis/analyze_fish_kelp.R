@@ -5,7 +5,7 @@ library(MASS)
 # Analysis and plot of Total YOY occurrence vs 3 kelps
 
 # based on multivariate analysis, site not a big deal for TOTyoy. on the other hand, year is a big deal. so we include year asa random effect.
-# For the logit you want the weights argument, not the offset argument. Essentually you want to treat the 60m^2 as having 6 times the weight as a 10m^2 transect. so I think you can call your 60m2 a weight of 1 and the 20m2 with a weight of 0.33, 10m2 with a weight of 1/6, etc.
+# For the logit you want the weights argument, not the offset argument. Essentially you want to treat the 60m^2 as having 6 times the weight as a 10m^2 transect. so I think you can call your 60m2 a weight of 1 and the 20m2 with a weight of 0.33, 10m2 with a weight of 1/6, etc.
 
 # length(which(is.na(fish_kelp$zone) == TRUE))
 # length(which(is.na(fish_kelp$three_kelps) == TRUE))
