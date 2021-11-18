@@ -39,26 +39,36 @@ kelp_codes = data.frame(read.csv( paste0(Data_Loc,"spp_codes_kelp.csv") ))
 
 # Bring in data. Produced in Univariate RMD ####
 
-df = readRDS( paste0(Data_Loc,"Data_Fish_Kelp_area_wide.rds"))
+# this file has mean density data for ordination
+df_dens = readRDS( paste0(Data_Loc,"Data_Fish_Kelp_area_wide.rds"))
+df_dens <- df_dens %>% rename(Macro= MACPYR , Nereo=NERLUE, Ptery=PTECAL)
+df_dens$area[df_dens$year==2015] <- "D"
+
+# this file has counts and areas for some univariate stats
+df_count <- readRDS(paste0(Data_Loc,"Fish-kelp-counts-wide.rds"))
+df_count <- df_count %>% rename(Macro= MACPYR , Nereo=NERLUE, Ptery=PTECAL)
+
+# add the area informatinto the df_dens file
+
+dfx = df_count[,c('site','zone','area','year','fish_area','kelp_area')]
+df_dens <- left_join(df_dens , dfx)
 
 ################## Ordination rockfish yoy vs kelps #########################
 
 # get fish matrix
-yoy = colnames(df)[grep('yoy',colnames(df))]
+yoy = colnames(df_dens)[grep('yoy',colnames(df_dens))]
 yoy = yoy[ yoy != 'TOTyoy']
-fish = df[,yoy]
+fish = df_dens[,yoy]
 
 library(ecole)
 bray.fish = bray0(sqrt(fish))
 
-df <- df %>% rename(Macro= MACPYR , Nereo=NERLUE, Ptery=PTECAL) 
-
-cap1 = capscale( bray.fish ~ Macro + Nereo + Ptery, distance = 'bray', data = df)
+cap1 = capscale( bray.fish ~ Macro + Nereo + Ptery, distance = 'bray', data = df_dens)
 sppscores(cap1) <- fish   # add fish scores sinces used distance matrix
 capscores <- scores(cap1) # get scores
-df$LD1 = capscores$sites[,1]
-df$LD2 = capscores$sites[,2]
-df$col = site.col$col[ match(df$site,site.col$site) ]
+df_dens$LD1 = capscores$sites[,1]
+df_dens$LD2 = capscores$sites[,2]
+df_dens$col = site.col$col[ match(df_dens$site,site.col$site) ]
 
 rn <- rownames(capscores$species)
 rn[rn == 'SECAyoy'] <- 'Copper'
@@ -74,7 +84,7 @@ par( ps = 10, cex = 1, pty='s')
 png(paste0(Fig_Loc,"Ordination-YOY-v-kelp-area.png"), units = 'in', res=300, height=4, width=4)
 
 ordiplot(cap1, cex = 0.8)
-points(df$LD1,df$LD2, col=df$col, pch=19, cex=0.8)
+points(df_dens$LD1,df$LD2, col=df$col, pch=19, cex=0.8)
 text( capscores$species[,1] , capscores$species[,2], rownames(capscores$species),col='red', cex = 0.8 )
 
 dev.off()
@@ -82,23 +92,23 @@ dev.off()
 
 ######### Quick plots #######
 
-df$site <- factor(df$site, levels=settings$sites)
+df_dens$site <- factor(df_dens$site, levels=settings$sites)
 
-macro1 <- ggplot( df , aes(x = Macro, y = TOTyoy, color=site)) +
+macro1 <- ggplot( df_dens , aes(x = Macro, y = TOTyoy, color=site)) +
      geom_point() + 
      xlab( expression(paste(italic('Macro'), ' stipes per ', m^2)) )+
      ylab( expression(paste('Rockfish YOY per 60 ',m^2) )) + 
      scale_color_manual(values = site.col$col) +
      theme_bw() + theme_nt
 
-nereo1 <- ggplot( df , aes(x = Nereo, y = TOTyoy, color=site)) +
+nereo1 <- ggplot( df_dens , aes(x = Nereo, y = TOTyoy, color=site)) +
      geom_point() + 
      xlab( expression(paste(italic('Nero'), ' stipes per ', m^2)) )+
      ylab( expression(paste('Rockfish YOY per 60 ',m^2) )) + 
      scale_color_manual(values = site.col$col) +
      theme_bw() + theme_nt
 
-ptery1 <- ggplot( df , aes(x = Ptery, y = TOTyoy, color=site)) +
+ptery1 <- ggplot( df_dens , aes(x = Ptery, y = TOTyoy, color=site)) +
      geom_point() + 
      xlab( expression(paste(italic('Ptery'), ' stipes per ', m^2)) )+
      ylab( expression(paste('Rockfish YOY per 60 ',m^2) )) + 
@@ -125,82 +135,56 @@ dev.off()
 
 #### Delta-glm analyses ####
 
-# get transect area for weighting. Need swath file
-swath <- read_rds(paste0(Data_Loc,'Swath_2015-2021.rds'))
-swath1 <- swath %>% filter(site %in% settings$sites)
-swath1$site <- factor(swath1$site, levels=settings$sites)
-
-dat.algae   <- swath1 %>% filter(group=="Algae")
-# assign dummy area and zone for 2015 data
-dat.algae$area[dat.algae$year == 2015] <- "D"
-dat.algae$zone[dat.algae$year == 2015] <- 5
-
-# 
-dat.algae1 <- dat.algae %>%
-     rename(transect.area.algae = Transect.area, count = Count) %>%
-     mutate(density = count/transect.area.algae )
-dat.algae2 <- dat.algae1 %>%
-     complete(species,
-              nesting(year, site, area, zone, transect, transect.area.algae),
-              fill=list(fun_gr = "COMPLETED",
-                        count = NA,
-                        density = NA)
-     )
-# make sure everything looks ok. it does
-dat.algae2 %>% tabyl(site, area, year)
-
-#### combine files ####
-
-# make match
-df$area[df$year == 2015] <- "D"
-dat.algae3 <- dat.algae2[,c('year','site','area','zone','transect','observer','transect.area.algae')]
- 
-df1 <- dat.algae3 %>%
-        group_by(site,year,area,zone) %>%
-        summarise(transect.area.algae.sum=sum(transect.area.algae)) %>%
-        mutate(transect.area.algae.weight = transect.area.algae.sum/max(transect.area.algae.sum)) 
-        # the anove is not filtered for vis and will contain some obs for which there
-        # are no fish obs.
-df = left_join(df,df1)                
-
 
 #################### Stats #######################
-df <- df %>% mutate(TOTyoy_pres = ifelse(TOTyoy > 0 , 1, 0)) %>%
-             mutate(three_kelps = Macro+Nereo+Ptery)
-df$year_factor = factor(df$year)
+
+# chose file to use for delta-glm analyses
+dfx <- df_dens
+
+dfx <- dfx %>% mutate(TOTyoy_pres = ifelse(TOTyoy > 0 , 1, 0)) %>%
+             mutate(three_kelps = Macro+Nereo+Ptery) %>%
+             mutate(transect.area.algae.weight = kelp_area/max(kelp_area))
+dfx$year_factor = factor(dfx$year)
 
 #(three_kelps * zone) ####
 # null model with only random year effect
-m_rand <- glmer( TOTyoy_pres ~  (1|year_factor), 
+m_year <- glmer( TOTyoy_pres ~  (1|year_factor), 
                   family = binomial, 
                   weights = transect.area.algae.weight,
-                  data = df
-)
-summary(m_rand)
-AIC(m_rand)
-(three_kelps * zone)
+                  data = dfx)
+m_rand <- glmer( TOTyoy_pres ~  (1|year_factor)+ (1|site), 
+                 family = binomial, 
+                 weights = transect.area.algae.weight,
+                 data = dfx)
 # model with kelp and zones ####
-m_occur <- glmer( TOTyoy_pres ~ (three_kelps * zone) + (1|year_factor), 
+m_nozone <- glmer( TOTyoy_pres ~ three_kelps+ (1|year_factor) + (1|site), 
+                  family = binomial, 
+                  weights = transect.area.algae.weight,
+                  data = dfx)
+
+# model with kelp and zones ####
+m_occur <- glmer( TOTyoy_pres ~ (three_kelps * zone) + (1|year_factor) + (1|site), 
                family = binomial, 
                weights = transect.area.algae.weight,
-               data = df
-)
+               data = dfx)
 
 summary(m_occur)
-AIC(m_occur)
-AIC(m_occur)
+aic = c( AIC(m_year),AIC(m_rand),AIC(m_nozone),AIC(m_occur) )
 
-p_occur <- predict(m_occur , type = "response")
 
-AIC(m_occur) - AIC(m_rand)
 
-df$p_occur <- p_occur
-df$pch = ifelse(df$zone==5,21,19)
+pred_occur <- predict(m_occur , type = "response")
+
+AIC(m_occur) - AIC(m_year)
+
+dfx$p_occur <- pred_occur
+
+dfx$pch = ifelse(dfx$zone==5,21,19)
 
 # plot occurence
 plot_occur <-
-     ggplot( df , aes(x=three_kelps,y=p_occur, color = site))+
-     geom_point(pch = df$pch)+
+     ggplot( dfx , aes(x=three_kelps,y=p_occur, color = site))+
+     geom_point(pch = dfx$pch)+
      xlab( expression(paste('Kelp stipes per ', m^2)) )+
      geom_point(aes(x=three_kelps, y = TOTyoy_pres), color='black') + 
      ylab('Probability of occurence') + 
@@ -215,27 +199,29 @@ plot_occur
 ### separate by depth
 
 plot_occur2 <-
-        ggplot( df , aes(x=three_kelps,y=p_occur, color = site))+
-        geom_point( pch = df$pch)+
-        geom_point(aes(x=three_kelps, y = TOTyoy_pres), color='black') + 
+        ggplot( dfx , aes(x=three_kelps,y=p_occur, color = site))+
+        geom_point( pch =  dfx$pch)+
+        geom_point(aes(x=three_kelps, y = TOTyoy_pres), color='black', size=1) + 
         xlab( expression(paste('Kelp stipes per ', m^2)) )+
         ylab('Probability of occurence') + 
-        facet_wrap(facets = df$zone, nrow = 2)+
+        facet_wrap(facets =  dfx$zone, nrow = 2)+
         geom_smooth(formula = y ~ x,
                     aes(x=three_kelps,y = TOTyoy_pres, group=1),
                     method = "glm", 
                     method.args = list(family = "binomial")) +
         scale_color_manual(values = site.col$col) +
         theme_bw() + theme_nt
-plot_occur2
+plot_occur2 + theme(legend.position = c(0.8,0.3))
 
-
-
+graphics.off()
+png( paste0(Fig_Loc, "FishYOY-Kelp-probability-occurence.png"), units = 'in',res=300, height=5 ,width = 3.5)
+plot_occur2 + theme(legend.position = c(0.8,0.3))
+dev.off()
 
 ####### Abundance Only ####
 # get just positives
 
-df_pos <- df %>% filter(TOTyoy > 0)
+df_pos <-  dfx %>% filter(TOTyoy > 0)
 
 pos_rand <- lmer( log(TOTyoy) ~  (1|year_factor), 
                  weights = transect.area.algae.weight,
@@ -273,28 +259,55 @@ plot_abund
 
 
 df_pos1 <- df_pos[ c('site','year','area', 'zone', 'pred_abund')]
-df <- df %>% left_join(., df_pos1)
+dfx <-  dfx %>% left_join(., df_pos1)
 
-df$predicted = df$p_occur * df$pred_abund
+dfx$predicted = dfx$p_occur *  dfx$pred_abund
 
 plot_predicted <-
-     ggplot( df , aes(x=three_kelps,y=predicted, color = site))+
-     geom_point( pch = df$pch)+
+     ggplot(  dfx , aes(x=three_kelps,y=predicted, color = site))+
+     geom_point( pch =  dfx$pch)+
      xlab( expression(paste('Kelp stipes per ', m^2)) )+
      ylab('Predicted abundance') + 
-     scale_color_manual(values = site.col$col) +
+        scale_color_manual(values = site.col$col) +
      theme_bw() + theme_nt
 plot_predicted
 
+#################################################
 
+#### quic gam just for fun ##########
+library(mgcv)
+g1 = gam( TOTyoy ~ s(three_kelps), data =  dfx)
+plot(g1)
+summary(g1)
 
+#################################################
 
+# negative binomial model
 
+m_abund_full <- glm.nb( TOTyoy ~ (three_kelps * zone) + 
+                        (year_factor) + 
+                        offset(log(transect.area.algae.sum/100)), # makes the units nicer
+                        data =  df_count )
 
+summary(m_abund_full)
+AIC(m_abund_full)
+pred_nb = predict(m_abund_full)
+df_count$pred_nb <- exp(pred_nb)
 
+dfp =  df_count[,c('three_kelps','TOTyoy')]
+df_count =  df_count[ order( df_count$three_kelps) , ]
 
+p2 <-  df_count %>% 
+        ggplot(aes(x = three_kelps, y = TOTyoy, color = as.factor(site))) +
+        geom_point(pch =  df_count$pch) +
+        geom_line(aes(x = three_kelps, y = pred_nb), color='black')+
+        xlab( expression(paste('Kelp stipes per ', m^2)) )+
+        ylab( expression(paste('Rockfish YOY per 60', m^2, ' transect')) )+
+        scale_color_manual(values = site.col$col) +
+        labs(title= "Total YOY rockfish count as a function of 3 kelps") +
+        theme_bw() + theme_nt
 
-
+print(p2)
 
 
 
