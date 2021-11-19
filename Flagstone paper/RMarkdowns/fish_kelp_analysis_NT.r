@@ -12,6 +12,8 @@ library(here)
 library(janitor)
 source("R-functions-ocnms.r")
 
+devtools::install_github("AckerDWM/gg3D")
+library(gg3D)
 # Set parameters; import information  ####
 
 HomeFile = "C:/Users/nick.tolimieri/Documents/GitHub/OCNMS/Flagstone paper"
@@ -298,6 +300,7 @@ m_yearsite <- glmer( TOTyoy_pres ~  (1|year_factor)+ (1|site),
                  weights = transect.area.algae.weight,
                  data = dfx)
 # indiv kelps
+
 m_nereo <- glmer( TOTyoy_pres ~ Nereo +(1|year_factor) + (1|site), 
                 family = binomial, 
                 weights = transect.area.algae.weight,
@@ -306,21 +309,21 @@ m_macro <- glmer( TOTyoy_pres ~  Macro +  (1|year_factor) + (1|site),
                 family = binomial, 
                 weights = transect.area.algae.weight,
                 data = dfx)
-m_ptery <- glmer( TOTyoy_pres ~  Ptery+zone +  (1|year_factor) + (1|site), 
+m_ptery <- glmer( TOTyoy_pres ~  Ptery +  (1|year_factor) + (1|site), 
                 family = binomial, 
                 weights = transect.area.algae.weight,
                 data = dfx)
 # two kelps
 
-m_MN <- glmer( TOTyoy_pres ~ Nereo+Macro +(1|year_factor) + (1|site), 
+m_MN <- glmer( TOTyoy_pres ~ Nereo + Macro +(1|year_factor) + (1|site), 
                   family = binomial, 
                   weights = transect.area.algae.weight,
                   data = dfx)
-m_MP <- glmer( TOTyoy_pres ~  Macro +Ptery+  (1|year_factor) + (1|site), 
+m_MP <- glmer( TOTyoy_pres ~  Macro + Ptery+  (1|year_factor) + (1|site), 
                   family = binomial, 
                   weights = transect.area.algae.weight,
                   data = dfx)
-m_NP <- glmer( TOTyoy_pres ~  Nereo+ Ptery+zone +  (1|year_factor) + (1|site), 
+m_NP <- glmer( TOTyoy_pres ~  Nereo + Ptery +  (1|year_factor) + (1|site), 
                   family = binomial, 
                   weights = transect.area.algae.weight,
                   data = dfx)
@@ -340,6 +343,8 @@ m_kelp_inter <- glmer( TOTyoy_pres ~  (Macro*Nereo*Ptery) + (1|year_factor) + (1
                 family = binomial, 
                 weights = transect.area.algae.weight,
                 data = dfx)
+
+
      
 AIC(m_year)
 AIC(m_site)
@@ -371,6 +376,158 @@ aic_all$DeltaAIC =  aic_all$AIC - min(aic_all$AIC)
 aic_all = aic_all[ order(aic_all$DeltaAIC),]
 aic_all
 
+
+# rename here because overwritten below
+
+m_presence <- m_MN
+
+
+
+# double check whether zone matters: doesn't
+m_MNZ <- glmer( TOTyoy_pres ~ Nereo + Macro + zone +(1|year_factor) + (1|site), 
+               family = binomial, 
+               weights = transect.area.algae.weight,
+               data = dfx)
+AIC(m_MNZ)
+# abundance ####
+
+dfa = dfx[dfx$TOTyoy_pres == 1,]
+
+m_year <- lmer( TOTyoy ~  (1|year_factor), 
+        
+                 weights = transect.area.algae.weight,
+                 data = dfa)
+m_site <- lmer( TOTyoy ~  (1|site), 
+                  
+                 weights = transect.area.algae.weight,
+                 data = dfa)
+m_yearsite <- lmer( TOTyoy ~  (1|year_factor)+ (1|site), 
+                     
+                     weights = transect.area.algae.weight,
+                     data = dfa)
+# indiv kelps
+m_nereo <- lmer( TOTyoy ~ Nereo +(1|year_factor) + (1|site), 
+                   
+                  weights = transect.area.algae.weight,
+                  data = dfa)
+m_macro <- lmer( TOTyoy ~  Macro +  (1|year_factor) + (1|site), 
+                  
+                  weights = transect.area.algae.weight,
+                  data = dfa)
+m_ptery <- lmer( TOTyoy ~  Ptery+zone +  (1|year_factor) + (1|site), 
+                  
+                  weights = transect.area.algae.weight,
+                  data = dfa)
+# two kelps
+
+m_MN <- lmer( TOTyoy ~ Nereo+Macro +(1|year_factor) + (1|site), 
+                
+               weights = transect.area.algae.weight,
+               data = dfa)
+m_MP <- lmer( TOTyoy ~  Macro +Ptery+  (1|year_factor) + (1|site), 
+               
+               weights = transect.area.algae.weight,
+               data = dfa)
+m_NP <- lmer( TOTyoy ~  Nereo+ Ptery+zone +  (1|year_factor) + (1|site), 
+               
+               weights = transect.area.algae.weight,
+               data = dfa)
+# all kelps
+m_kelp <- lmer( TOTyoy ~  Macro+Nereo+Ptery + (1|year_factor) + (1|site), 
+                 
+                 weights = transect.area.algae.weight,
+                 data = dfa)
+
+
+m_all <- lmer( TOTyoy ~  Macro+Nereo+Ptery+zone +  (1|year_factor) + (1|site), 
+                
+                weights = transect.area.algae.weight,
+                data = dfa)
+
+m_kelp_inter <- lmer( TOTyoy ~  (Macro*Nereo*Ptery) + (1|year_factor) + (1|site), 
+                       
+                       weights = transect.area.algae.weight,
+                       data = dfa)
+
+aic_abund = data.frame(c( AIC(m_year),
+                        AIC(m_site),
+                        AIC(m_yearsite),
+                        AIC(m_macro),
+                        AIC(m_nereo),
+                        AIC(m_ptery),
+                        AIC(m_MN),
+                        AIC(m_MP),
+                        AIC(m_NP),
+                        AIC(m_kelp), 
+                        AIC(m_all), 
+                        AIC(m_kelp_inter) ))
+colnames(aic_abund) = 'AIC'
+aic_abund$Model = c('Year','Site', 'Year + Site', 
+                  'Macro','Nereo','Ptery',
+                  'Mac-Ner','Mac-Pter', 'Ner-Pter',
+                  'Kelp' , 'Kelp + Depth', 
+                  'Kelp Interactions')
+
+aic_abund =aic_abund[,c('Model','AIC')]
+aic_abund$DeltaAIC =  aic_abund$AIC - min(aic_abund$AIC)
+aic_abund = aic_abund[ order(aic_abund$DeltaAIC),]
+aic_abund
+
+# use only multi species kelp models; don't lump kelps
+m_abundance = m_MP
+
+############ put together hurdle model #############
+# 
+
+# get predictions for best model
+# summarize to site x year
+# comnbine
+# plot
+
+dfx$prob_occur <- predict(m_presence, type = "response")
+df_occurence <- dfx %>% group_by(site,year) %>%
+        summarise(p_occur = mean(prob_occur),
+                  mean_macro = mean(Macro),
+                  mean_nereo = mean(Nereo),
+                  mean_ptery = mean(Ptery))
+
+dfa$pred_abund <- predict(m_abundance, type = "response")
+df_abundance <- dfa %>% group_by(site,year) %>%
+        summarise(p_abund = mean(pred_abund) )
+
+df_predicted <- full_join( df_occurence, df_abundance)
+df_predicted$p_abund[df_predicted$year == 2015] <- 0
+
+df_predicted = df_predicted %>% mutate(pred_yoy = p_occur*p_abund) 
+
+# some attempt at a heat plot style pair of graphs
+plot_occur <- 
+        ggplot(df_predicted , aes(x = mean_macro, y = mean_nereo, color = p_occur)) +
+        geom_point(pch = substring(df_predicted$year,4,4), size = 4) + 
+        # scale_color_viridis_d() +
+        xlab( expression(paste( italic(Macro),' stipes per ', m^2)) )+
+        ylab( expression(paste( italic(Nereo),' stipes per ', m^2)) )+
+        theme_bw()+theme_nt + theme(legend.key.size = unit(1,'lines'),
+                                    legend.position = c(0.8,0.8))
+ 
+plot_abund <-        
+        ggplot(df_predicted , aes(x = mean_macro, y = mean_ptery, color = p_abund)) +
+        # geom_point(size = 4) +
+        geom_point(pch = substring(df_predicted$year,4,4), size = 4) + 
+        xlab( expression(paste( italic(Macro),' stipes per ', m^2)) )+
+        ylab( expression(paste( italic(Ptery),' stipes per ', m^2)) )+
+        theme_bw()+theme_nt + theme(legend.key.size = unit(1,'lines'),
+                                                         legend.position = c(0.8,0.8))
+graphics.off()
+png( paste0(Fig_Loc,"Hurdle_Model.png"), units = 'in',res=300, height=3.0, width = 6)
+
+ggarrange( plot_occur, plot_abund,
+           nrow =1, ncol = 2,
+           align = 'v'
+           )
+dev.off()
+
+
 #################################################
 
 #### quic gam just for fun ##########
@@ -378,6 +535,10 @@ library(mgcv)
 g1 = gam( TOTyoy ~ s(three_kelps), data =  dfx)
 plot(g1)
 summary(g1)
+
+g2 = gam(TOTyoy ~ s(Macro) + s(Nereo) + s(Ptery), data=dfx)
+summary(g2)
+plot(g2)
 
 #################################################
 
@@ -403,17 +564,42 @@ p2 <-  df_count %>%
         xlab( expression(paste('Kelp stipes per ', m^2)) )+
         ylab( expression(paste('Rockfish YOY per 60', m^2, ' transect')) )+
         scale_color_manual(values = site.col$col) +
-        labs(title= "Total YOY rockfish count as a function of 3 kelps") +
+        # labs(title= "Total YOY rockfish count as a function of 3 kelps") +
         theme_bw() + theme_nt
 
 print(p2)
 
 
+###############################################################
+#### Use CANOPY DATA ##########################################
+###############################################################
 
+canopy = readRDS( paste0(Data_Loc, "Data_Kelp_Canopy_Long.rds") )
 
+canopy_wide <- pivot_wider(filter(canopy, can_type == 'tot_can'), names_from = species, values_from = canopy_ha,values_fill = NA)
 
+df_fish = df_dens %>% 
+        group_by(year,site) %>%
+        summarise(yoy = mean(TOTyoy)) %>%
+        left_join(.,canopy_wide)
+df_fish$yr = as.character(substring(df_fish$year,4,4))
 
+df_fish$site = factor(df_fish$site, levels = settings$sites)
 
+canopy_plot <-
+        ggplot( df_fish, aes(x = Total, y = yoy, color = site ))+
+        geom_point(pch = df_fish$yr, size = 4) +
+        xlab('Canopy area (ha)')+
+        ylab( expression(paste('Rockfish YOY per 60 ', m^2, ' transect')) )+
+        scale_color_manual(values = site.col$col) +
+        theme_bw() + theme_nt
+
+graphics.off()
+png( paste0(Fig_Loc, "YOY-vs-Canopy-Kelp.png") , units = 'in', res=300, width=3.5, height=3.5)
+
+canopy_plot + theme(legend.position = c(0.8,0.85) )
+
+dev.off()
 
 
 
