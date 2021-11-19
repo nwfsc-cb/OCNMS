@@ -133,10 +133,10 @@ ggarrange(macro1, nereo1, ptery1,
           nrow = 3, ncol=1)
 dev.off()
 
-#### Delta-glm analyses ####
-
 
 #################### Stats #######################
+
+# Delta-GLM ####
 
 # chose file to use for delta-glm analyses
 dfx <- df_dens
@@ -169,9 +169,13 @@ m_occur <- glmer( TOTyoy_pres ~ (three_kelps * zone) + (1|year_factor) + (1|site
                data = dfx)
 
 summary(m_occur)
-aic = c( AIC(m_year),AIC(m_rand),AIC(m_nozone),AIC(m_occur) )
-
-
+aic_occur = data.frame(c( AIC(m_year),AIC(m_rand),AIC(m_nozone),AIC(m_occur) ))
+colnames(aic_occur) = 'AIC'
+aic_occur$Model = c('Year','Year + Site', 'Kelp' , 'Kelp + Depth')
+aic_occur = aic_occur[,c('Model','AIC')]
+aic_occur$DeltaAIC =  aic_occur$AIC - min(aic_occur$AIC)
+aic_occur = aic_occur[ order(aic_occur$DeltaAIC),]
+aic_occur
 
 pred_occur <- predict(m_occur , type = "response")
 
@@ -194,8 +198,13 @@ plot_occur <-
                  method.args = list(family = "binomial")) +
      scale_color_manual(values = site.col$col) +
      theme_bw() + theme_nt
-plot_occur
 
+plot_occur + theme(legend.position = c(0.8,0.3))
+
+graphics.off()
+png( paste0(Fig_Loc, "FishYOY-Kelp-probability-occurence.png"), units = 'in',res=300, height=3.5 ,width = 3.5)
+plot_occur + theme(legend.position = c(0.8,0.3))
+dev.off()
 ### separate by depth
 
 plot_occur2 <-
@@ -213,10 +222,8 @@ plot_occur2 <-
         theme_bw() + theme_nt
 plot_occur2 + theme(legend.position = c(0.8,0.3))
 
-graphics.off()
-png( paste0(Fig_Loc, "FishYOY-Kelp-probability-occurence.png"), units = 'in',res=300, height=5 ,width = 3.5)
-plot_occur2 + theme(legend.position = c(0.8,0.3))
-dev.off()
+
+
 
 ####### Abundance Only ####
 # get just positives
@@ -271,6 +278,98 @@ plot_predicted <-
         scale_color_manual(values = site.col$col) +
      theme_bw() + theme_nt
 plot_predicted
+
+
+#######################################################################
+# Macro + Nereo + Ptery separate ####
+
+# no kelp
+
+m_year <- glmer( TOTyoy_pres ~  (1|year_factor), 
+                family = binomial, 
+                weights = transect.area.algae.weight,
+                data = dfx)
+m_site <- glmer( TOTyoy_pres ~  (1|site), 
+                 family = binomial, 
+                 weights = transect.area.algae.weight,
+                 data = dfx)
+m_yearsite <- glmer( TOTyoy_pres ~  (1|year_factor)+ (1|site), 
+                 family = binomial, 
+                 weights = transect.area.algae.weight,
+                 data = dfx)
+# indiv kelps
+m_nereo <- glmer( TOTyoy_pres ~ Nereo +(1|year_factor) + (1|site), 
+                family = binomial, 
+                weights = transect.area.algae.weight,
+                data = dfx)
+m_macro <- glmer( TOTyoy_pres ~  Macro +  (1|year_factor) + (1|site), 
+                family = binomial, 
+                weights = transect.area.algae.weight,
+                data = dfx)
+m_ptery <- glmer( TOTyoy_pres ~  Ptery+zone +  (1|year_factor) + (1|site), 
+                family = binomial, 
+                weights = transect.area.algae.weight,
+                data = dfx)
+# two kelps
+
+m_MN <- glmer( TOTyoy_pres ~ Nereo+Macro +(1|year_factor) + (1|site), 
+                  family = binomial, 
+                  weights = transect.area.algae.weight,
+                  data = dfx)
+m_MP <- glmer( TOTyoy_pres ~  Macro +Ptery+  (1|year_factor) + (1|site), 
+                  family = binomial, 
+                  weights = transect.area.algae.weight,
+                  data = dfx)
+m_NP <- glmer( TOTyoy_pres ~  Nereo+ Ptery+zone +  (1|year_factor) + (1|site), 
+                  family = binomial, 
+                  weights = transect.area.algae.weight,
+                  data = dfx)
+# all kelps
+m_kelp <- glmer( TOTyoy_pres ~  Macro+Nereo+Ptery + (1|year_factor) + (1|site), 
+                 family = binomial, 
+                 weights = transect.area.algae.weight,
+                 data = dfx)
+
+
+m_all <- glmer( TOTyoy_pres ~  Macro+Nereo+Ptery+zone +  (1|year_factor) + (1|site), 
+                family = binomial, 
+                weights = transect.area.algae.weight,
+                data = dfx)
+
+m_kelp_inter <- glmer( TOTyoy_pres ~  (Macro*Nereo*Ptery) + (1|year_factor) + (1|site), 
+                family = binomial, 
+                weights = transect.area.algae.weight,
+                data = dfx)
+     
+AIC(m_year)
+AIC(m_site)
+AIC(m_yearsite)
+AIC(m_all)
+summary(m_all)
+
+aic_all = data.frame(c( AIC(m_year),
+                        AIC(m_site),
+                        AIC(m_yearsite),
+                        AIC(m_macro),
+                        AIC(m_nereo),
+                        AIC(m_ptery),
+                        AIC(m_MN),
+                        AIC(m_MP),
+                        AIC(m_NP),
+                        AIC(m_kelp), 
+                        AIC(m_all), 
+                        AIC(m_kelp_inter) ))
+colnames(aic_all) = 'AIC'
+aic_all$Model = c('Year','Site', 'Year + Site', 
+                  'Macro','Nereo','Ptery',
+                  'Mac-Ner','Mac-Pter', 'Ner-Pter',
+                  'Kelp' , 'Kelp + Depth', 
+                  'Kelp Interactions')
+
+aic_all = aic_all[,c('Model','AIC')]
+aic_all$DeltaAIC =  aic_all$AIC - min(aic_all$AIC)
+aic_all = aic_all[ order(aic_all$DeltaAIC),]
+aic_all
 
 #################################################
 
