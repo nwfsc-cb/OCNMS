@@ -1,0 +1,10 @@
+                    Model      AIC   DeltaAIC
+8 Mac+ Pter + Year + Site 583.5939  0.0000000
+7 Mac + Ner + Year + Site 583.9584  0.3644637
+9 Ner+ Pter + Year + Site 584.0558  0.4619197
+4     Macro + Year + Site 585.0143  1.4203992
+1                    Year 585.2902  1.6963245
+6     Ptery + Year + Site 585.5573  1.9633360
+5     Nereo + Year + Site 585.9783  2.3844072
+3             Year + Site 587.1499  3.5560205
+2                    Site 609.5533 25.9593895

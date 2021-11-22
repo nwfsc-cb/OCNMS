@@ -360,21 +360,27 @@ aic_all = data.frame(c( AIC(m_year),
                         AIC(m_ptery),
                         AIC(m_MN),
                         AIC(m_MP),
-                        AIC(m_NP),
-                        AIC(m_kelp), 
-                        AIC(m_all), 
-                        AIC(m_kelp_inter) ))
+                        AIC(m_NP) ))
+                        #AIC(m_kelp), 
+                        #AIC(m_all), 
+                        #AIC(m_kelp_inter) ))
 colnames(aic_all) = 'AIC'
 aic_all$Model = c('Year','Site', 'Year + Site', 
-                  'Macro','Nereo','Ptery',
-                  'Mac-Ner','Mac-Pter', 'Ner-Pter',
-                  'Kelp' , 'Kelp + Depth', 
-                  'Kelp Interactions')
+                  'Macro + Year + Site',
+                  'Nereo + Year + Site',
+                  'Ptery + Year + Site',
+                  'Mac + Ner + Year + Site', 
+                  'Mac+ Pter + Year + Site', 
+                  'Ner+ Pter + Year + Site')
+                  # 'Kelp' , 'Kelp + Depth', 
+                  # 'Kelp Interactions')
 
 aic_all = aic_all[,c('Model','AIC')]
 aic_all$DeltaAIC =  aic_all$AIC - min(aic_all$AIC)
 aic_all = aic_all[ order(aic_all$DeltaAIC),]
-aic_all
+aic_occur <- aic_all
+
+capture.output(aic_occur , file = paste0(Fig_Loc,"AIC_occurence.txt"))
 
 
 # rename here because overwritten below
@@ -457,21 +463,26 @@ aic_abund = data.frame(c( AIC(m_year),
                         AIC(m_ptery),
                         AIC(m_MN),
                         AIC(m_MP),
-                        AIC(m_NP),
-                        AIC(m_kelp), 
-                        AIC(m_all), 
-                        AIC(m_kelp_inter) ))
+                        AIC(m_NP) ))
+                        #AIC(m_kelp), 
+                        #AIC(m_all), 
+                        #AIC(m_kelp_inter) 
+                        #))
 colnames(aic_abund) = 'AIC'
-aic_abund$Model = c('Year','Site', 'Year + Site', 
-                  'Macro','Nereo','Ptery',
-                  'Mac-Ner','Mac-Pter', 'Ner-Pter',
-                  'Kelp' , 'Kelp + Depth', 
-                  'Kelp Interactions')
+aic_abund$Model  = c('Year','Site', 'Year + Site', 
+                     'Macro + Year + Site',
+                     'Nereo + Year + Site',
+                     'Ptery + Year + Site',
+                     'Mac + Ner + Year + Site', 
+                     'Mac+ Pter + Year + Site', 
+                     'Ner+ Pter + Year + Site')
 
 aic_abund =aic_abund[,c('Model','AIC')]
 aic_abund$DeltaAIC =  aic_abund$AIC - min(aic_abund$AIC)
 aic_abund = aic_abund[ order(aic_abund$DeltaAIC),]
 aic_abund
+
+capture.output(aic_abund , file = paste0(Fig_Loc,"AIC_positives.txt"))
 
 # use only multi species kelp models; don't lump kelps
 m_abundance = m_MP
@@ -542,32 +553,6 @@ plot(g2)
 
 #################################################
 
-# negative binomial model
-
-m_abund_full <- glm.nb( TOTyoy ~ (three_kelps * zone) + 
-                        (year_factor) + 
-                        offset(log(transect.area.algae.sum/100)), # makes the units nicer
-                        data =  df_count )
-
-summary(m_abund_full)
-AIC(m_abund_full)
-pred_nb = predict(m_abund_full)
-df_count$pred_nb <- exp(pred_nb)
-
-dfp =  df_count[,c('three_kelps','TOTyoy')]
-df_count =  df_count[ order( df_count$three_kelps) , ]
-
-p2 <-  df_count %>% 
-        ggplot(aes(x = three_kelps, y = TOTyoy, color = as.factor(site))) +
-        geom_point(pch =  df_count$pch) +
-        geom_line(aes(x = three_kelps, y = pred_nb), color='black')+
-        xlab( expression(paste('Kelp stipes per ', m^2)) )+
-        ylab( expression(paste('Rockfish YOY per 60', m^2, ' transect')) )+
-        scale_color_manual(values = site.col$col) +
-        # labs(title= "Total YOY rockfish count as a function of 3 kelps") +
-        theme_bw() + theme_nt
-
-print(p2)
 
 
 ###############################################################
