@@ -3,7 +3,7 @@
 
 # Preliminaries ####
 
-library(ggplot)
+library(ggplot2)
 library(tidyverse)
 library(readxl)
 
@@ -16,7 +16,6 @@ site_col = settings$site.col
 
 # Import Data ####
 
-"NWFSC_UPC_ALLYEARS_data_2021.xlsm"
 
 upc = read_xlsx( paste0( Data_Loc,"NWFSC_UPC_ALLYEARS_data_2021.xlsm" ) , sheet = "DATA")
 
@@ -129,7 +128,7 @@ substrate_site <-    substrate_transect %>%
                   SE = sqrt(SD)/N)
 
 
-substrate_site$classcode = factor(substrate_site$classcode, levels=c( 'SAND','COB','BOULD','BEDRK' ))
+substrate_site$subs = factor(substrate_site$classcode, levels= c( 'SAND','COB','BOULD','BEDRK' ))
 
 substrate_site$SITE = factor(substrate_site$SITE, levels=c(  rev(c("Neah Bay",
                                                              "Tatoosh Island",
@@ -139,7 +138,7 @@ substrate_site$SITE = factor(substrate_site$SITE, levels=c(  rev(c("Neah Bay",
 
 # substrate plot ####
 substrate.plot <- ggplot(substrate_site,aes(x=SITE)) +
-        geom_bar(aes(y=mean_prop, fill= classcode), 
+        geom_bar(aes(y=mean_prop, fill= subs), 
                  position="fill", stat="identity",width = 0.75, colour="black")+
         scale_fill_manual(values = site_col$col,
                           labels = c('Sand','Cobble','Boulder','Bedrock')) +  

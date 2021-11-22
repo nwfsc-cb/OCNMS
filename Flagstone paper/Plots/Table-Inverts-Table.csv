@@ -1,71 +1,59 @@
 "","Species","Taxa","Total","Density"
-"1","Balanus nubilis","barnacle",15818.0935349061,0.812684283841338
-"2","Strongylocentrotus purpuratus","purple urchin",13656.7053462497,0.703497710064088
-"3","Nucella lamellosa","shelled gastropod",5275.13275613276,0.287776038776039
-"4","Mesocentrotus franciscanus","red urchin",3056.66247416247,0.157803203803204
-"5","Cucumaria miniata","cucumber",1878,0.100102564102564
-"6","Styela montereyensis","tunicate",1697,0.0912307692307692
-"7","Henricia leviuscula","blood star",1678,0.0921794871794872
-"8","Strongylocentrotus droebachiensis","green urchin",1198.30667893842,0.061887521996842
-"9","Dermasterias imbricata","leather star",1032.11111111111,0.0568518518518519
-"10","Ceratostoma foliatum","shelled gastropod",1012,0.0532051282051282
-"11","Crassadoma gigantea","bivalve",548,0.0292051282051282
-"12","Diodora aspera","shelled gastropod",438,0.0231282051282051
-"13","Lepasterias spp.","brood star",409,0.0214871794871795
-"14","Urticina spp.","anemone",357,0.0186666666666667
-"15","Pisaster ochraceous","Pisaster",329,0.0179487179487179
-"16","Metridium spp.","anemone",237,0.0121794871794872
-"17","Eupentacta quinquesemita","cucumber",199,0.0105641025641026
-"18","Anthopleura xanthogrammica","anemone",189,0.00992307692307692
-"19","small chitons","chiton",162,0.00871794871794872
-"20","Peltodoris nobilis","nudibranch",152,0.00894871794871795
-"21","Patiria miniata","medium star",150,0.0081025641025641
-"22","Evasterias troschelii","large star",146,0.00761538461538462
-"23","Doris odhneri","nudibranch",123,0.00748717948717949
-"24","Scyra spp.","crabs",120,0.00646153846153846
-"25","Orthasterias koehleri","large star",108,0.00571794871794872
-"26","Cryptochiton stelleri","chiton",105,0.00556410256410256
-"27","Dirona albolineata","nudibranch",98,0.00502564102564103
-"28","Acmaea mitra","shelled gastropod",87,0.00471794871794872
-"29","Lirabuccinum dirum","shelled gastropod",75,0.00397435897435897
-"30","sea star recruits","sea_star_YOY",72,0.00384615384615385
-"31","Epiactis prolifera","anemone",66,0.00351282051282051
-"32","Pagurus spp","hermit_crabs",50,0.00297435897435897
-"33","Craniella arb","sponge",36,0.00184615384615385
-"34","Triopha catalinae","nudibranch",36,0.00207692307692308
-"35","Janolus fuscus","nudibranch",35,0.00184615384615385
-"36","Cancer spp.","crabs",34,0.00184615384615385
-"37","Acanthodoris hudsoni","nudibranch",30,0.00156410256410256
-"38","Cancer oregonensis","crabs",28,0.00143589743589744
-"39","Mytilus californianus","shelled mussel",26,0.00133333333333333
-"40","Tegula spp.","shelled gastropod",26,0.00143589743589744
-"41","Parastichopus californicus","cucumber",25,0.00138461538461538
-"42","Pugettia gracilis","kelp crab",25,0.00128205128205128
-"43","Pugettia producta","kelp crab",24,0.00138461538461538
-"44","Solaster stimpsoni","large star",19,0.00102564102564103
-"45","Urticina crassicornis","anemone",17,0.00123076923076923
-"46","Cryptolithoides sitchensis","crabs",15,0.000794871794871795
-"47","Dialula sandiegensis","nudibranch",14,0.000717948717948718
-"48","Hermissenda crassicornis","nudibranch",12,0.000615384615384615
-"49","Urticina lofotensis","anemone",12,0.000615384615384615
-"50","Mediaster aequalis","medium star",9,0.000538461538461538
-"51","Urticina piscivora","anemone",9,0.000461538461538462
-"52","Pycnopodia helianthoides","Pycnopodia",8,0.00041025641025641
-"53","Pisaster brevispinus","Pisaster",7,0.000358974358974359
-"54","Pododesmus spp. ","bivalve",7,0.00102564102564103
-"55","mobile_invert_unident","mobile_invert",6,0.000538461538461538
-"56","Mimulus foliatus","crabs",5,0.000256410256410256
-"57","Fusitriton oregonensis","shelled gastropod",4,0.000230769230769231
-"58","Metridium giganteum","anemone",3,0.000153846153846154
-"59","Acanthodoris nanaimo","nudibranch",2,0.000102564102564103
-"60","misc clams","bivalve",2,0.000153846153846154
-"61","Lopholithodes mandtii","crabs",2,0.000102564102564103
-"62","Anthopleura elegantissima","anemone",1,5.12820512820513e-05
-"63","Crossaster papposus","medium star",1,5.12820512820513e-05
-"64","Enteroctopus dofleini","octopus",1,5.12820512820513e-05
-"65",NA,NA,1,5.12820512820513e-05
-"66","Limacia cockerelli","nudibranch",1,5.12820512820513e-05
-"67","Pisaster giganteus","Pisaster",1,5.12820512820513e-05
-"68","scallop","bivalve",1,5.12820512820513e-05
-"69",NA,NA,0,0
-"70",NA,NA,0,0
+"1","Balanus nubilis","barnacle",15892.0935349061,0.829236642443026
+"2","Strongylocentrotus purpuratus","purple urchin",13656.7053462497,0.714489861783839
+"3","Nucella lamellosa","shelled gastropod",5281.13275613276,0.292585039381914
+"4","Mesocentrotus franciscanus","red urchin",3056.66247416247,0.160268878862629
+"5","Cucumaria miniata","cucumber",1981,0.10703125
+"6","Styela montereyensis","tunicate",1738,0.0947916666666667
+"7","Henricia leviuscula","blood star",1723,0.0959635416666667
+"8","Strongylocentrotus droebachiensis","green urchin",1198.30667893842,0.0628545145280426
+"9","Dermasterias imbricata","leather star",1045.11111111111,0.0584172453703704
+"10","Ceratostoma foliatum","shelled gastropod",1021,0.0545052083333333
+"11","Crassadoma gigantea","bivalve",599,0.0323177083333333
+"12","Diodora aspera","shelled gastropod",444,0.0238020833333333
+"13","Lepasterias spp.","brood star",410,0.021875
+"14","Urticina spp.","anemone",364,0.0193229166666667
+"15","Pisaster ochraceous","Pisaster",330,0.01828125
+"16","Eupentacta quinquesemita","cucumber",199,0.0107291666666667
+"17","Anthopleura xanthogrammica","anemone",195,0.010390625
+"18","small chitons","chiton",166,0.0090625
+"19","Patiria miniata","medium star",156,0.00854166666666667
+"20","Evasterias troschelii","large star",153,0.00809895833333333
+"21","Peltodoris nobilis","nudibranch",153,0.009140625
+"22","Scyra spp.","crabs",133,0.00723958333333333
+"23","Doris odhneri","nudibranch",125,0.00770833333333333
+"24","Orthasterias koehleri","large star",109,0.005859375
+"25","Cryptochiton stelleri","chiton",106,0.005703125
+"26","Dirona albolineata","nudibranch",98,0.00510416666666667
+"27","Acmaea mitra","shelled gastropod",87,0.00479166666666667
+"28","Lirabuccinum dirum","shelled gastropod",75,0.00403645833333333
+"29","sea star recruits","sea_star_YOY",72,0.00390625
+"30","Epiactis prolifera","anemone",66,0.00356770833333333
+"31","Pagurus spp","hermit_crabs",50,0.00302083333333333
+"32","Craniella arb","sponge",36,0.001875
+"33","Triopha catalinae","nudibranch",36,0.002109375
+"34","Janolus fuscus","nudibranch",35,0.001875
+"35","Cancer spp.","crabs",34,0.001875
+"36","Acanthodoris hudsoni","nudibranch",30,0.00158854166666667
+"37","Cancer oregonensis","crabs",28,0.00145833333333333
+"38","Mytilus californianus","shelled mussel",26,0.00135416666666667
+"39","Parastichopus californicus","cucumber",26,0.00145833333333333
+"40","Pugettia gracilis","kelp crab",25,0.00130208333333333
+"41","Pugettia producta","kelp crab",24,0.00140625
+"42","Solaster stimpsoni","large star",19,0.00104166666666667
+"43","Urticina crassicornis","anemone",17,0.00125
+"44","Cryptolithoides sitchensis","crabs",16,0.000859375
+"45","Urticina lofotensis","anemone",12,0.000625
+"46","Mediaster aequalis","medium star",9,0.000546875
+"47","Urticina piscivora","anemone",9,0.00046875
+"48","Pycnopodia helianthoides","Pycnopodia",8,0.000416666666666667
+"49","Fusitriton oregonensis","shelled gastropod",7,0.000390625
+"50","Pisaster brevispinus","Pisaster",7,0.000364583333333333
+"51","Pododesmus spp. ","bivalve",7,0.00104166666666667
+"52","Mimulus foliatus","crabs",5,0.000260416666666667
+"53","Metridium giganteum","anemone",3,0.00015625
+"54","misc clams","bivalve",2,0.00015625
+"55","Lopholithodes mandtii","crabs",2,0.000104166666666667
+"56","Anthopleura elegantissima","anemone",1,5.20833333333333e-05
+"57",NA,NA,0,0
+"58",NA,NA,0,0
