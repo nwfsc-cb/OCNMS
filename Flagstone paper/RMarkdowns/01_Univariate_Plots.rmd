@@ -165,15 +165,16 @@ fish0 <- fish0 %>%
   left_join(.,fish_codes %>% dplyr::select(code,group),by=c("species"="code")) %>%
   rename(taxa=group)
 
+# convert small size to size to yoy for taxa
+
 fish0 <- fish0 %>% mutate(taxa=case_when(is.na(size_class)==TRUE ~ as.character(taxa),
                                          size_class=="large" ~ as.character(taxa),
                                          size_class=="small" ~ paste0(taxa,"yoy"))) %>%
                   mutate(taxa= ifelse(taxa=="RYOYyoy","RYOY",taxa))
 
-# combine YT and black or keep separate? # COMBINE!
-fish0 %>% filter(taxa %in% c('SEFLyoy','SEMEyoy','SEBYTyoy')) %>% group_by(taxa) %>% 
-        summarise(Tot=sum(Count))
+x = fish0 %>% filter(taxa %in% c('SEFLyoy','SEMEyoy','SEBYTyoy')) %>% group_by(taxa) %>% summarise(Tot=sum(Count))
 
+# combine YT and black or keep separate? # COMBINE!
 fish0$taxa[ fish0$taxa %in% c('SEFLyoy','SEMEyoy')] <- 'SEBYTyoy'
 
 # Aggregate the SEBYTyoy so that there are one, not three, entries for "SEBYTyoy"
@@ -183,8 +184,12 @@ fish_yt <- fish0 %>% filter(taxa=="SEBYTyoy") %>%
               summarise(Count_all=sum(Count, na.rm = TRUE)) %>% 
               rename(Count=Count_all) %>%
               mutate(species="SEBYT",common.name=NA)
-                
+
+## re-add SEBYTyoy   
+# could have just used rbind; don't know why I didn't
 fish0 <- fish0 %>% filter(!taxa == "SEBYTyoy") %>% full_join(.,fish_yt)
+
+sum(fish0$Count[fish0$taxa == 'SEBYTyoy'])
 
 # subset visibility ####
 # add fake vis for 2015
@@ -194,27 +199,32 @@ fish0$vis_m[ fish0$year == 2015 & fish0$site == "Destruction Island"] <- 1
 
 # output for multivariate ####
 fish1 = fish0 %>% filter(site %in%  sites)
-
+sum(fish1$Count[fish1$taxa == 'SEBYTyoy'])
 # drop low vis sites/transects and set depth
 fish1a = fish1[fish1$vis_m >= min.vis, ]
-
+sum(fish1a$Count[fish1a$taxa == 'SEBYTyoy'], na.rm = TRUE)
 # select depth ####
 fish1b = fish1a[fish1a$zone %in% fish.depth,]
+sum(fish1b$Count[fish1b$taxa == 'SEBYTyoy'])
 
-# calculate total yoy by site, transect, observer, and year
+# calculate TOTyoy by site, transect, observer, and year
 fish1b %>% filter(size_class == "small") %>% distinct(taxa)
 # all of the small taxa are rockfish YOY.
-
 fish1c <- fish1b %>% filter(size_class == "small") %>% 
                       group_by(site,year,transect,observer,zone,area) %>% 
                       summarise(Count_all=sum(Count, na.rm = TRUE)) %>%
                       mutate(species="TOTyoy",taxa="TOTyoy") %>%
                       rename(Count=Count_all)
+
 fish1d <- fish1b %>% full_join(.,fish1c) 
 
 # for combining below
 
 fish_transect <- fish1d
+sum(fish_transect$Count[fish_transect$taxa == 'SEBYTyoy'])
+sum(fish_transect$Count[fish_transect$taxa == 'TOTyoy'])
+sum(fish_transect$Count[fish_transect$taxa %in% c("RYOY","SEBYTyoy", "SECAyoy","SEMAyoy","SEMYyoy","SENEyoy","SEPIyoy")], na.rm = TRUE)
+
                     
 # Ole made this to check the aggregating in fish 2.
 fish3 <-  fish1d %>% group_by(site,year,zone,species, taxa) %>%
@@ -1075,8 +1085,13 @@ Use these files and not raw files. Kelp and invert data have been converted to d
 
 # comnbine fish spp into higher level taxa at the transect level
 # fish_transect calculated above
+
+
+
 fish_transect_taxa <-  fish_transect %>% group_by(site,year,area, zone, transect, taxa) %>%
                        summarise(Count = sum(Count))
+
+sum(fish_transect_taxa$Count[fish_transect_taxa$taxa == 'TOTyoy'])
 
 # comnbine inverts spp into higher level taxa at the transect level
 # dat.invert is raw file subsetted to just inverts
@@ -1085,9 +1100,9 @@ invert_transect_taxa <- dat.invert %>% group_by(year,site,transect,zone,area,tax
     mutate(density = total.count / total.area )
 
 # fake areas for 2015
-fish_transect_taxa$area[fish_transect_taxa$year == 2015] <- "N"
-kelp_transect$area[kelp_transect$year == 2015] <- "N"
-invert_transect_taxa$area[invert_transect_taxa$year == 2015] <- "N"
+fish_transect_taxa$area[fish_transect_taxa$year == 2015] <- "D"
+kelp_transect$area[kelp_transect$year == 2015] <- "D"
+invert_transect_taxa$area[invert_transect_taxa$year == 2015] <- "D"
 
 
 #### output for CAPdiscrim analyses or nMDS ####
@@ -1129,7 +1144,9 @@ kelp_wide = kelp_area[,c('year','site','area','zone','taxa','Mean')] %>%
 
 fish_wide = fish_area[,c('year','site','area','zone','Mean','taxa')] %>%
                     rename(mean = Mean)%>%
-                    pivot_wider(. ,values_from = mean, names_from = taxa, values_fill = 0 )
+                    pivot_wider(. ,values_from = mean, names_from = taxa, values_fill = 0)
+
+
 
 # file has all fish data and some NA's for the kelp data (at depth where no kelp transects)
 # set to zeros?
@@ -1177,6 +1194,8 @@ fish_count_wide<- fish_tran %>%
   pivot_wider(names_from = taxa, values_from = tot_fish, values_fill = 0)
 # kelp
 dim(fish_count_wide)
+
+sum(fish_count_wide$TOTyoy)
 
 x <- fish_count_wide
 x$n = 1

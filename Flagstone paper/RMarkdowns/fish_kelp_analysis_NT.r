@@ -571,6 +571,8 @@ df_fish$yr = as.character(substring(df_fish$year,4,4))
 
 df_fish$site = factor(df_fish$site, levels = settings$sites)
 
+
+# general plot
 canopy_plot <-
         ggplot( df_fish, aes(x = Total, y = yoy, color = site ))+
         geom_point(pch = df_fish$yr, size = 4) +
@@ -585,6 +587,55 @@ png( paste0(Fig_Loc, "YOY-vs-Canopy-Kelp.png") , units = 'in', res=300, width=3.
 canopy_plot + theme(legend.position = c(0.8,0.85) )
 
 dev.off()
+
+
+#### quick look at hurdle model ####
+# does not work well. Too many positives, I think.
+df_fish$yoy_occur = ifelse(df_fish$yoy>0,1,0)
+
+m_year = glmer(yoy_occur ~ Total + (1|year), family = binomial, data=df_fish)
+m_site = glmer(yoy_occur ~ Total + (1|site), family = binomial, data=df_fish)
+m_yearsite = glmer(yoy_occur ~  (1|site) + (1|year), family = binomial, data=df_fish)
+m_full = glmer(yoy_occur ~ Total + (1|site) + (1|year), family = binomial, data=df_fish)
+summary(m_full)
+
+
+AIC(m_year)
+AIC(m_site)
+AIC(m_yearsite)
+AIC(m_full)
+
+
+#############################################################################
+
+## Negative Binomial Model 
+
+#############################################################################
+
+# df_count
+library(MASS)
+var(df_count$TOTyoy)
+mean(df_count$TOTyoy)
+a
+# variance exceeds the mean...by a lot
+
+nb1  <- glm.nb( TOTyoy ~ Macro + Nereo + Ptery, 
+                link=log,
+                offset(log(df_count$fish_area)),
+                data = df_count)
+
+summary(nb1)
+anova(nb1)
+AIC(nb1)
+
+df_count$phat = predict(nb1, df_count, type='response')
+
+ggplot(df_dens, aes(x = Macro, y = Nereo, color = TOTyoy)) + 
+        geom_point( pch = as.character(substring(df_dens$year,4,4)), size =4)+
+        xlab( expression(paste( italic(Macro),' stipes per ', m^2)) )+
+        ylab( expression(paste( italic(Nereo),' stipes per ', m^2)) )+
+        theme_bw()+theme_nt + theme(legend.key.size = unit(1,'lines'),
+                                    legend.position = c(0.8,0.8))
 
 
 
