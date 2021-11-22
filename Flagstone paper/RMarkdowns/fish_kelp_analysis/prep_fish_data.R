@@ -61,6 +61,8 @@ fish1a <- fish1 %>%
       vis_m >= min.vis, Count, NA
     )
   )
+# length(which(is.na(fish1a$Count)))
+# fish1a %>% filter(is.na(Count)) %>% group_by(year, site, area, zone, transect) %>% distinct(transect)
 
 # check for NAs in depth
 unique(fish1a$zone)
@@ -119,7 +121,7 @@ fish1e = fish1e %>% group_by(year,site,area,zone,transect,taxa) %>%
   group_by(year,site,area,zone, taxa)%>%
   summarise(Mean = mean(transect_mean))
 
-fishwide =  pivot_wider(fish1e, names_from = taxa, values_from = Mean, values_fill = 0)
+fishwide =  pivot_wider(fish1e, names_from = taxa, values_from = Mean, values_fill = NA)
 dim(fishwide)
 
 # nrows is 95 but low vis rows not excluded, so mostly ok.
