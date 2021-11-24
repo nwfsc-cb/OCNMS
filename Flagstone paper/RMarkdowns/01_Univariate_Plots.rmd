@@ -957,8 +957,22 @@ urchin.plot <- ggplot(urchin_year, aes(x = year, y=grand_mean, color=taxa)) +
 
 urchin.plot
 
+
+x2015 = urchin_year$grand_mean[urchin_year$year == 2015 & urchin_year$taxa == "Purple urchin"]
+x2021 = urchin_year$grand_mean[urchin_year$year == 2021 & urchin_year$taxa == "Purple urchin"]
+x2019 = urchin_year$grand_mean[urchin_year$year == 2019 & urchin_year$taxa == "Purple urchin"]
 ```
  
+
+
+Purple urchin density in 2015 = `r x2015` urchins per m^2
+Purple urchin density in 2015 = `r x2019` urchins per m^2
+
+Increase was `r x2019/x2015` fold.
+
+Purple urchin density in 2015 = `r x2021` urchins per m^2
+
+Density compared to 2015 was `r x2021/x2015` fold.
 
 ## Seastars
 
@@ -1370,8 +1384,17 @@ canopy.kelp <- ggplot( canopy %>% filter(., site == 'Coastwide') %>% filter(., y
 
 canopy.kelp
 
+k2014  = canopy$canopy_ha[canopy$year == 2014 & canopy$site == 'Coastwide']
+k2020  = canopy$canopy_ha[canopy$year == 2020 & canopy$site == 'Coastwide']
+
+k_change = k2020/k2014
+
 ```
 
+Totals 2014 for Total, Nereo, Macro = `r k2014` ha
+Totals 2020 for Total, Nereo, Macro = `r k2020` ha
+
+Change was `r k2020/k2014` fold.
 
 # Combined Figures for MS
 
