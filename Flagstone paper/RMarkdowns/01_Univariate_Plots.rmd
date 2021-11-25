@@ -866,7 +866,18 @@ ggplot() +
       theme_bw()+ theme_nt
    
 
+
+
+tat_urchin2019 = urchin_zone[urchin_zone$year==2019 & urchin_zone$site =='Tatoosh Island',]
+
+
 ```
+
+
+Max total urchin density at Tatoosh
+
+ 5-m = `r tat_urchin2019$mean.density[1]` m^-2
+10-m = `r tat_urchin2019$mean.density[2]` m^-2
 
 ## Urchins by species
 
@@ -914,8 +925,16 @@ urchin_plot_all <- ggplot(data=urchins_all,aes(x=year, y= mean.density, col = si
                     theme_bw()+ theme_nt
 urchin_plot_all + rotate_x_text(angle = 45)
 
+
+tat_purpleurchins2019 = urchins_all[urchins_all$year==2019 & 
+                                    urchins_all$site =='Tatoosh Island' &
+                                    urchins_all$taxa == 'Purple urchin',]
 ```
 
+Max total urchin density at Tatoosh
+
+ 5-m = `r tat_purpleurchins2019$mean.density[1]` m^-2
+10-m = `r tat_purpleurchins2019$mean.density[2]` m^-2
 
 ```{r urchin-spp-year}
 
