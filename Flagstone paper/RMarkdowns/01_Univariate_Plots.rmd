@@ -1408,7 +1408,31 @@ k2020  = canopy$canopy_ha[canopy$year == 2020 & canopy$site == 'Coastwide']
 
 k_change = k2020/k2014
 
+
+can10 = canopy %>% filter(can_type=='tot_can', site=='Coastwide', year %in% c(2004:2013) )
+mean10 = mean(can10$canopy_ha)
+sd10 = sd(can10$canopy_ha)
+se10 = sd10/sqrt(10)
+
+
+
+canx = canopy %>% filter(can_type=='tot_can', site=='Coastwide', year %in% c(2015:2020) )
+meanx = mean(canx$canopy_ha)
+sdx = sd(canx$canopy_ha)
+sex = sdx/sqrt(length(canx))
+
 ```
+
+Mean ha for 2004-2013: `r mean10` ha +/- `r se10` s.e.
+
+Total canopy 2014: `r k2014[1]` ha
+
+Drop from previous decade: `r k2014[1]/mean10` % of previous cover.
+
+Mean ha for 2015-2020:`r meanx` ha +/- `r sex` s.e.
+
+Compared to earlier decade: `r meanx/mean10` % of previous cover.
+
 
 Totals 2014 for Total, Nereo, Macro = `r k2014` ha
 Totals 2020 for Total, Nereo, Macro = `r k2020` ha
