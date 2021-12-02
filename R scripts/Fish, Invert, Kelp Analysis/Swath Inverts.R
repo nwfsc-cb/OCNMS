@@ -5,6 +5,7 @@ library(dplyr)
 library(ggplot2)
 library(viridis)
 library(reshape2)
+library(tidyverse)
 
 rm(list=ls())
 
@@ -18,8 +19,6 @@ setwd(data.dir)
 
 dat.2015 <- read.csv("2015_OCNMSDataComplete_standardized_122116.csv")
 dat.2016.on.swath <- read.csv("NWFSC_SWATH_ALLYEARS_data_2021.csv")
-
-dat.2016.on.swath$CLASSCODE[dat.2016.on.swath$CLASSCODE=="no_alg"] <- "NO_ALG"
 
 species_names <- read.csv("species_code_list_swath.csv")
 
@@ -109,7 +108,7 @@ base.dat.2015 <- base.dat
 colnames(dat.2016.on.swath)[2] <- "YEAR"
 colnames(dat.2016.on.swath)[which(colnames(dat.2016.on.swath)=="SIDE")] <- "AREA"
 ## Replace a couple of CLASSCODE entry errors from 2016:
-#dat.2016.on.swath$CLASSCODE[dat.2016.on.swath$CLASSCODE=="no_alg"] <- "NO_ALG"
+dat.2016.on.swath$CLASSCODE[dat.2016.on.swath$CLASSCODE=="no_alg"] <- "NO_ALG"
 
 # Add in an indicator for Algae or Invert transects
 dat.2016.on.swath <- dat.2016.on.swath %>% left_join(., species_names %>% rename(CLASSCODE=species))
@@ -168,7 +167,7 @@ dat.2016.plus.swath <- dat.2016.plus.swath %>% group_by(year,site,area,transect,
 dat.swath <- full_join(dat.2015.swath.count,dat.2016.plus.swath)
 # Assign all 2015 transets to the 5m depth zone
 dat.swath <- dat.swath %>% mutate(zone=ifelse(year==2015 & is.na(zone)==T,5,zone))
-dat.swath <-dat.swath %>% filter(site != "")
+dat.swath <- dat.swath %>% filter(site != "")
 dat.swath <- dat.swath %>% filter(!group =="MISSING")
 
 dat.swath.base <- dat.swath %>% as.data.frame()
@@ -216,6 +215,20 @@ dat.swath.base      <- dat.swath.base %>% ungroup() %>%
 saveRDS(dat.swath.base,"Swath_2015-2021.rds")
 
 ###################################################################
+# Separate out invertebrates and algae.
+dat.invert <- dat.swath.base %>% filter(group == "Invert")
+dat.algae  <- dat.swath.base %>% filter(group == "Algae")
+###################################################################
+
+dat.transect.summary <- dat.swath.base %>% filter(year>2015) %>% group_by(year,site,area,zone,group) %>%
+                          summarise(MIN.t = min(transect),MAX.t = max(transect),N.t = length(unique(transect))) %>%
+                          pivot_wider(.,id_cols=c("year","site","area","zone"),names_from="group",values_from="N.t") %>%
+                          mutate(Error=ifelse(Algae != Invert | is.na(Algae) |is.na(Invert),"YES","no")) %>% 
+                          arrange(desc(Error)) %>%
+                          as.data.frame()
+
+write.csv(dat.transect.summary,file="SWATH ERROR CHECK.csv",row.names=F)
+###################################################################
 ###################################################################
 ###################################################################
 ###################################################################
@@ -228,10 +241,6 @@ saveRDS(dat.swath.base,"Swath_2015-2021.rds")
 ###################################################################
 ###################################################################
 
-###################################################################
-# Separate out invertebrates and algae.
-dat.invert <- dat.swath.base %>% filter(group == "Invert")
-dat.algae  <- dat.swath.base %>% filter(group == "Algae")
 
 #### INVERT ANALYSIS and plotting.
 # Convert to m2 for comparability across all years.

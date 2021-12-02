@@ -295,6 +295,14 @@ saveRDS(dat.fish,"Fish_2015-2021.rds")
 ##############################################################
 ##############################################################
 ##############################################################
+
+dat.transect.summary <- dat.fish %>% filter(year>2015) %>% group_by(year,site,area,zone) %>%
+  summarise(MIN.t = min(transect),MAX.t = max(transect),N.t = length(unique(transect))) %>%
+  arrange(year,site,area,zone) %>%
+  as.data.frame()
+
+write.csv(dat.transect.summary,file="FISH ERROR CHECK.csv",row.names=F)
+
 ##############################################################
 ##############################################################
 ##############################################################
