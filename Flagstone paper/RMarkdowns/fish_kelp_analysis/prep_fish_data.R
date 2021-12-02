@@ -5,6 +5,9 @@ library(here)
 library(janitor)
 # read in data and lookup keys
 fish <- read_rds(here::here('Flagstone paper','Data','Fish_2015-2021.rds')) # these data are complete and include zeroes for transects in which a species is not seen
+# Check to see if there are any yellowtail that are not small.
+fish %>% filter(species=="SEBYT",is.na(size_class)) %>% distinct(Count)
+# circa 2021, there are no large yellowtail.
 
 fish_codes = data.frame(read.csv( here::here('Flagstone paper','Data',"spp_codes_fish.csv") ))
 
@@ -23,7 +26,9 @@ fish0 <- fish %>%
   left_join(.,fish_codes %>% dplyr::select(code,group),by=c("species"="code")) %>%
   rename(taxa=group)
 
-# dim(fish[!apply(fish == "", 1, all),])
+# Manually get rid of "SEBYT" if the size_class is NA
+fish0 <- fish0 %>% mutate(sp_size = paste0(species,"_",as.character(size_class)))
+fish0 <- fish0 %>% filter(!sp_size == "SEBYT_NA") %>% dplyr::select(!sp_size)
 
 # assign all small size class fish to taxa == taxayoy, so we can focus on RYOY
 fish1 <- fish0 %>% mutate(taxa=case_when(is.na(size_class)==TRUE ~ as.character(taxa),
@@ -46,7 +51,7 @@ fish_yt <- fish1 %>% filter(taxa=="SEBYTyoy") %>%
   ungroup()
 
 # check on SEBYT. see if CJ 2015 zone 5 has any. it does not 
-View(fish1 [ fish1$year == 2015 & fish1$site == "Cape Johnson" & fish1$zone == 5 & fish1$species == "SEBYT", ] )
+# View(fish1 [ fish1$year == 2015 & fish1$site == "Cape Johnson" & fish1$zone == 5 & fish1$species == "SEBYT", ] )
 
 fish1 %>%
   tabyl(site, area, year)
@@ -54,7 +59,7 @@ fish1 %>%
 fish2 <- fish1 %>% filter(!taxa == "SEBYTyoy") %>% full_join(.,fish_yt)
 length(which(is.na(fish2$Count)))
 # check on SEBYT. see if CJ 2015 zone 5 is still there. it is
-View(fish2 [ fish2$year == 2015 & fish2$site == "Cape Johnson" & fish2$zone == 5 & fish2$species == "SEBYT", ] )
+# View(fish2 [ fish2$year == 2015 & fish2$site == "Cape Johnson" & fish2$zone == 5 & fish2$species == "SEBYT", ] )
 
 # subset to 5 index sites ####
 fish2a = fish2 %>% filter(site %in%  sites) %>%
@@ -76,8 +81,8 @@ length(which(is.na(fish2a$zone) == TRUE)) #0
 fish2a$area[fish2a$year == 2015] <- "D"
 
 # make sure everything looks ok. it does
-fish2a %>%
-  tabyl(site, area, year)
+# fish2a %>%
+#   tabyl(site, area, year)
 
 # assign dummy visibility ####
 # add fake vis for 2015 at DI
@@ -86,8 +91,8 @@ fish2a$vis_m[ fish2a$year == 2015 ] <- 3
 # fish2a$vis_m[ fish2a$year == 2015 & fish2a$site == "Destruction Island"] <- 1
 
 # any NAs for vis_m? yes
-length(which(is.na(fish2a$vis_m)))
-View(fish2a[which(is.na(fish2a$vis_m)),]) # all DI 2017 10m depth zone. JS chatted with OS, agreed to assume that viz was bad on these transects
+# length(which(is.na(fish2a$vis_m)))
+# View(fish2a[which(is.na(fish2a$vis_m)),]) # all DI 2017 10m depth zone. JS chatted with OS, agreed to assume that viz was bad on these transects
 # View(fish[which(is.na(fish$vis_m)),])
 
 # add poor vis for 2017 at DI deep
@@ -164,12 +169,12 @@ fish4a <- fish4 %>%
 glimpse(fish4a)
 
 # make sure everything looks ok. it does
-fish4a %>%
-  tabyl(site, area, year)
+ fish4a %>%
+   tabyl(site, area, year)
 # fish4a is a clean transect-level df 
 
-View(fish4a [ fish4a$year == 2015 & fish4a$site == "Cape Johnson" & fish4a$zone == 5 & fish4a$species == "SEBYT", ] )
-View(fish4a [ fish4a$year == 2015 & fish4a$site == "Cape Johnson" & fish4a$zone == 5 & fish4a$taxa == "SEBYT", ] ) # oh no, there is no SEBYT taxa
+# View(fish4a [ fish4a$year == 2015 & fish4a$site == "Cape Johnson" & fish4a$zone == 5 & fish4a$species == "SEBYT", ] )
+# View(fish4a [ fish4a$year == 2015 & fish4a$site == "Cape Johnson" & fish4a$zone == 5 & fish4a$taxa == "SEBYT", ] ) # oh no, there is no SEBYT taxa
 
 
 # unique(fish4a$taxa)
@@ -183,7 +188,7 @@ write_rds(fish4a, here::here('Flagstone paper','Data','fish_2015_2021_year_site_
 
 # quick data check ###
 fish4b = fish4a[,c('year', 'site', 'area', 'zone', 'transect','taxa', 'count' )]
-View(fish4b [ fish4b$year == 2015 & fish4b$site == "Cape Johnson" & fish4b$zone == 5 & fish4b$taxa == "SEBYT", ] )
+# View(fish4b [ fish4b$year == 2015 & fish4b$site == "Cape Johnson" & fish4b$zone == 5 & fish4b$taxa == "SEBYT", ] )
 
 fish5 = fish4b %>% group_by(year,site,area,zone,transect,taxa) %>%
   summarise(transect_mean = mean(count)) %>%
@@ -193,7 +198,7 @@ fish5 = fish4b %>% group_by(year,site,area,zone,transect,taxa) %>%
   ungroup()
 glimpse(fish5)
 
-View(fish5 [ fish5$year == 2015 & fish5$site == "Cape Johnson" & fish5$zone == 5 & fish5$taxa == "SEBYT", ] )
+# View(fish5 [ fish5$year == 2015 & fish5$site == "Cape Johnson" & fish5$zone == 5 & fish5$taxa == "SEBYT", ] )
 
 fishwide =  pivot_wider(fish5, names_from = taxa, values_from = Mean, values_fill = NA)
 dim(fishwide)
