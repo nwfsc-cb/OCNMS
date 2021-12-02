@@ -14,6 +14,9 @@ min.vis = 2
 
 fish.depth = c(5,10)
 
+fish %>%
+  tabyl(site, area, year)
+
 # add in yoy designator and fix some names
 fish0 <- fish %>% 
   #remove_empty("rows") %>% 
@@ -44,6 +47,9 @@ fish_yt <- fish1 %>% filter(taxa=="SEBYTyoy") %>%
 
 # check on SEBYT. see if CJ 2015 zone 5 has any. it does not 
 View(fish1 [ fish1$year == 2015 & fish1$site == "Cape Johnson" & fish1$zone == 5 & fish1$species == "SEBYT", ] )
+
+fish1 %>%
+  tabyl(site, area, year)
 
 fish2 <- fish1 %>% filter(!taxa == "SEBYTyoy") %>% full_join(.,fish_yt)
 length(which(is.na(fish2$Count)))
@@ -76,8 +82,8 @@ fish2a %>%
 # assign dummy visibility ####
 # add fake vis for 2015 at DI
 fish2a$vis_m[ fish2a$year == 2015 ] <- 3
-# poor vis at destruction in year 1.
-fish2a$vis_m[ fish2a$year == 2015 & fish2a$site == "Destruction Island"] <- 1
+# poor vis at destruction in year 1. but no fish observed so do not need next line 
+# fish2a$vis_m[ fish2a$year == 2015 & fish2a$site == "Destruction Island"] <- 1
 
 # any NAs for vis_m? yes
 length(which(is.na(fish2a$vis_m)))
@@ -95,13 +101,15 @@ fish2a %>% filter(vis_m < min.vis) %>% group_by(year, site, area, zone) %>% summ
 fish3 <- fish2a %>%
   mutate(
     Count = ifelse(
-      vis_m >= min.vis, Count, NA
+      vis_m >= min.vis, Count, -999999
     )
   ) %>%
   rename(count = Count)
 
 # how many counts are NAs now
 length(which(is.na(fish3$count)))
+# how many counts are -999999
+length(which(fish3$count == -999999))
 # fish3 %>% filter(is.na(count)) %>% group_by(year, site, area, zone, transect) %>% distinct(transect)
 # now how many transects have excludable viz?
 fish3 %>% filter(vis_m < min.vis) %>% group_by(year, site, area, zone) %>% summarise(num_NA_transects = length(unique(transect)))
@@ -112,6 +120,8 @@ fish3a <- fish3 %>%
   filter(vis_m >= min.vis)
 # how many counts are NAs now
 length(which(is.na(fish3a$count))) # 0
+# how many counts are -999999
+length(which(fish3a$count == -999999))
 # now how many transects have excludable viz?
 fish3a %>% filter(vis_m < min.vis) %>% group_by(year, site, area, zone) %>% summarise(num_NA_transects = length(unique(transect)))
 # 0 yr-site-area-zones
@@ -122,7 +132,7 @@ fish3a %>% filter(size_class == "small") %>% distinct(taxa)
 
 fish3b <- fish3a %>% filter(size_class == "small") %>% 
   group_by(site,year,area,zone,transect,observer,vis_m) %>% 
-  summarise(Count_all=sum(count, na.rm = TRUE)) %>%
+  summarise(Count_all=sum(count)) %>%
   ungroup() %>%
   mutate(species="TOTyoy",taxa="TOTyoy") %>%
   rename(count=Count_all)
@@ -158,6 +168,10 @@ fish4a %>%
   tabyl(site, area, year)
 # fish4a is a clean transect-level df 
 
+View(fish4a [ fish4a$year == 2015 & fish4a$site == "Cape Johnson" & fish4a$zone == 5 & fish4a$species == "SEBYT", ] )
+View(fish4a [ fish4a$year == 2015 & fish4a$site == "Cape Johnson" & fish4a$zone == 5 & fish4a$taxa == "SEBYT", ] ) # oh no, there is no SEBYT taxa
+
+
 # unique(fish4a$taxa)
 
 # how many unique yr-site-area-zones have NA values?
@@ -169,6 +183,8 @@ write_rds(fish4a, here::here('Flagstone paper','Data','fish_2015_2021_year_site_
 
 # quick data check ###
 fish4b = fish4a[,c('year', 'site', 'area', 'zone', 'transect','taxa', 'count' )]
+View(fish4b [ fish4b$year == 2015 & fish4b$site == "Cape Johnson" & fish4b$zone == 5 & fish4b$taxa == "SEBYT", ] )
+
 fish5 = fish4b %>% group_by(year,site,area,zone,transect,taxa) %>%
   summarise(transect_mean = mean(count)) %>%
   ungroup() %>%
@@ -176,6 +192,8 @@ fish5 = fish4b %>% group_by(year,site,area,zone,transect,taxa) %>%
   summarise(Mean = mean(transect_mean)) %>%
   ungroup()
 glimpse(fish5)
+
+View(fish5 [ fish5$year == 2015 & fish5$site == "Cape Johnson" & fish5$zone == 5 & fish5$taxa == "SEBYT", ] )
 
 fishwide =  pivot_wider(fish5, names_from = taxa, values_from = Mean, values_fill = NA)
 dim(fishwide)
