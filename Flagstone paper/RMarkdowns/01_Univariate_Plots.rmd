@@ -36,11 +36,6 @@ library(tinytex) # for pdf output
 # display.brewer.all(colorblindFriendly = TRUE)
 #vlibrary(readxl)
 
-# stats packages etc
-# library(vegan)
-# library(BiodiversityR)
-# library(pracma)
-# library(factoextra)
 source("R-functions-ocnms.r")
 
 
