@@ -13,7 +13,7 @@ library(lme4) # needed for glmer package
 #### BRING IN DATA ##########
 
 # run prep_fish_data.R, which uses df from ole Fish_2015-2021.rds 
-fish <- read_rds(here::here('Flagstone paper','Data','fish_2015_2021_year_site_area_zone.rds'))
+fish <- read_rds(here::here('Flagstone paper','Data','fish_2015_2021_year_site_area_zone_transect.rds'))
 glimpse(fish)
 
 # run prep_algae_data.R, which uses df from ole Swath_2015-2021.rds
@@ -36,9 +36,12 @@ fish_wide <- fish %>%
   pivot_wider(
     names_from = taxa,
     values_from = count,
-    values_fn = sum # use sum because there are some taxa with counts listed under multiple size classes
+    values_fn = sum, # use sum because there are some taxa with counts listed under multiple size classes
+    values_fill = -99999
               )
-glimpse(fish_wide)
+glimpse(fish_wide) # this is 318 rows, if we distill to yr-site-area-zone should only be 82 rows. need to check
+
+# -99999 are just for SEBYT, Ole is fixing
 
 ## make a kelp df summarised by year-site-area-zone, pivot_wide
 algae_area_wide <- algae %>%
@@ -55,12 +58,16 @@ algae_area_wide <- algae %>%
   ) %>%
   pivot_wider(
     names_from = species,
-    values_from = density
+    values_from = density,
+    values_fill = -99999
   ) %>%
   ungroup()
 glimpse(algae_area_wide)
+# as of 2021, only 1 transect at DI in 2015 has -99999 values because we only counted macro, nereo, and ptery. these will get dropped anyway because there are no fish data for DI in 2015
 
 length(which(is.na(algae_area_wide$NO_ALG)))
+
+# change -99999 values to NAs for fish
 
 # join the resulting df's, at yr-site-area-zone level, make year_factor column
 fish_kelp <- fish_wide %>% left_join(algae_area_wide, by=c('site'='site','year'='year','area'='area','zone'='zone')) %>%
