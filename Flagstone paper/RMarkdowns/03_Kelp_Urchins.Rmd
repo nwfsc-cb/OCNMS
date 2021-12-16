@@ -199,13 +199,41 @@ df = df_transect %>% group_by(site, year, zone, area, transect, kelp_spp) %>%
 
 df$pch = as.character(substring(df$year,4,4))
 
+# nl model
+
+
+X = df$Urchins[df$kelp_spp == 'Macrocystis']
+Y = df$Kelp[df$kelp_spp == 'Macrocystis']
+
+f = function(X, Y){ Y ~ a * exp(k * X)}
+f = function(X, Y){ Y ~   exp(k * X)}
+
+m1 <- nls( Y ~ a * exp(k * X), 
+           start=list(a=1,k=-1), 
+           control=nls.control(maxiter=100,  
+                               minFactor=1e-7, 
+                               tol=1e-5, 
+                               printEval=F, 
+                               warnOnly=F)
+           )
+
+summary(m1)
+p1 = predict(m1)
+
+#
+
+
 macro = filter(df, kelp_spp == "Macrocystis")
 macro1 <- ggplot(macro, aes( x=Urchins , y=Kelp, color=site)) +
          geom_point(size=2.5, pch=macro$pch) +
          scale_color_manual(values=site.col$col )+
          xlim(0,NA)+
          ylim(0,NA)+
-         # geom_smooth(data = filter(macro,site =='Tatoosh Island' ), method='lm', se=FALSE) +
+         # geom_smooth(aes(x = X, y = Y), 
+         #             formula='y ~ a * exp(k * x)',
+         #             start=list(a=1,k=0),
+         #             method='nls', se=FALSE,
+         #             linetype=1, color='red') +
          xlab( expression(paste('Urchins per 60 ', m^2) ) )+
          ylab( expression(paste(italic('Macro'), ' stipes per 60 ', m^2)) )+
          theme_bw() + theme_nt 
