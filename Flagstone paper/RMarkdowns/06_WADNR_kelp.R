@@ -3,6 +3,7 @@
 library(tidyverse)
 
 data.dir <- "/Users/ole.shelton/Github/OCNMS/Flagstone paper/Data"
+plot.dir <- "/Users/ole.shelton/Github/OCNMS/Flagstone paper/Plots"
 setwd(data.dir)
 
 kelp.dat <- read.csv("WADNR_summary_kelp_stats_1989_2020.csv")
@@ -127,7 +128,11 @@ p.plan <- ggplot(kelp.pl.long,aes(y=pl_ha,x=year,color=species)) +
   scale_color_viridis_d(begin=0,end=0.75,option="plasma") +
   theme_bw()
 
-
+setwd(plot.dir)
+pdf(file="WADNR kelp canopy.pdf",onefile = T,width=11,height=8.5)
+  print(p.canopy)
+  print(p.plan)
+dev.off()
 
 
 
