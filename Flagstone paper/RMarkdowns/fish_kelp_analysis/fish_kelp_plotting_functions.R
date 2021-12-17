@@ -40,9 +40,9 @@ bivariate_plot_abund <- function(kelp_sp, fish_sp, trans="none"){
 # function for occurrence
 # # https://www.ericrscott.com/post/plot-logistic-regressions/
 bivariate_plot_occur <- function(kelp_sp, fish_sp, trans="none"){
-  df <- fish_kelp %>% 
+  df <- yoy_kelp %>% 
     filter(is.na(zone) == FALSE) %>% 
-    dplyr::select(year, site, area, zone, transect, kelp_sp, fish_sp)
+    dplyr::select(year, site, area, zone, kelp_sp, fish_sp)
   
   # if(trans=="log"){
   #   df %<>%
@@ -58,7 +58,8 @@ bivariate_plot_occur <- function(kelp_sp, fish_sp, trans="none"){
   #   geom_line(aes(y = .fitted), color = "blue") +
   #   theme_classic()
   
-  xl <- ifelse(trans=="log","Log Density (count/sq. m + 1)","Kelp Density (count/sq. m)")
+  # xl <- ifelse(trans=="log","Log Density (count/sq. m + 1)","Kelp Density (count/sq. m)")
+  xl <- "Kelp Density (count/sq. m)"
   yl <- "YOY Probability of Occurrence"
   
   pl <- df %>% 

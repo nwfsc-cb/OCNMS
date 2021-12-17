@@ -41,7 +41,53 @@ fish_wide <- fish %>%
               )
 glimpse(fish_wide) # this is 318 rows, if we distill to yr-site-area-zone should only be 82 rows. need to check
 
-# -99999 are just for SEBYT, Ole is fixing
+# checked and yes it gives 82 rows with the example taxa TOTyoy
+# glimpse(
+#   fish_wide %>% select(year,site,area,zone,transect,TOTyoy) %>%
+#     group_by(year,site,area,zone,transect) %>%
+#     summarise(transect_mean_TOTyoy = mean(TOTyoy)) %>%
+#     ungroup() %>%
+#     group_by(year,site,area,zone)%>%
+#     summarise(Mean = mean(transect_mean_TOTyoy)) %>%
+#     ungroup()
+# )
+
+# are there values of -99999? NONE! Ole fixed by changing 15 SEBYT large/NA to small at DI S5 transect 4.
+length(which(fish_wide == -99999)) 
+length(which(is.na(fish_wide)))
+View(fish_wide) 
+
+# ok, now summarize num transects with YOY present vs absent by yr-site-area-zone
+
+fish_wide2 <- fish_wide %>%
+  mutate(
+    SEBYTyoy_pres = ifelse(SEBYTyoy > 0, 1, 0),
+    SECAyoy_pres = ifelse(SECAyoy > 0, 1, 0),
+    SEPIyoy_pres = ifelse(SEPIyoy > 0, 1, 0),
+    TOTyoy_pres = ifelse(TOTyoy > 0, 1, 0)
+  ) 
+
+yoy_wide <- fish_wide2 %>%
+  group_by(year,site,area,zone) %>%
+  summarise(
+    mean_SEBYTyoy = mean(SEBYTyoy),
+    num_trans_SEBYTyoy_Y = sum(SEBYTyoy_pres),
+    num_trans_SEBYTyoy_N = length(transect) - num_trans_SEBYTyoy_Y,
+    mean_SECAyoy = mean(SECAyoy),
+    num_trans_SECAyoy_Y = sum(SECAyoy_pres),
+    num_trans_SECAyoy_N = length(transect) - num_trans_SECAyoy_Y,
+    mean_SEPIyoy = mean(SEPIyoy),
+    num_trans_SEPIyoy_Y = sum(SEPIyoy_pres),
+    num_trans_SEPIyoy_N = length(transect) - num_trans_SEPIyoy_Y,
+    mean_TOTyoy = mean(TOTyoy),
+    num_trans_TOTyoy_Y = sum(TOTyoy_pres),
+    num_trans_TOTyoy_N = length(transect) - num_trans_TOTyoy_Y,
+    n_fish_transects = n()
+  ) %>%
+  ungroup()
+View(yoy_wide)
+glimpse(yoy_wide)
+#fish_wide %>% filter(year == 2015 & site == "Cape Johnson" & zone == 5) 
 
 ## make a kelp df summarised by year-site-area-zone, pivot_wide
 algae_area_wide <- algae %>%
@@ -66,68 +112,120 @@ glimpse(algae_area_wide)
 # as of 2021, only 1 transect at DI in 2015 has -99999 values because we only counted macro, nereo, and ptery. these will get dropped anyway because there are no fish data for DI in 2015
 
 length(which(is.na(algae_area_wide$NO_ALG)))
-
-# change -99999 values to NAs for fish
+length(which(algae_area_wide == -99999))  #13
 
 # join the resulting df's, at yr-site-area-zone level, make year_factor column
-fish_kelp <- fish_wide %>% left_join(algae_area_wide, by=c('site'='site','year'='year','area'='area','zone'='zone')) %>%
+yoy_kelp <- yoy_wide %>% left_join(algae_area_wide, by=c('site'='site','year'='year','area'='area','zone'='zone')) %>%
   mutate(
     year_factor = factor(year)
   )
 
-glimpse(fish_kelp)
+glimpse(yoy_kelp)
 
 # a tabyl of site x area, split into a list by year
-fish_kelp %>%
+yoy_kelp %>%
   tabyl(site, area, year) 
 # a tabyl of site x zone, split into a list by year
-fish_kelp %>%
+yoy_kelp %>%
   tabyl(site, zone, year) 
 
-sort(unique(fish_kelp$year))
-sort(unique(fish_kelp$site)) #do not need to drop levels
-sort(unique(fish_kelp$area)) 
-sort(unique(fish_kelp$zone)) 
+sort(unique(yoy_kelp$year))
+sort(unique(yoy_kelp$site)) #do not need to drop levels
+sort(unique(yoy_kelp$area)) 
+sort(unique(yoy_kelp$zone)) 
 
-# do a bit of cleanup, make summed kelps and fish and kelp occurrence and conditional abundance columns
+# do a bit of cleanup, make summed kelps [ no longer making  fish and kelp occurrence and conditional abundance columns, 12-16-2021]
 
 # YOYs: SEBYTyoy (black yellowtail), SECAyoy (copper), SEMAyoy (quill), SEMYyoy (blue), SENEyoy (china), SEPIyoy (canary)
 # black rocks: SEME
 # kelps: MACPYR, NERLUE, PTECAL, canopy_kelp, three_kelps, ner_pte, and diff_ner_pte
 
-fish_kelp <- fish_kelp %>%
+yoy_kelp2 <- yoy_kelp %>%
   mutate(
     site = droplevels(site),
     canopy_kelp = NERLUE + MACPYR,
     three_kelps = canopy_kelp + PTECAL,
     ner_pte = NERLUE + PTECAL,
     diff_ner_pte = NERLUE - PTECAL
-  ) %>%
-  dplyr::select(
-    year, year_factor, site, area, zone, transect, 
-    transect.area.algae, transect.area.algae.weight,
-    SEBYTyoy, SECAyoy, SEPIyoy, TOTyoy, SEME,
-    MACPYR, NERLUE, PTECAL, canopy_kelp, three_kelps, ner_pte, diff_ner_pte
-  ) %>%
-  mutate(
-    SEBYTyoy_pres = ifelse(SEBYTyoy > 0, 1, 0),
-    SECAyoy_pres = ifelse(SECAyoy > 0, 1, 0),
-    SEPIyoy_pres = ifelse(SEPIyoy > 0, 1, 0),
-    TOTyoy_pres = ifelse(TOTyoy > 0, 1, 0),
-    SEME_pres = ifelse(SEME > 0, 1, 0),
-    MACPYR_pres = ifelse(MACPYR > 0, 1, 0), 
-    NERLUE_pres = ifelse(NERLUE > 0, 1, 0), 
-    PTECAL_pres = ifelse(PTECAL > 0, 1, 0),
-    three_kelps_pres = ifelse(three_kelps > 0, 1, 0),
-    canopy_kelp_pres = ifelse(canopy_kelp > 0, 1, 0),
-    ner_pte_pres = ifelse(ner_pte > 0, 1, 0),
-    SEBYTyoy_cond_abund = ifelse(SEBYTyoy > 0, SEBYTyoy, NA),
-    SECAyoy_cond_abund = ifelse(SECAyoy > 0, SECAyoy, NA),
-    SEPIyoy_cond_abund = ifelse(SEPIyoy > 0, SEPIyoy, NA),
-    TOTyoy_cond_abund = ifelse(TOTyoy > 0, TOTyoy, NA),
-    SEME_cond_abund = ifelse(SEME > 0, SEME, NA)
+   ) #%>%
+  # dplyr::select(
+  #   year, year_factor, site, area, zone, transect, 
+  #   transect.area.algae, transect.area.algae.weight,
+  #   SEBYTyoy, SECAyoy, SEPIyoy, TOTyoy, SEME,
+  #   MACPYR, NERLUE, PTECAL, canopy_kelp, three_kelps, ner_pte, diff_ner_pte
+  # ) %>%
+  # mutate(
+  #   SEBYTyoy_pres = ifelse(SEBYTyoy > 0, 1, 0),
+  #   SECAyoy_pres = ifelse(SECAyoy > 0, 1, 0),
+  #   SEPIyoy_pres = ifelse(SEPIyoy > 0, 1, 0),
+  #   TOTyoy_pres = ifelse(TOTyoy > 0, 1, 0),
+  #   SEME_pres = ifelse(SEME > 0, 1, 0),
+  #   MACPYR_pres = ifelse(MACPYR > 0, 1, 0), 
+  #   NERLUE_pres = ifelse(NERLUE > 0, 1, 0), 
+  #   PTECAL_pres = ifelse(PTECAL > 0, 1, 0),
+  #   three_kelps_pres = ifelse(three_kelps > 0, 1, 0),
+  #   canopy_kelp_pres = ifelse(canopy_kelp > 0, 1, 0),
+  #   ner_pte_pres = ifelse(ner_pte > 0, 1, 0),
+  #   SEBYTyoy_cond_abund = ifelse(SEBYTyoy > 0, SEBYTyoy, NA),
+  #   SECAyoy_cond_abund = ifelse(SECAyoy > 0, SECAyoy, NA),
+  #   SEPIyoy_cond_abund = ifelse(SEPIyoy > 0, SEPIyoy, NA),
+  #   TOTyoy_cond_abund = ifelse(TOTyoy > 0, TOTyoy, NA),
+  #   SEME_cond_abund = ifelse(SEME > 0, SEME, NA)
+  # )
+
+write_rds(yoy_kelp2, here::here('Flagstone paper','Data','yoy_kelp_2015_2021_year_site_area_zone.rds'))
+
+# does yoy_kelp2 match NTs df? close but not quite. there are 4 yr-site-area-zones that do NOT match. these are 2015-Cape Johnson-D-5, 2015-Tatoosh Island-D-5, 2015-Neah Bay-D-5, and 2019-Destruction Island-S-5
+df_nt <- read_rds(here::here('Flagstone paper','Data','Data_Fish_Kelp_area_wide.rds'))
+glimpse(df_nt)
+View(df_nt)
+
+yoy_kelp2$site <- as.factor(yoy_kelp2$site)
+df_nt$site <- as.factor(df_nt$site)
+
+df_nt_compare <- df_nt %>% dplyr::select(year, site, area, zone, SEBYTyoy, SECAyoy, SEPIyoy, TOTyoy, NERLUE, MACPYR, PTECAL)
+yoy_kelp2_compare <- yoy_kelp2 %>% dplyr::select(year, site, area, zone, mean_SEBYTyoy, mean_SECAyoy, mean_SEPIyoy, mean_TOTyoy, NERLUE, MACPYR, PTECAL) %>% rename(
+  SEBYTyoy = mean_SEBYTyoy, SECAyoy = mean_SECAyoy, SEPIyoy = mean_SEPIyoy, TOTyoy=mean_TOTyoy
   )
 
+dplyr::all_equal(
+  yoy_kelp2_compare, 
+  df_nt_compare, convert = TRUE)
+
+View(yoy_kelp2_compare[c(1, 3, 4, 46),])
+View(df_nt_compare[c(6, 11, 45, 64),])
+
+
+#### 
+#### 
+#### 
+#### 
+#### 
+#### 
+#### JAMEAL DIDN'T REALLY GO MUCH FURTHER THAN THIS QUICK CHECK ON ONE MODEL, WHICH IS HIGHLY NS FOR KELPS
+# try occurrence
+
+TOTyoy.3kelp.m1 <- glm(num_trans_TOTyoy_Y/(num_trans_TOTyoy_Y+num_trans_TOTyoy_N) ~ (three_kelps * zone) + year_factor, data = yoy_kelp2, family = quasibinomial(link = 'logit'), weights = (num_trans_TOTyoy_Y+num_trans_TOTyoy_N))
+summary(TOTyoy.3kelp.m1)
+
+TOTyoy.3kelp.m2 <- glm(num_trans_TOTyoy_Y/(num_trans_TOTyoy_Y+num_trans_TOTyoy_N) ~ three_kelps + zone + year_factor, data = yoy_kelp2, family = quasibinomial(link = 'logit'), weights = (num_trans_TOTyoy_Y+num_trans_TOTyoy_N))
+summary(TOTyoy.3kelp.m2)
+
+
+TOTyoy.nereo.m1 <- glm(num_trans_TOTyoy_Y/(num_trans_TOTyoy_Y+num_trans_TOTyoy_N) ~ (NERLUE * zone) + year_factor, data = yoy_kelp2, family = quasibinomial(link = 'logit'), weights = (num_trans_TOTyoy_Y+num_trans_TOTyoy_N))
+summary(TOTyoy.nereo.m1)
+
+TOTyoy.nereo.m2 <- glm(num_trans_TOTyoy_Y/(num_trans_TOTyoy_Y+num_trans_TOTyoy_N) ~ NERLUE + zone + year_factor, data = yoy_kelp2, family = quasibinomial(link = 'logit'), weights = (num_trans_TOTyoy_Y+num_trans_TOTyoy_N))
+summary(TOTyoy.nereo.m2)
+
+
+#### 
+#### 
+#### 
+#### 
+#### 
+#### 
+# 12-16-2021. the code below was intended to work with an earlier version of the df's. DO NOT USE FOR NOW UNTIL FIXED
 
 #### MAKE BIVARIATE PLOTS #########
 

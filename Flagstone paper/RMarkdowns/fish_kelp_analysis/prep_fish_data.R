@@ -9,6 +9,9 @@ fish <- read_rds(here::here('Flagstone paper','Data','Fish_2015-2021.rds')) # th
 fish %>% filter(species=="SEBYT",is.na(size_class)) %>% distinct(Count)
 # circa 2021, there are no large yellowtail.
 
+# check for jameal's one offending transect to be sure we don't have any large SEBYT in the input data
+fish %>% filter(year == 2019 & site == "Destruction Island" & zone == 5 & transect == 4 & species=="SEBYT") 
+
 fish_codes = data.frame(read.csv( here::here('Flagstone paper','Data',"spp_codes_fish.csv") ))
 
 sites = c("Neah Bay","Tatoosh Island","Cape Alava","Cape Johnson","Destruction Island")
@@ -203,9 +206,9 @@ glimpse(fish5)
 fishwide =  pivot_wider(fish5, names_from = taxa, values_from = Mean, values_fill = NA)
 dim(fishwide)
 View(fishwide)
-# there are SEBYT that are NA. return to this 11-30-2021
+# all SEBYT are NA. good
 
-# nrows is 82 but low vis rows not excluded. does this match the df NT used? it has the same number of rows
+# nrows is 82 but low vis rows not excluded. does this match the df NT used? it has the same number of rows, which is good
 
 df_nt <- read_rds(here::here('Flagstone paper','Data','Data_Fish_Kelp_area_wide.rds'))
 glimpse(df_nt)
