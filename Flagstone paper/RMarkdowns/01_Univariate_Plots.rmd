@@ -824,7 +824,7 @@ invert_area <- invert_transect %>%
 
 ## Summed Urchins 
 
-Ole will want to clean up the figure
+
 
 ```{r total-urchins, fig.width=5, fig.height=3.5}
   # Zoom in on urchins
@@ -1352,8 +1352,6 @@ invert_total <- invert_transect %>% rename(SPP = species) %>%
                                 left_join(.,swath_codes, by = c('SPP' = 'CLASSCODE')) %>%
                                 rename(Taxa = taxa) %>%
                                 rename(Species = species)
-
-
                                 
 invert_total <- invert_total[,c('Species','Taxa','Total','Density')]
 invert_total <- invert_total[ order (invert_total$Total, decreasing = TRUE ),]
