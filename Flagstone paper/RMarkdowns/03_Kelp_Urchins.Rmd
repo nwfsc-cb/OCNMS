@@ -1063,7 +1063,7 @@ ptery1 <- ptery1 + theme(legend.position = 'none')
 ggarrange( plot_macro,macro1,
            plot_nereo,nereo1,
            plot_ptero,ptery1,
-           labels = c('a)','b)','c)','d)','e)','f)'), 
+           labels = c('a)','b)','c)','d)','e)','f)'),
            font.label = list(face='plain', size = 10),
            hjust = c( rep(-5.5,5),-8.5),
            vjust = 2,
@@ -1136,27 +1136,37 @@ plot1 <- ggplot( df%>%filter(df$group %in% c('Macrocystis','Nereocystis','Pteryg
 ```
 
 
-```{r Figure-5, fig.height=6, fig.width=6}
+```{r Figure-5, fig.height=5, fig.width=7}
 
-plot1  <- plot1 +  theme(legend.position = c(0.8,0.2), 
+plot1  <- plot1 +  theme(legend.position = 'right', 
                          legend.key.size = unit(0.25,'lines'),
                          legend.text = element_text(size=8))
-macro1 <- macro1 + theme(legend.position = c(0.75,0.8))
+macro1 <- macro1 + theme(legend.position = c(0.55,0.7))
 nereo1 <- nereo1 + theme(legend.position = 'none')
 ptery1 <- ptery1 + theme(legend.position = 'none')
 nereo.tat <- nereo.tat +theme(legend.position = c(0.75,0.4))
 ptery.tat <- ptery.tat +theme(legend.position = c(0.75,0.55))
 
-ggarrange(plot1, macro1, nereo1, ptery1, nereo.tat, ptery.tat,
-           labels = c('a)','b)','c)','d)','e)','f)'), 
-           font.label = list(face='plain', size = 10),
-           hjust = c(-5.5, -21.5,-5.5,-22, -5,-7.5),
-           # hjust= -5.5,
-           vjust = 2,
-           align = 'v',
-           nrow = 3, ncol=2)
+# ggarrange(plot1, macro1, nereo1, ptery1, nereo.tat, ptery.tat,
+#            labels = c('a)','b)','c)','d)','e)','f)'), 
+#            font.label = list(face='plain', size = 10),
+#            hjust = c(-5.5, -21.5,-5.5,-22, -5,-7.5),
+#            # hjust= -5.5,
+#            vjust = 2,
+#            align = 'v',
+#            nrow = 3, ncol=2)
 
+library(gridExtra)
 
+grid.arrange(
+  grobs = list(plot1, macro1, nereo1, ptery1, nereo.tat, ptery.tat),
+  widths = c(1,1,1,1,1,1),
+  layout_matrix = rbind(c(NA,NA,1,1,1,NA),
+                        c(2,2,3,3,4,4),
+                        c(NA,5,5,6,6,NA))
+)
+
+  
 
 ```
 

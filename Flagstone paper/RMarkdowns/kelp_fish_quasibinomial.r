@@ -11,7 +11,7 @@ jsfish <- readRDS("C:/Users/nick.tolimieri/Documents/GitHub/OCNMS/Flagstone pape
 
 # renames some colums to match different files; easier coding
 area_area <- jsfish %>% rename( present = num_trans_TOTyoy_Y,
-                             absent  = num_trans_TOTyoy_N)
+                                absent  = num_trans_TOTyoy_N)
 
 ##### transect by area files #####################################################
 # combine the fish transect data with kelp area files
@@ -130,7 +130,7 @@ for(i in 1: length(models)){
      
 }
 
-colnames(xtable) = c('Term',paste0('M',2:ncol(xtable)))
+colnames(xtable) = c('Term',paste0('M',1:(ncol(xtable)-1)) )
 xtable[is.na(xtable)] <- ""
 xtable
 
