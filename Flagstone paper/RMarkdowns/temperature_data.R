@@ -89,23 +89,23 @@ temp_plot
 
 # get rolling average 
 library(slider)
-df1 <- tempC_long %>%
+df_smooth <- tempC_long %>%
         group_by(site) %>%
         arrange(site, date) %>%
-        mutate(t_10 = slider::slide_dbl(degreesC, mean, .before = 10, .after = 10)) %>%
+        mutate(temp_smooth = slider::slide_dbl(degreesC, mean, .before = 5, .after = 5)) %>%
         ungroup() %>%
         mutate(month = lubridate::month(date), 
                year = lubridate::year(date)) 
 
-temp_plot_10 <- ggplot( df1 , aes( x=date , y=t_10 ) ) +
+temp_smooth_plot <- ggplot( df_smooth , aes( x=date , y=temp_smooth ) ) +
         geom_line() + 
         scale_color_manual(values = site.col$col) +
         scale_x_date(date_minor_breaks = "1 year" ) + 
-        facet_wrap(~ tempC_long$site , ncol = 2, scales = 'free_x') +
+        facet_wrap(~ df_smooth$site , ncol = 2, scales = 'free_x') +
         xlab ("") + ylab (paste0("Max temp ", Degree_C)) +
         theme_bw() + theme_nt
 
-temp_plot_10
+temp_smooth_plot
 
 ####################### Monthly Maximum Temperature ################################
 
@@ -342,6 +342,47 @@ write.csv(df_mn , paste0(Fig_Loc,"Temperature_year_mean_sd.csv"), row.names = FA
 write.csv(DF_MN , paste0(Fig_Loc,"Temperature_year_mean_comparison.csv"), row.names = FALSE)
 
 ####### end mean comparison table #################
+
+####### Max and Mean plots summarized across sites #######
+
+df_1max <- df_sum_max %>% 
+    group_by(year) %>%
+    summarise(tempC = mean(max_temp), stdv = sd(max_temp)) %>%
+    mutate(cat = "Max" )
+
+dfx <- df_sum_mean %>% 
+    group_by(year) %>%
+    summarise(tempC = mean(mean_temp), stdv = sd(mean_temp)) %>%
+    mutate(cat = "Mean") %>%
+    full_join(.,df_1max)
+
+dfx$color = ifelse(dfx$cat == 'Mean', site.col$col[1], site.col$col[3])
+
+plot_t <- ggplot(dfx, aes(x = year, y = tempC, fill = cat, color=cat )) +
+    scale_color_manual(values = site.col$col[c(1,3)]) +
+    geom_ribbon( aes(ymin = tempC-stdv, ymax =tempC+stdv ), 
+                 fill = dfx$color, linetype = 0, alpha=0.5) +
+    geom_line()+
+    geom_point()+
+    xlab("") + ylab(paste0("Temperature ", Degree_C)) +
+    scale_x_continuous( breaks = seq(2005,2020,5), minor_breaks = 2003:2021) +
+    
+    theme_bw() + theme_nt
+
+plot_t
+
+graphics.off()
+
+png(paste0(Fig_Loc,"Mean_max_temp_averaged.png"), units = 'in', res=300, width = 3.5, height = 3)
+plot_t
+dev.off()
+
+
+
+
+
+
+
 
 
 
