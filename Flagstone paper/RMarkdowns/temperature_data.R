@@ -87,12 +87,12 @@ temp_plot
 
 ################################ 
 
-# get rolling average 
+# get rolling average - %-day
 library(slider)
 df_smooth <- tempC_long %>%
         group_by(site) %>%
         arrange(site, date) %>%
-        mutate(temp_smooth = slider::slide_dbl(degreesC, mean, .before = 5, .after = 5)) %>%
+        mutate(temp_smooth = slider::slide_dbl(degreesC, mean, .before = 2, .after = 2)) %>%
         ungroup() %>%
         mutate(month = lubridate::month(date), 
                year = lubridate::year(date)) 
@@ -106,6 +106,159 @@ temp_smooth_plot <- ggplot( df_smooth , aes( x=date , y=temp_smooth ) ) +
         theme_bw() + theme_nt
 
 temp_smooth_plot
+
+################# Temp by season #################################
+# to help select months for plotting etc.
+
+df_month <- df_smooth %>%
+    group_by(month) %>%
+    summarise(meanC = mean(degreesC),
+              sdC = sd(degreesC))
+xlabel = substring(month.name, 1,3)
+
+temp_season <- ggplot(df_month , aes(x = month, y = meanC)) +
+    geom_ribbon( aes(ymin = meanC+sdC, ymax = meanC-sdC), fill = 'grey90') +
+    geom_line() +
+    geom_point() +
+    scale_x_continuous( breaks = 1:12, labels=xlabel)+
+    xlab("") +
+    ylab(paste0("Mean monthly temp ", Degree_C, "(5-day smooth"))+ 
+    theme_bw() + theme_nt
+
+temp_season 
+
+graphics.off()
+png(paste0(Fig_Loc,"Daily_Mean_Temperature_by_season_5d-smooth.png"), units = 'in', res = 300, width = 3.5, height = 3)
+temp_season + theme_bw() + theme_nt
+dev.off()
+
+# choose what classifies as summer months ####
+# july  - sept plateau
+
+summer_months = 7:9
+
+########## end temp by season plotting ###########################
+
+################# Summer MEAN temperature by site  ######################
+df_sum_mean <- df_smooth %>% # used below
+    group_by(site,year) %>%
+    filter(month %in% summer_months) %>%
+    summarise(mean_temp = round(mean(degreesC),1),
+              sd_temp  = round(sd(degreesC),1) ) %>%
+    mutate(mean_sd = paste0(mean_temp," (",sd_temp,")"))
+
+df_sum_mean_wide <- df_sum_mean %>%
+    select(year,site,mean_sd) %>%
+    pivot_wider( ., names_from = year, values_from = mean_sd) %>%
+    rename(Site = site)
+
+write.csv(df_sum_mean_wide, paste0(Fig_Loc,"Mean_sd_temp_by_site_year-5day.csv"), row.names = FALSE)
+
+df_sum_mean$site = factor(df_sum_mean$site, levels = site.col$site)
+df_sum_mean$col = site.col$col[ match(df_sum_mean$site, site.col$site)]
+
+sum_mean_plot <- ggplot(df_sum_mean, aes(x = year, y = mean_temp, color=site, fill=site)) + 
+    #geom_ribbon( aes(ymin = mean_temp+sd_temp, ymax =mean_temp-sd_temp)) +
+    geom_line(size = 1) +
+    scale_color_manual( values = site.col$col ) +
+    scale_x_continuous( breaks = seq(2005,2020,5) , minor_breaks = 2003:2021 )+
+    xlab("")+
+    ylab( paste0('Mean summer temperature ', Degree_C)) +
+    theme_bw()+theme_nt + theme(legend.position = c(0.4, 0.85) )
+sum_mean_plot
+
+graphics.off()
+png(paste0(Fig_Loc,"Mean_Temp_by_site-5day.png") , units = 'in',res=300, width = 3.5, height = 3)
+sum_mean_plot
+dev.off()
+
+################# Summer 5-day Maxumum temperature by site  ######################
+df_sum_max <- df_smooth %>% # used below
+    group_by(site,year) %>%
+    filter(month %in% summer_months) %>%
+    summarise(max_temp = round(max(degreesC),1) )
+
+df_sum_max_wide <- df_sum_max %>%
+    select(year,site,max_temp) %>%
+    pivot_wider( ., names_from = year, values_from = max_temp) %>%
+    rename(Site = site)
+
+write.csv(df_sum_mean_wide, paste0(Fig_Loc,"Mean_sd_temp_by_site_year-5day.csv"), row.names = FALSE)
+
+df_sum_max$site = factor(df_sum_max$site, levels = site.col$site)
+df_sum_max$col = site.col$col[ match(df_sum_max$site, site.col$site)]
+
+sum_max_plot <- ggplot(df_sum_max, aes(x = year, y = max_temp, color=site, fill=site)) + 
+    #geom_ribbon( aes(ymin = mean_temp+sd_temp, ymax =mean_temp-sd_temp)) +
+    geom_line(size = 1) +
+    scale_color_manual( values = site.col$col ) +
+    scale_x_continuous( breaks = seq(2005,2020,5) , minor_breaks = 2003:2021 )+
+    xlab("")+
+    ylab( paste0('Five-day max summer temperature ', Degree_C)) +
+    theme_bw()+theme_nt + theme(legend.position = c(0.4, 0.85) )
+sum_max_plot
+
+graphics.off()
+png(paste0(Fig_Loc,"Max_Temp_by_site-5day.png") , units = 'in',res=300, width = 3.5, height = 3)
+sum_max_plot
+dev.off()
+
+##### Plot max and mean together - absolute, 5-day smooth ################################
+
+graphics.off()
+png(paste0(Fig_Loc,"Temperature_summer_max_mean-5day-smooth.png"),
+    units = 'in',res=300, width = 3.5, height =5)
+
+ggarrange( sum_max_plot, sum_mean_plot,
+           labels = c('a)','b)'), 
+           font.label = list(face='plain', size = 10),
+           hjust = -4,
+           vjust = 2,
+           align = 'v',
+           ncol = 1)
+dev.off()
+
+####### 5-day Max and Mean plots summarized across sites #######
+
+df_1max <- df_sum_max %>% 
+    group_by(year) %>%
+    summarise(tempC = mean(max_temp), stdv = sd(max_temp)) %>%
+    mutate(cat = "Max" )
+
+dfx <- df_sum_mean %>% 
+    group_by(year) %>%
+    summarise(tempC = mean(mean_temp), stdv = sd(mean_temp)) %>%
+    mutate(cat = "Mean") %>%
+    full_join(.,df_1max)
+
+dfx$color = ifelse(dfx$cat == 'Mean', site.col$col[3], site.col$col[1])
+
+plot_t <- ggplot(dfx, aes(x = year, y = tempC, fill = cat, color=cat )) +
+    scale_color_manual(values = site.col$col[c(3,1)]) +
+    geom_ribbon( aes(ymin = tempC-stdv, ymax =tempC+stdv ), 
+                 fill = dfx$color, linetype = 0, alpha=0.5) +
+    geom_line()+
+    geom_point()+
+    xlab("") + ylab(paste0("Temperature ", Degree_C)) +
+    scale_x_continuous( breaks = seq(2005,2020,5), minor_breaks = 2003:2021) +
+    
+    theme_bw() + theme_nt
+
+plot_t
+
+graphics.off()
+
+png(paste0(Fig_Loc,"Mean_max_temp_averaged-5-day-smooth.png"), 
+    units = 'in', res=300, width = 3.5, height = 3)
+plot_t + theme(legend.position = c(0.2,0.9))
+dev.off()
+
+
+
+
+####################################################################################
+####### NON_SMOOTHED DATA AND PLOTS ################################################
+####################################################################################
 
 ####################### Monthly Maximum Temperature ################################
 
@@ -152,15 +305,16 @@ xlabel = substring(month.name, 1,3)
 temp_season <- ggplot(df_month , aes(x = month, y = meanC)) +
     geom_ribbon( aes(ymin = meanC+sdC, ymax = meanC-sdC), fill = 'grey90') +
     geom_line() +
+    geom_point() +
     scale_x_continuous( breaks = 1:12, labels=xlabel)+
     xlab("") +
-    ylab(paste0("Mean monthly maxumum temp ", Degree_C))+ 
+    ylab(paste0("Monthly mean temp ", Degree_C))+ 
     theme_bw() + theme_nt
 
 temp_season 
 
 graphics.off()
-png(paste0(Fig_Loc,"Temperature_by_season.png"), units = 'in', res = 300, width = 3.5, height = 3)
+png(paste0(Fig_Loc,"Daily_Mean_Temperature_by_season.png"), units = 'in', res = 300, width = 3.5, height = 3)
 temp_season + theme_bw() + theme_nt
 dev.off()
 
