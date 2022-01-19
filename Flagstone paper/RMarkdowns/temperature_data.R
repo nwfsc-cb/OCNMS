@@ -21,6 +21,12 @@ min.vis = as.numeric(settings['min.vis'])
 years = as.numeric(unlist(settings['years']))
 site.col = data.frame(settings['site.col'])
 colnames(site.col) = c('site','col')
+# correct for combined Tatoosh/Neah Bay
+plot.colors = site.col$col[c(3,1)]
+site.col = site.col[2:5,]
+site.col$site[1] = "Tatoosh Island-Neah Bay"
+
+
 sites = site.col$site
 year.pch = data.frame(settings['year.pch'])
 colnames(year.pch) = c('year','pch','col')
@@ -34,13 +40,14 @@ Encoding(Degree_C)<-"UTF-8"
 df <- data.frame(read_excel( paste0(Data_Loc,'Mean Daily OISST (C) for OCNMS sites 2003 to 2021.xlsx'), sheet = 1))
 rownames(df)
 # get just our sites
-df <- df[ df$SITE_NAME %in% sites,]
+df <- df[ df$SITE_NAME %in% c("Tatoosh Island", 'Destruction Island','Cape Alava','Cape Johnson'),]
 # remove lat long, don't need
 rownames(df) <- df$SITE_NAME
 
 df <- df[,-c(1:3)]
 tempC = data.frame(t(df))
 tempC$id = rownames(tempC)
+
 
 # bring in meta data and add some columns
 
@@ -62,7 +69,7 @@ tempC$date = paste(substring(x_date, 8,11),
                     sep='-')
 tempC$date <- as.POSIXct(tempC$date)
 
-sites2 = stringr::str_replace(sites, " ", ".") 
+sites2 = c('Tatoosh.Island','Cape.Alava','Cape.Johnson','Destruction.Island')
      
 tempC_long <- tempC %>% select( ., -c('id')) %>%
      pivot_longer(., names_to = 'site', values_to = 'degreesC', cols = sites2) 
@@ -72,7 +79,12 @@ tempC_long <- data.frame(tempC_long)
 tempC_long$date = as.Date(tempC_long$date)
 
 
-tempC_long$site <- factor(tempC_long$site, levels = site.col$site)
+# tempC_long$site <- factor(tempC_long$site, levels = site.col$site)
+
+tempC_long <- tempC_long[tempC_long$site != 'Neah Bay',]
+tempC_long$site[tempC_long$site == 'Tatoosh Island'] <- "Tatoosh Island-Neah Bay"
+tempC_long$site <- factor(tempC_long$site, 
+                          levels = sites)
 
 temp_plot <- ggplot( tempC_long , aes( x=date , y=degreesC ) ) +
      geom_line() + 
@@ -99,13 +111,19 @@ df_smooth <- tempC_long %>%
 
 temp_smooth_plot <- ggplot( df_smooth , aes( x=date , y=temp_smooth ) ) +
         geom_line() + 
-        scale_color_manual(values = site.col$col) +
+        scale_color_manual(values = site.col$col[2:5]) +
         scale_x_date(date_minor_breaks = "1 year" ) + 
         facet_wrap(~ df_smooth$site , ncol = 2, scales = 'free_x') +
-        xlab ("") + ylab (paste0("Max temp ", Degree_C)) +
+        xlab ("") + ylab (paste0("Mean temp ", Degree_C, ' (5-day smooth)')) +
         theme_bw() + theme_nt
 
 temp_smooth_plot
+
+graphics.off()
+png(paste0(Fig_Loc,"Temperature_5d_mean_five_sites.png"), 
+    units='in',res = 300, width=6, height = 4)
+temp_smooth_plot
+dev.off()
 
 ################# Temp by season #################################
 # to help select months for plotting etc.
@@ -122,7 +140,7 @@ temp_season <- ggplot(df_month , aes(x = month, y = meanC)) +
     geom_point() +
     scale_x_continuous( breaks = 1:12, labels=xlabel)+
     xlab("") +
-    ylab(paste0("Mean monthly temp ", Degree_C, "(5-day smooth"))+ 
+    ylab(paste0("Mean monthly temp ", Degree_C, " (5-day smooth)"))+ 
     theme_bw() + theme_nt
 
 temp_season 
@@ -231,10 +249,10 @@ dfx <- df_sum_mean %>%
     mutate(cat = "Mean") %>%
     full_join(.,df_1max)
 
-dfx$color = ifelse(dfx$cat == 'Mean', site.col$col[3], site.col$col[1])
+dfx$color = ifelse(dfx$cat == 'Mean', plot.colors[1], plot.colors[2])
 
 plot_t <- ggplot(dfx, aes(x = year, y = tempC, fill = cat, color=cat )) +
-    scale_color_manual(values = site.col$col[c(3,1)]) +
+    scale_color_manual(values =  plot.colors) +
     geom_ribbon( aes(ymin = tempC-stdv, ymax =tempC+stdv ), 
                  fill = dfx$color, linetype = 0, alpha=0.5) +
     geom_line()+
@@ -252,6 +270,109 @@ png(paste0(Fig_Loc,"Mean_max_temp_averaged-5-day-smooth.png"),
     units = 'in', res=300, width = 3.5, height = 3)
 plot_t + theme(legend.position = c(0.2,0.9))
 dev.off()
+
+########## Comparison Tables ####################################
+
+df_sum_max_wide
+df_sum_mean_wide
+
+# df_sum_mean_wide # these are "pretty with (sd)
+# df_sum_max_wide
+# re-do for calculations
+
+# Max summer temp table ##############################
+
+df_max <- df_smooth %>% # used below
+    group_by(site,year) %>%
+    filter(month %in% summer_months) %>%
+    summarise(max_temp = max(degreesC) ) %>%
+    select(year,site, max_temp) %>%
+    pivot_wider( ., names_from = year, values_from = max_temp) %>%
+    rename(Site = site) 
+
+
+# calculate means for various time periods -- all summer
+max_2003_2012 = rowSums( df_max[, as.character(c(2003:2012)) ]) / (length(2003:2012))
+max_2003_2013 = rowSums( df_max[, as.character(c(2003:2013)) ]) / (length(2003:2013))
+max_2014_2016 = rowSums( df_max[, as.character(c(2014:2016)) ]) / (length(2014:2016))
+# calculate sds for time periods
+
+df_max2 = cbind( df_max , 
+                 B12 = max_2003_2012 , B13 = max_2003_2013 , MHW = max_2014_2016 )
+
+df_max2 <- df_max2 %>% 
+    rename(Y2013 = "2013", Y2014 = "2014")%>%
+    mutate(Diff12 = MHW - B12, 
+           Diff13 = MHW - B13,
+           vs13 = Y2013 - B12,
+           vs14 = Y2014 - B13 )
+
+DF_MAX = df_max2 %>%
+    select(Site, Y2013, Y2014, 
+           B12, B13, MHW, 
+           Diff12, Diff13,vs13, vs14) 
+
+# export tables
+
+write.csv(df_max , paste0(Fig_Loc,"Temperature_year_max-5-day.csv"), row.names = FALSE)
+write.csv(DF_MAX , paste0(Fig_Loc,"Temperature_year_max_comparison-5-day.csv"), row.names = FALSE)
+
+#### end max comparison table
+
+# Mean summer temp table ##############################
+
+df_mn <- df_smooth %>% # used below
+    group_by(site,year) %>%
+    filter(month %in% summer_months) %>%
+    summarise(mean_temp = mean(degreesC),
+              sd_temp  = sd(degreesC) ) %>%
+    select(year,site, mean_temp) %>%
+    pivot_wider( ., names_from = year, values_from = mean_temp) %>%
+    rename(Site = site) 
+
+df_sd<- df_smooth %>% # used below
+    group_by(site,year) %>%
+    filter(month %in% summer_months) %>%
+    summarise(mean_temp = mean(degreesC),
+              sd_temp   = sd(degreesC) ) %>%
+    select(year,site,sd_temp) %>%
+    pivot_wider( ., names_from = year, values_from = sd_temp) %>%
+    rename(Site = site)
+
+# calculate means for various time periods -- all summer
+mean_2003_2012 = rowSums( df_mn[, as.character(c(2003:2012)) ]) / (length(2003:2012))
+mean_2003_2013 = rowSums( df_mn[, as.character(c(2003:2013)) ]) / (length(2003:2013))
+mean_2014_2016 = rowSums( df_mn[, as.character(c(2014:2016)) ]) / (length(2014:2016))
+# calculate sds for time periods
+sd_2003_2012 = apply( df_mn[, as.character(c(2003:2012)) ] , MARGIN = 1, FUN=sd)
+sd_2003_2013 = apply( df_mn[, as.character(c(2003:2013)) ] , MARGIN = 1, FUN=sd)
+sd_2014_2016 = apply( df_mn[, as.character(c(2014:2016)) ] , MARGIN = 1, FUN=sd)
+
+df_mn2 = cbind( df_mn , 
+                B12.mn = mean_2003_2012 , B13.mn = mean_2003_2013 , MHW.mn = mean_2014_2016 ,
+                MWH.sd = sd_2014_2016, B12.sd = sd_2003_2012 , B13.sd = sd_2003_2013)
+
+df_mn2 <- df_mn2 %>% 
+    rename(Y2013 = "2013", Y2014 = "2014")%>%
+    mutate(Diff12 = MHW.mn - B12.mn, 
+           Diff13 = MHW.mn - B13.mn,
+           vs13 = Y2013 - B12.mn,
+           vs14 = Y2014 - B13.mn )
+df_mn2$MHW = paste0(round(df_mn2$MHW.mn,1) , " (", round(df_mn2$MWH.sd,2),")")
+df_mn2$B12 = paste0(round(df_mn2$B12.mn,1) , " (", round(df_mn2$B12.sd,2),")")
+df_mn2$B13 = paste0(round(df_mn2$B13.mn,1) , " (", round(df_mn2$B13.sd,2),")")
+
+DF_MN = df_mn2 %>%
+    select(Site, Y2013, Y2014, 
+           B12, B13, MHW, 
+           Diff12, Diff13,vs13, vs14) 
+
+# export tables
+
+write.csv(df_mn , paste0(Fig_Loc,"Temperature_year_mean_sd-5day.csv"), row.names = FALSE)
+write.csv(DF_MN , paste0(Fig_Loc,"Temperature_year_mean_comparison-5day.csv"), row.names = FALSE)
+
+####### end mean comparison table #################
 
 
 
