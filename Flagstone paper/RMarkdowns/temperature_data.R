@@ -515,3 +515,49 @@ graphics.off()
 png(paste0(Fig_Loc,"SST-MHW-years-vs-prior.png"), units='in',res=300,width=6.5, height = 7)
 plot4 + theme_bw() + theme_nt
 dev.off()
+
+
+############## Cavanaugh , maybe #################
+
+# use this plot...so much easier and shorter also matches Cavanaugh
+
+
+############################################
+
+
+df_month = df_long %>%
+    group_by(year,month) %>%
+    summarise(meanT = mean(degreesC), sdT = sd(degreesC))
+
+df_max_month <- df_month %>% 
+    group_by(year) %>% 
+    summarise(maxT = max(meanT))
+df_max_month$sdT = df_month$sdT[match(df_max_month$maxT, df_month$meanT)]
+
+plot5 <- ggplot(df_max_month, aes(x = year, y = maxT) ) +
+    geom_ribbon( aes(ymin = maxT-sdT, ymax = maxT +sdT ), 
+                 fill='grey',linetype = 0, alpha=0.3) +
+    geom_line() + 
+    xlab("") +
+    ylab(paste0("Mean SST of warmest month ", Degree_C))+
+    scale_x_continuous( breaks = seq(2005,2020,5), minor_breaks = 2003:2021 )
+
+
+
+plot5 + theme_bw()+theme_nt
+
+
+graphics.off()
+png( paste0(Fig_Loc,"Mean-sst-warmest-month.png"), units = 'in',res=300,width=3.5, height=3)
+plot5 + theme_bw()+theme_nt
+dev.off()
+
+
+
+
+
+
+
+
+
+
