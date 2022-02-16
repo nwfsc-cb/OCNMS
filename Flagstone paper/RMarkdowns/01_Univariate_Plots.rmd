@@ -313,8 +313,8 @@ fish_taxa_year <- x
 
 fish.col = c(RColorBrewer::brewer.pal(n = 12, name = "Paired"))
 
-SP.yoy <- c("SEBYTyoy", "Black & Yellowtail",  'black',
-            "SECAyoy", "Copper",               fish.col[12],
+SP.yoy <- c("SEBYTyoy", "YTB",  'black',
+            "SECAyoy", "CQB",               fish.col[12],
             #"SEMAyoy", "Quillback",            fish.col[10],
             "SEMYyoy", "Blue" ,                fish.col[2],
             #"SENEyoy", "China",                fish.col[10],
@@ -409,7 +409,7 @@ Note: I have yellowtail here, but they are not in the multivariate stuff since w
 
 ggarrange(
   fish.plot,yoy.plot,
-  labels = c('a) Fish','b) YOY'), 
+  labels = c('a) Fishes','b) Juvnile rockfish'), 
   # labels = 'auto',
   font.label = list(face='plain', size = 10),
   hjust = -1.25,
@@ -1460,7 +1460,7 @@ ggarrange(
   labels = c('a)','b)','c)','d)', 'e)', 'f)'), 
   # labels = 'auto',
   font.label = list(face='plain', size = 10),
-  hjust = c(rep(-6,5),-9),
+  hjust = c(rep(-5.5,5),-9),
   vjust = 2,
   nrow = 3, ncol=2,
   align = 'v'

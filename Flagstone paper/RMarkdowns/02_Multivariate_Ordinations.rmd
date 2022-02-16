@@ -371,11 +371,11 @@ rownames(fish_ord$cap$cproj) <- str_replace( rownames(fish_ord$cap$cproj), "[.]"
 
 # fix yoy rownames
 rn <- rownames(yoy_ord$cap$cproj)
-rn[rn == 'SECAyoy'] <- 'Copper'
+rn[rn == 'SECAyoy'] <- 'CQB'
 rn[rn == 'SEPIyoy'] <- 'Canary'
 rn[rn == 'SEMYyoy'] <- 'Blue'
-rn[rn == 'SEBYTyoy'] <- 'Black/YT'
-rn[rn == 'RYOY'] <- 'RF YOY'
+rn[rn == 'SEBYTyoy'] <- 'YTB'
+rn[rn == 'RYOY'] <- 'Juv RF'
 rownames(yoy_ord$cap$cproj) <- rn
 
 # fix kelp names
@@ -401,46 +401,45 @@ rn <- str_to_title(rn)
 rn[rn == 'Pynopodia'] <- 'Pycnopodia'
 rownames(invert_ord$cap$cproj) <- rn
 
+inset = c(-0.05 ,0)
+
 # kelps
 Plot_Ordination( data.file = kelp_ord$cap.df , ord.file = kelp_ord$cap, min.score = min.score,
                  Yform = 'LD', Xform =  ' ~ site + year + col + pch', pval = p_kelp,
                  Xlim = c(-3,3), Ylim=c(-3,3), Xlim2 = xy2, Ylim2=xy2, scores.cex = scores.cex, scores.font = 3,
-                 plot.species = plotspp , spp.separate = sppseparate, fig.legend = 'Kelp', sppcol = sppcol)
+                 plot.species = plotspp , spp.separate = sppseparate, fig.legend = 'a) Kelp', sppcol = sppcol)
 
 legend('bottomleft', legend=site.col$site, pch=19, col=site.col$col, bty='n', cex=0.8 )
 yr = year.pch[year.pch$year != 2015 & year.pch$year!=2020 ,]
-
-legend('topleft', legend=yr$year, pch=as.numeric(yr$pch), col='darkgrey',pt.bg = 'black', bty='n', cex=0.8 )
+legend('bottomright', legend=yr$year, pch=as.numeric(yr$pch), col='darkgrey',pt.bg = 'black', bty='n', cex=0.8 )
+legend('topleft',legend = 'b)', bty='n', inset = inset)
 
 # invets
 Plot_Ordination( data.file = invert_ord$cap.df , ord.file = invert_ord$cap, min.score = min.score, pval = p_inv, 
                  Yform = 'LD', Xform =  ' ~ site + year + col + pch',scores.cex = scores.cex,
-                 Xlim = xy, Ylim=xy, Xlim2 = xy2, Ylim2=xy2,
-                 plot.species = FALSE , spp.separate = sppseparate, fig.legend = 'Inverts', sppcol = sppcol)
+                 Xlim = xy, Ylim=c(-4,4),  Xlim2 = c(-1.3,1), Ylim2=c(-0.5,1),
+                 plot.species = FALSE , spp.separate = sppseparate, fig.legend = 'c) Inverts', sppcol = sppcol)
 
 # z = data.frame(invert_ord$cap$cproj [ c('purple urchin','red urchin','green urchin'),])
 # z$spp = rownames(z)
 # text( z$LD1 , z$LD2, z$spp, col='red')
-
-
-
-
+legend('topleft',legend = 'd)', bty='n', inset = inset)
 # fish
 Plot_Ordination( data.file = fish_ord$cap.df , ord.file = fish_ord$cap, min.score = min.score,
                  Yform = 'LD', Xform =  ' ~ site + year + col + pch', pval = p_fish,
-                 Xlim = c(-2,2), Ylim=c(-2,2), Xlim2 = xy2, Ylim2=xy2,scores.cex = scores.cex,
-                 plot.species = plotspp , spp.separate = sppseparate, fig.legend = 'Fish', sppcol = sppcol)
+                 Xlim = c(-2,2), Ylim=c(-2,2), Xlim2 = c(-1.7,0.25), Ylim2=c(-1,1),scores.cex = scores.cex,
+                 plot.species = plotspp , spp.separate = sppseparate, fig.legend = 'e) Fishes', sppcol = sppcol)
 
 
-
+legend('topleft',legend = 'f)', bty='n', inset = inset)
 # sebastes yoy
 Plot_Ordination( data.file = yoy_ord$cap.df , ord.file = yoy_ord$cap, min.score = min.score,
                  Yform = 'LD', Xform =  ' ~ site + year + col + pch', pval = p_yoy,
-                 Xlim = c(-5,5), Ylim=c(-5, 5), Xlim2 = xy2, Ylim2=xy2, scores.cex = scores.cex,
-                 plot.species = plotspp , spp.separate = sppseparate, fig.legend = 'Sebastes YOY', sppcol = sppcol)
+                 Xlim = c(-2,5), Ylim=c(-2.25, 2.25), Xlim2 = c(-0.5, 1), Ylim2=c(-0.4,0.2), scores.cex = scores.cex,
+                 plot.species = plotspp , spp.separate = sppseparate, fig.legend = 'g) Juvenile rockfishes', sppcol = sppcol)
 
-
-
+legend('bottomleft', legend=yr$year, pch=as.numeric(yr$pch), col='darkgrey',pt.bg = 'black', bty='n', cex=0.8 )
+legend('topleft',legend = 'h)', bty='n', inset = inset)
 
 
 

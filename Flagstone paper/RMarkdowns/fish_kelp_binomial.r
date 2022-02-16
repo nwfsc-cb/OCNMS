@@ -42,21 +42,22 @@ kelp_codes = data.frame(read.csv( paste0(Data_Loc,"spp_codes_kelp.csv") ))
 
 # Bring in data. Produced in PlotUnivariate. RMD ####
 
-# # this file has mean density data for ordination
+# MEAN DENSITY ####
 df_dens = readRDS( paste0(Data_Loc,"Data_Fish_Kelp_area_wide.rds"))
 df_dens <- df_dens %>% rename(Macro= MACPYR , Nereo=NERLUE, Ptery=PTECAL)
 df_dens$area[df_dens$year==2015] <- "D"
 
-# this file has counts and areas for some univariate stats
+# TOTALCOUNT ####
 df_count <- readRDS(paste0(Data_Loc,"Fish-kelp-counts-wide.rds"))
-df_count <- df_count %>% rename(Macro= MACPYR , Nereo=NERLUE, Ptery=PTECAL)
+df_count <- df_count %>% 
+        rename(Macro= MACPYR , Nereo=NERLUE, Ptery=PTECAL) %>%
+        mutate(fish_volume = fish_area*2)
 
 # add the area informatinto the df_dens file
 # has area data for weighting
 
 # dfx = df_count[,c('site','zone','area','year','fish_area','kelp_area')]
-df_dens <- left_join(df_dens , df_count[,c('site','zone','area','year','fish_area','kelp_area')])
-
+df_dens <- left_join(df_dens , df_count[,c('site','zone','area','year','fish_area','kelp_area','fish_volume')])
 
 ######### Quick plots #######
 
@@ -111,7 +112,7 @@ dev.off()
 dfx <- df_dens
 
 dfx <- dfx %>% mutate(TOTyoy_pres = ifelse(TOTyoy > 0 , 1, 0)) %>%
-             mutate(three_kelps = Macro+Nereo+Ptery , 
+               mutate(three_kelps = Macro+Nereo+Ptery , 
                     canopy_kelp = Macro+Nereo,
                     transect.area.algae.weight = kelp_area/max(kelp_area),
                     fish.area.weight = fish_area/max(fish_area),
@@ -131,7 +132,7 @@ sum(dfx$TOTyoy_pres)/sum(dfx$n)
 
 m_year <- glmer( TOTyoy_pres ~  (1|year_factor), 
                   family = binomial, 
-                 weights = fish.area.weight,
+                  weights = fish.area.weight,
                   data = dfx)
 
 m_rand <- glmer( TOTyoy_pres ~  (1|year_factor)+ (1|site), 
@@ -256,6 +257,8 @@ dev.off()
 
 dfa = dfx[dfx$TOTyoy_pres == 1,]
 
+dfa$TOTyoy  = log(dfa$TOTyoy)
+
 a_year <- lmer( TOTyoy ~  (1|year_factor), 
                 weights = fish.area.weight,
                  data = dfa)
@@ -340,7 +343,7 @@ capture.output(summary(a_MNP), file = paste0(Fig_Loc,"Fish-YOY-Kelp-abundance-ta
 ################################################################################
 
 dfx$pred_occur_mn <-  predict(m_MN , type = 'response')
-dfa$pred_abund_mn <-  predict(a_MN , type = 'response')
+dfa$pred_abund_mn <-  exp(predict(a_year , type = 'response'))
 
 # plot just occurrence ####
 plot_occur <- 
@@ -382,4 +385,60 @@ plot_abund
  dev.off()
 
  
+#################################################################################
+########### Combine occurrence and abundance models##############################
+#################################################################################
+ 
+ 
+df_comb1 <- dfx[,c('year','site','area','zone','Nereo','Macro','pred_occur_mn')] 
+df_comb2 <- dfa[,c('year','site','area','zone','pred_abund_mn')] 
+df_comb2$pred_abund_mn[is.na(df_comb2$pred_abund_mn)] <- 0
+df_comb  <- left_join(df_comb1, df_comb2) %>% 
+            mutate(predYOY = pred_occur_mn*pred_abund_mn)
+df_comb$predYOY[is.na(df_comb$pred_abund_mn)] <- 0
 
+library(ggrepel)
+library(scales) 
+ 
+ 
+ 
+plot_1 = ggplot(df_comb , aes(x = Macro, y = Nereo, color = predYOY)) +
+          # geom_tile(size = 10) +
+          # geom_point() + 
+          geom_jitter(size = 4, alpha=0.7, width = 0.2) + 
+          #scale_color_continuous( type = 'gradient') +
+          scale_colour_gradient2( 
+                 low ="red",
+                 mid = "white",
+                 high = "blue",
+                 midpoint = 15,
+                 space = "Lab",
+                 na.value = "grey50",
+                 guide = "colourbar",
+                 aesthetics = "color")+
+          # xlim(0,6)+ ylim(0,6) +
+          xlab( expression(paste( italic(Macro),' stipes per ', m^2)) )+
+          ylab( expression(paste( italic(Nereo),' stipes per ', m^2)) )+
+          theme_bw()+theme_nt + theme(legend.key.size = unit(1,'lines'),
+                                      legend.position = c(0.8,0.8) )
+ 
+ plot_1 + guides(fill=guide_legend(title="New Legend Title"))
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
