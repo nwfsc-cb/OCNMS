@@ -148,7 +148,7 @@ p.plan <- ggplot(kelp.pl.long,aes(y=pl_ha,x=year,color=species)) +
   scale_color_manual(values = site.col$col[c(5,1,2,3)])+
   # scale_color_viridis_d(begin=0,end=0.75,option="plasma") +
   theme_bw()+ theme_nt
-
+p.plan
 
 
 graphics.off()
@@ -163,6 +163,17 @@ dev.off()
 saveRDS( kelp.can.long , paste0(Data_Loc, "Data_Kelp_Canopy_Long.rds") )
 
 ####
+
+
+
+########## some calculations for comparison ###################
+
+
+x = kelp.can.long %>%
+  mutate( time_cat = ifelse(year %in% 2003:2012, 'before', ifelse(year %in% 2013:2014, 'during', 'after'))) %>%
+  group_by(time_cat, can_type) %>%
+  filter(site == 'Coastwide') %>%
+  summarise( Mean = mean(canopy_ha, na.rm=TRUE), stdev = sd(canopy_ha, na.rm = TRUE))
 
 
 

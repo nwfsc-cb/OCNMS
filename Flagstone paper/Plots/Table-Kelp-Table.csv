@@ -1,14 +1,14 @@
-"","Species","Density"
-"1","Pterygophora californica",1.10951398854793
-"2","Nereocystis luetkeana",0.873560344341888
-"3","Macrocystis pyrifera",0.554370031074311
-"4","Laminaria setchellii",0.131837024689778
-"5","Saccharina dentigera",0.0877314501069245
-"6","Pleurophycus gardneri",0.0861684522168393
-"7","Desmarestia",0.0651875113555655
-"8","Costaria costata",0.0575196348050146
-"9","Saccharina latissima",0.044994454304912
-"10","Alaria marginats",0.0100268817204301
-"11","Cymathere triplicata",0.00274193548387097
-"12","Agarum fimbriatum",0.00263440860215054
-"13","None",0
+,Species,Density,SD
+1,Pterygophora californica,1.11,1.38
+2,Nereocystis luetkeana,0.87,1.70
+3,Macrocystis pyrifera,0.55,1.37
+4,Laminaria setchellii,0.13,0.40
+5,Saccharina dentigera,0.09,0.29
+6,Pleurophycus gardneri,0.09,0.31
+7,Desmarestia,0.07,0.21
+8,Costaria costata,0.06,0.17
+9,Saccharina latissima,0.04,0.22
+10,Alaria marginats,0.01,0.06
+11,Cymathere triplicata,0.00,0.02
+12,Agarum fimbriatum,0.00,0.04
+13,None,0,0

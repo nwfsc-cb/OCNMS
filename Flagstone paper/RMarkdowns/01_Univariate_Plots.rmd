@@ -335,7 +335,7 @@ yoy.plot <- ggplot(fish_taxa_year %>% filter(taxa %in% SP.yoy$taxa) %>% left_joi
     scale_x_continuous(breaks=seq(2015,2021)) +
     #scale_color_viridis_d(option="plasma", end=0.75) + 
     scale_color_manual(values=SP.yoy$col)+
-    ylab("No. rockfish YOY per transect") +
+    ylab(expression("Rockfish juveniles per 120 m"^3)) +
     xlab("") +
     theme_bw() + theme_nt +
     theme(legend.position = c(0.7, 0.8) )
@@ -392,7 +392,7 @@ fish.plot <- ggplot(fish_taxa_year %>% filter(taxa %in% fish.taxa$taxa) %>% left
   scale_x_continuous(breaks=seq(2015,2021)) +
   #scale_color_viridis_d(option="plasma", end=0.75) + 
   scale_color_manual(values=fish.taxa$col)+
-  ylab("No. fish per transect") +
+  ylab(expression("Number per 120 m"^3)) +
   xlab("") +
   theme_bw() + theme_nt + 
   theme(legend.position = c(0.2, 0.8) )
@@ -436,7 +436,7 @@ ggplot(fish_ys , aes(x = year, y = Mean, color = site)) +
           scale_x_continuous(breaks=seq(2015,2021)) +
           scale_color_manual(values=site.col$col)+
           xlab("")+
-          ylab(" Number per 30x2 m transect")+
+          ylab(expression("Number per 120 m"^3))+
           # facet_grid(rows = 'taxa', scales="free_y") +
           facet_wrap( ~ name, scales="free",nrow=4) +
           theme_bw() + theme_nt +
@@ -462,7 +462,7 @@ ggplot(yoy_ys , aes(x = year, y = Mean, color = site)) +
           scale_x_continuous(breaks=seq(2015,2021)) +
           scale_color_manual(values=site.col$col)+
           xlab("")+
-          ylab(" Number per 30x2 m transect")+
+          ylab(expression("Rockfish juveniles per 120 m"^3))+
           # facet_grid(rows = 'taxa', scales="free_y") +
           facet_wrap( ~ name, scales="free",nrow=3) +
           theme_bw() + theme_nt + 
@@ -919,7 +919,7 @@ urchin_plot_all <- ggplot(data=urchins_all,aes(x=year, y= mean.density, col = si
                     scale_color_manual(values = site.col$col) +
                     scale_x_continuous("",breaks=seq(2015,2021)) +
                     
-                    scale_y_continuous(expression("Urchin density (m"^-2*")")) +
+                    scale_y_continuous(expression("Urchins m"^-2)) +
                     theme_bw()+ theme_nt
 urchin_plot_all + rotate_x_text(angle = 45)
 
@@ -1093,7 +1093,7 @@ stars_plot_all <- ggplot(data=stars_all,aes(x=year, y= mean.density, col = site)
                     facet_grid( taxa ~ zone, scales="free_y") +
                     scale_color_manual(values = site.col$col) +
                     scale_x_continuous("Year", breaks=seq(2015,2021)) +
-                    scale_y_continuous(expression("Urchin density (m"^-2*")")) +
+                    scale_y_continuous(expression("Urchins m"^-2)) +
                     theme_bw()+ theme_nt
                    
   
@@ -1346,7 +1346,11 @@ fish_total$spp <- str_replace(fish_total$spp, "[.]", " ")
 fish_total <- fish_total[,c('spp', 'com_name', 'group', 'Total')] %>%
               rename(Species = spp) %>%
               rename('Common name' = com_name) %>%
-              rename (Group=group)
+             rename (Group=group)
+
+# fish_total$Species = stringr::str_replace(fish_total$Species, 'yoy', 'Juveniles')
+# fish_total$`Common name` = stringr::str_replace(fish_total$`Common name`, 'yoy', 'Juveniles')
+fish_total = na.omit(fish_total)
 library(tinytex)
 #library(xtable)
 library(htmlTable)
@@ -1368,15 +1372,16 @@ write.csv(fish_total, paste0(Fig_Loc,"Table-Fish-Table.csv"))
 ```{r kelp-table}
 
 kelp_total <- kelp_transect %>% group_by(species) %>%
-                                summarise(Density = mean(density, na.rm = TRUE)) %>%
+                                summarise(Density = mean(density, na.rm = TRUE),
+                                          SD = sd(density, na.rm = TRUE)) %>%
                                 left_join(.,kelp_codes, by = c('species' = 'species')) %>%
                                 rename(spp = species) %>%
                                 rename(Species = name2) 
                                 
-kelp_total <- kelp_total[,c('Species','Density')]
+kelp_total <- kelp_total[,c('Species','Density','SD')]
 kelp_total <- kelp_total[order(kelp_total$Density, decreasing = TRUE ),]
 
-# head(kelp_total)
+head(kelp_total)
 # output csv for table in supplement
 write.csv(kelp_total, paste0(Fig_Loc,"Table-Kelp-Table.csv"))
 
@@ -1388,13 +1393,13 @@ write.csv(kelp_total, paste0(Fig_Loc,"Table-Kelp-Table.csv"))
 invert_total <- invert_transect %>% rename(SPP = species) %>%
                                 group_by(SPP) %>%
                                 summarise(Density = mean(density, na.rm = TRUE), 
-                                          Total = sum(total.count, na.rm = TRUE)) %>%
+                                          SD = sd(density, na.rm = TRUE)) %>%
                                 left_join(.,swath_codes, by = c('SPP' = 'CLASSCODE')) %>%
                                 rename(Taxa = taxa) %>%
                                 rename(Species = species)
                                 
-invert_total <- invert_total[,c('Species','Taxa','Total','Density')]
-invert_total <- invert_total[ order (invert_total$Total, decreasing = TRUE ),]
+invert_total <- invert_total[,c('Species','Taxa','Density','SD')]
+invert_total <- invert_total[ order (invert_total$Density, decreasing = TRUE ),]
 
 head(invert_total)
 # output csv for table in supplement
@@ -1635,7 +1640,7 @@ kelp <- canopy.kelp.long + theme(legend.position = c(0.6 , 0.9) )
 
 ggarrange(
   sst, kelp,
-  labels = c('a)','b)'), 
+  labels = c('b)','c)'), 
   # labels = 'auto',
   font.label = list(face='plain', size = 10),
   hjust = c(rep(-6,5),-9),
