@@ -243,7 +243,8 @@ fish4 <-  fish1d %>% group_by(site,year,species,taxa) %>%
               summarise(Mean=mean(Count, na.rm = TRUE),
                         SD=sd(Count),
                         N=length(Count),
-                        SE=SD/sqrt(N),SE_var=SE^2)
+                        SE=SD/sqrt(N),
+                        SE_var=SE^2)
 saveRDS(fish4, paste0(Data_Loc,'Summarized_Data_Fish_site_year_species.rds'))
 
 fish5 <- fish4 %>% group_by(year, species, taxa) %>%
@@ -259,8 +260,11 @@ saveRDS(fish5, paste0(Data_Loc,'Summarized_Data_Fish_year_species.rds'))
 # greenlings lumped in current plots
 
 fish_taxa_Year_site <-  fish_transect %>% group_by(site,year,taxa) %>%
-  summarise(Mean=mean(Count, na.rm = TRUE),SD=sd(Count),N=length(Count),
-            SE=SD/sqrt(N),SE_var=SE^2)
+  summarise(Mean=mean(Count, na.rm = TRUE),
+            SD=sd(Count),
+            N=length(Count),
+            SE=SD/sqrt(N),
+            SE_var=SE^2)
 saveRDS(fish_taxa_Year_site, paste0(Data_Loc,'Summarized_Data_Fish_site_year_taxa.rds'))
 
 fish_taxa_year <-fish_taxa_Year_site %>% group_by(year,taxa) %>%
@@ -272,12 +276,6 @@ fish_taxa_year <-fish_taxa_Year_site %>% group_by(year,taxa) %>%
 saveRDS(fish_taxa_year, paste0(Data_Loc,'Summarized_Data_Fish_year_taxa.rds'))
 
 #### for multivariate stuff below
-
-
-
-
-
-
 
 ```
 
@@ -1202,6 +1200,43 @@ saveRDS(invert_kelp_wide, file=paste0(Data_Loc,'Data_Inverts_Kelp_transect_wide.
 
 
 ```
+
+
+```{r tables-of-samples}
+
+fish_wide_transect
+kelp_wide_transect
+invert_wide_transect
+
+
+
+fish_table = fish_wide_transect %>%
+  mutate(n_tran = 1) %>%
+  group_by(year,site) %>%
+  summarise(N_Transects = sum(n_tran))
+
+kelp_table = kelp_wide_transect %>%
+  mutate(n_tran = 1) %>%
+  group_by(year,site) %>%
+  summarise(N_Transects = sum(n_tran))
+
+invert_table = invert_wide_transect %>%
+  mutate(n_tran = 1) %>%
+  group_by(year,site) %>%
+  summarise(N_Transects = sum(n_tran))
+
+samples_table <- full_join(fish_table, kelp_table, by=c('year','site')) %>%
+  full_join(., invert_table, by=c('year','site'))
+colnames(samples_table) <- c('Year','Site','Fish','Kelp','Invertebrates')
+samples_table = samples_table[order(samples_table$Year),]
+samples_table
+write.csv(samples_table, paste0(Fig_Loc,'Table-sampling-effort.csv'), row.names = FALSE)
+
+```
+
+
+
+
 
 
 ## 

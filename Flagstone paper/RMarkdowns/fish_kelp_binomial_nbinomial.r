@@ -275,34 +275,73 @@ dev.off()
 #####################################################################
 
 dfa = dfx[dfx$TOTyoy_pres == 1,]
+dfa = dfx
 set.seed(42)
 # NOTE: 
+
+
+#### some background #########
+
+
+mean(dfa$TOTyoy)
+var(dfa$TOTyoy)
+
+x = dfa %>% group_by(site,year) %>%
+        summarise(s  = var(TOTyoy) , 
+                  mn = mean(TOTyoy))
+plot(x$s, x$mn)
+
+# variance does NOT equal the mean....definitely not.
+niter = 10000
+opt = "bobyqa"
 
 # base models
 a_year <- glmer.nb(TOTyoy ~ (1|year_factor) ,
                    offset = log(fish.transect.volume),
+                   control = glmerControl(
+                           optimizer = opt, 
+                           optCtrl=list(maxfun=niter) ),
                    data = dfa)
 a_site <- glmer.nb(TOTyoy ~  (1|site),
                    offset = log(fish.transect.volume),
+                   control = glmerControl(
+                           optimizer = opt, 
+                           optCtrl=list(maxfun=niter) ),
                    data = dfa)
 a_yearsite <- glmer.nb(TOTyoy ~ (1|year_factor) + (1|site),
+                       control = glmerControl(
+                               optimizer = opt, 
+                               optCtrl=list(maxfun=niter) ),
                        offset = log(fish.transect.volume),
                        data = dfa)
 # summed kelps ####
 
 a_canopy <- glmer.nb(TOTyoy ~  canopy_kelp +(1|year_factor) ,# + (1|site),
                      offset = log(fish.transect.volume),
+                     control = glmerControl(
+                             optimizer = opt, 
+                             optCtrl=list(maxfun=niter) ),
+                     verbose = TRUE,
                      data = dfa)
 a_three  <- glmer.nb(TOTyoy ~  Macro + Nereo + Ptery + (1|year_factor) ,#+ (1|site),
                      offset = log(fish.transect.volume),
+                     control = glmerControl(
+                             optimizer = opt, 
+                             optCtrl=list(maxfun=niter) ),
                      data = dfa)
 
 # indiv kelps ####
 a_nereo <- glmer.nb(TOTyoy ~  Nereo  + (1|year_factor) ,#+ (1|site),
                     offset = log(fish.transect.volume),
+                    control = glmerControl(
+                            optimizer = opt, 
+                            optCtrl=list(maxfun=niter) ),
                     data = dfa)
 a_macro <- glmer.nb(TOTyoy ~  Macro  + (1|year_factor) ,#+ (1|site),
                     offset = log(fish.transect.volume),
+                    control = glmerControl(
+                            optimizer = opt, 
+                            optCtrl=list(maxfun=niter) ),
                     data = dfa)
 a_ptery <- glmer.nb(TOTyoy ~   Ptery + (1|year_factor) ,#+ (1|site),
                     offset = log(fish.transect.volume),
@@ -311,25 +350,38 @@ a_ptery <- glmer.nb(TOTyoy ~   Ptery + (1|year_factor) ,#+ (1|site),
 
 a_MN <- glmer.nb(TOTyoy ~  Macro + Nereo  + (1|year_factor) ,# + (1|site),
                  offset = log(fish.transect.volume),
+                 control = glmerControl(
+                         optimizer = opt, 
+                         optCtrl=list(maxfun=niter) ),
                  data = dfa)
 a_MP <- glmer.nb(TOTyoy ~  Macro  + Ptery + (1|year_factor) ,#+ (1|site),
                  offset = log(fish.transect.volume),
+                 control = glmerControl(
+                         optimizer = opt, 
+                         optCtrl=list(maxfun=niter) ),
                  data = dfa)
 a_NP <- glmer.nb(TOTyoy ~   Nereo + Ptery + (1|year_factor) ,#+ (1|site),
                  offset = log(fish.transect.volume),
+                 control = glmerControl(
+                         optimizer = opt, 
+                         optCtrl=list(maxfun=niter) ),
                  data = dfa)
         
 # all kelps
 
 a_MNP <- glmer.nb(TOTyoy ~  Macro + Nereo + Ptery + (1|year_factor) ,# + (1|site),
                   offset = log(fish.transect.volume), verbose = TRUE,
+                  control = glmerControl(
+                          optimizer = opt, 
+                          optCtrl=list(maxfun=niter) ),
                   data = dfa)
 x = ls()
 y = grep("a_",x)
 z = x[y]
-z = z[z != "Sum_Stats"]
+z = z[ !( z %in% c("Sum_Stats", "Data_Loc")) ]
 
 for(i in 1:length(z)){
+        print(i)
         x = get(z[i])
         # aic = AICcmodavg::AICc(x)
         # aic = AIC(x)

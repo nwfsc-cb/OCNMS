@@ -189,6 +189,7 @@ m_kelp <- glmer( TOTyoy_pres ~  Macro+Nereo+Ptery + (1|year_factor) + (1|site),
                  family = binomial, 
                  weights = fish.area.weight,
                  data = dfx)
+# AIC table
 
 x = ls()
 y = grep("m_",x)
@@ -198,17 +199,24 @@ z = z[z != "Sum_Stats"]
 
 for(i in 1:length(z)){
         x = get(z[i])
+        aicc = AICcmodavg::AICc(x)
         aic = AIC(x)
+        sx = summary(x)
+        npar = nrow(sx$coefficients)
         mod.name = z[i]
-        x2 = data.frame(cbind(mod.name,aic))
+        x2 = data.frame(cbind(mod.name,aicc,aic, npar))
         if(i == 1){aic_table <- x2}else{aic_table = rbind(aic_table,x2)}
 }
 
-colnames(aic_table) = c('Model','AIC')
+colnames(aic_table) = c('Model','AICc', 'AIC','Parms')
+aic_table$AICc = as.numeric(aic_table$AICc)
+aic_table$d_AICc <- aic_table$AICc - min(aic_table$AICc)
 aic_table$AIC = as.numeric(aic_table$AIC)
-aic_table$delta_AIC <- aic_table$AIC - min(aic_table$AIC)
-aic_table = aic_table[order(aic_table$delta_AIC),]
+aic_table$d_AIC <- aic_table$AIC - min(aic_table$AIC)
+# order table by AICc or AIC. Set here
+aic_table = aic_table[order(aic_table$d_AICc),]
 aic_table_occur <- aic_table
+aic_table_occur
 rm(aic_table)
 
 capture.output(aic_table_occur , file = paste0(Fig_Loc,"AIC_occurence.txt"))
@@ -259,6 +267,8 @@ dfa = dfx[dfx$TOTyoy_pres == 1,]
 
 dfa$TOTyoy  = log(dfa$TOTyoy)
 
+ # dfa$fish.area.weight = 1
+
 a_year <- lmer( TOTyoy ~  (1|year_factor), 
                 weights = fish.area.weight,
                  data = dfa)
@@ -304,26 +314,35 @@ a_NP <- lmer( TOTyoy ~  Nereo+ Ptery+zone +  (1|year_factor) + (1|site),
 
 a_MNP <- lmer( TOTyoy ~  Macro+Nereo+Ptery + (1|year_factor) + (1|site), 
                weights = fish.area.weight,
-                 data = dfa)
+               data = dfa)
+
+# AIC
 x = ls()
 y = grep("a_",x)
 z = x[y]
-z = z[z != "Sum_Stats"]
+z = z[ !( z %in% c("Sum_Stats", "Data_Loc")) ]
 
 for(i in 1:length(z)){
+        print(i)
         x = get(z[i])
+        aicc = AICcmodavg::AICc(x)
         aic = AIC(x)
+        sx = summary(x)
+        npar = nrow(sx$coefficients)
         mod.name = z[i]
-        x2 = data.frame(cbind(mod.name,aic))
+        x2 = data.frame(cbind(mod.name,aicc,aic, npar))
         if(i == 1){aic_table <- x2}else{aic_table = rbind(aic_table,x2)}
 }
 
-colnames(aic_table) = c('Model','AIC')
+colnames(aic_table) = c('Model','AICc','AIC', 'Parms')
 aic_table$AIC = as.numeric(aic_table$AIC)
-aic_table$delta_AIC <- aic_table$AIC - min(aic_table$AIC)
-aic_table = aic_table[order(aic_table$delta_AIC),]
+aic_table$AICc = as.numeric(aic_table$AICc)
+aic_table$d_AICc <- aic_table$AICc - min(aic_table$AICc)
+aic_table$d_AIC  <- aic_table$AIC  - min(aic_table$AIC)
+aic_table = aic_table[order(aic_table$d_AIC),]
 aic_table_abund <- aic_table
 aic_table_abund
+
 
 write.csv(aic_table_abund, paste0(Fig_Loc,"Fish-YOY-Kelp-binomial-abundance.csv"))
 
@@ -367,7 +386,7 @@ dev.off()
 plot_abund <-        
          ggplot(dfa , aes(x = Macro, y = Nereo, color = pred_abund_mn)) +
          # geom_point(size = 4) +
-        geom_point(pch = substring(dfa$year,4,4), size = 4) + 
+         geom_point(pch = substring(dfa$year,4,4), size = 4) + 
          xlab( expression(paste( italic(Macro),' stipes per ', m^2)) )+
          ylab( expression(paste( italic(Nereo),' stipes per ', m^2)) )+
          theme_bw()+theme_nt + theme(legend.key.size = unit(1,'lines'),
@@ -401,12 +420,15 @@ library(ggrepel)
 library(scales) 
  
  
+df_comb$pch = ifelse(df_comb$predYOY == 0, 21, 19 )
+
  
 plot_1 = ggplot(df_comb , aes(x = Macro, y = Nereo, color = predYOY)) +
           # geom_tile(size = 10) +
-          # geom_point() + 
-          geom_jitter(size = 4, alpha=0.7, width = 0.2) + 
-          #scale_color_continuous( type = 'gradient') +
+          geom_point(size = pred_occur*10, shape = 19) +
+          geom_point(data = filter(df_comb, predYOY == 0), size=4, shape = 21, color='black')+
+          # geom_jitter(size = 4, alpha=0.7, width = 0.1, shape = df_comb$pch) + 
+          # scale_color_continuous( type = 'gradient') +
           scale_colour_gradient2( 
                  low ="red",
                  mid = "white",
@@ -417,8 +439,10 @@ plot_1 = ggplot(df_comb , aes(x = Macro, y = Nereo, color = predYOY)) +
                  guide = "colourbar",
                  aesthetics = "color")+
           # xlim(0,6)+ ylim(0,6) +
-          xlab( expression(paste( italic(Macro),' stipes per ', m^2)) )+
-          ylab( expression(paste( italic(Nereo),' stipes per ', m^2)) )+
+          scale_x_sqrt(breaks = c(0,1,2,4,6,8,10)) +
+          scale_y_sqrt(breaks = c(0,1,2,4,6,8,10)) +
+          xlab( expression(paste( 'Sqrt', italic(Macro),' stipes per ', m^2)) )+
+          ylab( expression(paste( "Sqrt ",italic(Nereo),' stipes per ', m^2)) )+
           theme_bw()+theme_nt + theme(legend.key.size = unit(1,'lines'),
                                       legend.position = c(0.8,0.8) )
  
