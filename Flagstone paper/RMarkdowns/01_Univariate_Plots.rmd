@@ -349,22 +349,6 @@ yoy.plot
 Fish depth = `r fish.depth`
 
 ```{r fish, fig.width=5, fig.height=3.5}
-# recalculate here for easy changes and to have it obvious
-# x <-  fish_transect %>% group_by(site,year,taxa) %>%
-#       summarise(Mean=mean(Count, na.rm = TRUE),
-#                 SD=sd(Count),
-#                 N=length(Count),
-#                 SE=SD/sqrt(N),
-#                 SE_var=SE^2)  %>%
-#       group_by(year,taxa) %>%
-#       summarise(grand_sum = sum(Mean, na.rm = TRUE),
-#             N=length(Mean),
-#             grand_mean = grand_sum / N,
-#             grand_sum_var = sum(SE_var, na.rm = TRUE), 
-#             grand_SE = sqrt(grand_sum_var / N^2))
-# fish_taxa_year <- x
-
-# fish_taxa_year <- readRDS(paste0(Data_Loc,'Summarized_Data_Fish_year_taxa.rds'))
 
 fish.col = c(RColorBrewer::brewer.pal(n = 12, name = "Paired"))
 
@@ -372,7 +356,7 @@ fish.taxa <- c("OPEL", "Lingcod",     fish.col[10],
                "HEXA", "Greenlings", fish.col[4],
                "SCMA" ,"Cabazon",     fish.col[8],
                "SECA", "Copper RF",   fish.col[12],
-               "SENE", "Blue RF",     fish.col[2],
+               "SENE", "China RF",     fish.col[2],
                "SEFL", "Yellowtail RF", fish.col[7],
                "SEME", 'Black RF',    'black')
 
@@ -1334,36 +1318,34 @@ yoy.spp =    c("SECAyoy", "SEPIyoy", "SEMYyoy", "SEBYTyoy","RYOY")
 
 ```{r fish-table , results='asis' }
 
-fish_total <- fish_transect %>% group_by(species) %>%
+fish_total <- fish_transect %>% group_by(species, size_class) %>%
                                 summarise(Total = sum(Count, na.rm = TRUE)) %>%
                                 left_join(.,fish_codes, by = c('species' = 'code'))
-# fish_total = na.omit(fish_total)
 
 fish_total$spp <- str_replace(fish_total$spp, "_", " ")
 fish_total$com_name <- str_replace(fish_total$com_name, "_", " ")
 fish_total$spp <- str_replace(fish_total$spp, "[.]", " ")
 
-fish_total <- fish_total[,c('spp', 'com_name', 'group', 'Total')] %>%
+fish_total <- fish_total[,c('spp', 'com_name', 'size_class', 'group', 'Total')] %>%
               rename(Species = spp) %>%
               rename('Common name' = com_name) %>%
-             rename (Group=group)
+              rename (Group=group)
 
-# fish_total$Species = stringr::str_replace(fish_total$Species, 'yoy', 'Juveniles')
-# fish_total$`Common name` = stringr::str_replace(fish_total$`Common name`, 'yoy', 'Juveniles')
-fish_total = na.omit(fish_total)
-library(tinytex)
-#library(xtable)
-library(htmlTable)
+fish_total$Species = stringr::str_replace(fish_total$Species, 'yoy', 'Juveniles')
+fish_total$`Common name` = stringr::str_replace(fish_total$`Common name`, 'yoy', 'Juveniles')
 
-# fish_total <- data.frame(fish_total)
-#print(xtable(fish_total , type='html'))
 
 fish_total <- fish_total[ order(fish_total$Total, decreasing = TRUE),]
 head(fish_total)
 
-write.csv(fish_total, paste0(Fig_Loc,"Table-Fish-Table.csv"))
+fish_adults =    fish_total %>% filter(size_class %in% c(NA,'large')) %>% 
+  select(Species, `Common name`,Total)
+fish_juveniles = fish_total %>% filter(size_class == 'small') %>% 
+  select(Species, `Common name`,Total)
 
-#knitr::kable(fish_total)
+
+write.csv(fish_adults, paste0(Fig_Loc,"Table-Fish-Adults.csv"))
+write.csv(fish_juveniles, paste0(Fig_Loc,"Table-Fish-Juveniles.csv"))
 
 ```
 

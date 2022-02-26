@@ -164,10 +164,10 @@ fish <- fish %>% rename('lingcod' = 'OPEL') %>%
                  rename('greenlings' = 'HEXA') %>%
                  rename('copper.rockfish' = 'SECA') %>%
                  rename('cabazon' = 'SCMA') %>%
-                 rename('blue.rockfish' = 'SENE') %>%
+                 rename('china.rockfish' = 'SENE') %>%
                  rename('black.rockfish' = 'SEME')
-fish.spp = c('lingcod', 'greenlings','copper.rockfish','cabazon','blue.rockfish','black.rockfish')
-
+fish.spp = c('lingcod', 'greenlings','copper.rockfish','cabazon','china.rockfish','black.rockfish')
+write.csv(fish.spp, paste0(Fig_Loc,"FishSpp-for-CAP.csv"))
 
 
 kelp <- kelp %>% rename('Macrocystis' = 'MACPYR') %>%
@@ -180,24 +180,12 @@ kelp.spp = c('Macrocystis','Nereocystis','Pterygophora')
 invert.taxa = c("anemone", "blood star","brood star", "chiton", "crabs", "cucumber","green urchin",      "hermit_crabs" , "kelp crab","large star","leather star" , "medium star", "nudibranch","Pisaster" , "purple urchin" ,"Pynopodia","red urchin", "shelled gastropod","sponge", "tunicate")
 invert.taxa = str_replace(invert.taxa, " ", '.')
 
-# fish.spp =   c("OPEL", "HEXA", "SECA", "SCMA" ,"SENE", "SEME")
+write.csv(invert.taxa, paste0(Fig_Loc,"InvertSpp-for-CAP.csv"))
 
 yoy.spp =    c("SECAyoy", "SEPIyoy", "SEMYyoy", "SEBYTyoy","RYOY")
+write.csv(yoy.spp, paste0(Fig_Loc,"YoYSpp-for-CAP.csv"))
 
-
-# fix spaces because it messes with multivarite stuff
-
-
-# kelp.spp =  c("MACPYR", "NERLUE", "PTECAL")
-
-# seletct depths and turn into data fram. tidyverse stuff messes with ordingations
-
-# kelp <-    data.frame(kelp %>% filter(zone %in% kelp.depth))
-# fish <-    data.frame(fish%>% filter(zone %in% fish.depth))
-# inverts <- data.frame(inverts%>% filter(zone %in% invert.depth))
-
-
-# need regular data frames or the column tites mess with the ordination software
+# need regular data frames or the column titles mess with the ordination software
 kelp <-    data.frame(kelp)
 fish <-    data.frame(fish)
 inverts <- data.frame(inverts %>% rename('hermit.crab' = 'hermit_crabs'))
@@ -386,7 +374,8 @@ rownames(kelp_ord$cap$cproj) <- rn
 
 # fix fish names
 rn <- rownames(fish_ord$cap$cproj)
-rn[rn == 'blue rockfish'] <- 'Blue RF'
+rn[rn == 'blue rockfish'] <- 'China RF'
+rn[rn == 'china rockfish'] <- 'China RF'
 rn[rn == 'copper rockfish'] <- 'Copper RF'
 rn[rn == 'cabazon'] <- 'Cabezon'
 rn[rn == 'black rockfish'] <- 'Black RF'
