@@ -238,7 +238,7 @@ dfx$p_occur <- pred_occur
 dfx$pch = ifelse(dfx$zone==5,21,19)
 
 # plot occurence
-plot_occur <-
+plot_occur_1 <-
      ggplot( dfx , aes(x=three_kelps,y=p_occur, color = site))+
      geom_point(pch = 19)+ # dfx$pch)+
      xlab( expression(paste('Canopy kelp stipes per ', m^2)) )+
@@ -251,11 +251,15 @@ plot_occur <-
      scale_color_manual(values = site.col$col) +
      theme_bw() + theme_nt
 
-plot_occur + theme(legend.position = c(0.8,0.3))
+plot_occur_1 + theme(legend.position = c(0.8,0.3),
+                   legend.box.background = element_blank(),
+                   legend.background = element_blank())
 
 graphics.off()
 png( paste0(Fig_Loc, "FishYOY-canopy-Kelp-occurence.png"), units = 'in',res=300, height=3.5 ,width = 3.5)
-plot_occur + theme(legend.position = c(0.8,0.3))
+plot_occur_1 + theme(legend.position = c(0.8,0.3),
+                   legend.box.background = element_blank(),
+                   legend.background = element_blank())
 dev.off()
 
 
@@ -422,40 +426,59 @@ library(scales)
  
 df_comb$pch = ifelse(df_comb$predYOY == 0, 21, 19 )
 
- 
-plot_1 = ggplot(df_comb , aes(x = Macro, y = Nereo, color = predYOY)) +
-          # geom_tile(size = 10) +
-          geom_point(size = pred_occur*10, shape = 19) +
-          geom_point(data = filter(df_comb, predYOY == 0), size=4, shape = 21, color='black')+
-          # geom_jitter(size = 4, alpha=0.7, width = 0.1, shape = df_comb$pch) + 
-          # scale_color_continuous( type = 'gradient') +
-          scale_colour_gradient2( 
-                 low ="red",
-                 mid = "white",
-                 high = "blue",
-                 midpoint = 15,
-                 space = "Lab",
-                 na.value = "grey50",
-                 guide = "colourbar",
-                 aesthetics = "color")+
-          # xlim(0,6)+ ylim(0,6) +
-          scale_x_sqrt(breaks = c(0,1,2,4,6,8,10)) +
-          scale_y_sqrt(breaks = c(0,1,2,4,6,8,10)) +
-          xlab( expression(paste( 'Sqrt', italic(Macro),' stipes per ', m^2)) )+
-          ylab( expression(paste( "Sqrt ",italic(Nereo),' stipes per ', m^2)) )+
-          theme_bw()+theme_nt + theme(legend.key.size = unit(1,'lines'),
-                                      legend.position = c(0.8,0.8) )
- 
- plot_1 + guides(fill=guide_legend(title="New Legend Title"))
- 
- 
+legend.title.1 =expression( "Rockfish\njuveniles\nper 60 m"^2) 
+legend.title.2 = "Probability of\noccurrence"
+# fake legend
 
+
+plot_comb = ggplot(df_comb , aes(x = Macro, y = Nereo), color='black') +
+        geom_point(aes( size = pred_occur_mn, fill = predYOY), shape = 21  ) +
+        geom_point(data = filter(df_comb, predYOY == 0), size=1, shape = 19, color='black')+
+        scale_fill_gradient(low = "white", high = "red")+
+        scale_x_sqrt(breaks = c(0,1,2,4,6,8,10)) +
+        scale_y_sqrt(breaks = c(0,1,2,4,6,8,10)) +
+        labs(x = expression(paste( 'Sqrt ', italic(Macro),' stipes per ', m^2)),
+             y = expression(paste( 'Sqrt ', italic(Macro),' stipes per ', m^2)),
+             size = legend.title.2,
+             fill = legend.title.1) +
+        theme_bw() + theme_nt
+        
+plot_comb
+
+
+############## combined figure ################
+
+plot_occur_x <- plot_occur_1 + theme(legend.box.background = element_blank(),
+                                     legend.background = element_blank(),
+                                     legend.key.size = unit(0.5,'lines'),
+                                     # legend.position = c(0.8,0.7),
+                                     legend.position = 'right')
+plot_comb_x <- plot_comb     + theme(legend.title =element_text(size=8),
+                                     legend.box.background = element_blank(),
+                                     legend.background = element_blank(),
+                                     legend.key.size = unit(0.5,'lines'),
+                                     # legend.position = c(0.8,0.7),
+                                     legend.position = 'right',
+                                     legend.box = "vertical")
+                                      
+
+# legend.margin = margin(0,0,0,0, unit="cm")
+
+graphics.off()
+
+png(paste0(Fig_Loc,"Figure-6-fish-kelp-combined.png"), units='in', res = 600, width = 5, height = 5)
+
+ggarrange(plot_occur_x, plot_comb_x, 
+         labels = c('a)','b)'), 
+         # labels = 'auto',
+         font.label = list(face='plain', size = 10),
+         hjust = -26,
+         vjust = 3,
+         nrow = 2, ncol=1,
+         align = 'v'
+ )
  
- 
- 
- 
- 
- 
+dev.off()
  
  
  
