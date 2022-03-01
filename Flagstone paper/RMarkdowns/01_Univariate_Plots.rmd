@@ -807,6 +807,16 @@ invert_area <- invert_transect %>%
               SD = sd(density), 
               N =length(year),
               SE= SD/sqrt(N) ) 
+
+
+pycnos = invert_transect %>% 
+  group_by(year) %>% 
+  filter(., taxa == 'Pycnopodia') %>%
+  summarise(no = sum(total.count))
+
+pycnos
+
+
 ```
 
 ## Summed Urchins 
