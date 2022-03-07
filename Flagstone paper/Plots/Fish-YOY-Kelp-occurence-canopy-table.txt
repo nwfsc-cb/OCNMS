@@ -1,5 +1,4 @@
-Generalized linear mixed model fit by maximum likelihood (Laplace  Approximation)
- [glmerMod]
+Generalized linear mixed model fit by maximum likelihood (Laplace Approximation) ['glmerMod']
  Family: binomial  ( logit )
 Formula: TOTyoy_pres ~ canopy_kelp + (1 | year_factor) + (1 | site)
    Data: dfx
