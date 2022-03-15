@@ -185,7 +185,7 @@ m_NP <- glmer( TOTyoy_pres ~  Nereo + Ptery +  (1|year_factor) + (1|site),
 
 # three kelps ####
 
-m_kelp <- glmer( TOTyoy_pres ~  Macro+Nereo+Ptery + (1|year_factor) + (1|site), 
+m_MNP <- glmer( TOTyoy_pres ~  Macro+Nereo+Ptery + (1|year_factor) + (1|site), 
                  family = binomial, 
                  weights = fish.area.weight,
                  data = dfx)
@@ -219,9 +219,7 @@ aic_table_occur <- aic_table
 aic_table_occur
 rm(aic_table)
 
-capture.output(aic_table_occur , file = paste0(Fig_Loc,"AIC_occurence.txt"))
-
-write.csv(aic_table_occur, paste0(Fig_Loc,"Fish-YOY-Kelp-binomial-probability-occurence.csv"))
+write.csv(aic_table_occur, paste0(Fig_Loc,"Fish-YOY-Kelp-binomial-AICc-table.csv"))
 
 summary(m_canopy)
 summary(m_MN)
