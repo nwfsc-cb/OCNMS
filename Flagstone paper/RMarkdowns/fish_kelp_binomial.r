@@ -415,10 +415,16 @@ plot_abund
  
 df_comb1 <- dfx[,c('year','site','area','zone','Nereo','Macro','pred_occur_mn')] 
 df_comb2 <- dfa[,c('year','site','area','zone','pred_abund_mn')] 
-df_comb2$pred_abund_mn[is.na(df_comb2$pred_abund_mn)] <- 0
+
+
+# df_comb2$pred_abund_mn[is.na(df_comb2$pred_abund_mn)] <- 0
+
 df_comb  <- left_join(df_comb1, df_comb2) %>% 
             mutate(predYOY = pred_occur_mn*pred_abund_mn)
-df_comb$predYOY[is.na(df_comb$pred_abund_mn)] <- 0
+
+# df_comb$predYOY[is.na(df_comb$pred_abund_mn)] <- 0
+
+df_comb = na.omit(df_comb)
 
 library(ggrepel)
 library(scales) 
@@ -433,12 +439,12 @@ legend.title.2 = "Probability of\noccurrence"
 
 plot_comb = ggplot(df_comb , aes(x = Macro, y = Nereo), color='black') +
         geom_point(aes( size = pred_occur_mn, fill = predYOY), shape = 21 , alpha = 0.5 ) +
-        geom_point(data = filter(df_comb, predYOY == 0), size=1, shape = 19, color='black')+
+        # geom_point(data = filter(df_comb, predYOY == 0), size=1, shape = 19, color='black')+
         scale_fill_gradient(low = "white", high = "red")+
         scale_x_sqrt(breaks = c(0, 0.5, 1,2,4,6,8,10), minor_breaks=0:10) +
         scale_y_sqrt(breaks = c(0, 0.5, 1,2,4,6,8,10), minor_breaks=0:10) +
-        labs(x = expression(paste( 'Sqrt ', italic(Macro),' stipes per ', m^2)),
-             y = expression(paste( 'Sqrt ', italic(Nereo),' stipes per ', m^2)),
+        labs(x = expression(paste( italic(Macro),' stipes per ', m^2)),
+             y = expression(paste( italic(Nereo),' stipes per ', m^2)),
              size = legend.title.2,
              fill = legend.title.1) +
         theme_bw() + theme_nt
@@ -482,10 +488,6 @@ dev.off()
  
  
  
- 
- 
- 
- 
- 
- 
+ ##################################################
+
  

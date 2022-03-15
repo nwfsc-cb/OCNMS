@@ -448,9 +448,15 @@ v = data.frame(cbind('Inverts', axislabels,invert_ord$pm[1:7,'R2']))
 df = rbind(f,s,k,v)
 colnames(df) <- c('Spp','x', 'r2')
 df$r2 = as.numeric(df$r2)
-df$Spp <- factor(df$Spp, levels = c("Kelp","Inverts","Fish",'Rockfish YOY'))
+
+df$Spp = as.character(df$Spp)
+df$Spp[df$Spp =='Rockfish YOY'] <- 'Juv. rockfishes'
+
+df$Spp <- factor(df$Spp, levels = c("Kelp","Inverts","Fish",'Juv. rockfishes'))
 
 df$x <-   factor(df$x , levels = axislabels)
+
+
 
 hist.col = c(RColorBrewer::brewer.pal(12,'Paired')[c(3,2,6,7)])
 
@@ -466,6 +472,7 @@ p = ggplot( df , aes(x = x,  y = r2, fill=Spp)) +
     theme( legend.title = element_blank(),
            legend.text = element_text(size = 8),
            legend.key.size = unit(0.7,'lines'))
+
 
 p
 
