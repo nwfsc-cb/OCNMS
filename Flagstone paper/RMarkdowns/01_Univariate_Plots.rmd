@@ -383,24 +383,7 @@ fish.plot <- ggplot(fish_taxa_year %>% filter(taxa %in% fish.taxa$taxa) %>% left
         
 fish.plot
 ```
-## Fish and YOY plot 
 
-Note: I have yellowtail here, but they are not in the multivariate stuff since we reall only saw them once.
-
-```{r fish-yoy, fig.width=3.5, fig.height=6}
-
-ggarrange(
-  fish.plot,yoy.plot,
-  labels = c('a) Fishes','b) Juvnile rockfish'), 
-  # labels = 'auto',
-  font.label = list(face='plain', size = 10),
-  hjust = -1.25,
-  vjust = 2,
-  nrow = 2, ncol=1,
-  align = 'v'
-)
-
-```
 
 ## Fish and YOY facet by site x year
 
@@ -861,7 +844,7 @@ ggplot() +
 
 
 tat_urchin2019 = urchin_zone[urchin_zone$year==2019 & urchin_zone$site =='Tatoosh Island',]
-
+tat_urchin2021 = urchin_zone[urchin_zone$year==2021 & urchin_zone$site =='Tatoosh Island',]
 
 ```
 
@@ -919,6 +902,9 @@ urchin_plot_all + rotate_x_text(angle = 45)
 
 
 tat_purpleurchins2019 = urchins_all[urchins_all$year==2019 & 
+                                    urchins_all$site =='Tatoosh Island' &
+                                    urchins_all$taxa == 'Purple urchin',]
+tat_purpleurchins2021 = urchins_all[urchins_all$year==2021 & 
                                     urchins_all$site =='Tatoosh Island' &
                                     urchins_all$taxa == 'Purple urchin',]
 ```
@@ -1046,7 +1032,7 @@ stars_year <- ggplot() +
       scale_y_continuous(expression("Sea stars m"^-2) ) + 
                           
       # scale_color_viridis_d(option="plasma",end=0.75)+
-      scale_color_manual(values = star.col, labels = c('Blood star', 'Brood star',
+      scale_color_manual(values = star.col, labels = c('Blood star', 'Brooding star',
                                     'Large star', 'Leather star',
                                     'Medium star',
                                     bquote(italic('Pisaster')),

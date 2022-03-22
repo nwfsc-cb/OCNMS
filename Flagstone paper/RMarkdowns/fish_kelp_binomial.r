@@ -420,9 +420,8 @@ df_comb2 <- dfa[,c('year','site','area','zone','pred_abund_mn')]
 df_comb  <- left_join(df_comb1, df_comb2) %>% 
             mutate(predYOY = pred_occur_mn*pred_abund_mn)
 
-# df_comb$predYOY[is.na(df_comb$pred_abund_mn)] <- 0
+df_comb$predYOY[is.na(df_comb$pred_abund_mn)] <- 0
 
-df_comb = na.omit(df_comb)
 
 library(ggrepel)
 library(scales) 
