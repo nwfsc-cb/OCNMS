@@ -172,8 +172,10 @@ write.csv(fish.spp, paste0(Fig_Loc,"FishSpp-for-CAP.csv"))
 
 kelp <- kelp %>% rename('Macrocystis' = 'MACPYR') %>%
                  rename('Nereocystis' = 'NERLUE') %>%
-                 rename('Pterygophora' = 'PTECAL')
-kelp.spp = c('Macrocystis','Nereocystis','Pterygophora')
+                 rename('Pterygophora' = 'PTECAL')%>% 
+                  mutate(Other = sum(AGAFIM+ALAMAR+COSCOS+CYMTRI+DESSPP+LAMSET+SACGRO+SACLAT+PLEGAR ))
+
+kelp.spp = c('Macrocystis','Nereocystis','Pterygophora','Other')
 
 # kelp.spp = c('MACPYR','NERLUE','PTECAL')
 
