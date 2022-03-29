@@ -400,7 +400,7 @@ Plot_Ordination( data.file = kelp_ord$cap.df , ord.file = kelp_ord$cap, min.scor
                  Xlim = c(-3,3), Ylim=c(-3,3), Xlim2 = xy2, Ylim2=xy2, scores.cex = scores.cex, scores.font = 3,
                  plot.species = plotspp , spp.separate = sppseparate, fig.legend = 'a) Kelp', sppcol = sppcol)
 
-legend('bottomleft', legend=site.col$site, pch=19, col=site.col$col, bty='n', cex=0.8 )
+legend('topright', legend=site.col$site, pch=19, col=site.col$col, bty='n', cex=0.8 )
 yr = year.pch[year.pch$year != 2015 & year.pch$year!=2020 ,]
 legend('bottomright', legend=yr$year, pch=as.numeric(yr$pch), col='darkgrey',pt.bg = 'black', bty='n', cex=0.8 )
 legend('topleft',legend = 'b)', bty='n', inset = inset)
@@ -429,7 +429,7 @@ Plot_Ordination( data.file = yoy_ord$cap.df , ord.file = yoy_ord$cap, min.score 
                  Xlim = c(-2,5), Ylim=c(-2.25, 2.25), Xlim2 = c(-0.5, 1), Ylim2=c(-0.4,0.2), scores.cex = scores.cex,
                  plot.species = plotspp , spp.separate = sppseparate, fig.legend = 'g) Juvenile rockfishes', sppcol = sppcol)
 
-legend('bottomleft', legend=yr$year, pch=as.numeric(yr$pch), col='darkgrey',pt.bg = 'black', bty='n', cex=0.8 )
+# legend('bottomleft', legend=yr$year, pch=as.numeric(yr$pch), col='darkgrey',pt.bg = 'black', bty='n', cex=0.8 )
 legend('topleft',legend = 'h)', bty='n', inset = inset)
 
 
