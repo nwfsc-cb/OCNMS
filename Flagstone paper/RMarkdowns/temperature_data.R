@@ -522,9 +522,10 @@ dev.off()
 # use this plot...so much easier and shorter also matches Cavanaugh
 
 
-############################################
+#######################################################################
 
 
+## across sites
 df_month = df_long %>%
     group_by(year,month) %>%
     summarise(meanT = mean(degreesC), sdT = sd(degreesC))
@@ -554,9 +555,48 @@ dev.off()
 
 
 
+###########################################################################
+
+#######################################################################
+
+## by site
+df_month_site = df_long %>%
+    group_by(year,month, site) %>%
+    summarise(meanT = mean(degreesC), sdT = sd(degreesC))
+
+df_max_month_site <- df_month_site %>% 
+    group_by(year, site) %>% 
+    summarise(maxT = max(meanT))
+df_max_month_site$sdT = df_month_site$sdT[match(df_max_month_site$maxT, df_month_site$meanT)]
+## across sites
+df_month = df_long %>%
+    group_by(year,month) %>%
+    summarise(meanT = mean(degreesC), sdT = sd(degreesC))
+
+df_max_month <- df_month %>% 
+    group_by(year) %>% 
+    summarise(maxT = max(meanT))
+df_max_month$sdT = df_month$sdT[match(df_max_month$maxT, df_month$meanT)]
+
+plot6 <- ggplot(df_max_month, aes(x = year, y = maxT) ) +
+    geom_ribbon( aes(ymin = maxT-sdT, ymax = maxT +sdT ), 
+                 fill='grey',linetype = 0, alpha=0.3) +
+    geom_line(data=df_max_month_site, aes(x=year, y = maxT, color=site), )+
+    scale_color_manual(values=site.col$col)+
+    geom_line(size=1.2) +
+    xlab("") +
+    ylab(paste0("Mean SST of warmest month ", Degree_C))+
+    scale_x_continuous( breaks = seq(2005,2020,5), minor_breaks = 2003:2021 )
 
 
 
+plot6 + theme_bw()+theme_nt+theme(legend.position = c(0.2,0.9))
+
+
+graphics.off()
+png( paste0(Fig_Loc,"Mean-sst-warmest-month-by-site.png"), units = 'in',res=300,width=3.5, height=3)
+plot6 + theme_bw()+theme_nt+theme(legend.position = c(0.3,0.9))
+dev.off()
 
 
 
