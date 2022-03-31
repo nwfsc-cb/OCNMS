@@ -22,7 +22,7 @@ HomeFile = "C:/Users/nick.tolimieri/Documents/GitHub/OCNMS/Flagstone paper"
 Fig_Loc = paste0(HomeFile,"/Plots/")
 Data_Loc = paste0(HomeFile,"/Data/")
 Results_Loc = paste0(HomeFile,"/Results/")
-Other_Files = paste0(HomeFile,"/Other Files/")
+other1_Files = paste0(HomeFile,"/other1 Files/")
 theme_nt = readRDS(paste0(Data_Loc, 'theme_nt.rds') )
 
 settings = readRDS(paste0(Data_Loc,'settings.rds') )
@@ -44,7 +44,7 @@ kelp_codes = data.frame(read.csv( paste0(Data_Loc,"spp_codes_kelp.csv") ))
 # MEAN DENSITY ####
 df_dens = readRDS( paste0(Data_Loc,"Data_Fish_Kelp_area_wide.rds"))
 df_dens <- df_dens %>% rename(Macro= MACPYR , Nereo=NERLUE, Ptery=PTECAL) %>%
-        mutate(understory = sum(AGAFIM+ALAMAR+COSCOS+CYMTRI+DESSPP+LAMSET+SACGRO+SACLAT+PLEGAR ))
+        mutate(other1 = sum(AGAFIM+ALAMAR+COSCOS+CYMTRI+DESSPP+LAMSET+SACGRO+SACLAT+PLEGAR ))
 df_dens$area[df_dens$year==2015] <- "D"
 
 # TOTALCOUNT ####
@@ -52,7 +52,7 @@ df_count <- readRDS(paste0(Data_Loc,"Fish-kelp-counts-wide.rds"))
 df_count <- df_count %>% 
         rename(Macro= MACPYR , Nereo=NERLUE, Ptery=PTECAL) %>%
         mutate(fish_volume = fish_area*2,
-               understory = sum(AGAFIM+ALAMAR+COSCOS+CYMTRI+DESSPP+LAMSET+SACGRO+SACLAT+PLEGAR ))
+               other1 = sum(AGAFIM+ALAMAR+COSCOS+CYMTRI+DESSPP+LAMSET+SACGRO+SACLAT+PLEGAR ))
 
 
 # add the area informatinto the df_dens file
@@ -86,9 +86,9 @@ ptery1 <- ggplot( df_dens , aes(x = Ptery, y = TOTyoy, color=site)) +
      scale_color_manual(values = site.col$col) +
      theme_bw() + theme_nt
 
-under1 <- ggplot( df_dens , aes(x = understory, y = TOTyoy, color=site)) +
+under1 <- ggplot( df_dens , aes(x = other1, y = TOTyoy, color=site)) +
         geom_point() + 
-        xlab( expression(paste(italic('Understory'), ' stipes per ', m^2)) )+
+        xlab( expression(paste(italic('other1'), ' stipes per ', m^2)) )+
         ylab( expression(paste('Rockfish YOY per 60 ',m^2) )) + 
         scale_color_manual(values = site.col$col) +
         theme_bw() + theme_nt
@@ -117,14 +117,14 @@ dev.off()
 
 # Delta-GLM ####
 
-# chose file to use for delta-glm analyses
+# chose file to use for delta-glm analyses (counts or density for fish)
 
 dfx <- df_dens
 
 dfx <- dfx %>% mutate(TOTyoy_pres = ifelse(TOTyoy > 0 , 1, 0)) %>%
-               mutate(three_kelps = Macro+Nereo+Ptery , 
-                    canopy_kelp = Macro+Nereo,
-                    under2 = Ptery+understory,
+               mutate(canopy_kelp = Macro+Nereo,
+                    other2 = Ptery+other1,
+                    all_kelps = Macro+Nereo+Ptery+other1,
                     transect.area.algae.weight = kelp_area/max(kelp_area),
                     fish.area.weight = fish_area/max(fish_area),
                     n = 1)
@@ -141,39 +141,54 @@ sum(dfx$TOTyoy_pres)/sum(dfx$n)
 ######## Begin occurrence models ##########################################
 ###########################################################################
 
-m_MNPU <- glmer( TOTyoy_pres ~  Macro+Nereo+Ptery+understory + (1|year_factor) + (1|site), 
+# sum of all kelp
+m_all <- glmer( TOTyoy_pres ~  all_kelps + (1|year_factor) + (1|site), 
                 family = binomial, 
                 weights = fish.area.weight,
                 na.action = 'na.fail',
                 data = dfx)
-m_CU <- glmer( TOTyoy_pres ~  canopy_kelp + under2 + (1|year_factor) + (1|site), 
-                 family = binomial, 
-                 weights = fish.area.weight,
-                 na.action = 'na.fail',
-                 data = dfx)
 
-m_MNPu <- glmer( TOTyoy_pres ~  Macro+Nereo+under2+ (1|year_factor) + (1|site), 
-                 family = binomial, 
-                 weights = fish.area.weight,
-                 na.action = 'na.fail',
-                 data = dfx)
+# canopy vs ptery vs under
+m_CPO <- glmer( TOTyoy_pres ~  canopy_kelp + Ptery + other1 + (1|year_factor) + (1|site), 
+               family = binomial, 
+               weights = fish.area.weight,
+               na.action = 'na.fail',
+               data = dfx)
+# kelp by species plus other1
+m_MNPO <- glmer( TOTyoy_pres ~  Macro+Nereo+Ptery+other1 + (1|year_factor) + (1|site), 
+                family = binomial, 
+                weights = fish.area.weight,
+                na.action = 'na.fail',
+                data = dfx)
+
 
 # run model selection
 library(MuMIn)
+dd_all  <- MuMIn::dredge(m_all)
+dd_MNPO <- MuMIn::dredge(m_MNPO)
+dd_CPO <- MuMIn::dredge(m_CPO)
 
-dd1 <- MuMIn::dredge(m_MNPU)
-dd2 <- MuMIn::dredge(m_CU)
-dd3 <- MuMIn::dredge(m_MNPu , subset = ~under2)
+dd = dd_all %>% full_join(.,dd_MNPO) %>% full_join(.,dd_CPO)
 
-dd = dd1 %>% full_join(.,dd2) %>% full_join(.,dd3)
+dd = dd[, c("(Intercept)","all_kelps", 
+            "canopy_kelp",
+            "Macro","Nereo","Ptery",
+            "other1",
+            "df","AICc","delta")]
 
-dd = dd[, c("(Intercept)","Macro","Nereo","Ptery","understory",
-            "canopy_kelp","under2", 
-            "df","logLik","AICc","delta")]
+
 dd$delta = dd$AICc - min(dd$AICc)
 dd_occur = dd[ order(dd$delta) , ]
+
+dd_occur$n = 1
+# delete doubles
+for(i in 2:nrow(dd_occur)){
+        dd_occur$n[i] = ifelse(dd_occur$delta[i] == dd_occur$delta[i-1],2,1 )
+}
+dd_occur = dd_occur %>% filter(n!=2)
+
 head(dd_occur)
-write.csv(dd_occur, paste0(Fig_Loc,"Fish-YOY-Kelp-binomial-AICc-table.csv"))
+write.csv(dd_occur, paste0(Fig_Loc,"Table.S10.Fish-YOY-Kelp-binomial-AICc-table.csv"))
 
 
 m_MN <- glmer( TOTyoy_pres ~  Macro+Nereo+ (1|year_factor) + (1|site), 
@@ -191,6 +206,7 @@ m_canopy <- glmer( TOTyoy_pres ~ canopy_kelp + (1|year_factor) + (1|site),
                data = dfx)
 
 capture.output(summary(m_canopy), file = paste(Results_Loc,"Model-canopy-occurence.txt"))
+
 
 ##############################################################
 ###### end occurrence models #################################
@@ -238,47 +254,57 @@ dfa = dfx[dfx$TOTyoy_pres == 1,]
 
 dfa$TOTyoy  = log(dfa$TOTyoy)
 
-
-a_MNPU <- lmer( TOTyoy ~  Macro+Nereo+Ptery+understory + (1|year_factor) + (1|site), 
-                weights = fish.area.weight,
-                 na.action = 'na.fail',
-                 data = dfa)
-a_CU <- lmer( TOTyoy ~  canopy_kelp + under2 + (1|year_factor) + (1|site), 
+a_all  <- lmer( TOTyoy ~  all_kelps  + (1|year_factor) + (1|site), 
+              weights = fish.area.weight,
+              na.action = 'na.fail',
+              data = dfa)
+a_CPO  <- lmer( TOTyoy ~  canopy_kelp + Ptery + other1 + (1|year_factor) + (1|site), 
                weights = fish.area.weight,
                na.action = 'na.fail',
                data = dfa)
-
-a_MNPu <-lmer( TOTyoy ~  Macro+Nereo+under2+ (1|year_factor) + (1|site), 
-                 weights = fish.area.weight,
+a_MNPO <- lmer( TOTyoy ~  Macro+Nereo+Ptery+other1 + (1|year_factor) + (1|site), 
+                weights = fish.area.weight,
                  na.action = 'na.fail',
                  data = dfa)
 
+
 # run model selection
 library(MuMIn)
+dd1 <- MuMIn::dredge(a_all)
+dd2 <- MuMIn::dredge(a_CPO)
+dd3 <- MuMIn::dredge(a_MNPO)
 
-dd1 <- MuMIn::dredge(a_MNPU)
-dd2 <- MuMIn::dredge(a_CU)
-dd3 <- MuMIn::dredge(a_MNPu , subset = ~ under2)
+
 
 dd = dd1 %>% full_join(.,dd2) %>% full_join(.,dd3)
 
-dd = dd[, c("(Intercept)","Macro","Nereo","Ptery","understory",
-            "canopy_kelp","under2", 
-            "df","logLik","AICc","delta")]
+dd = dd[, c("(Intercept)","all_kelps", 
+            "canopy_kelp",
+            "Macro","Nereo","Ptery",
+            "other1",
+            "df","AICc","delta")]
+
 dd$delta = dd$AICc - min(dd$AICc)
-dd = dd[ order(dd$delta) , ]
-dd_abund = dd[-1,]
+dd_abund = dd[ order(dd$delta) , ]
+
+dd_abund$n = 1
+# delete doubles
+for(i in 2:nrow(dd_abund)){
+        dd_abund$n[i] = ifelse(dd_abund$delta[i] == dd_abund$delta[i-1],2,1 )
+}
+
+dd_abund = dd_abund %>% filter(n!=2)
 head(dd_abund)
 
 
-write.csv(dd_abund, paste0(Fig_Loc,"Fish-YOY-Kelp-binomial-abundance.csv"))
+write.csv(dd_abund, paste0(Fig_Loc,"Table.S.12.Fish-Kelp-Abundance-AICc.csv"))
 
 a_base <- lmer( TOTyoy ~ (1|year_factor) + (1|site), 
                    weights = fish.area.weight,
                    na.action = 'na.fail',
                    data = dfa)
 
-capture.output(summary(a_base), file = paste(Results_Loc,"Model-canopy-occurence.txt"))
+capture.output(summary(a_base), file = paste(Results_Loc,"Fish-kelp-abundance-base.txt"))
 
 
 ################################################################################
