@@ -51,7 +51,7 @@ library(BiodiversityR)
 # install.packages("remotes")
 # for Bray curtis with no spp in common.
 # remotes::install_github("phytomosaic/ecole")
-library(ecole)
+# library(ecole)
 
 # options
 knitr::opts_chunk$set(
@@ -438,7 +438,7 @@ legend('topleft',legend = 'h)', bty='n', inset = inset)
 
 ### Explained variance figure YSD
 
-``` {r Figure-4, fig.width=4.5, fig.height=3}
+``` {r Figure-4, fig.width=3.18, fig.height=3}
 
 axislabels = c('D', "S",'Y','SxD','DxY','SxY','Res')
 
@@ -473,7 +473,10 @@ p = ggplot( df , aes(x = x,  y = r2, fill=Spp)) +
     theme_bw() + 
     theme( legend.title = element_blank(),
            legend.text = element_text(size = 8),
-           legend.key.size = unit(0.7,'lines'))
+           legend.key.size = unit(0.7,'lines'),
+           legend.position = c(0.25,0.83),
+           legend.background = element_blank(),
+           axis.text = element_text(size = 8))
 
 
 p

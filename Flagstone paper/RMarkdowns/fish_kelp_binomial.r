@@ -408,14 +408,14 @@ plot_comb
 plot_occur_x <- plot_occur_1 + theme(legend.box.background = element_blank(),
                                      legend.background = element_blank(),
                                      legend.key.size = unit(0.5,'lines'),
-                                     # legend.position = c(0.8,0.7),
-                                     legend.position = 'right')
+                                     legend.position = c(0.7,0.2) )
+                                     # legend.position = 'right')
 plot_comb_x <- plot_comb     + theme(legend.title =element_text(size=8),
                                      legend.box.background = element_blank(),
                                      legend.background = element_blank(),
                                      legend.key.size = unit(0.5,'lines'),
-                                     # legend.position = c(0.8,0.7),
-                                     legend.position = 'right',
+                                     legend.position = c(0.8,0.7),
+                                     # legend.position = 'none',
                                      legend.box = "vertical")
                                       
 plot_comb_x
@@ -423,7 +423,7 @@ plot_comb_x
 
 graphics.off()
 
-png(paste0(Fig_Loc,"Figure-6-fish-kelp-combined.png"), units='in', res = 600, width = 5, height = 5)
+png(paste0(Fig_Loc,"Figure-6-fish-kelp-combined.png"), units='in', res = 600, width = 3.18, height = 5)
 
 ggarrange(plot_occur_x, plot_comb_x, 
          labels = c('a)','b)'), 

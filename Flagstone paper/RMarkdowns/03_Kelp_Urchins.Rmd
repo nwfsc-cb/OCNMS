@@ -53,7 +53,7 @@ library(BiodiversityR)
 # install.packages("remotes")
 # for Bray curtis with no spp in common.
 # remotes::install_github("phytomosaic/ecole")
-library(ecole)
+
 
 # options
 knitr::opts_chunk$set(
@@ -1320,7 +1320,7 @@ plot1
 ```
 
 
-```{r Figure-5, fig.height=7, fig.width=6}
+```{r Figure-5, fig.height=7, fig.width=6.5}
 
 plot2  <- plot1 +  theme(legend.position = 'right', 
                          legend.key.size = unit(0.25,'lines'),
