@@ -6,6 +6,7 @@ library(ggplot2)
 library(stringr)
 library(lemon)
 library(ggpubr) 
+library(heatwaveR)
 HomeFile = "C:/Users/nick.tolimieri/Documents/GitHub/OCNMS/Flagstone paper"
 
 Fig_Loc = paste0(HomeFile,"/Plots/")
