@@ -180,3 +180,53 @@ png( paste0(Fig_Loc, "MHW-1.png"), res=600, height = 9, width = 6.5, units='in')
 p_mhw
 dev.off()
 
+########## tables ############
+
+xnb = mhw_nb$event %>% mutate(site = "Neah Bay")
+xca = mhw_ca$event %>% mutate(site = "Cape Alava")
+xcj = mhw_cj$event %>% mutate(site = "Cape Johnson")
+xdi = mhw_di$event %>% mutate(site = "Destruction Island")
+
+df = rbind(xnb, xcj, xca, xdi)
+df$n = 1
+df$year = as.numeric(substring(df$date_peak,1,4))
+
+hw = df %>% group_by(site, year) %>% 
+  summarise(N = sum(n), 
+            `Total days` = sum(duration),
+            `Min length` = min(duration),
+            `Max length` = max(duration),
+            `Mean intensity` = mean(intensity_mean),
+            `Var intensity` = sum(intensity_var)/N,
+            `Max intensity` = max(intensity_max)
+            )
+
+hw
+
+
+write.csv(hw, paste0(Fig_Loc,"Table_MHW_Intensity.csv"), row.names = FALSE)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
