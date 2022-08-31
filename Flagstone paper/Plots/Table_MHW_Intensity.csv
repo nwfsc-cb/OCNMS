@@ -1,4 +1,4 @@
-"site","year","N","Total days","Min length","Max length","Mean intensity","Var intensity","Max intensity"
+"site","year","Events","Total days","Min days","Max days","Mean intensity","Var intensity","Max intensity"
 "Cape Alava",2003,2,16,7,9,1.49855,0.13725,1.7313
 "Cape Alava",2004,1,6,6,6,1.5444,0.0842,1.6609
 "Cape Alava",2005,1,7,7,7,1.962,0.1057,2.1256

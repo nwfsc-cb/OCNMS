@@ -192,30 +192,40 @@ df$n = 1
 df$year = as.numeric(substring(df$date_peak,1,4))
 
 hw = df %>% group_by(site, year) %>% 
-  summarise(N = sum(n), 
-            `Total days` = sum(duration),
-            `Min length` = min(duration),
-            `Max length` = max(duration),
+  summarise(`Events` = sum(n), 
+            `MHW days` = sum(duration),
+            `Min days` = min(duration),
+            `Max days` = max(duration),
             `Mean intensity` = mean(intensity_mean),
-            `Var intensity` = sum(intensity_var)/N,
+            `Var intensity` = sum(intensity_var)/Events,
             `Max intensity` = max(intensity_max)
             )
 
 hw
 
 
-write.csv(hw, paste0(Fig_Loc,"Table_MHW_Intensity.csv"), row.names = FALSE)
 
+cnb = mhw_nb$climatology %>% mutate(site = 'Neah Bay')
+cca = mhw_ca$climatology %>% mutate(site = 'Cape Alava')
+ccj = mhw_cj$climatology %>% mutate(site = 'Cape Johnson')
+cdi = mhw_di$climatology %>% mutate(site = 'Destruction Island')
 
+dfc = rbind(cnb, cca, ccj, cdi)
+dfc$year = as.numeric(substring(dfc$t,1,4))
 
+dfx = dfc %>% group_by(site, year) %>%
+  mutate(n = ifelse(threshCriterion==TRUE,1,0)) %>%
+  summarise(Days = sum(n))
 
+MHW = hw %>% merge(dfx) %>%
+  rename(Site = site, Year = year, `HW days (5+)` = `Total days`) %>%
+  select (Site, Year, Days, Events, `HW days (5+)`,`Min days`,`Max days`,
+          `Mean intensity`,`Var intensity`,`Max intensity`)
 
+MHW
+#### write out table
 
-
-
-
-
-
+write.csv(MHW, paste0(Fig_Loc,"Table_MHW_Intensity.csv"), row.names = FALSE)
 
 
 
