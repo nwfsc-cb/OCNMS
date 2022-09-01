@@ -141,42 +141,45 @@ mhw1 <- ggarrange(nb,ca,cj,di,
 c1 = RColorBrewer::brewer.pal(12,"Paired")
 
 # functionalized...
-plot_mhw <- function(dfile, d1,d2){
+plot_mhw <- function(dfile){
   t1 = grep("2012-01-01", dfile$climatology$t)
   t2 = grep("2019-12-31", dfile$climatology$t)
-  mhw2 = dfile$climatology %>% slice(t1:t2)
+  mhw2 = dfile$climatology %>% slice(t1:t2) 
   mhw_top = mhw2
   
   ggplot(data = mhw2, aes(x = t)) +
-  geom_flame(aes(y = temp, y2 = thresh, fill = "all"), show.legend = T) +
-  geom_flame(data = mhw_top, aes(y = temp, y2 = thresh, fill = "top"),  show.legend = T) +
-  geom_line(aes(y = temp, colour = "temp"), size = 0.50) +
-  geom_line(aes(y = thresh, colour = "thresh"), size = 0.250) +
-  geom_line(aes(y = seas, colour = "seas"), size = 0.50) +
-  scale_colour_manual(name = "Line Colour",
+     ylim(0,20) + 
+     geom_flame(aes(y = temp, y2 = thresh, fill = "all"), show.legend = T) +
+     geom_flame(data = mhw_top, aes(y = temp, y2 = thresh, fill = "top"),  show.legend = T) +
+     geom_line(aes(y = temp, colour = "temp"), size = 0.50) +
+     geom_line(aes(y = thresh, colour = "thresh"), size = 0.250) +
+     geom_line(aes(y = seas, colour = "seas"), size = 0.50) +
+     scale_colour_manual(name = "Line Colour",
                       values = c("temp" = "grey", 
                                  "thresh" =  c1[6], 
                                  "seas" = c1[2])) +
-  scale_fill_manual(name = "Event Colour", 
+     scale_fill_manual(name = "Event Colour", 
                     values = c("top" = c1[6])) +
-  scale_x_date(date_labels = "%b %Y") +
-  guides(colour = guide_legend(override.aes = list(fill = NA))) +
-  labs(y = expression(paste("Temperature [", degree, "C]")), x = NULL) + 
-  theme_bw()
+     scale_x_date(date_labels = "%b %Y") +
+     guides(colour = guide_legend(override.aes = list(fill = NA))) +
+     labs(y = expression(paste("Temp (", degree, "C)")), x = NULL) + 
+     theme_bw()
 }
 
 nb = plot_mhw(mhw_nb) + theme(legend.position = 'none')
 ca = plot_mhw(mhw_ca) + theme(legend.position = 'none')
 cj = plot_mhw(mhw_cj) + theme(legend.position = 'none')
-di = plot_mhw(mhw_di) + theme(legend.position = 'bottom')
+di = plot_mhw(mhw_di) + theme(legend.position = c(0.5,0.2),
+                              legend.box = 'horizontal',
+                              legend.direction = 'horizontal')
 
 p_mhw <- ggarrange(nb,ca,cj,di,
-                  nrow=4)
-
+                  nrow=4,
+                  align='h')
 p_mhw
 
 graphics.off()
-png( paste0(Fig_Loc, "MHW-1.png"), res=600, height = 9, width = 6.5, units='in')
+png( paste0(Fig_Loc, "MHW-1.png"), res=600, height = 7, width = 6, units='in')
 p_mhw
 dev.off()
 
@@ -203,8 +206,6 @@ hw = df %>% group_by(site, year) %>%
 
 hw
 
-
-
 cnb = mhw_nb$climatology %>% mutate(site = 'Neah Bay')
 cca = mhw_ca$climatology %>% mutate(site = 'Cape Alava')
 ccj = mhw_cj$climatology %>% mutate(site = 'Cape Johnson')
@@ -218,7 +219,7 @@ dfx = dfc %>% group_by(site, year) %>%
   summarise(Days = sum(n))
 
 MHW = hw %>% merge(dfx) %>%
-  rename(Site = site, Year = year, `HW days (5+)` = `Total days`) %>%
+  rename(Site = site, Year = year, `HW days (5+)` = `MHW days`) %>%
   select (Site, Year, Days, Events, `HW days (5+)`,`Min days`,`Max days`,
           `Mean intensity`,`Var intensity`,`Max intensity`)
 
