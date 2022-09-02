@@ -143,23 +143,23 @@ c1 = RColorBrewer::brewer.pal(12,"Paired")
 # functionalized...
 plot_mhw <- function(dfile){
   t1 = grep("2012-01-01", dfile$climatology$t)
-  t2 = grep("2019-12-31", dfile$climatology$t)
+  t2 = grep("2021-12-31", dfile$climatology$t)
   mhw2 = dfile$climatology %>% slice(t1:t2) 
   mhw_top = mhw2
   
   ggplot(data = mhw2, aes(x = t)) +
      ylim(0,20) + 
      geom_flame(aes(y = temp, y2 = thresh, fill = "all"), show.legend = T) +
-     geom_flame(data = mhw_top, aes(y = temp, y2 = thresh, fill = "top"),  show.legend = T) +
+     geom_flame(data = mhw_top, aes(y = temp, y2 = thresh, fill = "MHW"),  show.legend = T) +
      geom_line(aes(y = temp, colour = "temp"), size = 0.50) +
      geom_line(aes(y = thresh, colour = "thresh"), size = 0.250) +
      geom_line(aes(y = seas, colour = "seas"), size = 0.50) +
-     scale_colour_manual(name = "Line Colour",
+     scale_colour_manual(name = "",
                       values = c("temp" = "grey", 
                                  "thresh" =  c1[6], 
                                  "seas" = c1[2])) +
-     scale_fill_manual(name = "Event Colour", 
-                    values = c("top" = c1[6])) +
+     scale_fill_manual(name = "", 
+                    values = c("MHW" = c1[6])) +
      scale_x_date(date_labels = "%b %Y") +
      guides(colour = guide_legend(override.aes = list(fill = NA))) +
      labs(y = expression(paste("Temp (", degree, "C)")), x = NULL) + 
@@ -175,7 +175,14 @@ di = plot_mhw(mhw_di) + theme(legend.position = c(0.5,0.2),
 
 p_mhw <- ggarrange(nb,ca,cj,di,
                   nrow=4,
-                  align='h')
+                  align='h',
+                  hjust = c(-0.525, -1, -0.81, -0.68),
+                  vjust = 2,
+                  labels = c('a) Tatoosh Is. & Neah Bay',
+                             'b) Cape Alava',
+                             'c) Cape Johnson',
+                             'd) Destruction Island'),
+                  font.label = list(size=10, face='plain'))
 p_mhw
 
 graphics.off()
@@ -219,9 +226,17 @@ dfx = dfc %>% group_by(site, year) %>%
   summarise(Days = sum(n))
 
 MHW = hw %>% merge(dfx) %>%
-  rename(Site = site, Year = year, `HW days (5+)` = `MHW days`) %>%
-  select (Site, Year, Days, Events, `HW days (5+)`,`Min days`,`Max days`,
+  rename(Site = site, 
+         `Days above threshold` = Days,
+         `MHW events` = Events,
+         Year = year, 
+         `HW days (5+)` = `MHW days`) %>%
+  select (Site, Year, `Days above threshold`, `MHW events`, `HW days (5+)`,`Min days`,`Max days`,
           `Mean intensity`,`Var intensity`,`Max intensity`)
+
+site.order = c('Neah Bay','Cape Alava','Cape Johnson','Destruction Island')
+
+
 
 MHW
 #### write out table
