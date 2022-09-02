@@ -234,8 +234,28 @@ MHW = hw %>% merge(dfx) %>%
   select (Site, Year, `Days above threshold`, `MHW events`, `HW days (5+)`,`Min days`,`Max days`,
           `Mean intensity`,`Var intensity`,`Max intensity`)
 
+#reorder table; pain in the ass but done
 site.order = c('Neah Bay','Cape Alava','Cape Johnson','Destruction Island')
+MHW$Site = factor(MHW$Site, levels = site.order)
 
+tx = MHW %>% mutate(n=1) %>% group_by(Site) %>% summarise(N = sum(n))
+tx = tx[ order(tx$Site,site.order),]
+tx$Site = as.character(tx$Site)
+tx
+
+# probably an easier way
+so = c( rep(as.character(tx[1,1]), tx[1,2]),
+        rep(as.character(tx[2,1]), tx[2,2]),
+        rep(as.character(tx[3,1]), tx[3,2]),
+        rep(as.character(tx[4,1]), tx[4,2]))
+so
+MHW = MHW[ order(MHW$Site,so),]
+MHW$Site = as.character(MHW$Site)
+MHW$Site[MHW$Site == 'Neah Bay'] <- 'Tatoosh Is. & Neah Bay'
+
+MHW$`Mean intensity` = round(MHW$`Mean intensity`,2)
+MHW$`Var intensity` = round(MHW$`Var intensity`,2)
+MHW$`Max intensity` = round(MHW$`Max intensity`,2)
 
 
 MHW
