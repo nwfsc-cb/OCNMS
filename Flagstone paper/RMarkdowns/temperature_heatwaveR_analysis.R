@@ -63,6 +63,9 @@ tempC$year = substring(tempC$x,1,2)
 tempC$year = ifelse(tempC$year %in% 92:99, paste0(19,tempC$year), paste0(20, tempC$year))
 tempC$day = substring(tempC$id,7,nchar(tempC$id))
 
+# seems to need a fake data and to establish the column as a date 
+# before doing calculations
+tempC$date = as.Date('1992-01-01')
 for(i in 1:nrow(tempC)){
   # note: converts as days since origin, so subtract one
   tempC$date[i] = as.Date( (as.numeric(tempC$day[i])-1),
@@ -94,6 +97,14 @@ temp_plot <- ggplot( tempC_long , aes( x=date , y=degreesC ) ) +
      theme_bw() + theme_nt
      
 temp_plot
+
+df.15Cdays = tempC_long %>% group_by(site,year) %>%
+  mutate(n = ifelse(degreesC > 15, 1, 0)) %>% summarise(D15C = sum(n)) %>%
+  rename(Year = year, Site = site, `Days > 15C`= D15C) %>% 
+  mutate(Year = as.numeric(Year),
+         Site = as.character(Site) )
+
+df.15Cdays$Site[df.15Cdays$Site == "Tatoosh Island-Neah Bay" ] <- 'Tatoosh Is. & Neah B.'
 
 ####### MHW Plots ##########################
 # colnames(tempC_long)
@@ -253,13 +264,23 @@ so = c( rep(as.character(tx[1,1]), tx[1,2]),
 so
 MHW = MHW[ order(MHW$Site,so),]
 MHW$Site = as.character(MHW$Site)
-MHW$Site[MHW$Site == 'Neah Bay'] <- 'Tatoosh Is. & Neah Bay'
+MHW$Site[MHW$Site == 'Neah Bay'] <- 'Tatoosh Is. & Neah B.'
 
 MHW$`Mean intensity` = round(MHW$`Mean intensity`,2)
 MHW$`Var intensity` = round(MHW$`Var intensity`,2)
 MHW$`Max intensity` = round(MHW$`Max intensity`,2)
 
+MHW = left_join(df.15Cdays, MHW )
+
+MHW$`Days > 15C`[is.na(MHW$`Days > 15C`)] <- 0
+MHW$`Days above threshold`[is.na(MHW$`Days above threshold`)] <- 0
+MHW$`MHW events`[is.na(MHW$`MHW events`)] <- 0
+MHW$`HW days (5+)`[is.na(MHW$`HW days (5+)`)] <- 0
+
 MHW
+
+
+
 #### write out table
 
 write.csv(MHW, paste0(Fig_Loc,"Table_MHW_Intensity.csv"), row.names = FALSE)
