@@ -37,47 +37,46 @@ Encoding(text_sd)<-"UTF-8"
 
 # bring in temp data and transpose
 
-df <- data.frame(read_excel( paste0(Data_Loc,'Mean Daily OISST (C) for OCNMS sites 2003 to 2021.xlsx'), sheet = 1))
-rownames(df)
-# get just our sites
-df <- df[ df$SITE_NAME %in% c("Tatoosh Island", 'Destruction Island','Cape Alava','Cape Johnson'),]
-# remove lat long, don't need
-rownames(df) <- df$SITE_NAME
+# df <- data.frame(read_excel( paste0(Data_Loc,'Mean Daily OISST (C) for OCNMS sites 2003 to 2021.xlsx'), sheet = 1))
+df1 <- data.frame(read_excel( paste0(Data_Loc,'Mean Daily OISST (C) for OCNMS sites 1992 to 2021.xlsx'), sheet = 1))
+df2 <- data.frame(read_excel( paste0(Data_Loc,'Mean Daily OISST (C) for OCNMS sites 1992 to 2021.xlsx'), sheet = 2))
 
-df <- df[,-c(1:3)]
-tempC = data.frame(t(df))
+rownames(df1)
+# get just our sites
+df1 <- df1[ df1$SITE_NAME %in% c("Tatoosh Island", 'Destruction Island','Cape Alava','Cape Johnson'),]
+df2 <- df2[ df2$SITE_NAME %in% c("Tatoosh Island", 'Destruction Island','Cape Alava','Cape Johnson'),]
+# remove lat long, don't need
+rownames(df1) <- df1$SITE_NAME
+rownames(df2) <- df2$SITE_NAME
+
+df1 <- df1[,-c(1:3)]
+df2 <- df2[,-c(1:3)]
+
+tempC1 = data.frame(t(df1))
+tempC2 = data.frame(t(df2))
+tempC = rbind(tempC1, tempC2)
 tempC$id = rownames(tempC)
 
+### put in data correctly
+tempC$x = str_remove(tempC$id,"sst")
+tempC$year = substring(tempC$x,1,2)
+tempC$year = ifelse(tempC$year %in% 92:99, paste0(19,tempC$year), paste0(20, tempC$year))
+tempC$day = substring(tempC$id,7,nchar(tempC$id))
 
-# bring in meta data and add some columns
-
-att <- data.frame(read_excel( paste0(Data_Loc,'Mean Daily OISST (C) for OCNMS sites 2003 to 2021.xlsx'), 
-                             sheet = "Attribute descriptions"))
-# add in and fix date
-x = att$Description[ match(tempC$id, att$Attribute)]
-x_date <- substring(x , nchar(x)-10, nchar(x) )
-x_month = substring(x_date , 4,6 )
-month_num <- 1:12
-month_name <- substring(month.name, 1,3)
-z = data.frame(cbind(month_name, month_num))
-x_num = z$month_num[match(x_month,z$month_name)]
-month_number = ifelse(nchar(x_num) == 1, paste0('0',x_num), x_num)
-
-tempC$date = paste(substring(x_date, 8,11), 
-                    month_number,
-                    substring(x_date, 1,2),
-                    sep='-')
-tempC$date <- as.POSIXct(tempC$date)
+for(i in 1:nrow(tempC)){
+  # note: converts as days since origin, so subtract one
+  tempC$date[i] = as.Date( (as.numeric(tempC$day[i])-1),
+                        origin = as.Date(paste0(tempC$year[i],"-01-01")))
+}
 
 sites2 = c('Tatoosh.Island','Cape.Alava','Cape.Johnson','Destruction.Island')
      
-tempC_long <- tempC %>% select( ., -c('id')) %>%
+tempC_long <- tempC %>% select( ., -c('id','day','x')) %>%
      pivot_longer(., names_to = 'site', values_to = 'degreesC', cols = sites2) 
     
 tempC_long$site <-  stringr::str_replace_all(tempC_long$site, "\\.", " ")    
 tempC_long <- data.frame(tempC_long)
 tempC_long$date = as.Date(tempC_long$date)
-
 
 # tempC_long$site <- factor(tempC_long$site, levels = site.col$site)
 
@@ -108,10 +107,13 @@ df_ca = df_main %>% filter(site=='Cape Alava') %>% select(t,temp)
 df_cj = df_main %>% filter(site=='Cape Johnson') %>% select(t,temp)
 df_di = df_main %>% filter(site=='Destruction Island') %>% select(t,temp)
 
-ts_nb <- ts2clm(df_nb, climatologyPeriod = c("2003-01-01", "2021-12-31"))
-ts_ca <- ts2clm(df_ca, climatologyPeriod = c("2003-01-01", "2021-12-31"))
-ts_cj <- ts2clm(df_cj, climatologyPeriod = c("2003-01-01", "2021-12-31"))
-ts_di <- ts2clm(df_di, climatologyPeriod = c("2003-01-01", "2021-12-31"))
+t1 = '1992-01-03'
+t2 = '2021-12-31'
+
+ts_nb <- ts2clm(df_nb, climatologyPeriod = c(t1, t2))
+ts_ca <- ts2clm(df_ca, climatologyPeriod = c(t1, t2))
+ts_cj <- ts2clm(df_cj, climatologyPeriod = c(t1, t2))
+ts_di <- ts2clm(df_di, climatologyPeriod = c(t1, t2))
 
 mhw_nb <- detect_event(ts_nb)
 mhw_ca <- detect_event(ts_ca)
@@ -119,13 +121,13 @@ mhw_cj <- detect_event(ts_cj)
 mhw_di <- detect_event(ts_di)
 
 nb <- event_line(mhw_nb, spread = 365*4, metric = "intensity_max", 
-           start_date = "2003-01-01", end_date = "2021-12-31")
+           start_date = t1, end_date = t2)
 ca <- event_line(mhw_ca, spread = 365*4, metric = "intensity_max", 
-                 start_date = "2003-01-01", end_date = "2021-12-31") 
+                 start_date = t1, end_date = t2) 
 cj <- event_line(mhw_cj, spread = 365*4, metric = "intensity_max", 
-                 start_date = "2003-01-01", end_date = "2021-12-31")
+                 start_date = t1, end_date = t2)
 di <- event_line(mhw_di, spread = 365*4, metric = "intensity_max", 
-                 start_date = "2003-01-01", end_date = "2021-12-31")
+                 start_date = t1, end_date = t2)
 
 nb <- event_line(mhw_nb, spread = 365*4, metric = "intensity_max")
 ca <- event_line(mhw_ca, spread = 365*4, metric = "intensity_max") 
@@ -142,9 +144,9 @@ c1 = RColorBrewer::brewer.pal(12,"Paired")
 
 # functionalized...
 plot_mhw <- function(dfile){
-  t1 = grep("2012-01-01", dfile$climatology$t)
-  t2 = grep("2021-12-31", dfile$climatology$t)
-  mhw2 = dfile$climatology %>% slice(t1:t2) 
+  x1 = grep("2012-01-01", dfile$climatology$t)
+  x2 = grep(t2, dfile$climatology$t)
+  mhw2 = dfile$climatology %>% slice(x1:x2) 
   mhw_top = mhw2
   
   ggplot(data = mhw2, aes(x = t)) +
@@ -257,17 +259,15 @@ MHW$`Mean intensity` = round(MHW$`Mean intensity`,2)
 MHW$`Var intensity` = round(MHW$`Var intensity`,2)
 MHW$`Max intensity` = round(MHW$`Max intensity`,2)
 
-
 MHW
 #### write out table
 
 write.csv(MHW, paste0(Fig_Loc,"Table_MHW_Intensity.csv"), row.names = FALSE)
 
+write.csv(tempC_long, paste0(Data_Loc,"Temperature-processed-1992-2021.csv"), row.names = FALSE)
 
 
-
-
-
+############ non-mhw figures ################
 
 
 
