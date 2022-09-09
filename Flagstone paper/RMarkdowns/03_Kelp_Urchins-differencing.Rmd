@@ -154,6 +154,7 @@ df_transect$urchin_spp[df_transect$urchin_spp=='green urchin'] <- 'Green urchins
 
 df_transect$urchin_spp = factor(df_transect$urchin_spp , levels=c('Purple urchins','Red urchins','Green urchins'))
 
+
 ```
 
 # Year x Kelp - average across sites
