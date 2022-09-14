@@ -155,8 +155,8 @@ c1 = RColorBrewer::brewer.pal(12,"Paired")
 
 # functionalized...
 plot_mhw <- function(dfile){
-  x1 = grep("2012-01-01", dfile$climatology$t)
-  x2 = grep(t2, dfile$climatology$t)
+  x1 = grep("2013-01-01", dfile$climatology$t)
+  x2 = grep("2016-12-31", dfile$climatology$t)
   mhw2 = dfile$climatology %>% slice(x1:x2) 
   mhw_top = mhw2
   
