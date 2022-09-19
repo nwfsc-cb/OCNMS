@@ -16,11 +16,6 @@ library(RColorBrewer)
 library(ggplot2)
 library(ggpubr)
 library(panelr)
-#library(nloptr)
-#library(lme4)
-#library(broom)
-#library(furrr)
-#plan(multiprocess)
 
 #settings ####
 settings = readRDS(paste0(Data_Loc,'settings.rds') )
@@ -111,23 +106,37 @@ df1 = df %>% filter(site %in% c('Tatoosh Island','Destruction Island') )
 sx = data.frame(X = levels(as.factor(as.character(df1$site))))
 sx$Y = 0:1
 df1$SITE = sx$Y[ match(df1$site,sx$X)]
-df2 = df1[,c('YEAR',"DEPTH",'SITE','Nereocystis',"urchins","id")]
 
-# panelr #### 
-dfx <- panel_data(df2, id = id, wave = YEAR)
-mod1 = wbm( log1p(Nereocystis) ~ urchins |  SITE+ DEPTH + DEPTH*SITE | (1|id) , data = dfx)
-summary(mod1)
-plot(mod1)
 
-# just tatoosh, where most of the urchin action happens ####
+# panelr NEREO REWB MODEL #### 
+df_nero = df1[,c('YEAR',"DEPTH",'SITE','Nereocystis',"urchins","id")]
+dfx <- panel_data(df_nero, id = id, wave = YEAR)
+m_nereo = wbm( log1p(Nereocystis) ~ urchins | DEPTH + SITE |  (urchins|id) , use.wave = TRUE, data = dfx )
+summary(m_nereo)
+# plot(mod1)
 
-df_tatoosh = df %>% filter(site == 'Tatoosh Island' )
-df3 = df_tatoosh[,c('YEAR',"DEPTH",'Nereocystis',"urchins","id")]
-# panelr ####
-dft <- panel_data(df3, id = id, wave = YEAR)
 
-mod2 = wbm( log1p(Nereocystis) ~ urchins |  DEPTH | (1|id) , data = dft)
-summary(mod2)
-plot(mod2)
+# panelr NEREO REWB MODEL #### 
+df_pter = df1[,c('YEAR',"DEPTH",'SITE','Pterygophora',"urchins","id")]
+dfz <- panel_data(df_pter, id = id, wave = YEAR)
+m_pter = wbm( log1p(Pterygophora) ~ urchins | DEPTH + SITE |  (urchins|id) , use.wave = TRUE, data = dfz )
+summary(m_pter)
+# plot(mod1)
+
+
+
+# plot x_it-x_i ####
+
+df_b = df1 %>% group_by(id, SITE, DEPTH) %>%
+       summarise(nereo = mean(log1p(Nereocystis)),
+                 pter = mean(log1p(Pterygophora)),
+                 urchins = mean(urchins))
+
+p1 = ggplot(df_b, aes(x = urchins, y = nereo, colour = as.factor(DEPTH) ) ) +
+     geom_point()
+
+p1
+
+
 
 
