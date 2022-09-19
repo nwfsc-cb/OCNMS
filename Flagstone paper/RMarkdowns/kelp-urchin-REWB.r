@@ -15,14 +15,15 @@ library(stringr)
 library(RColorBrewer)
 library(ggplot2)
 library(ggpubr)
-library(nloptr)
-library(lme4)
-library(broom)
-library(furrr)
-plan(multiprocess)
-# settings ####
-settings = readRDS(paste0(Data_Loc,'settings.rds') )
+library(panelr)
+#library(nloptr)
+#library(lme4)
+#library(broom)
+#library(furrr)
+#plan(multiprocess)
 
+#settings ####
+settings = readRDS(paste0(Data_Loc,'settings.rds') )
 min.vis = as.numeric(settings['min.vis'])
 years = as.numeric(unlist(settings['years']))
 site.col = data.frame(settings['site.col'])
@@ -92,39 +93,41 @@ df_urchin <- df_transect %>% rename(depth = zone) %>%
                  names_from = urchin_spp,
                  values_from = urchin_density)
 
-df = full_join(df_kelp,df_urchin) %>% mutate(id = paste(site,area,depth, sep="-"))
+df = full_join(df_kelp,df_urchin) %>% 
+     mutate(ID = paste(site,area,depth,transect, sep="-"),
+            urchins = `Purple urchins` + `Red urchins` + `Green urchins`,
+            DEPTH = ifelse(depth==5,0,1),
+            YEAR = year-2015)
+
+# make a numeric i (id) ######
+idx = data.frame(X =levels(as.factor(df$ID)))
+idx$Y = 1:nrow(idx)
+df$id = idx$Y[match(df$ID,idx$X)]
+
+# tatoosh and destruction ####
+# both sites have Nereo and Urchins
+
+df1 = df %>% filter(site %in% c('Tatoosh Island','Destruction Island') )
+sx = data.frame(X = levels(as.factor(as.character(df1$site))))
+sx$Y = 0:1
+df1$SITE = sx$Y[ match(df1$site,sx$X)]
+df2 = df1[,c('YEAR',"DEPTH",'SITE','Nereocystis',"urchins","id")]
+
+# panelr #### 
+dfx <- panel_data(df2, id = id, wave = YEAR)
+mod1 = wbm( log1p(Nereocystis) ~ urchins |  SITE+ DEPTH + DEPTH*SITE | (1|id) , data = dfx)
+summary(mod1)
+plot(mod1)
+
+# just tatoosh, where most of the urchin action happens ####
+
+df_tatoosh = df %>% filter(site == 'Tatoosh Island' )
+df3 = df_tatoosh[,c('YEAR',"DEPTH",'Nereocystis',"urchins","id")]
+# panelr ####
+dft <- panel_data(df3, id = id, wave = YEAR)
+
+mod2 = wbm( log1p(Nereocystis) ~ urchins |  DEPTH | (1|id) , data = dft)
+summary(mod2)
+plot(mod2)
 
 
-
-
-
-
-# d_rewb = d %>%
-#      # get other_visits, simple math.
-#      mutate(other_visits = total_visits - news_visits - google_visits - 
-#                  facebook_visits - twitter_visits - portals_visits) %>%
-#      group_by(person_id) %>%
-#      # log(x+1) the data for columns with visits or sites
-#      mutate_at(vars(matches("_visits|_sites")),
-#                funs(log = log1p(.))) %>%
-#      # calculate means and xit-xi
-#      # between is just the mean xi
-#      # within is obs-mean or xit-xi
-#      mutate_at(vars(contains("log")),
-#                funs(betw = mean(.), within = .-mean(.))) %>%
-#      # not sure what this does
-#      ungroup %>%
-#      # something about the age metric, vi1(xit-xi)
-#      mutate_at(vars(ends_with("betw"), age), funs(c = . - mean(.))) %>%
-#      mutate(obs = 1:nrow(.))
-
-
-
-
-
-
-
-###########
-glmer_opts = glmerControl(optimizer="nloptwrap",
-                          optCtrl=list(algorithm="NLOPT_LN_BOBYQA"),
-                          calc.derivs = FALSE)
