@@ -107,11 +107,12 @@ sx = data.frame(X = levels(as.factor(as.character(df1$site))))
 sx$Y = 0:1
 df1$SITE = sx$Y[ match(df1$site,sx$X)]
 
+# Just messing around with models....
 
 # panelr NEREO REWB MODEL #### 
 df_nero = df1[,c('YEAR',"DEPTH",'SITE','Nereocystis',"urchins","id")]
 dfx <- panel_data(df_nero, id = id, wave = YEAR)
-m_nereo = wbm( log1p(Nereocystis) ~ urchins | DEPTH + SITE |  (urchins|id) , use.wave = TRUE, data = dfx )
+m_nereo = wbm( log1p(Nereocystis) ~ urchins | DEPTH  | urchins*SITE +  urchins*DEPTH + (1|id) , use.wave = TRUE, data = dfx )
 summary(m_nereo)
 # plot(mod1)
 
@@ -119,7 +120,7 @@ summary(m_nereo)
 # panelr NEREO REWB MODEL #### 
 df_pter = df1[,c('YEAR',"DEPTH",'SITE','Pterygophora',"urchins","id")]
 dfz <- panel_data(df_pter, id = id, wave = YEAR)
-m_pter = wbm( log1p(Pterygophora) ~ urchins | DEPTH + SITE |  (urchins|id) , use.wave = TRUE, data = dfz )
+m_pter = wbm( log1p(Pterygophora) ~ urchins | DEPTH + SITE |  urchins*SITE +  (1|id) , use.wave = TRUE, data = dfz )
 summary(m_pter)
 # plot(mod1)
 
