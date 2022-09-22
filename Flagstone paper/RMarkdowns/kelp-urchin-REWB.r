@@ -16,6 +16,7 @@ library(RColorBrewer)
 library(ggplot2)
 library(ggpubr)
 library(panelr)
+library(lme4)
 
 #settings ####
 settings = readRDS(paste0(Data_Loc,'settings.rds') )
@@ -89,55 +90,31 @@ df_urchin <- df_transect %>% rename(depth = zone) %>%
                  values_from = urchin_density)
 
 df = full_join(df_kelp,df_urchin) %>% 
-     mutate(ID = paste(site,area,depth,transect, sep="-"),
-            urchins = `Purple urchins` + `Red urchins` + `Green urchins`,
-            DEPTH = ifelse(depth==5,0,1),
-            YEAR = year-2015)
-
-# make a numeric i (id) ######
-idx = data.frame(X =levels(as.factor(df$ID)))
-idx$Y = 1:nrow(idx)
-df$id = idx$Y[match(df$ID,idx$X)]
-
-# tatoosh and destruction ####
-# both sites have Nereo and Urchins
-
-df1 = df %>% filter(site %in% c('Tatoosh Island','Destruction Island') )
-sx = data.frame(X = levels(as.factor(as.character(df1$site))))
-sx$Y = 0:1
-df1$SITE = sx$Y[ match(df1$site,sx$X)]
-
-# Just messing around with models....
-
-# panelr NEREO REWB MODEL #### 
-df_nero = df1[,c('YEAR',"DEPTH",'SITE','Nereocystis',"urchins","id")]
-dfx <- panel_data(df_nero, id = id, wave = YEAR)
-m_nereo = wbm( log1p(Nereocystis) ~ urchins | DEPTH  | urchins*SITE +  urchins*DEPTH + (1|id) , use.wave = TRUE, data = dfx )
-summary(m_nereo)
-# plot(mod1)
+     mutate(id_i = paste(site,area,depth,transect, sep="-"),
+            id_a = paste(site,area,depth, sep="-"),
+            urchins = `Purple urchins` + `Red urchins` + `Green urchins`)
 
 
-# panelr NEREO REWB MODEL #### 
-df_pter = df1[,c('YEAR',"DEPTH",'SITE','Pterygophora',"urchins","id")]
-dfz <- panel_data(df_pter, id = id, wave = YEAR)
-m_pter = wbm( log1p(Pterygophora) ~ urchins | DEPTH + SITE |  urchins*SITE +  (1|id) , use.wave = TRUE, data = dfz )
-summary(m_pter)
-# plot(mod1)
+df = df %>% group_by(site, depth, area) %>% 
+              mutate(B_da = mean(urchins, rm.na=TRUE)) %>%
+            group_by(site, depth, area, year) %>% 
+              mutate(B_day = mean(urchins, rm.na=TRUE)) %>%
+              mutate(W_day = B_day - B_da,
+                     W_daty = urchins - B_day)
 
+# glmer_opts = glmerControl(optimizer="nloptwrap",
+#                           optCtrl=list(algorithm="NLOPT_LN_BOBYQA"),
+#                           calc.derivs = FALSE)
 
-
-# plot x_it-x_i ####
-
-df_b = df1 %>% group_by(id, SITE, DEPTH) %>%
-       summarise(nereo = mean(log1p(Nereocystis)),
-                 pter = mean(log1p(Pterygophora)),
-                 urchins = mean(urchins))
-
-p1 = ggplot(df_b, aes(x = urchins, y = nereo, colour = as.factor(DEPTH) ) ) +
-     geom_point()
-
-p1
-
-
+df_rewb = df %>% filter(year!=2015,
+                        site == 'Tatoosh Island')
+rm(m1)
+m1 = lmer( log1p(Nereocystis) ~ depth + area + year + 
+             B_da  + W_day + B_day + W_daty +
+             (1 + W_day + W_daty | id_i),
+             data = df_rewb)
+m1
+summary(m1)
+ 
 
 
