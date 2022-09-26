@@ -122,7 +122,47 @@ df1 = df %>% # mutate(urchins = log1p(urchins)) %>% # log or don't log urchins
               mutate(W_day = B_day - B_da,
                      W_daty = urchins - B_day) 
 
+
 df_rewb = df1 %>% filter(year != 2015, site == 'Tatoosh Island')
+x = df_rewb[,c('B_da','B_day','W_day','W_daty')]
+cp_data = as.matrix(df_rewb[,c('B_da','B_day','W_day','W_daty')], ncol=4)
+
+cor(cp_data)
+
+corrplot::corrplot(cor(cp_data))
+
+install.packages("PerformanceAnalytics")
+library("PerformanceAnalytics")
+chart.Correlation(cp_data, histogram=TRUE, pch=19)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # options
