@@ -1,5 +1,7 @@
 rm(list = ls())
 
+
+# bunch of initial gibberish for-----------------------------------------------
 # Paths for  ####
 source("R-functions-ocnms.r")
 HomeFile = "C:/Users/nick.tolimieri/Documents/GitHub/OCNMS/Flagstone paper/"
@@ -98,40 +100,54 @@ df = full_join(df_kelp,df_urchin) %>%
             id_a = paste(site,area,depth, sep="-"),
             urchins = `Purple urchins` + `Red urchins` + `Green urchins`)
 
-######## REWB calculations
+######## REWB calculations start here ----------------------------------------------
 
 # B = between
 # W = within
 # a = area, d = day, y = year, t = transect
+# Y_t = kelp
+# x_t = urchins
 
-df1 = df %>% group_by(site, depth, area) %>% 
+# model to fit
+# y_t = b0 + b_d + b_a + b_y + 
+#       v1*(x_day - mean(x_da)) + v2*mean(x+da) + 
+#       v3*(x_daty = mean(x_day)) + v4*(x_day) + error
+
+
+df1 = df %>% # mutate(urchins = log1p(urchins)) %>% # log or don't log urchins
+             group_by(site, depth, area) %>% 
               mutate(B_da = mean(urchins, rm.na=TRUE)) %>%
              group_by(site, depth, area, year) %>% 
               mutate(B_day = mean(urchins, rm.na=TRUE)) %>%
               mutate(W_day = B_day - B_da,
                      W_daty = urchins - B_day) 
-             # ungroup %>%
-             # mutate_at(vars(begins_with("B_"),depth, area, year),
-             #           funs(c = . - mean(.)))
+
+df_rewb = df1 %>% filter(year != 2015, site == 'Tatoosh Island')
 
 
-df_rewb = df1 %>% filter(year!=2015,
-                        site == 'Tatoosh Island')
+# options
 
-m_nereo = lmer( log1p(Nereocystis) ~ depth + area + year + 
-             B_da  + W_day + B_day + W_daty +
-             (1 + W_day + W_daty | id_i),
-             data = df_rewb)
+m_nereo = lmer( log1p(Nereocystis) ~ depth + area + year 
+                     + B_da +  B_day + W_day + W_daty
+                     + (1 + W_day + W_daty| id_i)
+                    # + (1 + W_daty| id_i)
+                , data = df_rewb)
+
 m_nereo
-summary(m_nereo)
-anova(m_nereo) 
+sn = (summary(m_nereo))
+
+snc = data.frame(sn$coefficients)
+snc = snc %>% mutate(y = 1:nrow(.),
+                     CLup = Estimate + Std..Error*1.96,
+                     CLlo = Estimate - Std..Error*1.96,
+                     cf = rownames(snc),
+                     cf = factor(cf, levels=rev(c('depth','areaS','year','B_da','B_day','W_day'))) )
 
 
-m_ptery = lmer( log1p(Pterygophora) ~ depth + area + year + 
-                     B_da  + W_day + B_day + W_daty +
-                     (1 + W_day + W_daty | id_i),
-                data = df_rewb)
-m_ptery
-summary(m_ptery)
-anova(m_ptery) 
+p_nereo <- ggplot(snc[2:nrow(snc),], aes(x = Estimate, y = cf)) +
+     geom_point() + ylab("") +
+     geom_errorbar(data = snc[2:nrow(snc),], aes(xmin = CLlo, xmax = CLup), width=0 ) +
+     theme_bw() 
+
+p_nereo
 
