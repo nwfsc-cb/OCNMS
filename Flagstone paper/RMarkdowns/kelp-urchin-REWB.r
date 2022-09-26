@@ -67,12 +67,14 @@ df_transect$urchin_spp[df_transect$urchin_spp=='green urchin'] <- 'Green urchins
 
 df_transect$urchin_spp = factor(df_transect$urchin_spp , levels=c('Purple urchins','Red urchins','Green urchins'))
 
-# prepare REWB format ####
+# some organization ####
 
 df_kelp <- df_transect %>% rename(depth = zone) %>% 
      select(year,site,area,depth,transect,kelp_spp, kelp_density) %>%
      # the way the file is set up, there are multiple kelp obs 
      # and multiple urchin obs...take mean
+     # including transect just keeps it as a cat var
+     # doesn't actually do any math for real
      group_by(year,site,area,depth,transect,kelp_spp) %>%
      summarise(kelp_density = mean(kelp_density)) %>%
      pivot_wider(id_cols = c(year,site,area,depth,transect), 
@@ -83,6 +85,8 @@ df_urchin <- df_transect %>% rename(depth = zone) %>%
      select(year,site,area,depth,transect, urchin_spp, urchin_density) %>%
      # the way the file is set up, there are multiple kelp obs 
      # and multiple urchin obs...take mean
+     # including transect just keeps it as a cat var
+     # doesn't actually do any math for real
      group_by(year,site,area,depth,transect,urchin_spp) %>%
      summarise(urchin_density = mean(urchin_density)) %>%
      pivot_wider(id_cols = c(year,site,area,depth,transect), 
@@ -94,27 +98,40 @@ df = full_join(df_kelp,df_urchin) %>%
             id_a = paste(site,area,depth, sep="-"),
             urchins = `Purple urchins` + `Red urchins` + `Green urchins`)
 
+######## REWB calculations
 
-df = df %>% group_by(site, depth, area) %>% 
+# B = between
+# W = within
+# a = area, d = day, y = year, t = transect
+
+df1 = df %>% group_by(site, depth, area) %>% 
               mutate(B_da = mean(urchins, rm.na=TRUE)) %>%
-            group_by(site, depth, area, year) %>% 
+             group_by(site, depth, area, year) %>% 
               mutate(B_day = mean(urchins, rm.na=TRUE)) %>%
               mutate(W_day = B_day - B_da,
-                     W_daty = urchins - B_day)
+                     W_daty = urchins - B_day) 
+             # ungroup %>%
+             # mutate_at(vars(begins_with("B_"),depth, area, year),
+             #           funs(c = . - mean(.)))
 
-# glmer_opts = glmerControl(optimizer="nloptwrap",
-#                           optCtrl=list(algorithm="NLOPT_LN_BOBYQA"),
-#                           calc.derivs = FALSE)
 
-df_rewb = df %>% filter(year!=2015,
+df_rewb = df1 %>% filter(year!=2015,
                         site == 'Tatoosh Island')
-rm(m1)
-m1 = lmer( log1p(Nereocystis) ~ depth + area + year + 
+
+m_nereo = lmer( log1p(Nereocystis) ~ depth + area + year + 
              B_da  + W_day + B_day + W_daty +
              (1 + W_day + W_daty | id_i),
              data = df_rewb)
-m1
-summary(m1)
- 
+m_nereo
+summary(m_nereo)
+anova(m_nereo) 
 
+
+m_ptery = lmer( log1p(Pterygophora) ~ depth + area + year + 
+                     B_da  + W_day + B_day + W_daty +
+                     (1 + W_day + W_daty | id_i),
+                data = df_rewb)
+m_ptery
+summary(m_ptery)
+anova(m_ptery) 
 

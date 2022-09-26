@@ -2,7 +2,7 @@
 # How social network sites and other online intermediaries increase exposure to news
 # Michael Scharkow, Frank Mangold, Sebastian Stier, Johannes Breuer
 # Contact us: scharkow@uni-mainz.de
-setwd("C:/Users/nick.tolimieri/Desktop/REWB-models")
+setwd("C:/Users/nick.tolimieri/Documents/GitHub/OCNMS/Flagstone paper/RMarkdowns")
 library(nloptr)
 library(lme4)
 library(broom)
@@ -58,36 +58,21 @@ tab1
 
 # REWB transformations  --------------------------------------------------------------------
 
-# d_rewb = d %>%
-#   mutate(other_visits = total_visits - news_visits - google_visits - 
-#               facebook_visits - twitter_visits - portals_visits) %>%
-#   group_by(person_id) %>%
-#   mutate_at(vars(matches("_visits|_sites")),
-#             funs(log = log1p(.))) %>%
-#   mutate_at(vars(contains("log")),
-#             funs(betw = mean(.), within = .-mean(.))) %>%
-#   ungroup %>%
-#   mutate_at(vars(ends_with("betw"), age), funs(c = . - mean(.))) %>%
-#   mutate(obs = 1:nrow(.))
-
 d_rewb = d %>%
-     # get other_visits, simple math.
-     mutate(other_visits = total_visits - news_visits - google_visits - 
-                 facebook_visits - twitter_visits - portals_visits) %>%
-     group_by(person_id) %>%
-     # log(x+1) the data for columns with visits or sites
-     mutate_at(vars(matches("_visits|_sites")),
-               funs(log = log1p(.))) %>%
-     # calculate means and xit-xi
-     # between is just the mean xi
-     # within is obs-mean or xit-xi
-     mutate_at(vars(contains("log")),
-               funs(betw = mean(.), within = .-mean(.))) %>%
-     # not sure what this does
-     ungroup %>%
-     # something about the age metric, vi1(xit-xi)
-     mutate_at(vars(ends_with("betw"), age), funs(c = . - mean(.))) %>%
-     mutate(obs = 1:nrow(.))
+  mutate(other_visits = total_visits - news_visits - google_visits -
+              facebook_visits - twitter_visits - portals_visits) %>%
+  group_by(person_id) %>%
+  mutate_at(vars(matches("_visits|_sites")),
+            funs(log = log1p(.))) %>%
+  mutate_at(vars(contains("log")),
+            funs(betw = mean(.), within = .-mean(.))) %>%
+  ungroup %>%
+  mutate_at(vars(ends_with("betw"), age), funs(c = . - mean(.))) %>%
+  mutate(obs = 1:nrow(.))
+
+# does c stand for centered?  looks to be that way. 
+# the grand mean from each between.
+
 
 # REWB models --------------------------------------------------------------
 
