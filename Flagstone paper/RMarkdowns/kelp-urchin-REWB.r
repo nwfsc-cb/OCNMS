@@ -177,7 +177,6 @@ spc = spc %>% mutate(y = 1:nrow(.),
                      cf = rownames(snc),
                      cf = factor(cf, levels=rev(c('depth10','areaS','year','B_da','W_day', 'W_daty'))) )
 
-
 p_ptery <- ggplot(snc[2:nrow(spc),], aes(x = Estimate, y = cf)) +
   geom_point() + ylab("") +
   geom_errorbar(data = spc[2:nrow(spc),], aes(xmin = CLlo, xmax = CLup), width=0 ) +
@@ -185,7 +184,6 @@ p_ptery <- ggplot(snc[2:nrow(spc),], aes(x = Estimate, y = cf)) +
   theme_bw() 
 
 p_ptery
-
 
 graphics.off()
 jpeg( paste0(Fig_Loc,'REWB_coefficients.jpg'), units = 'in', res=300, width = 5, height = 5)
@@ -198,8 +196,31 @@ ggarrange(p_nereo, p_ptery,
 )
 dev.off()
 
+# output sections for a table -----------
+sn_f = data.frame(sn$coefficients)
+sn_f$Term = rownames(sn_f)
+sn_f[sn_f=='(Intercept)'] <- 'Intercept'
 
+sn_f = sn_f %>% select(Term, Estimate, Std..Error,t.value) %>%
+  rename(`s.e.` = Std..Error, `t-value` = t.value) 
+sn_r = data.frame(sn$varcor) %>% select(grp, var1, vcov, sdcor) 
+sn_r = sn_r[c(1,2,4,5,7),]
+sn_r[sn_r=='(Intercept)'] <- 'Intercept'
 
+write.csv(sn_r, paste0(Fig_Loc,"REWB-Nereo-random.csv"), row.names = FALSE)
+write.csv(sn_f, paste0(Fig_Loc,"REWB-Nereo-fixed.csv"), row.names = FALSE)
+
+sp_f = data.frame(sp$coefficients)
+sp_f$Term = rownames(sp_f)
+sp_f[sp_f=='(Intercept)'] <- 'Intercept'
+sp_f = sp_f %>% select(Term, Estimate, Std..Error,t.value) %>%
+  rename(`s.e.` = Std..Error, `t-value` = t.value) 
+sp_r = data.frame(sp$varcor) %>% select(grp, var1, vcov, sdcor) 
+sp_r = sp_r[c(1,2,4,5,7),]
+sp_r[sp_r=='(Intercept)'] <- 'Intercept'
+
+write.csv(sp_r, paste0(Fig_Loc,"REWB-Ptery-random.csv"), row.names = FALSE)
+write.csv(sp_f, paste0(Fig_Loc,"REWB-Ptery-fixed.csv"), row.names = FALSE)
 
 
 
