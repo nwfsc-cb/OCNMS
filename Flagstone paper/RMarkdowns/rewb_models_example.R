@@ -66,12 +66,9 @@ d_rewb = d %>%
             funs(log = log1p(.))) %>%
   mutate_at(vars(contains("log")),
             funs(betw = mean(.), within = .-mean(.))) %>%
-  ungroup %>%
+  ungroup %>% # does c stand for centered?  looks to be that way. 
   mutate_at(vars(ends_with("betw"), age), funs(c = . - mean(.))) %>%
   mutate(obs = 1:nrow(.))
-
-# does c stand for centered?  looks to be that way. 
-# the grand mean from each between.
 
 
 # REWB models --------------------------------------------------------------

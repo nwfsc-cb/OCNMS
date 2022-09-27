@@ -117,77 +117,89 @@ df = full_join(df_kelp,df_urchin) %>%
 df1 = df %>% # mutate(urchins = log1p(urchins)) %>% # log or don't log urchins
              group_by(site, depth, area) %>% 
               mutate(B_da = mean(urchins, rm.na=TRUE)) %>%
+             ungroup %>% # just to be careful
              group_by(site, depth, area, year) %>% 
               mutate(B_day = mean(urchins, rm.na=TRUE)) %>%
-              mutate(W_day = B_day - B_da,
-                     W_daty = urchins - B_day) 
+             ungroup %>% # just to be careful
+              mutate(W_day = B_day - B_da) %>%
+              mutate(W_daty = urchins - B_day) 
 
 
-df_rewb = df1 %>% filter(year != 2015, site == 'Tatoosh Island')
-x = df_rewb[,c('B_da','B_day','W_day','W_daty')]
-cp_data = as.matrix(df_rewb[,c('B_da','B_day','W_day','W_daty')], ncol=4)
+df_rewb = df1 %>% filter(year != 2015, site == 'Tatoosh Island') %>%
+  mutate(#year = as.factor(year),
+         depth = as.factor(depth),
+         area = as.factor(area))
 
-cor(cp_data)
-
-corrplot::corrplot(cor(cp_data))
-
-install.packages("PerformanceAnalytics")
-library("PerformanceAnalytics")
-chart.Correlation(cp_data, histogram=TRUE, pch=19)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# options
+# REWB models ---------------------------------------------------------------------
 
 m_nereo = lmer( log1p(Nereocystis) ~ depth + area + year 
-                     + B_da +  B_day + W_day + W_daty
-                     + (1 + W_day + W_daty| id_i)
-                    # + (1 + W_daty| id_i)
+                     + B_da + W_day + W_daty
+                     + (1 + W_day | id_a)
+                     + (1 + W_daty| id_i)
                 , data = df_rewb)
 
 m_nereo
-sn = (summary(m_nereo))
+(sn = (summary(m_nereo)))
 
+m_ptery = lmer( log1p(Pterygophora) ~ depth + area + year 
+                + B_da + W_day + W_daty
+                + (1 + W_day | id_a)
+                + (1 + W_daty| id_i)
+                , data = df_rewb)
+
+m_ptery
+(sp = (summary(m_ptery)))
+
+
+# plot coefficients ----------------------------------------------------------------
 snc = data.frame(sn$coefficients)
 snc = snc %>% mutate(y = 1:nrow(.),
                      CLup = Estimate + Std..Error*1.96,
                      CLlo = Estimate - Std..Error*1.96,
                      cf = rownames(snc),
-                     cf = factor(cf, levels=rev(c('depth','areaS','year','B_da','B_day','W_day'))) )
+                     cf = factor(cf, levels=rev(c('depth10','areaS','year','B_da','W_day', 'W_daty'))) )
 
 
 p_nereo <- ggplot(snc[2:nrow(snc),], aes(x = Estimate, y = cf)) +
      geom_point() + ylab("") +
      geom_errorbar(data = snc[2:nrow(snc),], aes(xmin = CLlo, xmax = CLup), width=0 ) +
+     geom_vline(xintercept = 0, color = 'red', linetype = 'dotted' ) +
      theme_bw() 
 
 p_nereo
+
+# ----------------
+
+spc = data.frame(sp$coefficients)
+spc = spc %>% mutate(y = 1:nrow(.),
+                     CLup = Estimate + Std..Error*1.96,
+                     CLlo = Estimate - Std..Error*1.96,
+                     cf = rownames(snc),
+                     cf = factor(cf, levels=rev(c('depth10','areaS','year','B_da','W_day', 'W_daty'))) )
+
+
+p_ptery <- ggplot(snc[2:nrow(spc),], aes(x = Estimate, y = cf)) +
+  geom_point() + ylab("") +
+  geom_errorbar(data = spc[2:nrow(spc),], aes(xmin = CLlo, xmax = CLup), width=0 ) +
+  geom_vline(xintercept = 0, color = 'red', linetype = 'dotted' ) +
+  theme_bw() 
+
+p_ptery
+
+
+graphics.off()
+jpeg( paste0(Fig_Loc,'REWB_coefficients.jpg'), units = 'in', res=300, width = 5, height = 5)
+ggarrange(p_nereo, p_ptery,
+          ncol = 2,
+          labels = c( 'Nereocystis','Pterygophora'),
+          font.label = list(size=10, face="italic"),
+          hjust = -1.2,
+          vjust = 2
+)
+dev.off()
+
+
+
+
+
 
