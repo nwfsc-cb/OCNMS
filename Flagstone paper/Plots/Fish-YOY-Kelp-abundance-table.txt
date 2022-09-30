@@ -1,0 +1,30 @@
+Linear mixed model fit by REML ['lmerMod']
+Formula: TOTyoy ~ Macro + Nereo + Ptery + (1 | year_factor) + (1 | site)
+   Data: dfa
+Weights: fish.area.weight
+
+REML criterion at convergence: 233.7
+
+Scaled residuals: 
+     Min       1Q   Median       3Q      Max 
+-2.39069 -0.60635 -0.02924  0.66701  2.32934 
+
+Random effects:
+ Groups      Name        Variance Std.Dev.
+ year_factor (Intercept) 1.81620  1.3477  
+ site        (Intercept) 0.06144  0.2479  
+ Residual                1.74497  1.3210  
+Number of obs: 64, groups:  year_factor, 5; site, 5
+
+Fixed effects:
+            Estimate Std. Error t value
+(Intercept)  1.50846    0.66828   2.257
+Macro       -0.18709    0.14257  -1.312
+Nereo        0.06354    0.11821   0.538
+Ptery       -0.06843    0.14786  -0.463
+
+Correlation of Fixed Effects:
+      (Intr) Macro  Nereo 
+Macro -0.129              
+Nereo -0.109  0.238       
+Ptery -0.189 -0.147 -0.418

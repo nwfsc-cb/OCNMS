@@ -10,7 +10,7 @@ glimpse(swath)
 
 kelp_codes = data.frame(read.csv( here::here('Flagstone paper','Data',"spp_codes_kelp.csv") ))
 
-# Nick made kelp_codes. Jameal is changing them so that only Macro and Nereo are canopy
+# Nick made kelp_codes. Jameal is changing them so that only Macro and Nereo are canopy. It is debatable where Egregia belongs.
 kelp_codes <- kelp_codes %>%
   rename(functional_group = functinal_group) %>%
   mutate(

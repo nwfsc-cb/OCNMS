@@ -143,7 +143,7 @@ run.multivar.nt <- function(data.file, drop2015 = TRUE, spp, data.transform = NA
 ### Plot capscale ordinations/summarize data ####
 
 Plot_Ordination <- function( data.file , ord.file, plot.comm.scores=FALSE, comm.col = 'black',Yform, 
-                             Xform, pval=NA, pval.pos ="topright",method = "CAPdiscrim",
+                             Xform, pval=NA, pval.pos ="bottomright",method = "CAPdiscrim",
                              Xlim=NA, Ylim=NA, Xlim2 = NA, Ylim2=NA, Xlab = "Axis 1", Ylab = "Axis 2", 
                              min.score = 0.0, plot.species = TRUE, spp.separate = FALSE,
                              scores.cex = 1,scores.font=1, fig.legend=NA, legend.pos='topleft', 
@@ -171,7 +171,7 @@ Plot_Ordination <- function( data.file , ord.file, plot.comm.scores=FALSE, comm.
      segments( 0, par()$usr[3],0,par()$usr[4], lty = 'dotted', lwd = 0.5)
      
      # spp spp scores
-     if(!is.na(fig.legend)){legend(legend.pos, legend = fig.legend, bty='n')}
+     if(!is.na(fig.legend)){legend(legend.pos, legend = fig.legend, bty='n', inset = c(-0.05 ,0))}
      if(!is.na(pval)){legend(pval.pos, legend = pval, bty="n")}
      
      # for plotting dependent community scores from capscale

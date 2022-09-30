@@ -28,7 +28,12 @@ library(knitr)
 library(tidyverse)
 library(stringr)
 library(RColorBrewer)
-library(ggpubr) 
+library(readxl)
+library(lubridate)
+library(ggplot2)
+library(stringr)
+library(lemon)
+library(ggpubr)
 # library(tidyr)
 # library(dplyr)
 library(tinytex) # for pdf output
@@ -238,7 +243,8 @@ fish4 <-  fish1d %>% group_by(site,year,species,taxa) %>%
               summarise(Mean=mean(Count, na.rm = TRUE),
                         SD=sd(Count),
                         N=length(Count),
-                        SE=SD/sqrt(N),SE_var=SE^2)
+                        SE=SD/sqrt(N),
+                        SE_var=SE^2)
 saveRDS(fish4, paste0(Data_Loc,'Summarized_Data_Fish_site_year_species.rds'))
 
 fish5 <- fish4 %>% group_by(year, species, taxa) %>%
@@ -254,8 +260,11 @@ saveRDS(fish5, paste0(Data_Loc,'Summarized_Data_Fish_year_species.rds'))
 # greenlings lumped in current plots
 
 fish_taxa_Year_site <-  fish_transect %>% group_by(site,year,taxa) %>%
-  summarise(Mean=mean(Count, na.rm = TRUE),SD=sd(Count),N=length(Count),
-            SE=SD/sqrt(N),SE_var=SE^2)
+  summarise(Mean=mean(Count, na.rm = TRUE),
+            SD=sd(Count),
+            N=length(Count),
+            SE=SD/sqrt(N),
+            SE_var=SE^2)
 saveRDS(fish_taxa_Year_site, paste0(Data_Loc,'Summarized_Data_Fish_site_year_taxa.rds'))
 
 fish_taxa_year <-fish_taxa_Year_site %>% group_by(year,taxa) %>%
@@ -267,12 +276,6 @@ fish_taxa_year <-fish_taxa_Year_site %>% group_by(year,taxa) %>%
 saveRDS(fish_taxa_year, paste0(Data_Loc,'Summarized_Data_Fish_year_taxa.rds'))
 
 #### for multivariate stuff below
-
-
-
-
-
-
 
 ```
 
@@ -308,8 +311,8 @@ fish_taxa_year <- x
 
 fish.col = c(RColorBrewer::brewer.pal(n = 12, name = "Paired"))
 
-SP.yoy <- c("SEBYTyoy", "Black & Yellowtail",  'black',
-            "SECAyoy", "Copper",               fish.col[12],
+SP.yoy <- c("SEBYTyoy", "YTB",  'black',
+            "SECAyoy", "CQB",               fish.col[12],
             #"SEMAyoy", "Quillback",            fish.col[10],
             "SEMYyoy", "Blue" ,                fish.col[2],
             #"SENEyoy", "China",                fish.col[10],
@@ -332,7 +335,7 @@ yoy.plot <- ggplot(fish_taxa_year %>% filter(taxa %in% SP.yoy$taxa) %>% left_joi
     scale_x_continuous(breaks=seq(2015,2021)) +
     #scale_color_viridis_d(option="plasma", end=0.75) + 
     scale_color_manual(values=SP.yoy$col)+
-    ylab("No. rockfish YOY per transect") +
+    ylab(expression("Rockfish juveniles per 120 m"^3)) +
     xlab("") +
     theme_bw() + theme_nt +
     theme(legend.position = c(0.7, 0.8) )
@@ -346,22 +349,6 @@ yoy.plot
 Fish depth = `r fish.depth`
 
 ```{r fish, fig.width=5, fig.height=3.5}
-# recalculate here for easy changes and to have it obvious
-# x <-  fish_transect %>% group_by(site,year,taxa) %>%
-#       summarise(Mean=mean(Count, na.rm = TRUE),
-#                 SD=sd(Count),
-#                 N=length(Count),
-#                 SE=SD/sqrt(N),
-#                 SE_var=SE^2)  %>%
-#       group_by(year,taxa) %>%
-#       summarise(grand_sum = sum(Mean, na.rm = TRUE),
-#             N=length(Mean),
-#             grand_mean = grand_sum / N,
-#             grand_sum_var = sum(SE_var, na.rm = TRUE), 
-#             grand_SE = sqrt(grand_sum_var / N^2))
-# fish_taxa_year <- x
-
-# fish_taxa_year <- readRDS(paste0(Data_Loc,'Summarized_Data_Fish_year_taxa.rds'))
 
 fish.col = c(RColorBrewer::brewer.pal(n = 12, name = "Paired"))
 
@@ -369,7 +356,7 @@ fish.taxa <- c("OPEL", "Lingcod",     fish.col[10],
                "HEXA", "Greenlings", fish.col[4],
                "SCMA" ,"Cabazon",     fish.col[8],
                "SECA", "Copper RF",   fish.col[12],
-               "SENE", "Blue RF",     fish.col[2],
+               "SENE", "China RF",     fish.col[2],
                "SEFL", "Yellowtail RF", fish.col[7],
                "SEME", 'Black RF',    'black')
 
@@ -389,31 +376,14 @@ fish.plot <- ggplot(fish_taxa_year %>% filter(taxa %in% fish.taxa$taxa) %>% left
   scale_x_continuous(breaks=seq(2015,2021)) +
   #scale_color_viridis_d(option="plasma", end=0.75) + 
   scale_color_manual(values=fish.taxa$col)+
-  ylab("No. fish per transect") +
+  ylab(expression("Number per 120 m"^3)) +
   xlab("") +
   theme_bw() + theme_nt + 
   theme(legend.position = c(0.2, 0.8) )
         
 fish.plot
 ```
-## Fish and YOY plot 
 
-Note: I have yellowtail here, but they are not in the multivariate stuff since we reall only saw them once.
-
-```{r fish-yoy, fig.width=3.5, fig.height=6}
-
-ggarrange(
-  fish.plot,yoy.plot,
-  labels = c('a) Fish','b) YOY'), 
-  # labels = 'auto',
-  font.label = list(face='plain', size = 10),
-  hjust = -1.25,
-  vjust = 2,
-  nrow = 2, ncol=1,
-  align = 'v'
-)
-
-```
 
 ## Fish and YOY facet by site x year
 
@@ -433,7 +403,7 @@ ggplot(fish_ys , aes(x = year, y = Mean, color = site)) +
           scale_x_continuous(breaks=seq(2015,2021)) +
           scale_color_manual(values=site.col$col)+
           xlab("")+
-          ylab(" Number per 30x2 m transect")+
+          ylab(expression("Number per 120 m"^3))+
           # facet_grid(rows = 'taxa', scales="free_y") +
           facet_wrap( ~ name, scales="free",nrow=4) +
           theme_bw() + theme_nt +
@@ -459,7 +429,7 @@ ggplot(yoy_ys , aes(x = year, y = Mean, color = site)) +
           scale_x_continuous(breaks=seq(2015,2021)) +
           scale_color_manual(values=site.col$col)+
           xlab("")+
-          ylab(" Number per 30x2 m transect")+
+          ylab(expression("Rockfish juveniles per 120 m"^3))+
           # facet_grid(rows = 'taxa', scales="free_y") +
           facet_wrap( ~ name, scales="free",nrow=3) +
           theme_bw() + theme_nt + 
@@ -820,11 +790,21 @@ invert_area <- invert_transect %>%
               SD = sd(density), 
               N =length(year),
               SE= SD/sqrt(N) ) 
+
+
+pycnos = invert_transect %>% 
+  group_by(year) %>% 
+  filter(., taxa == 'Pycnopodia') %>%
+  summarise(no = sum(total.count))
+
+pycnos
+
+
 ```
 
 ## Summed Urchins 
 
-Ole will want to clean up the figure
+
 
 ```{r total-urchins, fig.width=5, fig.height=3.5}
   # Zoom in on urchins
@@ -864,7 +844,7 @@ ggplot() +
 
 
 tat_urchin2019 = urchin_zone[urchin_zone$year==2019 & urchin_zone$site =='Tatoosh Island',]
-
+tat_urchin2021 = urchin_zone[urchin_zone$year==2021 & urchin_zone$site =='Tatoosh Island',]
 
 ```
 
@@ -916,12 +896,15 @@ urchin_plot_all <- ggplot(data=urchins_all,aes(x=year, y= mean.density, col = si
                     scale_color_manual(values = site.col$col) +
                     scale_x_continuous("",breaks=seq(2015,2021)) +
                     
-                    scale_y_continuous(expression("Urchin density (m"^-2*")")) +
+                    scale_y_continuous(expression("Urchins m"^-2)) +
                     theme_bw()+ theme_nt
 urchin_plot_all + rotate_x_text(angle = 45)
 
 
 tat_purpleurchins2019 = urchins_all[urchins_all$year==2019 & 
+                                    urchins_all$site =='Tatoosh Island' &
+                                    urchins_all$taxa == 'Purple urchin',]
+tat_purpleurchins2021 = urchins_all[urchins_all$year==2021 & 
                                     urchins_all$site =='Tatoosh Island' &
                                     urchins_all$taxa == 'Purple urchin',]
 ```
@@ -1049,7 +1032,7 @@ stars_year <- ggplot() +
       scale_y_continuous(expression("Sea stars m"^-2) ) + 
                           
       # scale_color_viridis_d(option="plasma",end=0.75)+
-      scale_color_manual(values = star.col, labels = c('Blood star', 'Brood star',
+      scale_color_manual(values = star.col, labels = c('Blood star', 'Brooding star',
                                     'Large star', 'Leather star',
                                     'Medium star',
                                     bquote(italic('Pisaster')),
@@ -1090,7 +1073,7 @@ stars_plot_all <- ggplot(data=stars_all,aes(x=year, y= mean.density, col = site)
                     facet_grid( taxa ~ zone, scales="free_y") +
                     scale_color_manual(values = site.col$col) +
                     scale_x_continuous("Year", breaks=seq(2015,2021)) +
-                    scale_y_continuous(expression("Urchin density (m"^-2*")")) +
+                    scale_y_continuous(expression("Urchins m"^-2)) +
                     theme_bw()+ theme_nt
                    
   
@@ -1199,6 +1182,43 @@ saveRDS(invert_kelp_wide, file=paste0(Data_Loc,'Data_Inverts_Kelp_transect_wide.
 ```
 
 
+```{r tables-of-samples}
+
+fish_wide_transect
+kelp_wide_transect
+invert_wide_transect
+
+
+
+fish_table = fish_wide_transect %>%
+  mutate(n_tran = 1) %>%
+  group_by(year,site) %>%
+  summarise(N_Transects = sum(n_tran))
+
+kelp_table = kelp_wide_transect %>%
+  mutate(n_tran = 1) %>%
+  group_by(year,site) %>%
+  summarise(N_Transects = sum(n_tran))
+
+invert_table = invert_wide_transect %>%
+  mutate(n_tran = 1) %>%
+  group_by(year,site) %>%
+  summarise(N_Transects = sum(n_tran))
+
+samples_table <- full_join(fish_table, kelp_table, by=c('year','site')) %>%
+  full_join(., invert_table, by=c('year','site'))
+colnames(samples_table) <- c('Year','Site','Fish','Kelp','Invertebrates')
+samples_table = samples_table[order(samples_table$Year),]
+samples_table
+write.csv(samples_table, paste0(Fig_Loc,'Table-sampling-effort.csv'), row.names = FALSE)
+
+```
+
+
+
+
+
+
 ## 
 
 *combind fish and kelp in wide format using fish COUNT data.
@@ -1294,32 +1314,34 @@ yoy.spp =    c("SECAyoy", "SEPIyoy", "SEMYyoy", "SEBYTyoy","RYOY")
 
 ```{r fish-table , results='asis' }
 
-fish_total <- fish_transect %>% group_by(species) %>%
+fish_total <- fish_transect %>% group_by(species, size_class) %>%
                                 summarise(Total = sum(Count, na.rm = TRUE)) %>%
                                 left_join(.,fish_codes, by = c('species' = 'code'))
-# fish_total = na.omit(fish_total)
 
 fish_total$spp <- str_replace(fish_total$spp, "_", " ")
 fish_total$com_name <- str_replace(fish_total$com_name, "_", " ")
 fish_total$spp <- str_replace(fish_total$spp, "[.]", " ")
 
-fish_total <- fish_total[,c('spp', 'com_name', 'group', 'Total')] %>%
+fish_total <- fish_total[,c('spp', 'com_name', 'size_class', 'group', 'Total')] %>%
               rename(Species = spp) %>%
               rename('Common name' = com_name) %>%
               rename (Group=group)
-library(tinytex)
-#library(xtable)
-library(htmlTable)
 
-# fish_total <- data.frame(fish_total)
-#print(xtable(fish_total , type='html'))
+fish_total$Species = stringr::str_replace(fish_total$Species, 'yoy', 'Juveniles')
+fish_total$`Common name` = stringr::str_replace(fish_total$`Common name`, 'yoy', 'Juveniles')
+
 
 fish_total <- fish_total[ order(fish_total$Total, decreasing = TRUE),]
 head(fish_total)
 
-write.csv(fish_total, paste0(Fig_Loc,"Table-Fish-Table.csv"))
+fish_adults =    fish_total %>% filter(size_class %in% c(NA,'large')) %>% 
+  select(Species, `Common name`,Total)
+fish_juveniles = fish_total %>% filter(size_class == 'small') %>% 
+  select(Species, `Common name`,Total)
 
-#knitr::kable(fish_total)
+
+write.csv(fish_adults, paste0(Fig_Loc,"Table-Fish-Adults.csv"))
+write.csv(fish_juveniles, paste0(Fig_Loc,"Table-Fish-Juveniles.csv"))
 
 ```
 
@@ -1328,15 +1350,16 @@ write.csv(fish_total, paste0(Fig_Loc,"Table-Fish-Table.csv"))
 ```{r kelp-table}
 
 kelp_total <- kelp_transect %>% group_by(species) %>%
-                                summarise(Density = mean(density, na.rm = TRUE)) %>%
+                                summarise(Density = mean(density, na.rm = TRUE),
+                                          SD = sd(density, na.rm = TRUE)) %>%
                                 left_join(.,kelp_codes, by = c('species' = 'species')) %>%
                                 rename(spp = species) %>%
                                 rename(Species = name2) 
                                 
-kelp_total <- kelp_total[,c('Species','Density')]
+kelp_total <- kelp_total[,c('Species','Density','SD')]
 kelp_total <- kelp_total[order(kelp_total$Density, decreasing = TRUE ),]
 
-# head(kelp_total)
+head(kelp_total)
 # output csv for table in supplement
 write.csv(kelp_total, paste0(Fig_Loc,"Table-Kelp-Table.csv"))
 
@@ -1348,15 +1371,13 @@ write.csv(kelp_total, paste0(Fig_Loc,"Table-Kelp-Table.csv"))
 invert_total <- invert_transect %>% rename(SPP = species) %>%
                                 group_by(SPP) %>%
                                 summarise(Density = mean(density, na.rm = TRUE), 
-                                          Total = sum(total.count, na.rm = TRUE)) %>%
+                                          SD = sd(density, na.rm = TRUE)) %>%
                                 left_join(.,swath_codes, by = c('SPP' = 'CLASSCODE')) %>%
                                 rename(Taxa = taxa) %>%
                                 rename(Species = species)
-
-
                                 
-invert_total <- invert_total[,c('Species','Taxa','Total','Density')]
-invert_total <- invert_total[ order (invert_total$Total, decreasing = TRUE ),]
+invert_total <- invert_total[,c('Species','Taxa','Density','SD')]
+invert_total <- invert_total[ order (invert_total$Density, decreasing = TRUE ),]
 
 head(invert_total)
 # output csv for table in supplement
@@ -1453,11 +1474,11 @@ fish.plot   <- fish.plot  + theme(legend.position = c(0.35 , 0.75) ) + guides(co
 yoy.plot    <- yoy.plot + theme(legend.position = c(0.70 , 0.70) )
 
 ggarrange(
-  canopy.kelp, kelp_coast, urchin.plot, stars_year, fish.plot,yoy.plot,
+  kelp_coast, urchin.plot, stars_year, fish.plot,yoy.plot,
   labels = c('a)','b)','c)','d)', 'e)', 'f)'), 
   # labels = 'auto',
   font.label = list(face='plain', size = 10),
-  hjust = c(rep(-6,5),-9),
+  hjust = c(rep(-5.5,5),-9),
   vjust = 2,
   nrow = 3, ncol=2,
   align = 'v'
@@ -1466,6 +1487,144 @@ ggarrange(
 
 ```
 
+# Combined Kelp and Temperature figure
+
+```{r sst}
+
+Degree_C <-"\u00B0C"
+Encoding(Degree_C)<-"UTF-8"
+
+text_sd<-"\u00b1 1.0 s.d."
+Encoding(text_sd)<-"UTF-8"
+
+df <- data.frame(read_excel( paste0(Data_Loc,
+      'Mean Daily OISST (C) for OCNMS sites 2003 to 2021.xlsx'), sheet = 1))
+rownames(df)
+# get just our sites
+df <- df[ df$SITE_NAME %in% c("Tatoosh Island", 'Destruction Island','Cape Alava','Cape Johnson'),]
+# remove lat long, don't need
+rownames(df) <- df$SITE_NAME
+
+df <- df[,-c(1:3)]
+tempC = data.frame(t(df))
+tempC$id = rownames(tempC)
+
+
+# bring in meta data and add some columns
+
+att <- data.frame(read_excel( paste0(Data_Loc,'Mean Daily OISST (C) for OCNMS sites 2003 to 2021.xlsx'), 
+                             sheet = "Attribute descriptions"))
+# add in and fix date
+x = att$Description[ match(tempC$id, att$Attribute)]
+x_date <- substring(x , nchar(x)-10, nchar(x) )
+x_month = substring(x_date , 4,6 )
+month_num <- 1:12
+month_name <- substring(month.name, 1,3)
+z = data.frame(cbind(month_name, month_num))
+x_num = z$month_num[match(x_month,z$month_name)]
+month_number = ifelse(nchar(x_num) == 1, paste0('0',x_num), x_num)
+
+tempC$date = paste(substring(x_date, 8,11), 
+                    month_number,
+                    substring(x_date, 1,2),
+                    sep='-')
+tempC$date <- as.POSIXct(tempC$date)
+
+sites2 = c('Tatoosh.Island','Cape.Alava','Cape.Johnson','Destruction.Island')
+     
+tempC_long <- tempC %>% select( ., -c('id')) %>%
+     pivot_longer(., names_to = 'site', values_to = 'degreesC', cols = sites2) 
+    
+tempC_long$site <-  stringr::str_replace_all(tempC_long$site, "\\.", " ")    
+tempC_long <- data.frame(tempC_long)
+tempC_long$date = as.Date(tempC_long$date)
+
+
+# tempC_long$site <- factor(tempC_long$site, levels = site.col$site)
+
+tempC_long <- tempC_long[tempC_long$site != 'Neah Bay',]
+tempC_long$site[tempC_long$site == 'Tatoosh Island'] <- "Tatoosh Island-Neah Bay"
+tempC_long$site <- factor(tempC_long$site, 
+                          levels = sites)
+
+################# Temp by season #################################
+# to help select months for plotting etc.
+# probably don't need to change name
+df_long = tempC_long %>%
+     mutate(month = lubridate::month(date), 
+            year = lubridate::year(date)) 
+
+################
+
+df_month = df_long %>%
+    group_by(year,month) %>%
+    summarise(meanT = mean(degreesC), sdT = sd(degreesC))
+
+df_max_month <- df_month %>% 
+    group_by(year) %>% 
+    summarise(maxT = max(meanT))
+df_max_month$sdT = df_month$sdT[match(df_max_month$maxT, df_month$meanT)]
+
+plot5 <- ggplot(df_max_month, aes(x = year, y = maxT) ) +
+    geom_ribbon( aes(ymin = maxT-sdT, ymax = maxT +sdT ), 
+                 fill='grey',linetype = 0, alpha=0.3) +
+    geom_line() + 
+    xlab("") +
+    xlim( 2003,2021 )+
+    ylab(paste0("Mean SST of warmest month ", Degree_C))+
+    scale_x_continuous( breaks = seq(2005,2020,5), minor_breaks = 2003:2021 )
 
 
 
+plot5 + theme_bw()+theme_nt
+
+
+```
+
+
+```{r kelp-canopy-full}
+
+canopy = readRDS( paste0(Data_Loc, "Data_Kelp_Canopy_Long.rds") )
+
+
+canopy$species = factor(canopy$species, levels = c('Total','Macrocystis','Nereocystis'))
+
+canopy.kelp.long <- ggplot( canopy %>% filter(., site == 'Coastwide') %>% filter(.,year %in% 2003:2021), 
+                       aes(x=year, y = canopy_ha, color = species)) +
+                geom_point() +
+                geom_line() +
+                xlab("") +
+                scale_x_continuous(breaks = seq(2005,2020,5), 
+                                   minor_breaks = 2003:2022, 
+                                   limits = c(2003,2021) ) +
+                scale_y_continuous("Canopy area (ha)") +
+                scale_color_manual(values = site.col$col[c(5,1,2,3)],
+                                   labels = c('Total', 
+                                              bquote(italic('Macrocystis')),
+                                              bquote(italic('Nereocystis'))) )+
+                # scale_color_viridis_d(begin=0,end=0.75,option="plasma") +
+                theme_bw() + theme_nt + 
+                theme(legend.key.size = unit(0.5,'lines') )            
+
+
+canopy.kelp.long
+# plot5 + theme_bw()+theme_nt
+
+```
+
+```{r sst-kelp, fig.width=3.5 , fig.height=5}
+sst = plot5 + theme_bw()+theme_nt
+kelp <- canopy.kelp.long + theme(legend.position = c(0.6 , 0.9) )
+
+ggarrange(
+  sst, kelp,
+  labels = c('b)','c)'), 
+  # labels = 'auto',
+  font.label = list(face='plain', size = 10),
+  hjust = c(rep(-6,5),-9),
+  vjust = 2,
+  nrow = 2, ncol=1,
+  align = 'v'
+)
+
+```
