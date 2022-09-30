@@ -7,6 +7,9 @@ library(janitor)
 fish <- read_rds(here::here('Flagstone paper','Data','Fish_2015-2021.rds')) # these data are complete and include zeroes for transects in which a species is not seen
 # Check to see if there are any yellowtail that are not small.
 fish %>% filter(species=="SEBYT",is.na(size_class)) %>% distinct(Count)
+fish %>% filter(species=="SEBYT",size_class == "large") %>% distinct(Count)
+
+fish %>% filter(year == 2019 & site == "Destruction Island" & zone == 5 & species=="SEBYT") 
 # circa 2021, there are no large yellowtail.
 
 fish_codes = data.frame(read.csv( here::here('Flagstone paper','Data',"spp_codes_fish.csv") ))
