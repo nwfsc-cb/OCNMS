@@ -134,8 +134,8 @@ df_rewb = df1 %>% filter(year != 2015, site == 'Tatoosh Island') %>%
 
 m_nereo = lmer( log1p(Nereocystis) ~ depth + area + year 
                      + B_da + W_day + W_daty
-                     + (1 + W_day | id_a)
-                     + (1 + W_daty| id_i)
+                     + (0 + W_day | id_a)
+                     + (0 + W_daty| id_i)
                 , data = df_rewb)
 
 m_nereo
@@ -143,8 +143,8 @@ m_nereo
 
 m_ptery = lmer( log1p(Pterygophora) ~ depth + area + year 
                 + B_da + W_day + W_daty
-                + (1 + W_day | id_a)
-                + (1 + W_daty| id_i)
+                + (0 + W_day | id_a)
+                + (0 + W_daty| id_i)
                 , data = df_rewb)
 
 m_ptery
