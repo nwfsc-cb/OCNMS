@@ -175,6 +175,7 @@ x = kelp.can.long %>%
   filter(site == 'Coastwide') %>%
   summarise( Mean = mean(canopy_ha, na.rm=TRUE), stdev = sd(canopy_ha, na.rm = TRUE))
 
+x
 
 
 
