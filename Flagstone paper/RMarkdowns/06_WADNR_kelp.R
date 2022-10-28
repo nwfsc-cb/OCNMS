@@ -1,12 +1,20 @@
 # Examine overflight data from WADNR
 
 library(tidyverse)
+library(ggplot2)
+# data.dir <- "/Users/ole.shelton/Github/OCNMS/Flagstone paper/Data"
+# setwd(data.dir)
 
-data.dir <- "/Users/ole.shelton/Github/OCNMS/Flagstone paper/Data"
-plot.dir <- "/Users/ole.shelton/Github/OCNMS/Flagstone paper/Plots"
-setwd(data.dir)
+setwd('..')
+HomeFile = getwd()
+Data_Loc = paste0(HomeFile,"/Data/")
+Fig_Loc = paste0(HomeFile,"/Plots/")
+kelp.dat <- read.csv(paste0(Data_Loc,"WADNR_summary_kelp_stats_1989_2020.csv") )
 
-kelp.dat <- read.csv("WADNR_summary_kelp_stats_1989_2020.csv")
+sites = c("Neah Bay","Tatoosh Island","Cape Alava","Cape Johnson","Destruction Island")
+col = RColorBrewer::brewer.pal(n = 12, name = "Paired")[c(2,4,6, 10,12)]
+site.col = data.frame(cbind(sites,col))
+colnames(site.col) <- c('site', 'col')
 
 # These are the relevant columns of interest
 # tot_ne_can	Total Nereo canopy area ha 
@@ -92,9 +100,7 @@ kelp.can.long <- kelp.all %>% pivot_longer(.,cols=contains("can"),
                          )
 
 kelp.can.long$species <- factor(kelp.can.long$species, levels=
-                            c("Total",
-                              "Nereocystis",
-                              "Macrocystis"))            
+                                  c("Total","Macrocystis", "Nereocystis"))        
 
 kelp.pl.long <-  kelp.all %>% pivot_longer(.,cols=contains("pl"),
                                      names_to="pl_type",values_to="pl_ha") %>%
@@ -106,35 +112,70 @@ kelp.pl.long <-  kelp.all %>% pivot_longer(.,cols=contains("pl"),
                       )
 
 kelp.pl.long$species <- factor(kelp.pl.long$species, levels=
-                              c("Total",
-                                "Nereocystis",
-                                "Macrocystis"))            
+                              c("Total","Macrocystis", "Nereocystis"))
                   
                   
-                  
+
+
+
+ theme_nt   <-   theme(legend.title=element_blank(),
+                   legend.background = element_blank(),
+                   axis.title.y = element_text(size=8),
+                   axis.text.x = element_text(size=8),
+                   strip.background = element_blank(),
+                   legend.text = element_text(size = 8),
+                   legend.key.size = unit(0.5,'lines')
+)
+
+
 p.canopy <- ggplot(kelp.can.long,aes(y=canopy_ha,x=year,color=species)) +
-    geom_point(alpha=0.5) +
-    geom_line(alpha=0.5) +
+    geom_point() +
+    geom_line() +
     facet_wrap(~site,ncol=2,scale="free") +
     scale_y_continuous("Canopy area (ha)") +
-    scale_color_viridis_d(begin=0,end=0.75,option="plasma") +
-    theme_bw()
+    scale_color_manual(values = site.col$col[c(5,1,2,3)])+
+    # scale_color_viridis_d(begin=0,end=0.75,option="plasma") +
+    theme_bw()+ theme_nt 
+p.canopy 
+ 
+ 
 
 p.plan <- ggplot(kelp.pl.long,aes(y=pl_ha,x=year,color=species)) +
-  geom_point(alpha=0.5) +
-  geom_line(alpha=0.5) +
+  geom_point() +
+  geom_line() +
   facet_wrap(~site,ncol=2,scale="free") +
   scale_y_continuous("Planimeter area (ha)") +
-  scale_color_viridis_d(begin=0,end=0.75,option="plasma") +
-  theme_bw()
+  scale_color_manual(values = site.col$col[c(5,1,2,3)])+
+  # scale_color_viridis_d(begin=0,end=0.75,option="plasma") +
+  theme_bw()+ theme_nt
+p.plan
 
-setwd(plot.dir)
-pdf(file="WADNR kelp canopy.pdf",onefile = T,width=11,height=8.5)
-  print(p.canopy)
-  print(p.plan)
+
+graphics.off()
+jpeg(paste0( Fig_Loc,'Kelp-canopy-by-site-canopy-ha.jpg'), units='in', res=300, height=6, width = 6)
+p.canopy
 dev.off()
 
+jpeg(paste0(Fig_Loc,'Kelp-canopy-by-site-planimeter-ha.jpg'), units='in', res=300, height=6, width = 6)
+p.plan
+dev.off()
 
+saveRDS( kelp.can.long , paste0(Data_Loc, "Data_Kelp_Canopy_Long.rds") )
+
+####
+
+
+
+########## some calculations for comparison ###################
+
+
+x = kelp.can.long %>%
+  mutate( time_cat = ifelse(year %in% 2003:2012, 'before', ifelse(year %in% 2013:2014, 'during', 'after'))) %>%
+  group_by(time_cat, can_type) %>%
+  filter(site == 'Coastwide') %>%
+  summarise( Mean = mean(canopy_ha, na.rm=TRUE), stdev = sd(canopy_ha, na.rm = TRUE))
+
+x
 
 
 
