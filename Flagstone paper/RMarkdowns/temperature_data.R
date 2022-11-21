@@ -586,7 +586,7 @@ plot6 <- ggplot(df_max_month, aes(x = year, y = maxT) ) +
     scale_color_manual(values=site.col$col)+
     geom_line(size=1.2) +
     xlab("") +
-    ylab(paste0("Mean SST of warmest month ", Degree_C))+
+    ylab(paste0("Mean SST of warmest month (", Degree_C,")"))+
     scale_x_continuous( breaks = seq(2005,2020,5), minor_breaks = 2003:2021 )
 
 
@@ -595,7 +595,7 @@ plot6 + theme_bw()+theme_nt+theme(legend.position = c(0.2,0.9))
 
 
 graphics.off()
-png( paste0(Fig_Loc,"Mean-sst-warmest-month-by-site.png"), units = 'in',res=300,width=3.5, height=3)
+png( paste0(Fig_Loc,"Fig-1a-Mean-sst-warmest-month-by-site.png"), units = 'in',res=300,width=3.5, height=3)
 plot6 + theme_bw()+theme_nt+theme(legend.position = c(0.3,0.9))
 dev.off()
 

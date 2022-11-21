@@ -792,7 +792,7 @@ urchin.plot <- ggplot(urchin_year, aes(x = year, y=grand_mean, color=taxa)) +
                                   ymax=grand_mean+grand_SE ,  color=taxa),width=0) +
                 scale_color_manual(values = site.col$col[c(4,3,2)]) +
                 scale_x_continuous("", breaks=seq(2015,2021)) +
-                scale_y_continuous(expression("Urchins m"^-2), limits=c(0,3)) +
+                scale_y_continuous(expression("Urchins per m"^2), limits=c(0,3)) +
                 theme_bw()+ theme_nt 
                 # theme(legend.position = c(0.2, 0.8),
                 #       legend.key.size = unit(0.75,'lines'))
@@ -1307,12 +1307,12 @@ Change was `r k2020/k2014` fold.
 # library(ggpubr)
 canopy.kelp <- canopy.kelp + theme(legend.position = c(0.8 , 0.6) )
 kelp_coast  <- kelp_coast +  
-  scale_y_continuous(expression("Kelp stipes m"^-2), breaks=c(0,1,2), limits=c(0,2.2)) +
+  scale_y_continuous(expression("Kelp stipes per m"^2), breaks=c(0,1,2), limits=c(0,2.2)) +
   theme(legend.position = c(0.80 , 0.85) )
 
 urchin.plot <- urchin.plot + theme(legend.position = c(0.30 , 0.85) )
 stars_year  <- stars_year  + 
-  scale_y_continuous(expression("Sea stars m"^-2), breaks=c(0,0.1,0.2), limits=c(0,0.2)) +
+  scale_y_continuous(expression("Sea stars per m"^2), breaks=c(0,0.1,0.2), limits=c(0,0.2)) +
   theme(legend.position = c(0.60 , 0.85) ) +
   guides(color=guide_legend(ncol=2))
 fish.plot   <- fish.plot  + theme(legend.position = c(0.35 , 0.75) ) + guides(color=guide_legend(ncol=2))

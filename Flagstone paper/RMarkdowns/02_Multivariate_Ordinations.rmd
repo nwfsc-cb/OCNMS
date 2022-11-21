@@ -469,7 +469,7 @@ p = ggplot( df , aes(x = x,  y = r2, fill=Spp)) +
     geom_bar(stat="identity", position=position_dodge(), color='black') +
     scale_fill_manual( values =  hist.col )+
     ylab('Prop. explained variance') +
-    xlab("") +
+    xlab("Fixed terms") +
     theme_bw() + 
     theme( legend.title = element_blank(),
            legend.text = element_text(size = 8),
