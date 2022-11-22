@@ -22,7 +22,7 @@ Fixed effects:
 (Intercept)   -0.274      1.447  -0.189   0.8498  
 canopy_kelp    2.553      1.009   2.531   0.0114 *
 ---
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+Signif. codes:  0 â€˜***â€™ 0.001 â€˜**â€™ 0.01 â€˜*â€™ 0.05 â€˜.â€™ 0.1 â€˜ â€™ 1
 
 Correlation of Fixed Effects:
             (Intr)

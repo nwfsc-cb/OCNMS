@@ -1228,7 +1228,7 @@ other.tat
 # Combined Figure 5
 
 
-```{r Figure-5-prep, fig.height=6, fig.width=6}
+```{r Figure-5-prep, fig.height=6.65, fig.width=6.65}
 
 df_other <- df_transect %>% filter( kelp_spp == 'Other') %>%
               group_by(year,site, area, zone, transect) %>%
@@ -1320,7 +1320,7 @@ plot1
 ```
 
 
-```{r Figure-5, fig.height=7, fig.width=6.5}
+```{r Figure-5, fig.height=7.2, fig.width=6.65}
 
 plot2  <- plot1 +  theme(legend.position = 'right', 
                          legend.key.size = unit(0.25,'lines'),

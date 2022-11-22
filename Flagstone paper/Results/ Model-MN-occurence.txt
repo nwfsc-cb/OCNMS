@@ -23,7 +23,7 @@ Fixed effects:
 Macro         2.5169     1.6083   1.565   0.1176  
 Nereo         2.5700     1.1742   2.189   0.0286 *
 ---
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+Signif. codes:  0 â€˜***â€™ 0.001 â€˜**â€™ 0.01 â€˜*â€™ 0.05 â€˜.â€™ 0.1 â€˜ â€™ 1
 
 Correlation of Fixed Effects:
       (Intr) Macro 

@@ -403,7 +403,7 @@ plot_comb = ggplot(df_comb , aes(x = Macro, y = Nereo), color='black') +
 plot_comb 
 
 
-############## combined figure ################
+############## Figure 6: combined figure ################
 
 plot_occur_x <- plot_occur_1 + theme(legend.box.background = element_blank(),
                                      legend.background = element_blank(),
@@ -414,7 +414,7 @@ plot_comb_x <- plot_comb     + theme(legend.title =element_text(size=8),
                                      legend.box.background = element_blank(),
                                      legend.background = element_blank(),
                                      legend.key.size = unit(0.5,'lines'),
-                                     legend.position = c(0.8,0.7),
+                                     legend.position = c(0.3,0.7),
                                      # legend.position = 'none',
                                      legend.box = "vertical")
                                       
@@ -423,13 +423,13 @@ plot_comb_x
 
 graphics.off()
 
-png(paste0(Fig_Loc,"Figure-6-fish-kelp-combined.png"), units='in', res = 600, width = 3.18, height = 5)
+png(paste0(Fig_Loc,"Figure-6-fish-kelp-combined.png"), units='mm', res = 600, width = 81, height = 125)
 
 ggarrange(plot_occur_x, plot_comb_x, 
          labels = c('a)','b)'), 
          # labels = 'auto',
          font.label = list(face='plain', size = 10),
-         hjust = -26,
+         hjust = -23,
          vjust = 3,
          nrow = 2, ncol=1,
          align = 'v'

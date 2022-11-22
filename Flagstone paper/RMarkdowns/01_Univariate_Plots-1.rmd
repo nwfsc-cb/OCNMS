@@ -1302,7 +1302,7 @@ Change was `r k2020/k2014` fold.
 
 # Combined Figures for MS
 
-```{r Figure-2, fig.width=6.5, fig.height=6.5}
+```{r Figure-2, fig.width=6.65, fig.height=6.65}
 
 # library(ggpubr)
 canopy.kelp <- canopy.kelp + theme(legend.position = c(0.8 , 0.6) )
@@ -1457,13 +1457,16 @@ canopy.kelp.long
 
 ```
 
-```{r sst-kelp, fig.width=3.5 , fig.height=5}
-sst = plot5 + theme_bw()+theme_nt
+```{r Fig-1-sst-kelp, fig.width=3.18 , fig.height=5}
+
+plot6 = readRDS(file = "Fig-1-Mean-sst-warmest-month-by-site.rds")
+
+sst = plot6 + theme_bw()+theme_nt + theme(legend.position = c(0.4,0.9))
 kelp <- canopy.kelp.long + theme(legend.position = c(0.6 , 0.9) )
 
 ggarrange(
   sst, kelp,
-  labels = c('b)','c)'), 
+  labels = c('d)','e)'), 
   # labels = 'auto',
   font.label = list(face='plain', size = 10),
   hjust = c(rep(-6,5),-9),

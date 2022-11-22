@@ -595,10 +595,10 @@ plot6 + theme_bw()+theme_nt+theme(legend.position = c(0.2,0.9))
 
 
 graphics.off()
-png( paste0(Fig_Loc,"Fig-1a-Mean-sst-warmest-month-by-site.png"), units = 'in',res=300,width=3.5, height=3)
+png( paste0(Fig_Loc,"Fig-1-Mean-sst-warmest-month-by-site.png"), units = 'in',res=300, width=3.5, height=3)
 plot6 + theme_bw()+theme_nt+theme(legend.position = c(0.3,0.9))
 dev.off()
 
-
+saveRDS(plot6, file = "Fig-1-Mean-sst-warmest-month-by-site.rds")
 
 
