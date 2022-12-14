@@ -71,11 +71,6 @@ knitr::opts_chunk$set(
 
 # just to keep track of when I ran things.
 
-Last_Run0 = Sys.time()
-Last_Run = str_replace(Last_Run0, ":", ".")
-Last_Run = str_replace(Last_Run, ":", ".")
-capture.output(Last_Run, file = 'Last_Run.txt')
-
 par(ps=10, cex=1)
 
 
@@ -92,7 +87,8 @@ settings = readRDS( paste0(Data_Loc,'settings.RDS') )
 
 min.vis = 2
 
-years = 2015:2021
+years = 2015:last.year
+last.year = max(years)
 pch = c(8 , 21, 22, 23, 24, 4, 25 )
 col = RColorBrewer::brewer.pal(n = 12, name = "Paired")[c(2,4,6,10,12,7,8)]
 year.pch = data.frame(cbind(years, pch,col))
@@ -332,7 +328,7 @@ yoy.plot <- ggplot(fish_taxa_year %>% filter(taxa %in% SP.yoy$taxa) %>% left_joi
     geom_errorbar(aes(x=year,color=name,ymin=grand_mean-grand_SE,ymax=grand_mean+grand_SE),
                   width=0) +
     scale_y_continuous(trans="sqrt",breaks=c(0,1,5,10,20,40,60,80),limits=c(0,NA)) +
-    scale_x_continuous(breaks=seq(2015,2021)) +
+    scale_x_continuous(breaks=seq(2015,last.year)) +
     #scale_color_viridis_d(option="plasma", end=0.75) + 
     scale_color_manual(values=SP.yoy$col)+
     ylab(expression("Rockfish juveniles per 120 m"^3)) +
@@ -373,7 +369,7 @@ fish.plot <- ggplot(fish_taxa_year %>% filter(taxa %in% fish.taxa$taxa) %>% left
   geom_errorbar(aes(x=year,color=name,ymin=grand_mean-grand_SE,ymax=grand_mean+grand_SE),
                 width=0) +
   scale_y_continuous(trans="sqrt",breaks=c(0,1,5,10),limits=c(0,10)) +
-  scale_x_continuous(breaks=seq(2015,2021)) +
+  scale_x_continuous(breaks=seq(2015,last.year)) +
   #scale_color_viridis_d(option="plasma", end=0.75) + 
   scale_color_manual(values=fish.taxa$col)+
   ylab(expression("Number per 120 m"^3)) +
@@ -400,7 +396,7 @@ ggplot(fish_ys , aes(x = year, y = Mean, color = site)) +
           geom_point() + 
           geom_line() + 
           geom_errorbar(aes(x=year,color=site,ymin=Mean-SE,ymax=Mean+SE),width=0) +
-          scale_x_continuous(breaks=seq(2015,2021)) +
+          scale_x_continuous(breaks=seq(2015,last.year)) +
           scale_color_manual(values=site.col$col)+
           xlab("")+
           ylab(expression("Number per 120 m"^3))+
@@ -426,7 +422,7 @@ ggplot(yoy_ys , aes(x = year, y = Mean, color = site)) +
           geom_point() + 
           geom_line() + 
           geom_errorbar(aes(x=year,color=site,ymin=Mean-SE,ymax=Mean+SE),width=0) +
-          scale_x_continuous(breaks=seq(2015,2021)) +
+          scale_x_continuous(breaks=seq(2015,last.year)) +
           scale_color_manual(values=site.col$col)+
           xlab("")+
           ylab(expression("Rockfish juveniles per 120 m"^3))+
@@ -530,7 +526,7 @@ kelp3 =  ggplot(canopy %>% filter(site=="Tatoosh Island",species=="NERLUE")) +
    geom_line(aes(x=year,y=mean.density,color=zone),alpha=0.5) +
    geom_errorbar(aes(x=year,ymin=mean.density-SE,ymax=mean.density+SE,color=zone),width=0) +
    #facet_grid(rows="species",scales="free_y") +
-   scale_x_continuous(breaks=seq(2015,2021)) +
+   scale_x_continuous(breaks=seq(2015,last.year)) +
    scale_y_continuous(expression("Stipes m"^-2),limits=c(0,NA)) +
    scale_color_viridis_d("Depth (m)",option="plasma",end=0.75)+
    ggtitle("Tatoosh Island") +
@@ -566,7 +562,7 @@ mac_ner_zone <- mac_ner %>% group_by(year,site,zone) %>%
     geom_line(aes(x=year,y=mean.density,color=site)) +
     geom_errorbar(aes(x=year,ymin=mean.density-SE,ymax=mean.density+SE,color=site),width=0) +
     facet_grid(rows="zone",scales="free_y", labeller = labeller(zone = depth.labs)) +
-    scale_x_continuous(breaks=seq(2015,2021)) +
+    scale_x_continuous(breaks=seq(2015,last.year)) +
     scale_y_continuous(expression("Stips m"^-2)) +
     # scale_color_viridis_d(option="plasma",end=0.75)+
     scale_color_manual(values = site.col$col)+
@@ -597,7 +593,7 @@ Plot the big 3 species: Macro, Nero, Ptero
     geom_line(aes(x=year,y=mean.density,color=site)) +
     geom_errorbar(aes(x=year,ymin=mean.density-SE,ymax=mean.density+SE,color=site),width=0) +
     facet_grid(species ~ zone,scales="free_y", labeller = labeller(zone=depth.labs , species=kelp.labs)) +
-    scale_x_continuous(breaks=seq(2015,2021)) +
+    scale_x_continuous(breaks=seq(2015,last.year)) +
     xlab("Year")+
     scale_y_continuous(expression("Stipes m"^-2)) +
     # scale_color_viridis_d(option="plasma",end=0.75)+
@@ -626,7 +622,7 @@ kelp1 + rotate_x_text(angle = 45)
     geom_line(aes(x=year,y=mean.density,color=site)) +
     geom_errorbar(aes(x=year,ymin=mean.density-SE,ymax=mean.density+SE,color=site),width=0) +
     facet_grid(rows='species' ,scales="free_y", labeller = labeller(species=kelp.labs)) +
-    scale_x_continuous(breaks=seq(2015,2021)) +
+    scale_x_continuous(breaks=seq(2015,last.year)) +
     xlab("Year")+
     scale_y_continuous(expression("Stipes m"^-2)) +
     # scale_color_viridis_d(option="plasma",end=0.75)+
@@ -672,7 +668,7 @@ kelp_coast <- ggplot( dfx , aes(x=year, y=grand_mean, color=species)) +
                                   ymin=grand_mean-grand_SE,
                                   ymax=grand_mean+grand_SE, color=species),width=0) +
                 scale_color_manual(values = site.col$col)+
-                scale_x_continuous(breaks=seq(2015,2021)) +
+                scale_x_continuous(breaks=seq(2015,last.year)) +
                 xlab("")+
                 scale_y_continuous(expression("Kelp stipes m"^-2)) +
                 theme_bw()+ theme_nt +
@@ -716,7 +712,7 @@ kelp_coast5 <- ggplot( dfx5 , aes(x=year, y=grand_mean, color=species)) +
                                   ymin=grand_mean-grand_SE,
                                   ymax=grand_mean+grand_SE, color=species),width=0) +
                 scale_color_manual(values = site.col$col)+
-                scale_x_continuous(breaks=seq(2015,2021)) +
+                scale_x_continuous(breaks=seq(2015,last.year)) +
                 xlab("Year")+
                 scale_y_continuous(expression("Stipes m"^-2)) +
                 theme_bw()+ theme_nt +
@@ -744,7 +740,7 @@ kelp_coast5 <- ggplot( dfx5 , aes(x=year, y=grand_mean, color=species)) +
 #                                        ymin=Mean-SE,
 #                                        ymax=Mean+SE,color=species),width=0) +
 #                 scale_color_manual(values = site.col$col)+
-#                 scale_x_continuous(breaks=seq(2015,2021)) +
+#                 scale_x_continuous(breaks=seq(2015,last.year)) +
 #                 xlab("")+
 #                 scale_y_continuous(expression("Stipes m"^-2), limits = c(0,3)) +
 #                
@@ -834,7 +830,7 @@ ggplot() +
       geom_errorbar(data=urchin_zone,
                     aes(x=year,ymin=mean.density-SE,ymax=mean.density+SE,color=site),width=0) +
       facet_grid(rows="zone", labeller = labeller(zone=depth.labs )) +
-      scale_x_continuous(breaks=seq(2015,2021)) +
+      scale_x_continuous(breaks=seq(2015,last.year)) +
       scale_y_continuous(expression("Urchin density (m"^-2*")")) +
       # scale_color_viridis_d(option="plasma",end=0.75)+
       scale_color_manual(values = site.col$col)+
@@ -844,7 +840,7 @@ ggplot() +
 
 
 tat_urchin2019 = urchin_zone[urchin_zone$year==2019 & urchin_zone$site =='Tatoosh Island',]
-tat_urchin2021 = urchin_zone[urchin_zone$year==2021 & urchin_zone$site =='Tatoosh Island',]
+tat_urchin2021 = urchin_zone[urchin_zone$year==last.year & urchin_zone$site =='Tatoosh Island',]
 
 ```
 
@@ -894,7 +890,7 @@ urchin_plot_all <- ggplot(data=urchins_all,aes(x=year, y= mean.density, col = si
                     facet_grid( taxa ~ zone , 
                       labeller = labeller(zone = depth.labs) ) +#,scales="free_y") +
                     scale_color_manual(values = site.col$col) +
-                    scale_x_continuous("",breaks=seq(2015,2021)) +
+                    scale_x_continuous("",breaks=seq(2015,last.year)) +
                     
                     scale_y_continuous(expression("Urchins m"^-2)) +
                     theme_bw()+ theme_nt
@@ -904,7 +900,7 @@ urchin_plot_all + rotate_x_text(angle = 45)
 tat_purpleurchins2019 = urchins_all[urchins_all$year==2019 & 
                                     urchins_all$site =='Tatoosh Island' &
                                     urchins_all$taxa == 'Purple urchin',]
-tat_purpleurchins2021 = urchins_all[urchins_all$year==2021 & 
+tat_purpleurchins2021 = urchins_all[urchins_all$year==last.year & 
                                     urchins_all$site =='Tatoosh Island' &
                                     urchins_all$taxa == 'Purple urchin',]
 ```
@@ -946,7 +942,7 @@ urchin.plot <- ggplot(urchin_year, aes(x = year, y=grand_mean, color=taxa)) +
                               aes(x=year, ymin=grand_mean-grand_SE ,
                                   ymax=grand_mean+grand_SE ,  color=taxa),width=0) +
                 scale_color_manual(values = site.col$col[c(4,3,2)]) +
-                scale_x_continuous("", breaks=seq(2015,2021)) +
+                scale_x_continuous("", breaks=seq(2015,last.year)) +
                 scale_y_continuous(expression("Urchins m"^-2), limits=c(0,3)) +
                 theme_bw()+ theme_nt 
                 # theme(legend.position = c(0.2, 0.8),
@@ -956,7 +952,7 @@ urchin.plot
 
 
 x2015 = urchin_year$grand_mean[urchin_year$year == 2015 & urchin_year$taxa == "Purple urchin"]
-x2021 = urchin_year$grand_mean[urchin_year$year == 2021 & urchin_year$taxa == "Purple urchin"]
+x2021 = urchin_year$grand_mean[urchin_year$year == last.year & urchin_year$taxa == "Purple urchin"]
 x2019 = urchin_year$grand_mean[urchin_year$year == 2019 & urchin_year$taxa == "Purple urchin"]
 ```
  
@@ -991,7 +987,7 @@ ggplot() +
                  aes(x=year,y=mean.density,color=site)) +
       geom_errorbar(data=star_zone,aes(x=year,ymin=mean.density-SE,ymax=mean.density+SE,color=site),width=0) +
       facet_grid(rows="zone", labeller = labeller(zone = depth.labs)) + #,scales="free_y") +
-      scale_x_continuous(breaks=seq(2015,2021)) +
+      scale_x_continuous(breaks=seq(2015,last.year)) +
       scale_y_continuous(expression("Sea stars m"^-2)) +
       # scale_color_viridis_d(option="plasma",end=0.75)+
       scale_color_manual(values = site.col$col)+
@@ -1027,7 +1023,7 @@ stars_year <- ggplot() +
       geom_line( data = star_zone, aes(x=year,y=grand_mean,color=taxa)) +
       geom_errorbar(data=star_zone,aes(x=year,ymin=grand_mean-grand_SE,
                                        ymax=grand_mean+grand_SE,color=taxa),width=0) +
-      scale_x_continuous(breaks=seq(2015,2021)) +
+      scale_x_continuous(breaks=seq(2015,last.year)) +
       xlab("") +
       scale_y_continuous(expression("Sea stars m"^-2) ) + 
                           
@@ -1072,7 +1068,7 @@ stars_plot_all <- ggplot(data=stars_all,aes(x=year, y= mean.density, col = site)
                     #facet_grid(rows="taxa") + 
                     facet_grid( taxa ~ zone, scales="free_y") +
                     scale_color_manual(values = site.col$col) +
-                    scale_x_continuous("Year", breaks=seq(2015,2021)) +
+                    scale_x_continuous("Year", breaks=seq(2015,last.year)) +
                     scale_y_continuous(expression("Urchins m"^-2)) +
                     theme_bw()+ theme_nt
                    
@@ -1395,7 +1391,7 @@ Imports data file from other R file. Plot just kelp canopy. Add to ggarrange bel
 
 canopy = readRDS( paste0(Data_Loc, "Data_Kelp_Canopy_Long.rds") )
 
-year.range = 2015:2021
+year.range = 2015:last.year
 
 canopy$species = factor(canopy$species, levels = c('Total','Macrocystis','Nereocystis'))
 
@@ -1405,8 +1401,8 @@ canopy.kelp <- ggplot( canopy %>% filter(., site == 'Coastwide') %>% filter(., y
                 geom_line() +
                 xlab("") +
                 xlim( min(year.range),max(year.range) )+
-                #scale_x_continuous(breaks=seq(2015,2021)) +
-                scale_x_continuous(breaks=seq(2015,2021,1), limits = c(2015,2021)) +
+                #scale_x_continuous(breaks=seq(2015,last.year)) +
+                scale_x_continuous(breaks=seq(2015,last.year,1), limits = c(2015,last.year)) +
                 scale_y_continuous("Canopy area (ha)") +
                 scale_color_manual(values = site.col$col[c(5,1,2,3)],
                                    labels = c('Total', 
@@ -1570,9 +1566,9 @@ plot5 <- ggplot(df_max_month, aes(x = year, y = maxT) ) +
                  fill='grey',linetype = 0, alpha=0.3) +
     geom_line() + 
     xlab("") +
-    xlim( 2003,2021 )+
+    xlim( 2003,last.year )+
     ylab(paste0("Mean SST of warmest month ", Degree_C))+
-    scale_x_continuous( breaks = seq(2005,2020,5), minor_breaks = 2003:2021 )
+    scale_x_continuous( breaks = seq(2005,2020,5), minor_breaks = 2003:last.year )
 
 
 
@@ -1589,14 +1585,14 @@ canopy = readRDS( paste0(Data_Loc, "Data_Kelp_Canopy_Long.rds") )
 
 canopy$species = factor(canopy$species, levels = c('Total','Macrocystis','Nereocystis'))
 
-canopy.kelp.long <- ggplot( canopy %>% filter(., site == 'Coastwide') %>% filter(.,year %in% 2003:2021), 
+canopy.kelp.long <- ggplot( canopy %>% filter(., site == 'Coastwide') %>% filter(.,year %in% 2003:last.year), 
                        aes(x=year, y = canopy_ha, color = species)) +
                 geom_point() +
                 geom_line() +
                 xlab("") +
                 scale_x_continuous(breaks = seq(2005,2020,5), 
                                    minor_breaks = 2003:2022, 
-                                   limits = c(2003,2021) ) +
+                                   limits = c(2003,last.year) ) +
                 scale_y_continuous("Canopy area (ha)") +
                 scale_color_manual(values = site.col$col[c(5,1,2,3)],
                                    labels = c('Total', 

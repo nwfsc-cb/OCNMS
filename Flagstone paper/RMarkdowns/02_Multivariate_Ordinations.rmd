@@ -326,19 +326,19 @@ Separate Sites and Species plots for clarity.
 
 Note: spp score must be min of abs(0.2) to show up on plot. So only black and blue show up on yoy plot.
 
-```{r Figure-3, fig.width=4.5, fig.height=8}
+```{r Figure-3, fig.width=4.13, fig.height=8}
 
-par( mfrow = c(4,2), pty='s' , mar = c(3.5,1,0,0), mgp=c(2,1,0) )
+par( mfrow = c(4,2), pty='s' , mar = c(3.5,2,0,0), mgp=c(2,1,0))
 
 xy=c(-7,7)
 xy2 = c(-1.7, 1.7)
 var.ylim = c(0,0.8)
-var.cex = 0.7
+var.cex = 0.9
 plotspp = FALSE
 sppseparate = TRUE
 sppcol = 'black'
 min.score = 0.2
-scores.cex = 0.8
+scores.cex = 0.9
 
 p_kelp = ifelse( kelp_ord$cap$manova$stats[1,6]<0.001 , "p < 0.001",
          paste0("p < ", round(kelp_ord$cap$manova$stats[1,6],3)))
@@ -469,7 +469,7 @@ p = ggplot( df , aes(x = x,  y = r2, fill=Spp)) +
     geom_bar(stat="identity", position=position_dodge(), color='black') +
     scale_fill_manual( values =  hist.col )+
     ylab('Prop. explained variance') +
-    xlab("") +
+    xlab("Fixed terms") +
     theme_bw() + 
     theme( legend.title = element_blank(),
            legend.text = element_text(size = 8),

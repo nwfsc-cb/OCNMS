@@ -542,7 +542,7 @@ Plot the big 3 species: Macro, Nero, Ptero
     facet_grid(spp ~ zone,scales="free_y", labeller = labeller(zone=depth.labs , spp=kelp.labs)) +
     scale_x_continuous(breaks=seq(2015,2021)) +
     xlab("Year")+
-    scale_y_continuous(expression("Stipes m"^-2)) +
+    scale_y_continuous(expression("Stipes per m"^2)) +
     # scale_color_viridis_d(option="plasma",end=0.75)+
     scale_color_manual(values = site.col$col)+
     theme_bw()+ theme_nt + 
@@ -592,7 +592,7 @@ kelp_coast <- ggplot( dfx , aes(x=year, y=grand_mean, color=spp)) +
                 scale_color_manual(values = site.col$col)+
                 scale_x_continuous(breaks=seq(2015,2021)) +
                 xlab("")+
-                scale_y_continuous(expression("Kelp stipes m"^-2)) +
+                scale_y_continuous(expression("Kelp stipes per m"^2)) +
                 theme_bw()+ theme_nt +
                 theme( legend.text = element_text(face = 'italic'),
                        legend.key.size = unit(0.5,'lines')) 
@@ -741,7 +741,7 @@ urchin_plot_all <- ggplot(data=urchins_all,aes(x=year, y= mean.density, col = si
                     scale_color_manual(values = site.col$col) +
                     scale_x_continuous("",breaks=seq(2015,2021)) +
                     
-                    scale_y_continuous(expression("Urchins m"^-2)) +
+                    scale_y_continuous(expression("Urchins per m"^2)) +
                     theme_bw()+ theme_nt
 urchin_plot_all + rotate_x_text(angle = 45)
 
@@ -792,7 +792,7 @@ urchin.plot <- ggplot(urchin_year, aes(x = year, y=grand_mean, color=taxa)) +
                                   ymax=grand_mean+grand_SE ,  color=taxa),width=0) +
                 scale_color_manual(values = site.col$col[c(4,3,2)]) +
                 scale_x_continuous("", breaks=seq(2015,2021)) +
-                scale_y_continuous(expression("Urchins m"^-2), limits=c(0,3)) +
+                scale_y_continuous(expression("Urchins per m"^2), limits=c(0,3)) +
                 theme_bw()+ theme_nt 
                 # theme(legend.position = c(0.2, 0.8),
                 #       legend.key.size = unit(0.75,'lines'))
@@ -1302,17 +1302,17 @@ Change was `r k2020/k2014` fold.
 
 # Combined Figures for MS
 
-```{r Figure-2, fig.width=6.5, fig.height=6.5}
+```{r Figure-2, fig.width=6.65, fig.height=6.65}
 
 # library(ggpubr)
 canopy.kelp <- canopy.kelp + theme(legend.position = c(0.8 , 0.6) )
 kelp_coast  <- kelp_coast +  
-  scale_y_continuous(expression("Kelp stipes m"^-2), breaks=c(0,1,2), limits=c(0,2.2)) +
+  scale_y_continuous(expression("Kelp stipes per m"^2), breaks=c(0,1,2), limits=c(0,2.2)) +
   theme(legend.position = c(0.80 , 0.85) )
 
 urchin.plot <- urchin.plot + theme(legend.position = c(0.30 , 0.85) )
 stars_year  <- stars_year  + 
-  scale_y_continuous(expression("Sea stars m"^-2), breaks=c(0,0.1,0.2), limits=c(0,0.2)) +
+  scale_y_continuous(expression("Sea stars per m"^2), breaks=c(0,0.1,0.2), limits=c(0,0.2)) +
   theme(legend.position = c(0.60 , 0.85) ) +
   guides(color=guide_legend(ncol=2))
 fish.plot   <- fish.plot  + theme(legend.position = c(0.35 , 0.75) ) + guides(color=guide_legend(ncol=2))
@@ -1457,13 +1457,16 @@ canopy.kelp.long
 
 ```
 
-```{r sst-kelp, fig.width=3.5 , fig.height=5}
-sst = plot5 + theme_bw()+theme_nt
+```{r Fig-1-sst-kelp, fig.width=3.18 , fig.height=5, eval=FALSE}
+
+plot6 = readRDS(file = "Fig-1-Mean-sst-warmest-month-by-site.rds")
+
+sst = plot6 + theme_bw()+theme_nt + theme(legend.position = c(0.4,0.9))
 kelp <- canopy.kelp.long + theme(legend.position = c(0.6 , 0.9) )
 
 ggarrange(
   sst, kelp,
-  labels = c('b)','c)'), 
+  labels = c('d)','e)'), 
   # labels = 'auto',
   font.label = list(face='plain', size = 10),
   hjust = c(rep(-6,5),-9),

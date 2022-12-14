@@ -108,7 +108,7 @@ sum_mean_plot <- ggplot(df_sum_mean, aes(x = year, y = mean_temp, color=site, fi
     scale_color_manual( values = site.col$col ) +
     scale_x_continuous( breaks = seq(1990,2020,5) , minor_breaks = 1992:2021 )+
     xlab("")+
-    ylab( paste0('Mean summer temperature ', Degree_C)) +
+    ylab( paste0('Mean summer temperature (', Degree_C,')')) +
     theme_bw()+theme_nt + theme(legend.position = c(0.4, 0.85) )
 sum_mean_plot
 
@@ -541,7 +541,7 @@ plot6 <- ggplot(df_max_month, aes(x = year, y = maxT) ) +
     scale_color_manual(values=rev(site.col$col))+
     geom_line(size=1.2) +
     xlab("") +
-    ylab(paste0("Mean SST of warmest month ", Degree_C))+
+    ylab(paste0("Mean SST of warmest month (", Degree_C,")"))+
     scale_x_continuous( breaks = seq(1990,2020,5), minor_breaks = 1990:2021 )
 
 
