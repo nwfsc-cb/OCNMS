@@ -314,10 +314,10 @@ fish.col = c(RColorBrewer::brewer.pal(n = 12, name = "Paired"))
 SP.yoy <- c("SEBYTyoy", "YTB",  'black',
             "SECAyoy", "CQB",               fish.col[12],
             #"SEMAyoy", "Quillback",            fish.col[10],
-            "SEMYyoy", "Blue" ,                fish.col[2],
+            "SEMYyoy", "Blue RF" ,                fish.col[2],
             #"SENEyoy", "China",                fish.col[10],
-            "SEPIyoy", "Canary",               fish.col[6],
-            "RYOY", "Unidentified",            'darkgrey') # ,
+            "SEPIyoy", "Canary RF",               fish.col[6],
+            "RYOY", "Unidentified RF",            'darkgrey') # ,
             #"TOTyoy", "Total",                 fish.col[10])
 
 SP.yoy <- matrix(SP.yoy,ncol=3,byrow=T) %>% as.data.frame()
