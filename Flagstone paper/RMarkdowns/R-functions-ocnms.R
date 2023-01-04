@@ -146,7 +146,8 @@ Plot_Ordination <- function( data.file , ord.file, plot.comm.scores=FALSE, comm.
                              Xform, pval=NA, pval.pos ="bottomright",method = "CAPdiscrim",
                              Xlim=NA, Ylim=NA, Xlim2 = NA, Ylim2=NA, Xlab = "Axis 1", Ylab = "Axis 2", 
                              min.score = 0.0, plot.species = TRUE, spp.separate = FALSE,
-                             scores.cex = 1,scores.font=1, fig.legend=NA, legend.pos='topleft', 
+                             scores.cex = 1,scores.font=1, fig.lab=NA, lab.pos='topleft', 
+                             fig.legend=FALSE, legend.pos="bottomleft", legend.inset = c(0,0),
                              sppcol='red', bg.equals.col=TRUE){
      form1 = paste0(Yform, '1', Xform)
      form2 = paste0(Yform, '2', Xform)
@@ -171,8 +172,11 @@ Plot_Ordination <- function( data.file , ord.file, plot.comm.scores=FALSE, comm.
      segments( 0, par()$usr[3],0,par()$usr[4], lty = 'dotted', lwd = 0.5)
      
      # spp spp scores
-     if(!is.na(fig.legend)){legend(legend.pos, legend = fig.legend, bty='n', inset = c(-0.05 ,0))}
+     if(!is.na(fig.lab)){legend(lab.pos, legend = fig.lab, bty='n', inset = c(-0.05 ,0))}
      if(!is.na(pval)){legend(pval.pos, legend = pval, bty="n")}
+     if(fig.legend == TRUE){
+       legend(legend.pos, legend=site.col$site, pch=19, col=site.col$col, bty='n', cex=0.8, inset=legend.inset)
+       legend('topright', legend=yr$year, pch=as.numeric(yr$pch), col='darkgrey',pt.bg = 'black', bty='n', cex=0.8 )}
      
      # for plotting dependent community scores from capscale
      if(plot.comm.scores == TRUE){
