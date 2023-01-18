@@ -10,7 +10,7 @@ data.dir <- "/Users/ole.shelton/GitHub/OCNMS/Data/CSV_2015_on"
 setwd(data.dir)
 
 dat.2015 <- read.csv("2015_OCNMSDataComplete_standardized_122116.csv")
-dat.2016.on.fish <- read.csv("NWFSC_FISH_ALLYEARS_data_2021.csv")
+dat.2016.on.fish <- read.csv("NWFSC_FISH_ALLYEARS_data_2022.csv")
 
 species_names <- read.csv("species_code_list.csv")
 #species_names <- species_names %>% rename("species"="PISCO.CLASSCODE")
@@ -253,23 +253,63 @@ dat.fish <- dat.fish %>% ungroup() %>%
 # All samples in 2015 were collected at 5m depth
 dat.fish$zone[dat.fish$year == 2015] <- 5
 
+#### combine small black and yellowtail into a single SEBYT category. 
+dat.ryoy <- dat.fish %>% filter(size_class =="small") %>% 
+                filter(species %in% c("SEBYT","RYOY","SEME")) %>%
+                group_by(site,transect,observer,size_class,year,area,zone,vis_m) %>%
+                summarise(Count=sum(Count)) %>% 
+                mutate(species ="SEBYT") %>%
+                left_join(.,species_names) %>%
+                dplyr::select(site, transect, observer,common.name, species,
+                              size_class, year, Count, area, zone, vis_m)
+# replace the values in dat.fish with the values in dat.ryoy
+dat.fish <- dat.fish %>% mutate(filt = paste0(species,"_",size_class)) %>%
+                  filter(!filt %in% c("SEBYT_small","SEME_small","RYOY_small")) %>%
+                  # eliminated SEBYT and RYOY from large size category. 
+                  filter(!filt %in% c("SEBYT_large","RYOY_large")) %>%
+                  dplyr::select(-filt) %>%
+                  bind_rows(.,dat.ryoy)
+
+
+
+####
+# Add dummy visibility for some sites where information was missing.
+# assign dummy visibility ####
+# add fake vis for 2015 all sites (3m)
+dat.fish$vis_m[ dat.fish$year == 2015 ] <- 3
+# poor vis at destruction in year 1. 
+dat.fish$vis_m[ dat.fish$year == 2015 & dat.fish$site == "Destruction Island"] <- 1
+
+# any NAs for vis_m? yes
+# length(which(is.na(dat.fish$vis_m)))
+# View(dat.fish[which(is.na(dat.fish$vis_m)),]) # all DI 2017 10m depth zone. JS chatted with OS, agreed to assume that viz was bad on these transects
+# View(fish[which(is.na(fish$vis_m)),])
+
+# add poor vis for 2017 at DI deep
+dat.fish$vis_m[ dat.fish$year == 2017 & dat.fish$site == "Destruction Island" & dat.fish$zone == 10] <- 1
+
+# Check for any sites that have NA for vis
+dat.fish %>% distinct(year,site,transect,vis_m) %>% filter(is.na(vis_m))
+
+
 # This is a check on labeling
 dat.fish %>% ungroup() %>% dplyr::select(year, site,area,transect) %>% distinct(year,site,area) %>%
- as.data.frame()
+  as.data.frame()
 
 dat.fish$site <- factor(dat.fish$site,
                         levels = c("Destruction Island",
-                                    "Teahwhit Head",
-                                    "Cape Johnson",
-                                    "Rock 305",
-                                    "Cape Alava",
-                                    "Point of the Arches",
-                                    "Anderson Point",
-                                    "Tatoosh Island",
-                                    "Chibadehl Rocks",
-                                    "Neah Bay"))
+                                   "Teahwhit Head",
+                                   "Cape Johnson",
+                                   "Rock 305",
+                                   "Cape Alava",
+                                   "Point of the Arches",
+                                   "Anderson Point",
+                                   "Tatoosh Island",
+                                   "Chibadehl Rocks",
+                                   "Neah Bay"))
 
-saveRDS(dat.fish,"Fish_2015-2021.rds")
+# WRITE TO FILE
+saveRDS(dat.fish,file="Fish_2015-2022.rds")
 
 ##############################################################
 ##############################################################
@@ -462,8 +502,9 @@ Q.complex.small.log <- ggplot() +
 # 
 
 #######  Make Tile plot of all species by site.
-MAX    <- max(dat.large.fish.summary %>% dplyr::select(Mean))
+
 BREAKS <- c(1,5,10,15,20,40,80,120,160)
+MAX    <- min(max(dat.large.fish.summary %>% dplyr::select(Mean)),max(BREAKS))
 MIN    <- 0.05
 
 dat.large.fish.summary$species <- factor(dat.large.fish.summary$species, levels=SP.count.large$species)
@@ -490,8 +531,8 @@ for(i in 1:length(YEAR)){
 ################
 ### Just Small (< size.break) ## SQRT TRANSFORMED
 ################
-MAX    <- max(dat.small.fish.summary %>% dplyr::select(Mean))
 BREAKS <- c(1,5,10,20,40,80,120,160)
+MAX    <- min(max(dat.small.fish.summary %>% dplyr::select(Mean)),max(BREAKS))
 MIN    <- 0.05
 
 dat.small.fish.summary$species <- factor(dat.small.fish.summary$species, levels=SP.count.small$species)

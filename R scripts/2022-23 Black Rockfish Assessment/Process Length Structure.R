@@ -12,7 +12,7 @@ data.dir <- "/Users/ole.shelton/GitHub/OCNMS/Data/CSV_2015_on"
 setwd(data.dir)
 
 dat.2015 <- read.csv("2015_OCNMSDataComplete_standardized_122116.csv")
-dat.2016.on.fish <- read.csv("NWFSC_FISH_ALLYEARS_data_2021.csv")
+dat.2016.on.fish <- read.csv("NWFSC_FISH_ALLYEARS_data_2022.csv")
 species_names <- read.csv("species_code_list.csv")
 
 # trim data to include only swath dat
@@ -50,7 +50,7 @@ dat.fish.seme.2016 <- dat.fish.seb.2016 %>%
                                       QUANTITY,
                                       SIZE.MIN= SIZE..MIN.,
                                       SIZE.MAX= SIZE..MAX.) %>%
-                        filter(SPECIES %in% c("SEME","SEBYT","RYOY"))
+                        filter(SPECIES %in% c("SEME","SEBYT","RYOY")) 
 
 # Keep only the 5 core sites
 nom <- c("Destruction Island","Cape Johnson","Cape Alava",
@@ -71,19 +71,32 @@ dat.seme.ad <- dat.seme %>% filter(VIS_M > TRIM | YEAR==2015) %>%
                       group_by(YEAR,SITE,SPECIES,SIZE) %>% # Sum across transects, depth zones
                       summarise(COUNT = sum(QUANTITY))
 
+dat.seme.all <- dat.seme %>% filter(VIS_M > TRIM | YEAR==2015) %>%
+  mutate(SIZE = (SIZE.MIN+SIZE.MAX)*0.5) %>%
+  group_by(YEAR,SITE,SPECIES,SIZE) %>% # Sum across transects, depth zones
+  summarise(COUNT = sum(QUANTITY))
+
+
 BIN <- seq(0,70,by=5)
 BIN.MIN <- BIN -2.5
 BIN.MAX <- BIN +2.5
 
 # There has to be a better way to do this, but looping works fine.
 dat.seme.ad$bin <- 0
+dat.seme.all$bin <- 0
 for(i in 1: length(BIN)){
   dat.seme.ad <- dat.seme.ad %>% 
                     mutate(bin =ifelse(SIZE < BIN.MAX[i] & SIZE >= BIN.MIN[i],BIN[i],bin))
+  dat.seme.all <- dat.seme.all %>% 
+    mutate(bin =ifelse(SIZE < BIN.MAX[i] & SIZE >= BIN.MIN[i],BIN[i],bin))
 }
 
 dat.seme.ad.binned <- dat.seme.ad %>% group_by(YEAR,SITE,SPECIES,bin) %>% # Sum across transects, depth zones
                         summarise(COUNT = sum(COUNT))
+dat.seme.all.binned <- dat.seme.all %>% group_by(YEAR,SITE,SPECIES,bin) %>% # Sum across transects, depth zones
+  summarise(COUNT = sum(COUNT))
+
+
 
 dat.seme.ad$SITE <- factor(dat.seme.ad$SITE,
                            levels=c("Neah Bay","Tatoosh Island","Cape Alava",
@@ -93,6 +106,16 @@ dat.seme.ad.binned$SITE <- factor(dat.seme.ad.binned$SITE,
                            levels=c("Neah Bay","Tatoosh Island","Cape Alava",
                                     "Cape Johnson","Destruction Island"))
 
+
+dat.seme.all$SITE <- factor(dat.seme.all$SITE,
+                           levels=c("Neah Bay","Tatoosh Island","Cape Alava",
+                                    "Cape Johnson","Destruction Island"))
+
+dat.seme.all.binned$SITE <- factor(dat.seme.all.binned$SITE,
+                                  levels=c("Neah Bay","Tatoosh Island","Cape Alava",
+                                           "Cape Johnson","Destruction Island"))
+
+################3 PLOTS
     
 p.seme.size1 <- ggplot(dat.seme.ad) +
                     geom_col(aes(x=SIZE,y=COUNT)) +
@@ -128,23 +151,26 @@ p.seme.size.bin1 <- ggplot(dat.seme.ad.binned) +
 p.seme.size.bin1
 
 p.seme.size.bin2 <- ggplot(dat.seme.ad.binned) +
-  geom_col(aes(x=bin,y=COUNT),width=4) +
+  geom_col(aes(x=bin,y=COUNT,color=SITE,fill=SITE),width=4) +
   facet_wrap(~YEAR,ncol=1) +
   labs(x="Length (5 cm bins)",y="Count") +
   theme_bw()
-p.seme.size.bin
+p.seme.size.bin2
 
-p.seme.size3
+p.seme.size.bin3 <- ggplot(dat.seme.ad.binned) +
+  geom_col(aes(x=bin,y=COUNT,color=SITE,fill=SITE),width=4) +
+  facet_wrap(~YEAR,ncol=1) +
+  labs(x="Length (5 cm bins)",y="Count") +
+  theme_bw()
+p.seme.size.bin3
 
 
-###
+## 3 INCLUDE YOY sizes
 
-# Define codes for rockfish 
-ROCKFISH <- c(as.character(species_names$species[grep("SE",species_names$species)]),"RYOY")
-
-###############################
-###############################
-# Repeat for 2016 and later data.
-###############################
-###############################
-
+p.seme.size.all.bin1 <- ggplot(dat.seme.all.binned) +
+  geom_col(aes(x=bin,y=COUNT)) +
+  facet_grid(SITE~YEAR) +
+  labs(x="Length (5cm bins)",y="Count") +
+  scale_y_continuous(trans="sqrt")
+  theme_bw()
+p.seme.size.all.bin1

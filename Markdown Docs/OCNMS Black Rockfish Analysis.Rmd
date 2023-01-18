@@ -1,0 +1,152 @@
+---
+title: "Black Rockfish Analysis OCNMS"
+author: "Ole Shelton"
+date: "1/17/2023"
+output:
+  pdf_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(xtable)
+
+# This is a padded data.frame which includes all transects
+# includes zero observations
+# includes low visibility transects which will be dropped.
+dat.fish <- readRDS("Fish_2015-2022.rds")
+
+# Filter to include only black rockfish or "small" size category (rockfish YOY)
+dat.bk <- dat.fish %>% filter(species %in% c("SEME")) %>%
+              bind_rows(.,
+                        dat.fish %>% filter(size_class %in% c("small")))
+
+# Drop transects where the visibility is less than the visibility threshold (2m):
+VIS_LIM <- 2
+dat.bk <- dat.bk %>% filter(vis_m >= VIS_LIM)
+
+```
+
+# Data description
+These are some analyses based on the 2015-22 survey data for fish. I've done a bunch of processing in the Git repo (file "/GitHub/OCNMS/R scripts/Fish, Invert, Kelp Analysis/Swath Fish.R") for all of the species. We have filtered out the just the black rockfish data for this analysis. 
+
+First, we can look at the sampling locations of our survey. 
+
+INSERT MAP HERE.
+
+## Insert methods description
+
+
+
+Here is how the number fish transects with visibility >2m were distributed across sites and years.  The number of transects at 5m and 10m are combined in this table.  2015 includes only surveys conducted at 5m depth. Other years have data approximately evenly split between 5m and 10m depths.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(xtable)
+
+# here are the sites ordered from S to N
+nom <- c("Destruction Island","Teahwhit Head","Cape Johnson","Rock 305","Cape Alava","Point of the Arches","Anderson Point","Tatoosh Island","Chibadehl Rocks","Neah Bay")
+N.trans <- dat.bk %>% distinct(year,site,zone,transect,observer) %>% group_by(year,site,zone) %>%
+              dplyr::summarise(N=length(transect))
+N.trans.site.year <- N.trans %>% group_by (year,site) %>% summarise(N=sum(N))
+
+N.trans$site <- factor(N.trans$site,levels=nom)
+N.trans.site.year$site <- factor(N.trans.site.year$site,levels=nom)
+
+N.trans <- N.trans %>% arrange(site)
+#A <- left_join(A,nom.merge,by=c("site"="nom"))
+N.trans.1 <- pivot_wider(N.trans, id_cols = c("year","zone"),
+                                names_from=c("site"),
+                                values_from=c("N")) 
+N.trans.site.year <- N.trans.site.year %>% arrange(site,year)
+N.trans.2 <- pivot_wider(N.trans.site.year, id_cols = c("year"),
+                                names_from=c("site"),
+                                values_from=c("N")) 
+N.trans.site.year <- N.trans.site.year %>% arrange(year)
+N.trans.3 <- pivot_wider(N.trans.site.year, id_cols =c("site") ,
+                                names_from= c("year"),
+                                values_from=c("N")) 
+
+N.trans.2[is.na(N.trans.2)] <- 0
+N.trans.3[is.na(N.trans.3)] <- 0
+N.trans.2 <- N.trans.2 %>% arrange(year)
+
+N.trans.3$site <- factor(N.trans.3$site,levels=nom)
+N.trans.3 <- N.trans.3 %>% arrange(site)
+
+N.trans.1[is.na(N.trans.1)] <- 0
+N.trans.1 <- N.trans.1 %>%ungroup() %>% dplyr::select(-year,-zone) %>% mutate(Total= rowSums(.)) %>%
+              pull(Total) %>%
+              bind_cols(N.trans.1,.) %>%
+              arrange(year,zone)
+colnames(N.trans.1)[ncol(N.trans.1)] <- "Total"
+
+N.trans.3 <- N.trans.3 %>% dplyr::select(-site) %>% colSums(.) %>% data.frame() %>% 
+                t() %>% bind_cols(site="TOTAL",.) %>% bind_rows(N.trans.3,.)
+```
+
+```{r echo=FALSE} 
+library(knitr)
+kable(N.trans.1)
+
+kable(N.trans.3)
+``` 
+
+#  Abundance trends
+
+## Large (>10 cm total length) Black rockfish trends
+
+To calculate the average density of black rockfish in each year, we first calculate the mean density and standard error per site in each year.  We treat each transect as a i.i.d. sample of black rockfish density within each site; we ignore depth differences in abundance within a site. 
+
+```{r echo=FALSE} 
+# GENERATE INDEXES BY SITE and AMONG SITES
+dat.bk.summary <- dat.bk %>% filter(size_class=="large")
+  
+#check to see that this only contains large black rockfish (should be species "SEME")
+dat.bk.summary %>% distinct(species,year,size_class)
+  
+# summarize using means and standard errors
+dat.bk.summary <- dat.bk.summary %>%
+                    group_by(year,site,species) %>% 
+                    summarise(Mean=mean(Count),
+                              VAR = var(Count),
+                              SD=sd(Count),
+                              N=length(Count),
+                              SE=SD/sqrt(N))
+      # We have a bunch of 0 observations, which preclude using weighting by the SE.
+      # So I used n_transects as the weights for each site.
+
+
+
+ggplot(dat.bk.summary) + 
+  geom_point(aes(x=year,y=Mean)) +
+  geom_errorbar(aes(x=year,ymin=Mean-SE,ymax=Mean+SE))
+  
+
+# Do error bars via simulation.
+
+# Draw each site independently from a t-distribution.
+# with distribution mu = Mean, sigma= SD, df=
+
+
+
+
+# Calculate among                     
+  
+bk.summary.year <- dat.bk.summary %>% ungroup() %>%
+                      group_by(year) %>%
+                      summarise(s2 = mean(VAR),
+                                s1 = var(Mean))
+  mutate(w= N) %>%
+                    group_by(year,species) %>%
+                    mutate(W = sum(w),std.w = w/W) 
+                    
+bk.summary.year <- dat.bk.summary %>% group_by(year) %>%
+                      summarise(grand_mean = sum(Mean * std.w),
+                                grand_var  = var(Mean)*sum(std.w^2),
+                                grand_sd   = sqrt(grand_var))
+                                
+
+```
