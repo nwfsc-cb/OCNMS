@@ -93,13 +93,11 @@ dat.seme.ad.binned$SITE <- factor(dat.seme.ad.binned$SITE,
                            levels=c("Neah Bay","Tatoosh Island","Cape Alava",
                                     "Cape Johnson","Destruction Island"))
 
-    
 p.seme.size1 <- ggplot(dat.seme.ad) +
                     geom_col(aes(x=SIZE,y=COUNT)) +
                     facet_grid(SITE~YEAR) +
                     labs(x="Length(cm)",y="Count") +
                     theme_bw()
-
 p.seme.size1
 
 p.seme.size2 <- ggplot(dat.seme.ad) +
@@ -132,9 +130,7 @@ p.seme.size.bin2 <- ggplot(dat.seme.ad.binned) +
   facet_wrap(~YEAR,ncol=1) +
   labs(x="Length (5 cm bins)",y="Count") +
   theme_bw()
-p.seme.size.bin
-
-p.seme.size3
+p.seme.size.bin2
 
 
 ###
