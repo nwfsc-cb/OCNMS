@@ -11,12 +11,20 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-library(tidyverse)
-library(xtable)
+  library(tidyverse)
+  library(xtable)
+  library(terra)
+  library(ggplot2)
+  library(maps)
+  library(mapdata)
+  library(mapproj)
+
 
 # This is a padded data.frame which includes all transects
 # includes zero observations
 # includes low visibility transects which will be dropped.
+
+# All processing steps can be found in the Git repo (file "/GitHub/OCNMS/R scripts/Fish, Invert, Kelp Analysis/Swath Fish.R") for all of the species. We have filtered out the just the black rockfish data for this analysis. 
 dat.fish <- readRDS("Fish_2015-2022.rds")
 
 # Filter to include only black rockfish or "small" size category (rockfish YOY)
@@ -28,22 +36,115 @@ dat.bk <- dat.fish %>% filter(species %in% c("SEME")) %>%
 VIS_LIM <- 2
 dat.bk <- dat.bk %>% filter(vis_m >= VIS_LIM)
 
+# Read in length data from all years.
+# This data comes from the processing script:
+# source("../R scripts/2022-23 Black Rockfish Assessment/Process Length Structure.R")
+
+load("Black_rockfish_lengths_2015-22.Rdata")
+# relevant object here is "length.dat"
+
 ```
 
 # Data description
-These are some analyses based on the 2015-22 survey data for fish. I've done a bunch of processing in the Git repo (file "/GitHub/OCNMS/R scripts/Fish, Invert, Kelp Analysis/Swath Fish.R") for all of the species. We have filtered out the just the black rockfish data for this analysis. 
+These are derived data products relevant to estimating black rockfish abundance and size stemming from NWFSC dive surveys in the Olympic Coast National Marine Sanctuary (OCNMS) conducted between 2015 and 2022. Description of survey methods and aims are detailed in Tolimieri et al. (2023). We provide a brief summary of methods relevant to fish surveys here.
 
-First, we can look at the sampling locations of our survey. 
+Divers on SCUBA conducted in situ surveys to count fish at each site along benthic belt transects (30 m by 2 m) following slightly modified procedures described in Malone et al.(2022). Transects were conducted within or directly adjacent to canopy kelp beds (consisting of giant *Macrocystis pyrifera* or bull *Nereocystis luetkeana* kelps).  From 2016 on, we surveyed at 5 sites (Fig. \ref{fig:p.map}), sampling at 2 locations within each site separated by >100 m, and 2 depths within each location (5 and 10 m) Our goal was to complete 6 replicate transects at each year-site-depth combination. In 2015 surveyed at 10 sites and conducted 4 transects per site at 5 m depth (Fig. \ref{fig:p.map}).
 
-INSERT MAP HERE.
+During each fish transect, we counted and estimated the size (total length to nearest cm) of all fishes >5 cm total length; the exception was rockfishes *Sebastes* spp., for which we estimated sizes of all individuals. Rockfishes $\leq$ 10 cm were considered young of year. Divers also estimated horizontal visibility on each transect by determining the distance at which the lead diver could distinguish their buddy’s extended fingers. Transects with visibility less than 2 m were excluded from analyses.
 
-## Insert methods description
+Because it is difficult to visually distinguish many rockfish species when they are small, we categorized juvenile rockfishes into 5 groups established in the literature (Johansson et al. 2018, Markel and Shurin 2020). (1) Yellowtail and black (YTB) included both yellowtail (*S. flavidus*) and black (*S. melanops*) rockfishes. (2) The copper/quillback/brown (CQB) group included copper (*S. caurinus*), quillback (*S. maliger*), and brown (*S. auriculatus*) rockfishes. We were able to identify (3) canary (*S. pinniger*) and (4) blue rockfish (*S. mystinus*) to species. (5) Unidentified individuals were categorized as juvenile rockfishes.
 
-All fish density and size data were collected during SCUBA surveys 
+**Citations from the above section**
 
+Johansson ML, Litz MN, Brodeur RD, Britt TA, Vanegas CA, Hyde JR, Banks MA (2018) Seasonal distribution of late larval and juvenile rockfish (Sebastes spp.) and associated environmental conditions off Oregon and Washington: new insights based on genetics. Fish Bull 116: 266-80.
 
+Malone DP, Davis K, Lonhart SI, Parsons-Field A, Caselle JE, Carr MH (2022) Large scale, multi-decade monitoring data from kelp forest ecosystems in California and Oregon (USA). Ecology 103: e3630
 
-Here is how the number fish transects with visibility >2m were distributed across sites and years.  The number of transects at 5m and 10m are combined in this table.  2015 includes only surveys conducted at 5m depth. Other years have data approximately evenly split between 5m and 10m depths.
+Markel RW, Shurin JB (2020) Contrasting effects of coastal upwelling on growth and recruitment of nearshore Pacific rockfishes (genus Sebastes). Can J Fish Aquat Sci 77: 950-962
+
+[Tolimeiri et al. 2023. Changes in kelp forest communities off Washington, USA, during and after the 2014-2016 marine heatwave and sea star wasting syndrome. Marine Ecology Progress Series 703:47-63]
+
+```{r,echo=FALSE,warning=FALSE,message=FALSE}
+  #### READ IN WASHINGTON MARINE SHORELINES (FROM http://www.ecy.wa.gov/services/gis/data/data.htm
+  
+  #base.dir <- getwd()
+#   gis.dir<- "/Users/ole.shelton/GitHub/OCNMS/Data/PG Shore shore_thematic_UTM10/"
+#   setwd(gis.dir)
+#   # shore.poly	<-	readShapePoly("shore_thematic_UTM10.shp")
+#   
+#   shore.poly	<-	readOGR(dsn=".","shore_thematic_UTM10")
+#   shore		<-	data.frame(shore.poly)
+# 
+#   shore.dat	<-	 as(shore.poly,"data.frame")
+#   shore.dat$NEW	<- 1:nrow(shore.dat)
+#   shore.poly@data$id 	= rownames(shore.poly@data)
+#   shore.points		<-	fortify(shore.poly,region="id")
+#   shore.df			  <- merge(shore.points,shore.poly@data,by="id")
+#   write.csv(shore.df,file="shore df.csv",row.names=F)
+  shore.df        <- read.csv("../Data/PG Shore shore_thematic_UTM10/shore df.csv")
+  
+  # setwd(base.dir)
+  PROJ <- "+proj=utm +zone=10 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0"
+  
+  temp <- vect(cbind(shore.df$long,shore.df$lat),crs=PROJ)
+  temp2 <- project(temp,"+proj=longlat +datum=WGS84")
+  shore.df[,c("lon2","lat2")] <- geom(temp2)[,c("x","y")]
+  
+  loc <-  read.csv("Survey locations.csv",fileEncoding="latin1")
+  loc <- loc %>% filter(type %in% c("2015 only","2015-22"))
+  loc$nudge_x = 0.09
+  loc$nudge_x[loc$Site =="Pt. of the Arches"] = 0.12
+  loc$nudge_x[loc$Site =="Tatoosh Is."] = -0.08
+  loc$nudge_x[loc$Site =="Chibahdehl"] = 0.08
+  loc$nudge_x[loc$Site =="Neah Bay"] = 0.08
+  loc$nudge_y = 0
+  #loc$nudge_y[loc$Site =="Neah Bay"] = 0
+  loc$nudge_y[loc$Site =="Chibahdehl"] = 0.01
+  #loc$nudge_y[loc$Site =="Tatoosh Is."] = 0
+  # loc.new				<- cbind(loc$lon, loc$latitude)
+  # loc.new.sp		<- SpatialPoints(loc.new,CRS("+proj=longlat +ellps=WGS84 +datum=WGS84"))
+  # 
+  # loc.new.sp.NAD83	<- spTransform(loc.new.sp, CRS(PROJ))
+  # new.dat			      <- as(loc.new.sp.NAD83,"data.frame")
+  # colnames(new.dat)	<- c("LonUTM","LatUTM")
+  # loc <- data.frame(loc,new.dat)
+  
+  
+  x.lim =c(-124.85,-124.3)
+  y.lim =c(47.65,48.4)
+  
+  #wa <- map_data('worldHires','USA')
+  #quartz(width=3,height=5)
+  #wa <- map_data("state",region = c('washington'))
+  p.map	<-	ggplot()+
+				theme_bw() +
+				theme(legend.key =  element_rect(fill = "white", colour = "white"),
+					panel.border = element_rect(fill = NA, colour = "black",size=1.5)) +
+		  #  geom_polygon(data=wa,aes(long,lat,group=group),fill=8,color="black")	+
+				#coord_cartesian(xlim = x.lim,ylim=y.lim)     +
+        geom_polygon(data=shore.df[shore.df$POLYTYPE == "Land" | shore.df$POLYTYPE == "Island" ,],
+                     aes(lon2,lat2,group=group),fill=grey(0.7),color=NA)+
+        geom_point(data= loc %>% filter(type %in% c("2015-22","2015 only")),aes(x=lon,y=lat,color=type)) +
+        scale_color_discrete("Survey")+
+            geom_text(data= loc %>% filter(type %in% c("2015-22","2015 only")),
+                  aes(label=Site,x=lon,y=lat),size=2.5,
+                  #check_overlap = TRUE,
+                  nudge_x=loc$nudge_x,
+                  nudge_y=loc$nudge_y
+                  ) +
+        xlab("Longitude") +
+			  ylab("Latitude") +
+        coord_fixed(ratio=1.3,xlim =x.lim,ylim=y.lim)
+	
+	#dev.off()
+  		# 	bGrid +bAxis + bBack + bTics +
+
+```
+```{r echo=FALSE,warning=FALSE,fig.height = 5,fig.align='center', fig.cap ="\\label{fig:p.map} Dive survey locations along the coast of Washington state."}
+print(p.map)
+```
+
+As a result of our 2m visibility requirements, there were transects that were omitted from the analyses. The following tables show is how the number fish transects with visibility >2m were distributed across sites and years. 2015 includes only surveys conducted at 5m depth. Other years have data approximately evenly split between 5m and 10m depths.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 library(xtable)
@@ -89,14 +190,16 @@ N.trans.3 <- N.trans.3 %>% dplyr::select(-site) %>% colSums(.) %>% data.frame() 
                 t() %>% bind_cols(site="TOTAL",.) %>% bind_rows(N.trans.3,.)
 ```
 
-```{r echo=FALSE} 
+```{r echo=FALSE,message=FALSE} 
 library(knitr)
-kable(N.trans.1)
+kable(N.trans.1,
+      caption = "Number of transects conducted by year, site and depth zone.  Only transects that had at least 2m visibility are included")
 ``` 
 
 \newpage
-```{r echo=FALSE} 
-kable(N.trans.3)
+```{r echo=FALSE,message=FALSE} 
+kable(N.trans.3,
+      caption = "Number of transects conducted by year and site.  Only transects that had at least 2m visibility are included")
 ``` 
 
 #  Abundance trends
@@ -198,7 +301,7 @@ print(bk.rockfish.ts)
 
 # Young of year black rockfish
 
-Unlike adult black rockfish, small (<10 cm total length) rockfish cannot be unequivocally visually identified to species. In most cases, species can be identified to a complex of a few species. For small rockfish, black rockfish occur in a complex of two species, black rockfish and yellowtail rockfish.  Yellowtail rockfish are rare in Washington state and we consider their contribution to small rockfish size categories to be trivial. Nearly all small rockfish fall into the 4 to 7cm length range and all are considered to be fish that recruited to the kelp forest from the plankton during the calender year of the survey.  Therefore, we view the density of <10cm rockfish to be an indicator of black rockfish recruitment.
+Unlike adult black rockfish, small (<10 cm total length) rockfish cannot be unequivocally visually identified to species. In most cases, species can be identified to a complex of a few species. For small rockfish, black rockfish occur in a complex of two species, black rockfish and yellowtail rockfish.  Yellowtail rockfish are rare in Washington state and we consider their contribution to small rockfish size categories to be trivial. Nearly all small rockfish fall into the 4 to 7cm length range and all are considered to have recruited from the plankton during the calender year of the survey.  Therefore, we view the density of <10cm rockfish to be an indicator of black rockfish recruitment.
 
 To derive estimates of overall young-of-year densities, we use identical methods to those described for adult rockfish densities and provide estimated densities per year for our survey area (Fig. \ref{fig:yoy.ts})
 
@@ -289,38 +392,112 @@ yoy.ts <- ggplot() +
 ```
 
 
-```{r echo=FALSE, warning=FALSE, fig.yoy.ts, fig.height = 4, fig.width = 6,fig.align='center',fig.cap ="\\label{fig:yoy.ts} Time-series of estimated young-of-year rockfish (black-yellowtail complex) density on the Washington coast. Black points show means and standard errors for individual sites. Blue points show coastwide density estimates, interquartile range and 95\\% intervals for each year."}
+```{r echo=FALSE, warning=FALSE, fig.yoy.ts, fig.height = 4, fig.width = 6,fig.align='center',fig.cap ="\\label{fig:yoy.ts} Time-series of estimated young-of-year rockfish (black-yellowtail complex) density on the Washington coast. Black points show means and standard errors for individual sites. Blue points show coastwide density estimates, interquartile range and 95\\% intervals for each year. Note y-axis is square root "}
 print(yoy.ts)
 ```
 
 \newpage
 ## Information on size data for black rockfish 2015-2022
 
-In addition to abundance data, we visually estimate size (total length) for all individuals observed during the surveys.  Young-of-year show remarkably limited variation in size ()
+In addition to abundance data, we visually estimate size (total length) for all individuals observed during the surveys.  Young-of-year show remarkably limited variation in size and so we exclude them from the analysis.
 
-<!-- ```{r echo=T,warning=FALSE,fig.height = 4.25, fig.width = 7,fig.align='center'} -->
-<!-- source("../R scripts/2022-23 Black Rockfish Assessment/Process Length Structure.R") -->
+```{r echo=FALSE,message=FALSE,warning=FALSE}
 
-<!-- ``` -->
-
-<!-- Plots of size distribution grouped into 5 cm bins. -->
-<!-- ```{r echo=FALSE,warning=FALSE,fig.height = 7, fig.width = 8,fig.align='center'} -->
-<!-- print(p.seme.size.bin1) -->
-
-<!-- ``` -->
+# This data comes from the processing script:
+# source("../R scripts/2022-23 Black Rockfish Assessment/Process Length Structure.R")
+dat.seme.all.binned <- length.dat$dat.seme.all.binned  # all black rockfish (include YOYs in 5cm bins)
+dat.seme.all        <- length.dat$dat.seme.all        # all black rockfish (include YOYs)
+dat.seme.ad.binned  <- length.dat$dat.seme.ad.binned # adult black rockfish (>10cm in 5cm bins)
+dat.seme.ad         <- length.dat$dat.seme.ad # adult black rockfish 
 
 
-<!-- ```{r echo=FALSE,warning=FALSE,fig.width = 6, fig.height = 7,fig.align='center'} -->
-<!-- print(p.seme.size.bin2) -->
+################3 PLOTS
+p.seme.size1 <- ggplot(dat.seme.ad) +
+                    geom_col(aes(x=SIZE,y=COUNT)) +
+                    facet_grid(SITE~YEAR) +
+                    labs(x="Length(cm)",y="Count") +
+                    theme_bw()
+#p.seme.size1
 
-<!-- ``` -->
+p.seme.size2 <- ggplot(dat.seme.ad) +
+  geom_col(aes(x=SIZE,y=COUNT,color=SITE,fill=SITE)) +
+  facet_wrap(~YEAR,ncol=1) +
+  labs(x="Length(cm)",y="Count") +
+  theme_bw()
+#p.seme.size2
 
-<!-- \newpage -->
-<!-- Plots of size distribution... but without 5cm bins -->
+p.seme.size3 <- ggplot(dat.seme.ad) +
+  geom_col(aes(x=SIZE,y=COUNT)) +
+  facet_wrap(~YEAR,ncol=1) +
+  labs(x="Length(cm)",y="Count") +
+  theme_bw()
+#p.seme.size3
 
-<!-- ```{r echo=FALSE,warning=FALSE,fig.width = 6, fig.height = 7,fig.align='center'} -->
-<!-- print(p.seme.size2) -->
+### BINNED (5cm bins)
+p.seme.size.bin1 <- ggplot(dat.seme.ad.binned) +
+  geom_col(aes(x=bin,y=COUNT)) +
+  facet_grid(SITE~YEAR) +
+  labs(x="Length (5cm bins)",y="Count") +
+  theme_bw()
+#p.seme.size.bin1
 
-<!-- ``` -->
+p.seme.size.bin2 <- ggplot(dat.seme.ad.binned) +
+  geom_col(aes(x=bin,y=COUNT,color=SITE,fill=SITE),width=4) +
+  facet_wrap(~YEAR,ncol=1) +
+  labs(x="Length (5 cm bins)",y="Count") +
+  theme_bw()
+#p.seme.size.bin2
 
+###
+p.seme.size.bin3 <- ggplot(dat.seme.ad.binned) +
+  geom_col(aes(x=bin,y=COUNT,color=SITE,fill=SITE),width=4) +
+  facet_wrap(~YEAR,ncol=1) +
+  labs(x="Length (5 cm bins)",y="Count") +
+  theme_bw()
+#p.seme.size.bin3
+
+
+## 3 INCLUDE YOY sizes
+
+p.seme.size.all.bin1 <- ggplot(dat.seme.all.binned) +
+  geom_col(aes(x=bin,y=COUNT)) +
+  facet_grid(SITE~YEAR) +
+  labs(x="Length (5cm bins)",y="Count") +
+  scale_y_continuous(trans="sqrt") +
+  theme_bw()
+#p.seme.size.all.bin1
+
+
+```
+
+Plots of size distribution grouped into 5 cm bins.
+```{r echo=FALSE,warning=FALSE,fig.height = 7, fig.width = 8,fig.align='center'}
+print(p.seme.size.bin1)
+
+```
+
+
+```{r echo=FALSE,warning=FALSE,fig.width = 6, fig.height = 7,fig.align='center'}
+print(p.seme.size.bin2)
+
+```
+
+\newpage
+Plots of size distribution, but without 5cm bins.  While nominally sizes are recorded in 1cm increments, in practice sizes in 5cm increments are recorded.
+
+```{r echo=FALSE,warning=FALSE,fig.width = 6, fig.height = 7,fig.align='center'}
+print(p.seme.size2)
+
+```
+
+\newpage a
+```{r echo=TRUE,warning=FALSE}
+# Write output from analysis to file for ease of use 
+bk.rockfish.output <- list(
+  yoy.trend = yoy.trend, # year-specific estimates of density for young of year
+  bk.trend = bk.trend   # year-specific estimates of density for >10cm black rockfish.
+)
+
+save(bk.rockfish.output,file="Black_rockfish_OCNMS_indices.Rdata")
+```
 

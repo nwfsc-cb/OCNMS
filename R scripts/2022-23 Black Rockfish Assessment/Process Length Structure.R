@@ -173,6 +173,26 @@ p.seme.size.all.bin1 <- ggplot(dat.seme.all.binned) +
   geom_col(aes(x=bin,y=COUNT)) +
   facet_grid(SITE~YEAR) +
   labs(x="Length (5cm bins)",y="Count") +
-  scale_y_continuous(trans="sqrt")
+  scale_y_continuous(trans="sqrt") +
   theme_bw()
 p.seme.size.all.bin1
+
+
+# write data and plots to file
+
+length.dat <- list(
+        # data frames that include all sizes.
+        dat.seme.all.binned = dat.seme.all.binned,
+        dat.seme.all = dat.seme.all,
+        # data frames that include only individuals > 10cm
+        dat.seme.ad.binned = dat.seme.ad.binned,
+        dat.seme.ad = dat.seme.ad)
+
+# Write to file.        
+save(length.dat,file="Black_rockfish_lengths_2015-22.Rdata")
+
+
+
+
+
+
