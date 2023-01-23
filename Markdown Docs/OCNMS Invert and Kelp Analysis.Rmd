@@ -1,0 +1,701 @@
+---
+title: "Invert and KelpAnalysis OCNMS"
+author: "Ole Shelton"
+date: "01/20/2023"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(xtable)
+source("/Users/ole.shelton/GitHub/OCNMS/R scripts/Fish, Invert, Kelp Analysis/Swath Inverts.R")
+```
+
+# Exploratory analysis 
+These are some analyses based on the 2015- survey data for invertebrates. I've done a bunch of processing in the Git repo (file "/GitHub/OCNMS/R scripts/Fish, Invert, Kelp Analysis/Swath Inverts.R"").
+
+During the sampling, a total of `r A<-dat.swath %>% filter(group=="Invert") %>% dplyr::select(species) %>% as.data.frame(); length(unique(A$species))` invertebrate species and species groups were observed. Here is how the sampling was distributed across sites and 5m and 10m depths among years (2015-present). Surveys from pre-2015 were not collected by NWFSC and have a different design and methods.  They also are only available for some species
+
+```{r  results="asis",echo=F,warning=F,message=F}
+### The relevant dataframes are dat.invert and dat.algae for 2015 and later.
+### dat.invert.density for 1987 to present.
+
+library(knitr)
+invert.transects <- dat.invert %>% group_by(year,site,transect,observer,area,zone) %>% 
+        summarise(n.sp=length(transect)) %>% group_by(year,site,zone) %>% 
+        summarise(N=length(n.sp)) %>% dcast(year+site~zone)
+invert.transects[is.na(invert.transects) ==T] <-0 
+
+invert.transects$site <- factor(invert.transects$site,levels=
+                                c("Destruction Island",
+                                "Teahwhit Head",  
+                                "Rock 305",
+                                "Cape Johnson",
+                                "Anderson Point",      
+                                "Cape Alava",                  
+                                "Point of the Arches", 
+                                "Tatoosh Island",
+                                "Chibadehl Rocks",
+                                "Neah Bay"))
+invert.transects <- invert.transects %>% arrange(year,site)
+kable(invert.transects)
+```
+
+Let's go through the main species groups individually to look at changes through time.
+
+## Sea urchins 
+Urchins include these species
+
+```{r  results="asis",echo=F,warning=F,message=F}
+GROUP <- "urchin"
+### The relevant dataframes are dat.invert and dat.algae for 2015 and later.
+### dat.invert.density for 1987 to present.
+
+# you can find out what the GROUPS are option 
+
+library(knitr)
+A<- species_names %>% filter(species %in% urchin) %>% rename(code=species) %>% dplyr::select(-group)
+kable(A)
+
+```
+
+```{r ,echo=F,warning=F,message=F}
+ALP <- 0.5
+p1 <- ggplot(dat.invert.group %>% filter(group.name == GROUP,site %in% SITES )) +
+    geom_point(aes(x=year,y=Mean,color=site),alpha=ALP) +
+    geom_line(aes(x=year,y=Mean,color=site),alpha=ALP) +
+    geom_errorbar(aes(x=year,ymin=Mean-SE,ymax=Mean+SE,color=site),alpha=ALP)+
+    
+    ylab(expression("Mean density (m"^-2*")"))+
+    xlab("Year") +
+    scale_color_discrete("Site") +
+    ggtitle("Sea Urchins, all depths") +
+    theme_bw()
+
+p2 <- ggplot(dat.invert.group.zone %>% filter(group.name == GROUP,site %in% SITES )) +
+        geom_point(aes(x=year,y=Mean,color=site),alpha=ALP) +
+    geom_line(aes(x=year,y=Mean,color=site),alpha=ALP) +
+    geom_errorbar(aes(x=year,ymin=Mean-SE,ymax=Mean+SE,color=site),alpha=ALP)+
+    ylab(expression("Mean density (m"^-2*")"))+
+    xlab("Year") +
+    scale_color_discrete("Site") +
+    ggtitle("Sea Urchins by depth") +
+    facet_wrap(~zone,nrow=2) +
+    theme_bw()
+
+
+A<- species_names %>% filter(species %in% urchin) %>% rename(code=species) %>% dplyr::select(-group)
+P.sp <- list()
+for(i in 1:nrow(A)){
+P.sp[[i]] <- ggplot(dat.invert.species.zone %>% filter(species==A$code[i],site %in% SITES )) +
+        geom_point(aes(x=year,y=Mean,color=site),alpha=ALP) +
+    #geom_line(aes(x=year,y=Mean,color=site),alpha=ALP) +
+    geom_errorbar(aes(x=year,ymin=Mean-SE,ymax=Mean+SE,color=site),alpha=ALP)+
+    ylab(expression("Mean density (m"^-2*")"))+
+    xlab("Year") +
+    scale_color_discrete("Site") +
+    ggtitle(paste(A$code[i],A$common.name[i])) +
+    facet_wrap(~zone,nrow=2) +
+    theme_bw()
+}
+
+print(p1)
+print(p2)
+for(i in 1:nrow(A)){
+    print(P.sp[[i]])
+}
+```
+<!-- 
+###################################################
+SEASTAR SECTION
+###################################################
+-->
+
+## Seastars 
+Seastar plots include these species
+```{r  results="asis",echo=F,warning=F,message=F}
+GROUP <- "seastar"
+### The relevant dataframes are dat.invert and dat.algae for 2015 and later.
+### dat.invert.density for 1987 to present.
+
+# you can find out what the GROUPS are option 
+
+library(knitr)
+A<- species_names %>% filter(species %in% seastar) %>% rename(code=species) %>% dplyr::select(-group)
+kable(A)
+
+```
+
+We also see these species, but they are often below the size threshold (2.5cm radius) so we do not include them in the summaries below
+```{r  results="asis",echo=F,warning=F,message=F}
+### The relevant dataframes are dat.invert and dat.algae for 2015 and later.
+### dat.invert.density for 1987 to present.
+
+# you can find out what the GROUPS are option 
+
+library(knitr)
+A<- species_names %>% filter(species %in% seastar.2) %>% rename(code=species) %>% dplyr::select(-group)
+kable(A)
+
+```
+
+```{r ,echo=F,warning=F,message=F}
+ALP <- 0.5
+p1 <- ggplot(dat.invert.group %>% filter(group.name == GROUP,site %in% SITES )) +
+    geom_point(aes(x=year,y=Mean,color=site),alpha=ALP) +
+    geom_line(aes(x=year,y=Mean,color=site),alpha=ALP) +
+    geom_errorbar(aes(x=year,ymin=Mean-SE,ymax=Mean+SE,color=site),alpha=ALP)+
+    
+    ylab(expression("Mean density (m"^-2*")"))+
+    xlab("Year") +
+    scale_color_discrete("Site") +
+    ggtitle("Seastars, all depths") +
+    theme_bw()
+
+p2 <- ggplot(dat.invert.group.zone %>% filter(group.name == GROUP,site %in% SITES )) +
+    geom_point(aes(x=year,y=Mean,color=site),alpha=ALP) +
+    geom_line(aes(x=year,y=Mean,color=site),alpha=ALP) +
+    geom_errorbar(aes(x=year,ymin=Mean-SE,ymax=Mean+SE,color=site),alpha=ALP)+
+    ylab(expression("Mean density (m"^-2*")"))+
+    xlab("Year") +
+    scale_color_discrete("Site") +
+    ggtitle("Seastars by depth") +
+    facet_wrap(~zone,nrow=2) +
+    theme_bw()
+
+print(p1)
+print(p2)
+A<- species_names %>% filter(species %in% seastar) %>% rename(code=species) %>% dplyr::select(-group)
+P.sp <- list()
+for(i in 1:nrow(A)){
+    if(nrow(dat.invert.species.zone %>% filter(species==A$code[i],site %in% SITES ))>0){
+    upper.lim = dat.invert.species.zone %>% filter(species==A$code[i],site %in% SITES )
+    upper.lim <- max(upper.lim$Mean+upper.lim$SE,na.rm=T)
+
+    P.sp[[i]] <- ggplot(dat.invert.species.zone %>% filter(species==A$code[i],site %in% SITES )) +
+        geom_point(aes(x=year,y=Mean,color=site),alpha=ALP) +
+    #geom_line(aes(x=year,y=Mean,color=site),alpha=ALP) +
+    geom_errorbar(aes(x=year,ymin=Mean-SE,ymax=Mean+SE,color=site),alpha=ALP)+
+    scale_y_continuous(limits = c(0,upper.lim)) +
+    ylab(expression("Mean density (m"^-2*")"))+
+    xlab("Year") +
+    scale_color_discrete("Site") +
+    ggtitle(paste(A$code[i],A$common.name[i])) +
+    facet_wrap(~zone,nrow=2) +
+    theme_bw()
+    }
+}
+for(i in 1:nrow(A)){
+    quartz(file=paste("seastar",i,".jpeg"),type="jpeg",dpi=600,height=5,width=7); print(P.sp[[i]]); dev.off()
+}
+
+```
+<!-- 
+###################################################
+CRAB SECTION
+###################################################
+GROUPS <- c("urchin","seastar","crab","bivalve","chiton","cucumber","gastropod","tunicate","anenome")
+
+-->
+
+## Crabs 
+Crabs plots include these species
+```{r  results="asis",echo=F,warning=F,message=F}
+GROUP <- "crab"
+### The relevant dataframes are dat.invert and dat.algae for 2015 and later.
+### dat.invert.density for 1987 to present.
+
+# you can find out what the GROUPS are option 
+
+library(knitr)
+A<- species_names %>% filter(species %in% crab) %>% rename(code=species) %>% dplyr::select(-group)
+kable(A)
+```
+
+```{r ,echo=F,warning=F,message=F}
+ALP <- 0.5
+p1 <- ggplot(dat.invert.group %>% filter(group.name == GROUP,site %in% SITES )) +
+    geom_point(aes(x=year,y=Mean,color=site),alpha=ALP) +
+    geom_line(aes(x=year,y=Mean,color=site),alpha=ALP) +
+    geom_errorbar(aes(x=year,ymin=Mean-SE,ymax=Mean+SE,color=site),alpha=ALP)+
+    
+    ylab(expression("Mean density (m"^-2*")"))+
+    xlab("Year") +
+    scale_color_discrete("Site") +
+    ggtitle(paste(GROUP,"all depths")) +
+    theme_bw()
+
+p2 <- ggplot(dat.invert.group.zone %>% filter(group.name == GROUP,site %in% SITES )) +
+    geom_point(aes(x=year,y=Mean,color=site),alpha=ALP) +
+    geom_line(aes(x=year,y=Mean,color=site),alpha=ALP) +
+    geom_errorbar(aes(x=year,ymin=Mean-SE,ymax=Mean+SE,color=site),alpha=ALP)+
+    ylab(expression("Mean density (m"^-2*")"))+
+    xlab("Year") +
+    scale_color_discrete("Site") +
+    ggtitle(paste(GROUP,"by depth")) +
+    facet_wrap(~zone,nrow=2) +
+    theme_bw()
+
+print(p1)
+print(p2)
+```
+<!-- 
+###################################################
+BIVALVE SECTION
+###################################################
+GROUPS <- c("urchin","seastar","crab","bivalve","chiton","cucumber","gastropod","tunicate","anenome")
+
+-->
+
+## Bivalves 
+Bivalve plots include these species
+```{r  results="asis",echo=F,warning=F,message=F}
+GROUP <- "bivalve"
+### The relevant dataframes are dat.invert and dat.algae for 2015 and later.
+### dat.invert.density for 1987 to present.
+
+# you can find out what the GROUPS are option 
+
+library(knitr)
+A<- species_names %>% filter(species %in% bivalve) %>% rename(code=species) %>% dplyr::select(-group)
+kable(A)
+
+
+```
+
+```{r ,echo=F,warning=F,message=F}
+ALP <- 0.5
+p1 <- ggplot(dat.invert.group %>% filter(group.name == GROUP,site %in% SITES )) +
+    geom_point(aes(x=year,y=Mean,color=site),alpha=ALP) +
+    geom_line(aes(x=year,y=Mean,color=site),alpha=ALP) +
+    geom_errorbar(aes(x=year,ymin=Mean-SE,ymax=Mean+SE,color=site),alpha=ALP)+
+    
+    ylab(expression("Mean density (m"^-2*")"))+
+    xlab("Year") +
+    scale_color_discrete("Site") +
+    ggtitle(paste(GROUP,"all depths")) +
+    theme_bw()
+
+p2 <- ggplot(dat.invert.group.zone %>% filter(group.name == GROUP,site %in% SITES )) +
+    geom_point(aes(x=year,y=Mean,color=site),alpha=ALP) +
+    geom_line(aes(x=year,y=Mean,color=site),alpha=ALP) +
+    geom_errorbar(aes(x=year,ymin=Mean-SE,ymax=Mean+SE,color=site),alpha=ALP)+
+    ylab(expression("Mean density (m"^-2*")"))+
+    xlab("Year") +
+    scale_color_discrete("Site") +
+    ggtitle(paste(GROUP,"by depth")) +
+    facet_wrap(~zone,nrow=2) +
+    theme_bw()
+
+print(p1)
+print(p2)
+```
+<!-- 
+###################################################
+CUCUMBER SECTION
+###################################################
+GROUPS <- c("urchin","seastar","crab","bivalve","chiton","cucumber","gastropod","tunicate","anenome")
+
+-->
+
+## Sea Cucumber 
+Sea cucumber plots include these species
+```{r  results="asis",echo=F,warning=F,message=F}
+GROUP <- "cucumber"
+### The relevant dataframes are dat.invert and dat.algae for 2015 and later.
+### dat.invert.density for 1987 to present.
+
+# you can find out what the GROUPS are option 
+
+library(knitr)
+A<- species_names %>% filter(species %in% cucumber) %>% rename(code=species) %>% dplyr::select(-group)
+kable(A)
+
+
+```
+
+```{r ,echo=F,warning=F,message=F}
+ALP <- 0.5
+p1 <- ggplot(dat.invert.group %>% filter(group.name == GROUP,site %in% SITES )) +
+    geom_point(aes(x=year,y=Mean,color=site),alpha=ALP) +
+    geom_line(aes(x=year,y=Mean,color=site),alpha=ALP) +
+    geom_errorbar(aes(x=year,ymin=Mean-SE,ymax=Mean+SE,color=site),alpha=ALP)+
+    
+    ylab(expression("Mean density (m"^-2*")"))+
+    xlab("Year") +
+    scale_color_discrete("Site") +
+    ggtitle(paste(GROUP,"all depths")) +
+    theme_bw()
+
+p2 <- ggplot(dat.invert.group.zone %>% filter(group.name == GROUP,site %in% SITES )) +
+    geom_point(aes(x=year,y=Mean,color=site),alpha=ALP) +
+    geom_line(aes(x=year,y=Mean,color=site),alpha=ALP) +
+    geom_errorbar(aes(x=year,ymin=Mean-SE,ymax=Mean+SE,color=site),alpha=ALP)+
+    ylab(expression("Mean density (m"^-2*")"))+
+    xlab("Year") +
+    scale_color_discrete("Site") +
+    ggtitle(paste(GROUP,"by depth")) +
+    facet_wrap(~zone,nrow=2) +
+    theme_bw()
+
+print(p1)
+print(p2)
+```
+
+<!-- 
+###################################################
+GASTROPOD SECTION
+###################################################
+GROUPS <- c("urchin","seastar","crab","bivalve","chiton","cucumber","gastropod","tunicate","anenome")
+
+-->
+
+## Gastropods
+Gastropod plots include these species
+```{r  results="asis",echo=F,warning=F,message=F}
+GROUP <- "gastropod"
+### The relevant dataframes are dat.invert and dat.algae for 2015 and later.
+### dat.invert.density for 1987 to present.
+
+# you can find out what the GROUPS are option 
+
+library(knitr)
+A<- species_names %>% filter(species %in% gastropod) %>% rename(code=species) %>% dplyr::select(-group)
+kable(A)
+
+
+```
+
+```{r ,echo=F,warning=F,message=F}
+ALP <- 0.5
+p1 <- ggplot(dat.invert.group %>% filter(group.name == GROUP,site %in% SITES )) +
+    geom_point(aes(x=year,y=Mean,color=site),alpha=ALP) +
+    geom_line(aes(x=year,y=Mean,color=site),alpha=ALP) +
+    geom_errorbar(aes(x=year,ymin=Mean-SE,ymax=Mean+SE,color=site),alpha=ALP)+
+    
+    ylab(expression("Mean density (m"^-2*")"))+
+    xlab("Year") +
+    scale_color_discrete("Site") +
+    ggtitle(paste(GROUP,"all depths")) +
+    theme_bw()
+
+p2 <- ggplot(dat.invert.group.zone %>% filter(group.name == GROUP,site %in% SITES )) +
+    geom_point(aes(x=year,y=Mean,color=site),alpha=ALP) +
+    geom_line(aes(x=year,y=Mean,color=site),alpha=ALP) +
+    geom_errorbar(aes(x=year,ymin=Mean-SE,ymax=Mean+SE,color=site),alpha=ALP)+
+    ylab(expression("Mean density (m"^-2*")"))+
+    xlab("Year") +
+    scale_color_discrete("Site") +
+    ggtitle(paste(GROUP,"by depth")) +
+    facet_wrap(~zone,nrow=2) +
+    theme_bw()
+
+print(p1)
+print(p2)
+```
+
+<!-- 
+###################################################
+TUNICATE SECTION
+###################################################
+GROUPS <- c("urchin","seastar","crab","bivalve","chiton","cucumber","gastropod","tunicate","anenome")
+
+-->
+
+## Tunicates
+Tunicates plots include these species
+```{r  results="asis",echo=F,warning=F,message=F}
+GROUP <- "tunicate"
+### The relevant dataframes are dat.invert and dat.algae for 2015 and later.
+### dat.invert.density for 1987 to present.
+
+# you can find out what the GROUPS are option 
+
+library(knitr)
+A<- species_names %>% filter(species %in% tunicate) %>% rename(code=species) %>% dplyr::select(-group)
+kable(A)
+
+
+```
+
+```{r ,echo=F,warning=F,message=F}
+ALP <- 0.5
+p1 <- ggplot(dat.invert.group %>% filter(group.name == GROUP,site %in% SITES )) +
+    geom_point(aes(x=year,y=Mean,color=site),alpha=ALP) +
+    geom_line(aes(x=year,y=Mean,color=site),alpha=ALP) +
+    geom_errorbar(aes(x=year,ymin=Mean-SE,ymax=Mean+SE,color=site),alpha=ALP)+
+    
+    ylab(expression("Mean density (m"^-2*")"))+
+    xlab("Year") +
+    scale_color_discrete("Site") +
+    ggtitle(paste(GROUP,"all depths")) +
+    theme_bw()
+
+p2 <- ggplot(dat.invert.group.zone %>% filter(group.name == GROUP,site %in% SITES )) +
+    geom_point(aes(x=year,y=Mean,color=site),alpha=ALP) +
+    geom_line(aes(x=year,y=Mean,color=site),alpha=ALP) +
+    geom_errorbar(aes(x=year,ymin=Mean-SE,ymax=Mean+SE,color=site),alpha=ALP)+
+    ylab(expression("Mean density (m"^-2*")"))+
+    xlab("Year") +
+    scale_color_discrete("Site") +
+    ggtitle(paste(GROUP,"by depth")) +
+    facet_wrap(~zone,nrow=2) +
+    theme_bw()
+
+print(p1)
+print(p2)
+```
+
+<!-- 
+###################################################
+TUNICATE SECTION
+###################################################
+GROUPS <- c("urchin","seastar","crab","bivalve","chiton","cucumber","gastropod","tunicate","anenome")
+
+-->
+
+## Anenomes
+Anenomes plots include these species
+```{r  results="asis",echo=F,warning=F,message=F}
+GROUP <- "anenome"
+### The relevant dataframes are dat.invert and dat.algae for 2015 and later.
+### dat.invert.density for 1987 to present.
+
+# you can find out what the GROUPS are option 
+
+library(knitr)
+A<- species_names %>% filter(species %in% anenome) %>% rename(code=species) %>% dplyr::select(-group)
+kable(A)
+
+
+```
+
+```{r ,echo=F,warning=F,message=F}
+ALP <- 0.5
+p1 <- ggplot(dat.invert.group %>% filter(group.name == GROUP,site %in% SITES )) +
+    geom_point(aes(x=year,y=Mean,color=site),alpha=ALP) +
+    geom_line(aes(x=year,y=Mean,color=site),alpha=ALP) +
+    geom_errorbar(aes(x=year,ymin=Mean-SE,ymax=Mean+SE,color=site),alpha=ALP)+
+    
+    ylab(expression("Mean density (m"^-2*")"))+
+    xlab("Year") +
+    scale_color_discrete("Site") +
+    ggtitle(paste(GROUP,"all depths")) +
+    theme_bw()
+
+p2 <- ggplot(dat.invert.group.zone %>% filter(group.name == GROUP,site %in% SITES )) +
+    geom_point(aes(x=year,y=Mean,color=site),alpha=ALP) +
+    geom_line(aes(x=year,y=Mean,color=site),alpha=ALP) +
+    geom_errorbar(aes(x=year,ymin=Mean-SE,ymax=Mean+SE,color=site),alpha=ALP)+
+    ylab(expression("Mean density (m"^-2*")"))+
+    xlab("Year") +
+    scale_color_discrete("Site") +
+    ggtitle(paste(GROUP,"by depth")) +
+    facet_wrap(~zone,nrow=2) +
+    theme_bw()
+
+print(p1)
+print(p2)
+```
+
+<!-- 
+###################################################
+NUDIBRANCH SECTION
+###################################################
+GROUPS <- c("urchin","seastar","crab","bivalve","chiton","cucumber","gastropod","tunicate","anenome")
+-->
+## Nudibranch
+Nudibranch plots include these species
+```{r  results="asis",echo=F,warning=F,message=F}
+GROUP <- "nudibranch"
+### The relevant dataframes are dat.invert and dat.algae for 2015 and later.
+### dat.invert.density for 1987 to present.
+
+# you can find out what the GROUPS are option 
+
+library(knitr)
+A<- species_names %>% filter(species %in% nudibranch) %>% rename(code=species) %>% dplyr::select(-group)
+kable(A)
+
+
+```
+
+```{r ,echo=F,warning=F,message=F}
+ALP <- 0.5
+p1 <- ggplot(dat.invert.group %>% filter(group.name == GROUP,site %in% SITES )) +
+    geom_point(aes(x=year,y=Mean,color=site),alpha=ALP) +
+    geom_line(aes(x=year,y=Mean,color=site),alpha=ALP) +
+    geom_errorbar(aes(x=year,ymin=Mean-SE,ymax=Mean+SE,color=site),alpha=ALP)+
+    
+    ylab(expression("Mean density (m"^-2*")"))+
+    xlab("Year") +
+    scale_color_discrete("Site") +
+    ggtitle(paste(GROUP,"all depths")) +
+    theme_bw()
+
+p2 <- ggplot(dat.invert.group.zone %>% filter(group.name == GROUP,site %in% SITES )) +
+    geom_point(aes(x=year,y=Mean,color=site),alpha=ALP) +
+    geom_line(aes(x=year,y=Mean,color=site),alpha=ALP) +
+    geom_errorbar(aes(x=year,ymin=Mean-SE,ymax=Mean+SE,color=site),alpha=ALP)+
+    ylab(expression("Mean density (m"^-2*")"))+
+    xlab("Year") +
+    scale_color_discrete("Site") +
+    ggtitle(paste(GROUP,"by depth")) +
+    facet_wrap(~zone,nrow=2) +
+    theme_bw()
+
+print(p1)
+print(p2)
+```
+
+<!-- 
+###################################################
+CHITON SECTION
+###################################################
+GROUPS <- c("urchin","seastar","crab","bivalve","chiton","cucumber","gastropod","tunicate","anenome")
+-->
+## Chiton
+Chiton plots include these species
+```{r  results="asis",echo=F,warning=F,message=F}
+GROUP <- "chiton"
+### The relevant dataframes are dat.invert and dat.algae for 2015 and later.
+### dat.invert.density for 1987 to present.
+
+# you can find out what the GROUPS are option 
+
+library(knitr)
+A<- species_names %>% filter(species %in% chiton) %>% rename(code=species) %>% dplyr::select(-group)
+kable(A)
+
+
+```
+
+```{r ,echo=F,warning=F,message=F}
+ALP <- 0.5
+p1 <- ggplot(dat.invert.group %>% filter(group.name == GROUP,site %in% SITES )) +
+    geom_point(aes(x=year,y=Mean,color=site),alpha=ALP) +
+    geom_line(aes(x=year,y=Mean,color=site),alpha=ALP) +
+    geom_errorbar(aes(x=year,ymin=Mean-SE,ymax=Mean+SE,color=site),alpha=ALP)+
+    
+    ylab(expression("Mean density (m"^-2*")"))+
+    xlab("Year") +
+    scale_color_discrete("Site") +
+    ggtitle(paste(GROUP,"all depths")) +
+    theme_bw()
+
+p2 <- ggplot(dat.invert.group.zone %>% filter(group.name == GROUP,site %in% SITES )) +
+    geom_point(aes(x=year,y=Mean,color=site),alpha=ALP) +
+    geom_line(aes(x=year,y=Mean,color=site),alpha=ALP) +
+    geom_errorbar(aes(x=year,ymin=Mean-SE,ymax=Mean+SE,color=site),alpha=ALP)+
+    ylab(expression("Mean density (m"^-2*")"))+
+    xlab("Year") +
+    scale_color_discrete("Site") +
+    ggtitle(paste(GROUP,"by depth")) +
+    facet_wrap(~zone,nrow=2) +
+    theme_bw()
+
+print(p1)
+print(p2)
+```
+
+# Algae
+
+Ok. This section makes the same set of plots but does not group the species, but rather orders them from important to rare.
+
+
+```{r ,echo=F,warning=F,message=F}
+# drop No_ALG
+dat.algae.density <- dat.algae.density %>% filter(!species == "NO_ALG")
+dat.algae.density <- dat.algae.density %>% rename(Mean = MEAN)
+dat.algae.density$species <- factor(dat.algae.density$species,
+                                    levels= c(
+                                      "MACPYR","NERLUE","PTECAL",
+                                      "AGAFIM","ALAMAR","COSCOS",
+                                      "CYMTRI","DESSPP","EGRMEN","LAMSET",
+                                      "PLEGAR","SACGRO","SACLAT"))
+
+
+
+ALP <- 0.5
+p1 <- ggplot(dat.algae.density %>% 
+               filter(site %in% SITES, species %in% c("MACPYR","NERLUE","PTECAL" ))) +
+    geom_point(aes(x=year,y=MEAN.site.zone,color=site),alpha=ALP) +
+    geom_line(aes(x=year,y=MEAN.site.zone,color=site),alpha=ALP) +
+    geom_errorbar(aes(x=year,ymin=MEAN.site.zone-SE.site.zone,
+                      ymax=MEAN.site.zone+SE.site.zone,color=site),alpha=ALP)+
+    scale_y_continuous(expression("Mean density (m"^-2*")"),
+                       trans="sqrt",expand=c(NA,0))+
+   
+    xlab("Year") +
+    scale_color_discrete("Site") +
+    #ggtitle(paste(GROUP,"all depths")) +
+    facet_grid(species~zone,scales="free") +
+    theme_bw()
+
+p2 <-  ggplot(dat.algae.density %>% 
+               filter(site %in% SITES, species %in% c("AGAFIM","ALAMAR","COSCOS" ))) +
+    geom_point(aes(x=year,y=MEAN.site.zone,color=site),alpha=ALP) +
+    geom_line(aes(x=year,y=MEAN.site.zone,color=site),alpha=ALP) +
+    geom_errorbar(aes(x=year,ymin=MEAN.site.zone-SE.site.zone,
+                      ymax=MEAN.site.zone+SE.site.zone,color=site),alpha=ALP)+
+    scale_y_continuous(expression("Mean density (m"^-2*")"),
+                       trans="sqrt",expand=c(NA,0))+
+   
+    xlab("Year") +
+    scale_color_discrete("Site") +
+    #ggtitle(paste(GROUP,"all depths")) +
+    facet_grid(species~zone,scales="free") +
+    theme_bw()
+
+p3 <-  ggplot(dat.algae.density %>% 
+             filter(site %in% SITES, species %in% c("CYMTRI","DESSPP","EGRMEN","LAMSET"))) +
+    geom_point(aes(x=year,y=MEAN.site.zone,color=site),alpha=ALP) +
+    geom_line(aes(x=year,y=MEAN.site.zone,color=site),alpha=ALP) +
+    geom_errorbar(aes(x=year,ymin=MEAN.site.zone-SE.site.zone,
+                      ymax=MEAN.site.zone+SE.site.zone,color=site),alpha=ALP)+
+    scale_y_continuous(expression("Mean density (m"^-2*")"),
+                       trans="sqrt",expand=c(NA,0))+
+   
+    xlab("Year") +
+    scale_color_discrete("Site") +
+    #ggtitle(paste(GROUP,"all depths")) +
+    facet_grid(species~zone,scales="free") +
+    theme_bw()
+
+p4 <-  ggplot(dat.algae.density %>% 
+             filter(site %in% SITES, species %in% c("PLEGAR","SACGRO","SACLAT"))) +
+    geom_point(aes(x=year,y=MEAN.site.zone,color=site),alpha=ALP) +
+    geom_line(aes(x=year,y=MEAN.site.zone,color=site),alpha=ALP) +
+    geom_errorbar(aes(x=year,ymin=MEAN.site.zone-SE.site.zone,
+                      ymax=MEAN.site.zone+SE.site.zone,color=site),alpha=ALP)+
+    scale_y_continuous(expression("Mean density (m"^-2*")"),
+                       trans="sqrt",expand=c(NA,0))+
+   
+    xlab("Year") +
+    scale_color_discrete("Site") +
+    #ggtitle(paste(GROUP,"all depths")) +
+    facet_grid(species~zone,scales="free") +
+    theme_bw()
+
+```
+
+```{r ,echo=F,warning=F,message=F,fig.height=7}
+print(p1)
+```
+
+```{r ,echo=F,warning=F,message=F,fig.height=7}
+print(p2)
+
+```
+
+```{r ,echo=F,warning=F,message=F,fig.height=7}
+print(p3)
+
+```
+
+```{r ,echo=F,warning=F,message=F,fig.height=7}
+print(p4)
+```
+
