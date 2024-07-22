@@ -10,7 +10,7 @@ data.dir <- "/Users/ole.shelton/GitHub/OCNMS/Data/CSV_2015_on"
 setwd(data.dir)
 
 dat.2015 <- read.csv("2015_OCNMSDataComplete_standardized_122116.csv")
-dat.2016.on.fish <- read.csv("NWFSC_FISH_ALLYEARS_data_2022.csv")
+dat.2016.on.fish <- read.csv("NWFSC_FISH_ALLYEARS_data_2023.csv")
 
 species_names <- read.csv("species_code_list.csv")
 #species_names <- species_names %>% rename("species"="PISCO.CLASSCODE")

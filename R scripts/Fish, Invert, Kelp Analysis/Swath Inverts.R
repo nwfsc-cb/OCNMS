@@ -17,7 +17,7 @@ data.dir <- paste0(base.dir,"/Data/CSV_2015_on")
 setwd(data.dir)
 
 dat.2015 <- read.csv("2015_OCNMSDataComplete_standardized_122116.csv")
-dat.2016.on.swath <- read.csv("NWFSC_SWATH_ALLYEARS_data_2022.csv")
+dat.2016.on.swath <- read.csv("NWFSC_SWATH_ALLYEARS_data_2023.csv")
 
 dat.2016.on.swath$CLASSCODE[dat.2016.on.swath$CLASSCODE=="no_alg"] <- "NO_ALG"
 

@@ -12,7 +12,7 @@ data.dir <- "/Users/ole.shelton/GitHub/OCNMS/Data/CSV_2015_on"
 setwd(data.dir)
 
 dat.2015 <- read.csv("2015_OCNMSDataComplete_standardized_122116.csv")
-dat.2016.on.fish <- read.csv("NWFSC_FISH_ALLYEARS_data_2022.csv")
+dat.2016.on.fish <- read.csv("NWFSC_FISH_ALLYEARS_data_2023.csv")
 species_names <- read.csv("species_code_list.csv")
 
 # trim data to include only swath dat
@@ -96,6 +96,27 @@ dat.seme.ad.binned <- dat.seme.ad %>% group_by(YEAR,SITE,SPECIES,bin) %>% # Sum 
 dat.seme.all.binned <- dat.seme.all %>% group_by(YEAR,SITE,SPECIES,bin) %>% # Sum across transects, depth zones
   summarise(COUNT = sum(COUNT))
 
+####################################
+# Add a second binning group. (2cm)
+BIN <- seq(2,70,by=2)
+BIN.MIN <- BIN - 2
+BIN.MAX <- BIN 
+
+# There has to be a better way to do this, but looping works fine.
+dat.seme.ad$bin_2 <- 0
+dat.seme.all$bin_2 <- 0
+for(i in 1: length(BIN)){
+  dat.seme.ad <- dat.seme.ad %>% 
+    mutate(bin_2 =ifelse(SIZE < BIN.MAX[i] & SIZE >= BIN.MIN[i],BIN[i],bin_2))
+  dat.seme.all <- dat.seme.all %>% 
+    mutate(bin_2 =ifelse(SIZE < BIN.MAX[i] & SIZE >= BIN.MIN[i],BIN[i],bin_2))
+}
+
+dat.seme.ad <- dat.seme.ad %>% mutate(bin_min= bin_2 -2, bin_max = bin_2,
+                                      bin_range = paste0(bin_2-2,"-",bin_2))
+dat.seme.all <- dat.seme.all %>% mutate(bin_min= bin_2 -2, bin_max = bin_2,
+                                        bin_range = paste0(bin_2-2,"-",bin_2))
+####################################
 
 
 dat.seme.ad$SITE <- factor(dat.seme.ad$SITE,
@@ -191,6 +212,13 @@ length.dat <- list(
 # Write to file.        
 save(length.dat,file="Black_rockfish_lengths_2015-22.Rdata")
 
+
+
+dat.seme.all.2cm = dat.seme.all %>% 
+                    dplyr::select(YEAR,SITE,SPECIES,COUNT,bin_min,bin_max,bin_range) %>%
+                    filter(bin_min >=10)                    
+
+write.csv(dat.seme.all.2cm,file="Black_Rockfish_2015-2022_lengths_2cm_bin_OCNMS.csv",row.names = FALSE)
 
 
 

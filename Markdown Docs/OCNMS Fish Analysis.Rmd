@@ -1,7 +1,7 @@
 ---
 title: "Fish Analysis OCNMS"
 author: "Ole Shelton"
-date: "12/16/2021"
+date: "04/15/2024"
 output:
   pdf_document: default
   word_document: default
@@ -11,7 +11,8 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-source("/Users/ole.shelton/GitHub/OCNMS/R scripts/Fish, Invert, Kelp Analysis/Swath Fish.R")
+library(here)
+source(here("R scripts","Fish, Invert, Kelp Analysis","Swath Fish.R"))
 ```
 
 # Exploratory analysis 
