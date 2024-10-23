@@ -25,10 +25,22 @@ to update the data for the most recent year. You will also need to have:
 
 as helper files. 
 
+# DATA YEAR 
+
+Set the data year year
+
+```{r data.year}
+rm(list = ls())
+data_year = 2024
+
+```
+
+## some prep info
+
 ```{r SETUP, include=FALSE}
 # A bunch of initial set up junk
 
-rm(list = ls())
+
 
 ##### knitr stuff and libraries ####
 # tools in use 
@@ -58,7 +70,7 @@ home_dir = getwd()
 
 fig_dir = paste0(home_dir,"/figures/")
 # data_dir = paste0(home_dir,"/data/")
-data_dir = "~/GitHub/OCNMS/Data/2024/"
+data_dir = paste0("~/GitHub/OCNMS/Data/",data_year,"/")
 results_dir = paste0(home_dir,"/results/")
 other_dir = paste0(home_dir,"/other/")
 
@@ -94,10 +106,10 @@ par(ps=10, cex=1)
 # load fish & swath codes, used below
 
 fish_codes = data.frame(read_xlsx(
-  paste0(data_dir,"NWFSC_FISH_ALLYEARS_data_2024.xlsx"), sheet='species.codes'))
+  paste0(data_dir,"NWFSC_FISH_ALLYEARS_data_",data_year,".xlsx"), sheet='species.codes'))
 swath_codes = data.frame(read_xlsx(
-  paste0(data_dir,"NWFSC_SWATH_ALLYEARS_data_2024.xlsx"), sheet='species.codes'))
-swath_codes = swath_codes %>% rename(species = CLASSCODE) %>%
+  paste0(data_dir,"NWFSC_SWATH_ALLYEARS_data_",data_year,".xlsx"), sheet='species.codes'))
+swath_codes = swath_codes %>% rename(spp = species,species = CLASSCODE) %>%
   mutate(group = stringr::str_to_sentence(group))
 kelp_codes = swath_codes %>% filter(group=="Algae")
 
@@ -105,7 +117,7 @@ if(1==1){ # update the data or not....
 # fish data ####
   print("Loading fish")
   fishx = data.frame(read_xlsx(
-  paste0(data_dir,"NWFSC_FISH_ALLYEARS_data_2024.xlsx"), sheet='DATA'))
+    paste0(data_dir,"NWFSC_FISH_ALLYEARS_data_",data_year,".xlsx"), sheet='DATA'))
 
   print('Running fish')
   source("update-swath-fish.R")
@@ -114,7 +126,7 @@ if(1==1){ # update the data or not....
   # inverts and algae ####
   print("Loading inverts & algae")
   swathx = data.frame(read_xlsx(
-  paste0(data_dir,"NWFSC_SWATH_ALLYEARS_data_2024.xlsx"), sheet='data'))
+    paste0(data_dir,"NWFSC_SWATH_ALLYEARS_data_",data_year,".xlsx"), sheet='data'))
 
   print("Running inverts & algae")
   source("update-swath-inverts.R")
@@ -128,21 +140,15 @@ Currently the species codes are in separate files from the data. Need to change 
 
 ```{r data-import}
 # fish
-fish0 = readRDS( paste0(data_dir,'Fish_2015-2024.rds' ))
+fish0 = readRDS( paste0(data_dir,'Fish_2015-',data_year,'.rds' ))
 # algae and kelp
-swath0 <- readRDS( paste0(data_dir,'Swath_2015-2024.rds' ))
+swath0 <- readRDS( paste0(data_dir,'Swath_2015-',data_year,'.rds' ))
+
 # fish and swath codes above
 # fish_codes = data.frame(read.csv("spp_codes_fish.csv"))
 # kelp_codes = data.frame(read.csv( "spp_codes_kelp.csv" ))
 # swath_codes = data.frame(read.csv("spp_codes_swath.csv"))
 # kelp_codes = swath_codes %>% filter(group=="Algae") # 
-
-# data for jackie
-
-# fish_jackie = fish0 %>% filter(year == 2015, site %in% c("Teahwhit Head", "Rock 305"))
-# swath_jackie = swath0 %>% filter(year == 2015, site %in% c("Teahwhit Head", "Rock 305"))
-# write.csv(fish_jackie, "Fish-transects-2015-TH.R305.csv")
-# write.csv(swath_jackie, "Invers-algae-transects-2015-TH.R305.csv")
 
 ```
 
@@ -517,8 +523,7 @@ ggplot(yoy_ys , aes(x = year, y = Mean, color = site)) +
 
 
 ```
-
-# ALGAE
+# ALGAE & INVERT DATA
 
 Summarize kelp and invert data to get count by transect. Raw files has more detailed observations. Data are imported above. 
 
@@ -536,7 +541,7 @@ dat.algae$fun_gr = kelp_codes$functional_group[ match(dat.algae$species, kelp_co
 
 dat.invert  <- swath1 %>% filter(group=="Invert")
 # higher taxa groupings for inverts; for grouping later
-dat.invert$taxa = swath_codes$taxa[ match(dat.invert$species, swath_codes$CLASSCODE) ]
+dat.invert$taxa = swath_codes$taxa[ match(dat.invert$species, swath_codes$species) ]
 
 #Mesocentrotus franciscanus
 
@@ -587,6 +592,9 @@ saveRDS(algae3, file = paste0(data_dir,"Summarized_Data_Kelp_year_zone_spp.rds")
   
 
 ```
+
+# ALGAE
+
 ## Nereocystis at Tatoosh
 
 Not sure why I started with this, but the figure is *Nereocystis* stipe counts at Tatoosh Island. 
@@ -836,7 +844,7 @@ kelp_coast5
 
 Start with some data manipulations to sum up species by transect. 
 
-Table is count of pynopodia by year. 
+Table is count of *Pycnopodia* by year. 
 
 ```{r invert-data}
 # data imported above with kelps
@@ -856,9 +864,12 @@ dat.invert$grp2[dat.invert$taxa %in% c('Pisaster','Pycnopodia')] <- 'STAR'
 
 
 # Aggregate up to the transect level (within year, site, area, zone)
-invert_transect <- dat.invert %>% group_by(year,site,transect,observer,species,zone,area,taxa,grp2) %>%
-    summarise(total.count=sum(Count, na.rm = TRUE),total.area=sum(Transect.area, na.rm = TRUE)) %>% 
+invert_transect <- dat.invert %>% 
+  group_by(year,site,transect,observer,species,zone,area,taxa,grp2) %>%
+    summarise(total.count=sum(Count, na.rm = TRUE),
+              total.area=sum(Transect.area, na.rm = TRUE)) %>% 
     mutate(density = total.count / total.area )
+
 saveRDS(invert_transect, file=paste0(data_dir , "Sumized_Data_Inverts_year_site_zone_area_transect_taxa.rds") )
 
 # Aggregate up to the area level (within year, site, zone) -- treat transects as replicates
@@ -1395,17 +1406,20 @@ yoy.spp =    c("SECAyoy", "SEPIyoy", "SEMYyoy", "SEBYTyoy","RYOY")
 
 ```{r fish-table , results='asis' }
 
-fish_total <- fish_transect %>% group_by(species, size_class) %>%
-                                summarise(Total = sum(Count, na.rm = TRUE)) %>%
-                                left_join(.,fish_codes, by = c('species' = 'code'))
+fish_total <- fish_transect %>% 
+  group_by(species, size_class) %>%
+  summarise(Total = sum(Count, na.rm = TRUE)) %>%
+  left_join(.,fish_codes) %>%
+  rename(spp = spp.name)
+         
 
 fish_total$spp <- str_replace(fish_total$spp, "_", " ")
-fish_total$com_name <- str_replace(fish_total$com_name, "_", " ")
+fish_total$com_name <- str_replace(fish_total$common.name, "_", " ")
 fish_total$spp <- str_replace(fish_total$spp, "[.]", " ")
 
-fish_total <- fish_total[,c('spp', 'com_name', 'size_class', 'group', 'Total')] %>%
+fish_total <- fish_total[,c('spp', 'common.name', 'size_class', 'group', 'Total')] %>%
               rename(Species = spp) %>%
-              rename('Common name' = com_name) %>%
+              rename('Common name' = common.name) %>%
               rename (Group=group)
 
 fish_total$Species = stringr::str_replace(fish_total$Species, 'yoy', 'Juveniles')
@@ -1433,11 +1447,10 @@ write.csv(fish_juveniles, paste0(fig_dir,"Table-Fish-Juveniles.csv"))
 kelp_total <- kelp_transect %>% group_by(species) %>%
                                 summarise(Density = mean(density, na.rm = TRUE),
                                           SD = sd(density, na.rm = TRUE)) %>%
-                                left_join(.,kelp_codes, by = c('species' = 'species')) %>%
-                                rename(spp = species) %>%
-                                rename(Species = name2) 
+                                left_join(.,kelp_codes) 
                                 
-kelp_total <- kelp_total[,c('Species','Density','SD')]
+                                
+kelp_total <- kelp_total[,c('spp','Density','SD')]
 kelp_total <- kelp_total[order(kelp_total$Density, decreasing = TRUE ),]
 
 head(kelp_total)
@@ -1453,9 +1466,8 @@ invert_total <- invert_transect %>% rename(SPP = species) %>%
                                 group_by(SPP) %>%
                                 summarise(Density = mean(density, na.rm = TRUE), 
                                           SD = sd(density, na.rm = TRUE)) %>%
-                                left_join(.,swath_codes, by = c('SPP' = 'CLASSCODE')) %>%
-                                rename(Taxa = taxa) %>%
-                                rename(Species = species)
+                                left_join(.,swath_codes, by = c('SPP' = 'species')) %>%
+                                rename(Taxa = taxa, Species = spp)
                                 
 invert_total <- invert_total[,c('Species','Taxa','Density','SD')]
 invert_total <- invert_total[ order (invert_total$Density, decreasing = TRUE ),]
@@ -1474,7 +1486,7 @@ Imports data file from other R file. Plot just kelp canopy. Add to ggarrange bel
 
 ```{r kelp-canopy}
 
-canopy = readRDS( paste0(data_dir, "Data_Kelp_Canopy_Long.rds") )
+canopy = readRDS( "Data_Kelp_Canopy_Long.rds") 
 
 year.range = 2015:last.year
 
@@ -1581,8 +1593,8 @@ Encoding(Degree_C)<-"UTF-8"
 text_sd<-"\u00b1 1.0 s.d."
 Encoding(text_sd)<-"UTF-8"
 
-df <- data.frame(read_excel( paste0(data_dir,
-      'Mean Daily OISST (C) for OCNMS sites 2003 to 2021.xlsx'), sheet = 1))
+df <- data.frame(read_excel('Mean Daily OISST (C) for OCNMS sites 2003 to 2021.xlsx'), 
+                 sheet = 1)
 rownames(df)
 # get just our sites
 df <- df[ df$SITE_NAME %in% c("Tatoosh Island", 'Destruction Island','Cape Alava','Cape Johnson'),]
@@ -1593,11 +1605,10 @@ df <- df[,-c(1:3)]
 tempC = data.frame(t(df))
 tempC$id = rownames(tempC)
 
-
 # bring in meta data and add some columns
 
-att <- data.frame(read_excel( paste0(data_dir,'Mean Daily OISST (C) for OCNMS sites 2003 to 2021.xlsx'), 
-                             sheet = "Attribute descriptions"))
+att <- data.frame(read_excel( 'Mean Daily OISST (C) for OCNMS sites 2003 to 2021.xlsx', 
+                  sheet = "Attribute descriptions"))
 # add in and fix date
 x = att$Description[ match(tempC$id, att$Attribute)]
 x_date <- substring(x , nchar(x)-10, nchar(x) )
@@ -1612,7 +1623,8 @@ tempC$date = paste(substring(x_date, 8,11),
                     month_number,
                     substring(x_date, 1,2),
                     sep='-')
-tempC$date <- as.POSIXct(tempC$date)
+
+tempC$date <- lubridate::as_date(tempC$date)
 
 sites2 = c('Tatoosh.Island','Cape.Alava','Cape.Johnson','Destruction.Island')
      
@@ -1654,11 +1666,11 @@ plot5 <- ggplot(df_max_month, aes(x = year, y = maxT) ) +
                  fill='grey',linetype = 0, alpha=0.3) +
     geom_line() + 
     xlab("") +
-    xlim( 2003,last.year )+
+    xlim( 2003,last.year ) + ylim(10,17)+
     ylab(paste0("Mean SST of warmest month ", Degree_C))+
-    scale_x_continuous( breaks = seq(2005,2020,5), minor_breaks = 2003:last.year )
-
-
+    scale_x_continuous( breaks = seq(2003,last.year,3), 
+                        minor_breaks = 2003:last.year,
+                        limits = c(2003,last.year))
 
 plot5 + theme_bw()+theme_nt
 
@@ -1668,7 +1680,7 @@ plot5 + theme_bw()+theme_nt
 
 ```{r kelp-canopy-full}
 
-canopy = readRDS( paste0(data_dir, "Data_Kelp_Canopy_Long.rds") )
+canopy = readRDS( "Data_Kelp_Canopy_Long.rds") 
 
 
 canopy$species = factor(canopy$species, levels = c('Total','Macrocystis','Nereocystis'))
@@ -1678,8 +1690,8 @@ canopy.kelp.long <- ggplot( canopy %>% filter(., site == 'Coastwide') %>% filter
                 geom_point() +
                 geom_line() +
                 xlab("") +
-                scale_x_continuous(breaks = seq(2005,2020,5), 
-                                   minor_breaks = 2003:2022, 
+                scale_x_continuous(breaks = seq(2005,last.year,3), 
+                                   minor_breaks = 2003:last.year, 
                                    limits = c(2003,last.year) ) +
                 scale_y_continuous("Canopy area (ha)") +
                 scale_color_manual(values = site.col$col[c(5,1,2,3)],
