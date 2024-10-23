@@ -1,0 +1,752 @@
+---
+title: "Kelp vs Urchins - the differenced version"
+author: Nick Toimieri
+date: sys.date()
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 3
+    number_sections: true
+    fig_caption: true
+fontsize: 11pt
+
+---
+# Set up
+
+```{r SETUP, include=FALSE}
+# A bunch of initial set up junk
+
+rm(list = ls())
+
+##### knitr stuff and libraries ####
+source("R-functions-ocnms.r")
+
+# Paths for files
+
+HomeFile = "C:/Users/nick.tolimieri/Documents/GitHub/OCNMS/Flagstone paper/"
+
+fig_dir = paste0(HomeFile,"/Plots/")
+data_dir = paste0(HomeFile,"/Data/")
+results_dir = paste0(HomeFile,"/Results/")
+
+home_dir = getwd()
+
+fig_dir = paste0(home_dir,"/figures/")
+data_dir = paste0(home_dir,"/data/")
+results_dir = paste0(home_dir,"/results/")
+other_dir = paste0(home_dir,"/other/")
+
+
+# tools in use 
+library(knitr)
+library(tidyverse)
+library(stringr)
+library(tinytex) # for pdfs
+library(RColorBrewer)
+# display.brewer.all(colorblindFriendly = TRUE)
+library(readxl)
+# library(reprex)
+library(ggplot2)
+library(ggpubr)
+# library(ggtext)
+# stats packages etc
+# library(vegan)
+# library(BiodiversityR)
+# library(pracma)
+# library(factoextra)
+
+# install.packages("remotes")
+# for Bray curtis with no spp in common.
+# remotes::install_github("phytomosaic/ecole")
+
+
+# options
+knitr::opts_chunk$set(
+  fig.path = fig_dir,
+  cache.path = 'cache/graphics-', 
+  echo=FALSE,
+  error=FALSE,
+  include = TRUE,
+  dev='png',
+  dpi=300,
+  warning=FALSE,
+  #out.width = '100%',
+  fig.align='center'
+  
+  )
+
+# just to keep track of when I ran things.
+
+
+par(ps=10, cex=1)
+
+# load some external functions
+# source("R-functions-ocnms.r")
+
+```
+
+# Triggers and settings
+
+```{r Triggers-and-Settings}
+
+# bring in settings from previous univariate figure or set
+# maintain consistency between files
+
+settings = readRDS(paste0(data_dir,'settings.rds') )
+
+min.vis = as.numeric(settings['min.vis'])
+years = as.numeric(unlist(settings['years']))
+site.col = data.frame(settings['site.col'])
+colnames(site.col) = c('site','col')
+sites = site.col$site
+year.pch = data.frame(settings['year.pch'])
+colnames(year.pch) = c('year','pch','col')
+
+# Set common stuff for ordinations here ####
+# Options are: NA, "sqrt", "4th-root","log"
+# for 'log' the transform is actually log(x+1), need the log+1 because of zeros.
+
+kelp.transform = 'log'
+fish.transform = 'log'
+invert.transform = 'log'
+nperm  = 999
+
+# Some csv files for naming later
+
+fish_codes = data.frame(read.csv( paste0(data_dir,"spp_codes_fish.csv") ))
+swath_codes = data.frame(read.csv( paste0(data_dir,"spp_codes_swath.csv") ))
+kelp_codes = data.frame(read.csv( paste0(data_dir,"spp_codes_kelp.csv") ))
+
+theme_nt = readRDS(paste0(data_dir, 'theme_nt.rds') )
+
+```
+
+# Bring in data
+
+Note: for Neah Bay in 2016
+
+1. There are not algae data for the South Area only, the North.
+2. There are are only two transects of invert data for the North. There are 5 transects in the South area. 
+
+```{r import-kelp-urchins}
+
+df_transect1 = readRDS(paste0(data_dir,'Data_Inverts_Kelp_transect_wide.rds')) %>% 
+               mutate(Other = c(AGAFIM+ALAMAR+COSCOS+CYMTRI+DESSPP+LAMSET+PLEGAR+SACGRO+SACLAT)) %>%
+               filter(site %in% sites) 
+
+df_transect2 = df_transect1[,c('site','year','transect','area','zone', 
+                             'NERLUE','MACPYR', 'PTECAL','Other',
+                             'purple urchin','red urchin','green urchin')]
+
+df_transect =  df_transect2 %>%
+                  pivot_longer(NERLUE:Other , names_to = 'kelp_spp', values_to = 'kelp_density') %>%
+                    mutate(kelp_spp = factor(kelp_spp, levels=c('MACPYR','NERLUE','PTECAL','Other'))) %>%
+                  pivot_longer('purple urchin':'green urchin' , 
+                               names_to = 'urchin_spp', values_to = 'urchin_density')
+df_transect$kelp_spp <- as.character(df_transect$kelp_spp)
+
+df_transect$kelp_spp[ df_transect$kelp_spp == 'NERLUE'] <- 'Nereocystis'
+df_transect$kelp_spp[ df_transect$kelp_spp == 'MACPYR'] <- 'Macrocystis'
+df_transect$kelp_spp[ df_transect$kelp_spp == 'PTECAL'] <- 'Pterygophora'
+
+df_transect$kelp_spp = factor(df_transect$kelp_spp , levels = 
+                                c('Macrocystis','Nereocystis','Pterygophora','Other'))
+
+df_transect$urchin_spp <- as.character(df_transect$urchin_spp)
+
+df_transect$urchin_spp[df_transect$urchin_spp=='purple urchin'] <- 'Purple urchins'
+df_transect$urchin_spp[df_transect$urchin_spp=='red urchin'] <- 'Red urchins'
+df_transect$urchin_spp[df_transect$urchin_spp=='green urchin'] <- 'Green urchins'
+
+df_transect$urchin_spp = factor(df_transect$urchin_spp , levels=c('Purple urchins','Red urchins','Green urchins'))
+
+
+```
+
+# Year x Kelp - average across sites
+
+```{r Figure-5-prep-diff, fig.height=6, fig.width=6}
+df_tot <- df_transect %>% 
+  group_by(year,site, area, zone, transect) %>%
+  summarise( kelp_mean = mean(kelp_density, na.rm = TRUE),
+             urchin_mean = mean(urchin_density, na.rm = TRUE) ) %>%
+  group_by(year,site) %>%
+  summarise( kelp = mean(kelp_mean, na.rm=TRUE) , 
+             urchins = mean(urchin_mean, na.rm=TRUE)) %>%
+  mutate( pch = substring(year,4,4)) %>%
+  group_by(year) %>%
+  summarise(Kelp = mean(kelp, na.rm=TRUE) , Urchins = mean(urchins, na.rm=TRUE))
+
+df_canopy <- df_transect %>% filter(., kelp_spp != 'Pterygophora') %>%
+  group_by(year,site, area, zone, transect) %>%
+  summarise( kelp_mean = mean(kelp_density, na.rm = TRUE),
+             urchin_mean = mean(urchin_density, na.rm = TRUE) ) %>%
+  group_by(year,site) %>%
+  summarise( kelp = mean(kelp_mean, na.rm=TRUE) , 
+             urchins = mean(urchin_mean, na.rm=TRUE)) %>%
+  mutate( pch = substring(year,4,4)) %>%
+  group_by(year) %>%
+  summarise(Kelp = mean(kelp, na.rm=TRUE) , Urchins = mean(urchins, na.rm=TRUE))
+
+df_nereo <- df_transect %>% filter( kelp_spp == 'Nereocystis') %>%
+  group_by(year,site, area, zone, transect) %>%
+  summarise( kelp_mn = mean(kelp_density, na.rm = TRUE),
+             urchin_mn = mean(urchin_density, na.rm = TRUE)) %>%
+  group_by(year,site) %>%
+  summarise( kelp = mean(kelp_mn, na.rm=TRUE) , 
+             urchins = mean(urchin_mn, na.rm=TRUE)) %>%
+  mutate( pch = substring(year,4,4)) %>%
+  group_by(year) %>%
+  summarise(Kelp = mean(kelp, na.rm=TRUE) , Urchins = mean(urchins, na.rm=TRUE))
+
+df_macro <- df_transect %>% filter( kelp_spp == 'Macrocystis') %>%
+  group_by(year,site, area, zone, transect) %>%
+  summarise( kelp_mn = mean(kelp_density, na.rm = TRUE),
+             urchin_mn = mean(urchin_density, na.rm = TRUE)) %>%
+  group_by(year,site) %>%
+  summarise( kelp = mean(kelp_mn, na.rm=TRUE) , 
+             urchins = mean(urchin_mn, na.rm=TRUE)) %>%
+  mutate( pch = substring(year,4,4)) %>%
+  group_by(year) %>%
+  summarise(Kelp = mean(kelp, na.rm=TRUE) , Urchins = mean(urchins, na.rm=TRUE))
+
+df_ptero <- df_transect %>% filter( kelp_spp == 'Pterygophora') %>%
+  group_by(year,site, area, zone, transect) %>%
+  summarise( kelp_mn = mean(kelp_density, na.rm = TRUE),
+             urchin_mn = mean(urchin_density, na.rm = TRUE)) %>%
+  group_by(year,site) %>%
+  summarise( kelp = mean(kelp_mn, na.rm=TRUE) , 
+             urchins = mean(urchin_mn, na.rm=TRUE)) %>%
+  mutate( pch = substring(year,4,4)) %>%
+  group_by(year) %>%
+  summarise(Kelp = mean(kelp, na.rm=TRUE) , Urchins = mean(urchins, na.rm=TRUE))
+
+df_other <- df_transect %>% filter( kelp_spp == 'Other') %>%
+              group_by(year,site, area, zone, transect) %>%
+              summarise( kelp_mn = mean(kelp_density, na.rm = TRUE),
+                         urchin_mn = mean(urchin_density, na.rm = TRUE)) %>%
+              group_by(year,site) %>%
+              summarise( kelp = mean(kelp_mn, na.rm=TRUE) , 
+                         urchins = mean(urchin_mn, na.rm=TRUE)) %>%
+              mutate( pch = substring(year,4,4)) %>%
+              group_by(year) %>%
+              summarise(Kelp = mean(kelp, na.rm=TRUE) , Urchins = mean(urchins, na.rm=TRUE))
+
+
+
+
+df_tot$group = 'Total'
+df_canopy$group = 'Canopy'
+df_macro$group = "Macrocystis"
+df_nereo$group = "Nereocystis"
+df_ptero$group = "Pterygophora"
+df_other$group = "Other"
+
+df = rbind(df_tot,df_canopy,df_macro,df_nereo,df_ptero, df_other)
+df$group = factor(df$group , levels = c('Total','Canopy','Macrocystis',"Nereocystis","Pterygophora","Other"))
+
+
+# Differencing Here - none previously
+
+df_diff = df %>% group_by(group) %>%
+  mutate( Kelp = Kelp - lag(Kelp, default = Kelp[1]),
+          Urchins = Urchins - lag(Urchins, default = Urchins[1])) %>%  filter(year>2015) %>%
+  filter(group %in% c('Macrocystis','Nereocystis','Pterygophora','Other', 'Total') )
+
+# Total kelp stipes
+dfx = na.omit(df_diff %>% filter(., group == "Total"))
+X = dfx$Urchins
+Y = dfx$Kelp
+R = cor.test(X,Y)
+rstatement0 = paste0('r = ' , round(R$estimate,2) )
+pstatement0 = paste0('p = ' , round(R$p.value,2) )
+
+# Macro
+dfx = na.omit(df_diff %>% filter(., group == "Macrocystis"))
+X = dfx$Urchins
+Y = dfx$Kelp
+R = cor.test(X,Y)
+rstatement1 = paste0('r = ' , round(R$estimate,2) )
+pstatement1 = paste0('p = ' , round(R$p.value,2) )
+
+# Nereo
+dfx = na.omit(df_diff %>% filter(., group == "Nereocystis"))
+X = dfx$Urchins
+Y = dfx$Kelp
+R = cor.test(X,Y)
+rstatement2 = bquote(italic(r)^2 == .(format(R$estimate^2, digits = 2)))
+pstatement2 = paste0('p = ' , round(R$p.value,2) )
+
+# Pterygophora
+dfx = na.omit(df_diff %>% filter(., group == "Pterygophora"))
+X = dfx$Urchins
+Y = dfx$Kelp
+R = cor.test(X,Y)
+rstatement3 = bquote(italic(r)^2 == .(format(R$estimate^2, digits = 2)))
+pstatement3 = paste0('p = ' , round(R$p.value,2) )
+
+# other
+dfx = na.omit(df_diff %>% filter(., group == "Other"))
+X = dfx$Urchins
+Y = dfx$Kelp
+R = cor.test(X,Y)
+rstatement4 = bquote(italic(r)^2 == .(format(R$estimate^2, digits = 2)))
+pstatement4 = paste0('p = ' , round(R$p.value,2) )
+
+stats.x = -0.2
+
+
+
+df_diff = df %>% group_by(group) %>%
+  mutate( Kelp = Kelp - lag(Kelp, default = Kelp[1]),
+          Urchins = Urchins - lag(Urchins, default = Urchins[1])) %>%  filter(year>2015) %>%
+  filter(group %in% c('Macrocystis','Nereocystis','Pterygophora','Other') )
+
+# plot
+plot1 <- ggplot( df_diff, aes(x = Urchins, y = Kelp, color=group)) +
+  geom_point(size = 2) +
+  scale_color_manual(values = site.col$col[c(1,2,3,4)],
+                     labels = c(bquote(italic('Macrocystis')),
+                              bquote(italic('Nereocystis')),
+                              bquote(italic('Pterygophora')),
+                              'Other'))+
+  xlab( expression(paste('Change in urchins per ', m^2) ) )+
+  ylab( expression(paste('Change in stipes per ', m^2) ) )+
+  # geom_smooth(data = filter(df_diff,group =='Pterygophora' ),method='lm', se=FALSE) +
+   # annotate(geom="text", x=stats.x, y=0.9, 
+   #          label = expression(italic("Pterygophora")), hjust = 0, color=site.col$col[3], size = 3) +
+   # annotate(geom="text", x=stats.x, y=0.7, 
+   #          label = rstatement3, hjust = 0, color=site.col$col[3], size = 3) +
+   # annotate(geom="text", x=stats.x, y=0.5, 
+   #          label = pstatement3, hjust = 0, color=site.col$col[3], size = 3) +
+           theme_bw() + theme_nt 
+
+plot1
+
+
+```
+# Year x Site, separate plots by kelp
+
+## Macro
+
+```{r macro-vs-urchins-site-year-diff, fig.height=2.5, fig.width=3.5}
+
+df = df_transect %>% group_by(site, year, zone, area, transect, kelp_spp) %>%
+                      summarise(urchins = mean(urchin_density), kelp = mean(kelp_density) ) %>% 
+                      group_by(site,year,kelp_spp) %>%
+                      summarise(Urchins = mean(urchins), Kelp = mean(kelp) ) 
+
+df$pch = as.character(substring(df$year,4,4))
+
+
+df_diff = df %>% group_by(kelp_spp, site) %>%
+  mutate( Kelp = Kelp - lag(Kelp, default = Kelp[1]),
+          Urchins = Urchins - lag(Urchins, default = Urchins[1])) %>%  
+  filter(year>2015,kelp_spp == "Macrocystis")
+
+macro1 <- ggplot(df_diff, aes( x=Urchins , y=Kelp, color=site)) +
+         geom_point(size=2.5, pch=df_diff$pch) +
+         scale_color_manual(values=site.col$col )+
+         xlim(0,NA)+
+         ylim(0,NA)+
+         xlab( expression(paste(Delta, ' urchins per ', m^2) ) )+
+         ylab( expression(paste(Delta, italic(' Macro'), ' stipes per ', m^2)) )+
+         theme_bw() + theme_nt 
+
+macro1
+
+```
+## Nereo
+
+```{r nereo-vs-urchins-site-year-diff, fig.height=2.5, fig.width=3.5}
+
+df = df_transect %>% group_by(site, year, zone, area, transect, kelp_spp) %>%
+                      summarise(urchins = mean(urchin_density), kelp = mean(kelp_density) ) %>% 
+                      group_by(site,year,kelp_spp) %>%
+                      summarise(Urchins = mean(urchins), Kelp = mean(kelp) )
+
+df$pch = as.character(substring(df$year,4,4))
+
+df_diff = df %>% group_by(kelp_spp, site) %>%
+  mutate( Kelp = Kelp - lag(Kelp, default = Kelp[1]),
+          Urchins = Urchins - lag(Urchins, default = Urchins[1])) %>%  
+  filter(year>2015, kelp_spp=="Nereocystis")
+
+nereo = df_diff
+
+lmp = lm( Kelp ~ Urchins, data = nereo[nereo$site =='Tatoosh Island',])
+nereo.s.tat = summary(lmp)
+lmp = lm( Kelp ~ Urchins, data = nereo[nereo$site =='Destruction Island',])
+nereo.s.des = summary(lmp)
+
+# correlation?
+dfx = na.omit(df_diff)
+X = dfx$Urchins
+Y = dfx$Kelp
+R = cor.test(X,Y)
+rstatement4 = bquote(italic(r)^2 == .(format(R$estimate^2, digits = 2)))
+pstatement4 = paste0('p = ' , round(R$p.value,2) )
+
+# no obvious correlations...
+
+nereo1 <- ggplot(df_diff, aes( x=Urchins , y=Kelp, color=site)) +
+         geom_point(size=2.5, pch=df_diff$pch) +
+         scale_color_manual(values=site.col$col )+
+         # geom_smooth(data = filter(nereo,site =='Tatoosh Island' ), method='lm', se=FALSE) +
+         # geom_smooth(data = filter(nereo,site =='Destruction Island' ), method='lm', se=FALSE) +
+         xlab( expression(paste(Delta, ' urchins per ', m^2) ) )+
+         ylab( expression(paste(Delta, italic(' Nereo'), ' stipes per ', m^2)) )+
+         theme_bw() + theme_nt 
+
+nereo1
+
+```
+
+## Ptery
+```{r ptery-vs-urchins-site-year-diff, fig.height=2.5, fig.width=3.5}
+
+df = df_transect %>% group_by(site, year, zone, area, transect, kelp_spp) %>%
+                      summarise(urchins = mean(urchin_density), kelp = mean(kelp_density) ) %>% 
+                      group_by(site,year,kelp_spp) %>%
+                      summarise(Urchins = mean(urchins), Kelp = mean(kelp) )
+
+df$pch = as.character(substring(df$year,4,4))
+
+df_diff = df %>% group_by(kelp_spp, site) %>%
+  mutate( Kelp = Kelp - lag(Kelp, default = Kelp[1]),
+          Urchins = Urchins - lag(Urchins, default = Urchins[1])) %>%  
+  filter(year>2015, kelp_spp == "Pterygophora")
+
+ptery = df_diff
+
+lmp = lm( Kelp ~ Urchins, data = ptery[ptery$site =='Tatoosh Island',])
+pter.s.tat = summary(lmp)
+lmp = lm( Kelp ~ Urchins, data = ptery[ptery$site =='Destruction Island',])
+pter.s.des = summary(lmp)
+
+r2 =  round( pter.s.tat$r.squared , 2 )
+pval = round( pter.s.tat$coefficients[2,4] , 2 )
+
+rstatement = bquote(italic(r)^2 == .(format( pter.s.tat$r.squared, digits = 2)))
+# rstatement = paste0("r = ", round(sqrt(r2),2))
+pstatement = paste0("p = ", pval)
+
+
+ptery1 <- ggplot(df_diff, aes( x=Urchins , y=Kelp, color=site)) +
+         geom_point(size=2.5, pch=df_diff$pch) +
+         scale_color_manual(values=site.col$col )+
+         xlim(0,NA)+
+         ylim(0,NA)+
+         # geom_smooth(data = filter(df_diff,site =='Tatoosh Island' ), method='lm', se=FALSE) +
+         # # geom_smooth(data = filter(ptery,site =='Destruction Island' ), method='lm', se=FALSE) +
+         # annotate(geom="text", x=0.5, y=2.0, label = "Tatoosh", 
+         #          hjust = 0, color=site.col$col[2], size = 3) +
+         # annotate(geom="text", x=0.5, y=1.7, label = rstatement, hjust = 0, color=site.col$col[2], 
+         #          size = 3) +
+         # annotate(geom="text", x=0.5, y=1.4, label = pstatement, hjust = 0, color=site.col$col[2], 
+         #          size = 3) +
+         xlab( expression(paste(Delta, ' urchins per ', m^2) ) )+
+         ylab( expression(paste(Delta, italic(' Ptery'), ' stipes per ', m^2)) )+
+         theme_bw() + theme_nt 
+
+ptery1
+
+
+```
+## Other
+```{r other-vs-urchins-site-year-diff, fig.height=2.5, fig.width=3.5}
+
+df = df_transect %>% group_by(site, year, zone, area, transect, kelp_spp) %>%
+                      summarise(urchins = mean(urchin_density), kelp = mean(kelp_density) ) %>% 
+                      group_by(site,year,kelp_spp) %>%
+                      summarise(Urchins = mean(urchins), Kelp = mean(kelp) )
+df$pch = as.character(substring(df$year,4,4))
+
+df_diff = df %>% group_by(kelp_spp, site) %>%
+  mutate( Kelp = Kelp - lag(Kelp, default = Kelp[1]),
+          Urchins = Urchins - lag(Urchins, default = Urchins[1])) %>%  
+  filter(year>2015, kelp_spp == "Other")
+
+
+
+other = df
+
+lmp = lm( Kelp ~ Urchins, data = other[other$site =='Tatoosh Island',])
+other.s.tat = summary(lmp)
+
+r2 =  round( other.s.tat$r.squared , 2 )
+pval = round( other.s.tat$coefficients[2,4] , 2 )
+
+rstatement = bquote(italic(r)^2 == .(format( other.s.tat$r.squared, digits = 2)))
+pstatement = paste0("p = ", pval)
+
+
+
+other1 <- ggplot(df_diff, aes( x=Urchins , y=Kelp, color=site)) +
+         geom_point(size=2.5, pch=df_diff$pch) +
+         scale_color_manual(values=site.col$col )+
+         # geom_smooth(data = filter(other,site =='Tatoosh Island' ), method='lm', se=FALSE) +
+         # annotate(geom="text", x=1.3, y=1.0, label = "Tatoosh", 
+         #          hjust = 0, color=site.col$col[2], size = 3) +
+         # annotate(geom="text", x=1.3, y=0.6, label = rstatement, hjust = 0, color=site.col$col[2], 
+         #          size = 3) +
+         # annotate(geom="text", x=1.3, y=0.2, label = pstatement, hjust = 0, color=site.col$col[2], 
+         #          size = 3) +
+         xlab( expression(paste(Delta, ' urchins per ', m^2) ) )+
+         ylab( expression(paste(Delta, ' other', ' stipes per ', m^2)) )+
+         theme_bw() + theme_nt 
+
+other1
+
+
+```
+
+# Macro and Ptery at Neah Bay
+```{r neah-year-diff, fig.height=2.5, fig.width=3.5}
+
+df = df_transect %>% group_by(site, year, zone, area, transect, kelp_spp) %>%
+                      summarise(urchins = mean(urchin_density), kelp = mean(kelp_density) ) %>% 
+                      group_by(site,year,kelp_spp) %>%
+                      summarise(Urchins = mean(urchins), Kelp = mean(kelp) ) %>%
+                      filter(site %in% c('Neah Bay'))
+
+df$pch = as.character(substring(df$year,4,4))
+# difference
+dfn = df %>% filter( kelp_spp %in% c("Macrocystis", "Pterygophora") & site == 'Neah Bay') %>% 
+  group_by(kelp_spp) %>%   mutate( Kelp = Kelp - lag(Kelp, default = Kelp[1]),
+          Urchins = Urchins - lag(Urchins, default = Urchins[1])) %>%  filter(year>2015)
+
+# macro
+mx = lm(Kelp ~ Urchins, data = dfn%>%filter(kelp_spp=="Macrocystis"))
+smx = summary(mx)
+#
+r2 =  round( smx$r.squared , 2 )
+pval = round( smx$coefficients[2,4] , 2 )
+
+rstatement.m = bquote(italic(r)^2 == .(format( smx$r.squared, digits = 2)))
+pstatement.m = paste0("p = ", pval)
+
+# Ptery
+px = lm(Kelp ~ Urchins, data = dfn%>%filter(kelp_spp=="Pterygophora"))
+spx = summary(px)
+#
+r2 =  round( spx$r.squared , 2 )
+pval = round( spx$coefficients[2,4] , 2 )
+
+rstatement.p = bquote(italic(r)^2 == .(format( spx$r.squared, digits = 2)))
+pstatement.p = paste0("p = ", pval)
+
+neah1 <- ggplot(dfn, aes( x=Urchins , y=Kelp, color=kelp_spp)) +
+         geom_point(size=2.5, pch=dfn$pch) +
+         geom_smooth(data = filter(dfn,kelp_spp =='Macrocystis' ), method='lm', se=FALSE) +
+         geom_smooth(data = filter(dfn,kelp_spp =='Pterygophora' ), method='lm', se=FALSE) +
+         scale_color_manual(values=site.col$col[c(1,3)] )+
+         # macro       
+         annotate(geom="text", x=0.02, y=0, label = expression(italic("Macro")), hjust = 0, color=site.col$col[1], size = 3) +
+         annotate(geom="text", x=0.02, y=-0.6, label = rstatement.m, hjust = 0, color=site.col$col[1], size = 3) +
+         annotate(geom="text", x=0.02, y=-1.2, label = pstatement.m, hjust = 0, color=site.col$col[1], size = 3) +
+         # Ptery
+         annotate(geom="text", x=-0.06, y=3.00, label = expression(italic("Ptery")), hjust = 0, color=site.col$col[3], size = 3) +
+         annotate(geom="text", x=-0.06, y=2.4, label = rstatement.p, hjust = 0, color=site.col$col[3], size = 3) +
+         annotate(geom="text", x=-0.06, y=1.8, label = pstatement.p, hjust = 0, color=site.col$col[3], size = 3) +
+         xlab( expression(paste(Delta, ' urchins per ', m^2) ) )+
+         ylab( expression(paste(Delta,' in stipes per ', m^2) ) )+
+         theme_bw() + theme_nt 
+
+neah1
+
+
+```
+
+## Tatoosh Nereo, Ptery, Other
+
+# Nereo
+```{r tatoosh-transect-level-nereo-diff , fig.height=2.5 , fig.width=3.5}
+
+df_tat <- df_transect %>% filter(., site == 'Tatoosh Island') %>% filter(kelp_spp == 'Nereocystis') %>%
+                      group_by(year, zone, area, transect) %>%
+                      summarize( kelp = mean(kelp_density) , 
+                                 urchins = mean(urchin_density) ) 
+
+dfx = df_tat %>% 
+  group_by(zone, area, transect) %>%
+  mutate( kelp = kelp - lag(kelp, default = kelp[1]),
+          urchins = urchins - lag(urchins, default = urchins[1])) %>%  
+  filter(year != 2015,
+         kelp != 0)
+
+dfx$pch = as.character(substring(dfx$year,4,4))
+
+
+dfy = na.omit(df_diff)
+
+X = dfy$urchins
+Y = dfy$kelp
+
+dfx$zone = as.character(dfx$zone)
+dfx$zone[dfx$zone == 5] <- "5 m"
+dfx$zone[dfx$zone == 10] <- "10 m"
+
+dfx$zone = factor(dfx$zone, levels = c('5 m','10 m'))
+
+nereo.tat = ggplot(dfx , aes(x = urchins, y = kelp, color=zone)) + 
+        #geom_line(data=pr, aes(x=X,y=p2), color='red') +
+        geom_text(data=dfx , key_glyph = "point", aes(x=urchins, y=kelp, label=pch), size = 3)+
+        scale_color_manual(values=site.col$col[c(1,3)])+
+        xlab( expression(paste(Delta, ' urchins per ', m^2) ) )+
+        ylab( expression(paste(Delta, italic(' Nereo'), ' stipes per ', m^2)) )+
+        # annotate(geom="text", x=-3, y=10, label = rstatement, hjust = 0, color="black", size = 3) +
+        # annotate(geom="text", x=-3, y=8, label= pstatement, hjust = 0, color="black", size = 3) +
+        theme_bw() + theme_nt
+
+nereo.tat
+
+```
+
+## Ptery
+
+```{r tatoosh-transect-level-ptery-diff , fig.height=2.5 , fig.width=3.5}
+
+df_tat <-df_transect %>% filter(., site == 'Tatoosh Island') %>% filter(kelp_spp == 'Pterygophora') %>%
+                      group_by(site,year,transect,area,zone) %>%
+                      summarize( kelp = mean(kelp_density) , 
+                                 urchins = mean(urchin_density) )
+
+dfx = df_tat %>% 
+  group_by(zone, area, transect) %>%
+  mutate( kelp = kelp - lag(kelp, default = kelp[1]),
+          urchins = urchins - lag(urchins, default = urchins[1])) %>%  
+  filter(year != 2015,
+         kelp != 0)
+dfx$pch = as.character(substring(dfx$year,4,4))
+
+dfy = na.omit(dfx)
+
+X = dfy$urchins
+Y = dfy$kelp
+
+
+dfx$zone = as.character(dfx$zone)
+dfx$zone[dfx$zone == 5] <- "5 m"
+dfx$zone[dfx$zone == 10] <- "10 m"
+
+dfx$zone = factor(dfx$zone, levels = c('5 m','10 m'))
+
+ptery.tat = ggplot(dfx , aes(x = urchins, y = kelp, color=zone)) + 
+        # geom_line(data=pr, aes(x=X,y=p2), color='red') +
+        geom_text(data=dfx , key_glyph = "point", aes(x=urchins, y=kelp, label=pch), size = 3)+
+        scale_color_manual(values=site.col$col[c(1,3)])+
+        xlab( expression(paste(Delta, 'urchins per ', m^2) ) )+
+        ylab( expression(paste(Delta, italic(' Ptery'), ' stipes per ', m^2)) )+
+        # annotate(geom="text", x=4, y=15, label = rstatement, hjust = 0, color="black", size = 3) +
+        # annotate(geom="text", x=4, y=13, label= pstatement, hjust = 0, color="black", size = 3) +
+        theme_bw() + theme_nt
+
+ptery.tat
+
+```
+## Other
+```{r tatoosh-transect-level-other-diff , fig.height=2.5 , fig.width=3.5}
+
+df_tat <-df_transect %>% filter(., site == 'Tatoosh Island') %>% filter(kelp_spp == 'Other') %>%
+                      group_by(site,year,transect,area,zone) %>%
+                      summarize( kelp = mean(kelp_density) , 
+                                 urchins = mean(urchin_density) )
+
+dfx = df_tat %>% 
+  group_by(zone, area, transect) %>%
+  mutate( kelp = kelp - lag(kelp, default = kelp[1]),
+          urchins = urchins - lag(urchins, default = urchins[1])) %>%  
+  filter(year != 2015,
+         kelp != 0)
+
+dfx$pch = as.character(substring(dfx$year,4,4))
+
+dfy = na.omit(dfx)
+
+X = dfy$urchins
+Y = dfy$kelp
+
+dfy = na.omit(dfx)
+
+dfx$zone = as.character(dfx$zone)
+dfx$zone[dfx$zone == 5] <- "5 m"
+dfx$zone[dfx$zone == 10] <- "10 m"
+
+dfx$zone = factor(dfx$zone, levels = c('5 m','10 m'))
+
+other.tat = ggplot(dfx , aes(x = urchins, y = kelp, color=zone)) + 
+        # geom_line(data=pr, aes(x=X,y=p2), color='red') +
+        geom_text(data=dfx , key_glyph = "point", aes(x=urchins, y=kelp, label=pch), size = 3)+
+        scale_color_manual(values=site.col$col[c(1,3)])+
+        xlab( expression(paste(Delta, ' urchins per ', m^2) ) )+
+        ylab( expression(paste(Delta, ' other stipes per ', m^2)) )+
+        # annotate(geom="text", x=4, y=15, label = rstatement, hjust = 0, color="black", size = 3) +
+        # annotate(geom="text", x=4, y=13, label= pstatement, hjust = 0, color="black", size = 3) +
+        theme_bw() + theme_nt
+
+other.tat
+
+```
+# Combined Figure 5
+
+
+
+
+```{r Figure-5-diff, fig.height=7, fig.width=6.5}
+SIZE = 3
+plot2  <- plot1 +  theme(legend.position = 'right', 
+                         legend.key.size = unit(0.25,'lines'),
+                         legend.text = element_text(size=8)) + 
+                         annotate(geom="text",x=-0.3,y=1.0, label="a)", size=SIZE)
+
+macro2 <- macro1 + theme(legend.position = c(0.55,0.7)) + 
+                         annotate(geom="text",x=0.07,y=3.0, label="b)", size=SIZE)
+
+nereo2 <- nereo1 + theme(legend.position = 'none')+ 
+                         annotate(geom="text",x=-1.0,y=3.4, label="c)", size=SIZE)
+
+ptery2 <- ptery1 + theme(legend.position = 'none')+ 
+                         annotate(geom="text",x=0.05,y=2, label="d)", size=SIZE)
+
+other2 <- other1 + theme(legend.position = 'none')+ 
+                         annotate(geom="text",x=-1.0,y=2, label="e)", size=SIZE)
+
+neah2 <- neah1 +   theme(legend.position = "none") + 
+                         annotate(geom="text",x=-0.07,y=3.4, label="f) Neah Bay", size=SIZE,
+                                  hjust='left')
+
+nereo.tat2 <- nereo.tat +theme(legend.position = c(0.75,0.2))+ 
+                         annotate(geom="text",x=-6.0,y=10, label="g) Tatoosh Is", size=SIZE,
+                                  hjust='left')
+
+ptery.tat2 <- ptery.tat +theme(legend.position = 'none')+ 
+                         annotate(geom="text",x=-6.0,y=10, label="h) Tatoosh Is", size=SIZE,
+                                  hjust='left')
+
+other.tat2 <- other.tat +theme(legend.position = 'none')+ 
+                         annotate(geom="text",x=-6.0,y=10, label="i) Tatoosh Is", size=SIZE,
+                                  hjust='left')
+
+library(gridExtra)
+
+grid.arrange(
+  grobs = list(plot2, 
+               macro2, nereo2, 
+               ptery2, other2,neah2,
+               nereo.tat2, ptery.tat2, other.tat2),
+  widths = c(1,1,1,1,1,1),
+  # layout_matrix = rbind(c(NA,NA,1,1,1,NA),
+  #                       c(NA,2,2,3,3,NA),
+  #                       c(4,4,5,5,6,6),
+  #                       c(7,7,8,8,9,9))
+  layout_matrix = rbind(c(NA,NA,1,1,1,NA),
+                        c(2,2,3,3,4,4),
+                        c(NA,5,5,6,6,NA),
+                        c(7,7,8,8,9,9))
+)
+
+```
+
+

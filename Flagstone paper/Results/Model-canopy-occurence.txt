@@ -1,0 +1,29 @@
+Generalized linear mixed model fit by maximum likelihood (Laplace Approximation) ['glmerMod']
+ Family: binomial  ( logit )
+Formula: TOTyoy_pres ~ canopy_kelp + (1 | year_factor) + (1 | site)
+   Data: dfx
+Weights: fish.area.weight
+
+     AIC      BIC   logLik deviance df.resid 
+    70.5     80.1    -31.2     62.5       78 
+
+Scaled residuals: 
+     Min       1Q   Median       3Q      Max 
+-1.50687  0.00029  0.11447  0.30935  1.38259 
+
+Random effects:
+ Groups      Name        Variance Std.Dev.
+ year_factor (Intercept) 5.331    2.309   
+ site        (Intercept) 3.252    1.803   
+Number of obs: 82, groups:  year_factor, 6; site, 5
+
+Fixed effects:
+            Estimate Std. Error z value Pr(>|z|)  
+(Intercept)   -0.274      1.447  -0.189   0.8498  
+canopy_kelp    2.553      1.009   2.531   0.0114 *
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Correlation of Fixed Effects:
+            (Intr)
+canopy_kelp -0.330
