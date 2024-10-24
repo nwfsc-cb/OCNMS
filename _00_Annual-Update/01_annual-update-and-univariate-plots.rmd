@@ -125,9 +125,9 @@ if(1==1){ # update the data or not....
 
   # inverts and algae ####
   print("Loading inverts & algae")
-  swathx = data.frame(read_xlsx(
-    paste0(data_dir,"NWFSC_SWATH_ALLYEARS_data_",data_year,".xlsx"), sheet='data'))
-
+  swathx = data.frame(read.csv(
+    paste0(data_dir,"NWFSC_SWATH_ALLYEARS_data_",data_year,".csv")))
+  swathx = swathx %>% filter(!is.na(YEAR))
   print("Running inverts & algae")
   source("update-swath-inverts.R")
 }
@@ -547,7 +547,7 @@ dat.invert$taxa = swath_codes$taxa[ match(dat.invert$species, swath_codes$specie
 
 ```
 
-A bunch more summarizing at different scles. Also output for multivariate analyses. 
+A bunch more summarizing at different scales. Also output for multivariate analyses. 
 
 ```{r more-kelp}
 # removed 'observer' because it leads to multiple transects per transect...fucks up transition to wide
@@ -1556,7 +1556,7 @@ Change was `r k2020/k2014` fold.
 canopy.kelp <- canopy.kelp + theme(legend.position = c(0.8 , 0.6) )
 kelp_coast  <- kelp_coast +  
   scale_y_continuous(expression("Kelp stipes m"^-2), 
-                     breaks=c(0,1,2), limits=c(0,2.2)) +
+                     breaks=c(0,1,2), limits=c(0,3)) +
   theme(legend.position = c(0.80 , 0.9) )
 # kelp_coast5 <- kelp_coast5 + theme(legend.position = c(0.30 , 0.85) )
 urchin.plot <- urchin.plot + theme(legend.position = c(0.30 , 0.85) )

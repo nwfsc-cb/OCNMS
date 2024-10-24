@@ -14,7 +14,7 @@ library(tidyverse)
 # base.dir <- getwd()
 # data.dir <- paste0(base.dir,"/data/")
 
-source("update-swath-process-pre-2017-data.R")
+source("update-swath-process-pre-2015-data.R")
 dat.pre.2015 <- dat.trim %>% rename(group.name=group)
 
 # setwd(data.dir)
@@ -184,11 +184,13 @@ dat.long <- dat.long %>%
          zone=ZONE,species=SPECIES)
 dat.2016.plus.swath <- dat.long %>% filter(!group == "MISSING")
 
-dat.2016.plus.swath <- dat.2016.plus.swath %>% mutate(METERS.sampled=ifelse(is.na(METERS.sampled)==T,10,METERS.sampled))
+dat.2016.plus.swath <- dat.2016.plus.swath %>% 
+  mutate(METERS.sampled=ifelse(is.na(METERS.sampled)==T,10,METERS.sampled))
 
 # Tiny data fix for one dat point
 dat.2016.plus.swath <- dat.2016.plus.swath %>% 
-                mutate(METERS.sampled = ifelse(METERS.sampled==0 & species =="PISOCH",10,METERS.sampled)) 
+                mutate(METERS.sampled = ifelse(METERS.sampled==0 & 
+                                                 species =="PISOCH",10,METERS.sampled)) 
                 
 
 dat.2016.plus.swath = dat.2016.plus.swath %>% 
@@ -205,14 +207,33 @@ dat.2016.plus.swath <- dat.2016.plus.swath %>%
   group_by(year,site,area,transect,observer,zone,species,group,) %>%
   summarize(Count=sum(Count.seg),N.segments = length(Count.seg)) %>% 
   mutate(Transect.area = 20*N.segments)
+head(dat.2016.plus.swath)
+tail(dat.2016.plus.swath)
 
 #############################################################################
 # Combine years of data later than 2015 into one data frame
-dat.swath <- full_join(dat.2015.swath.count,dat.2016.plus.swath)
+# dat.2015.swatch nount does not have area
+head(dat.2015.swath.count)
+tail(dat.2015.swath.count)
+
+
+
+dat.2015.swath.count$observer = 'not noted'
+dat.2015.swath.count$area = 'not noted'
+dat.2016.plus.swath$area = as.character(dat.2016.plus.swath$area)
+
+dat.swath <- full_join(dat.2015.swath.count, dat.2016.plus.swath)
+head(dat.swath)
+tail(dat.swath)
+
 # Assign all 2015 transets to the 5m depth zone
 dat.swath <- dat.swath %>% mutate(zone=ifelse(year==2015 & is.na(zone)==T,5,zone))
 dat.swath <- dat.swath %>% filter(site != "")
 dat.swath <- dat.swath %>% filter(!group =="MISSING")
+
+
+##### lost reas some where before here ############
+
 
 dat.swath.base <- dat.swath %>% as.data.frame()
 dat.swath.base$site <- as.character(dat.swath.base$site)
