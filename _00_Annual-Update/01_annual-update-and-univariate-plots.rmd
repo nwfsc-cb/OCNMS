@@ -97,10 +97,19 @@ par(ps=10, cex=1)
 
 # Process raw data 
 
-- Copy the xlxm files into the year folder. 
-- Open and save as xlsx files. 
+- copy xlxm files into from google drive into the Data folder. Put in subfolder for that year.
+- make csv and xlsx versions of the files
+
+The xlsx version of the file is used to pull the species codes: fish_codes, swath_codes, kelp_codes. 
+
+HOWEVER, at present read_xlsx incorrectly loads the data files because the SIDE/AREA column has both numbers and letters. read_xlsx turns these into NAs. This change messes up the transect area calculations and doubles the estimated densities...incorrectly of course. I haven't figured out how to fix that yet.
 
 ## Bring in data and species codes
+
+This chunk will load the species codes and run the update files to turn the raw data files into counts by size and transect.  Once you've run it, you can turn of the data processing part and just load the species codes. Runs:
+
+- update-swath-fish.r
+- update-swath-inverts.r (includes algae)
 
 ```{r, message=FALSE, echo=FALSE, warning=FALSE}
 # load fish & swath codes, used below
@@ -116,8 +125,8 @@ kelp_codes = swath_codes %>% filter(group=="Algae")
 if(1==1){ # update the data or not....
 # fish data ####
   print("Loading fish")
-  fishx = data.frame(read_xlsx(
-    paste0(data_dir,"NWFSC_FISH_ALLYEARS_data_",data_year,".xlsx"), sheet='DATA'))
+  fishx = data.frame(read.csv(
+    paste0(data_dir,"NWFSC_FISH_ALLYEARS_data_",data_year,".csv"), header=T))
 
   print('Running fish')
   source("update-swath-fish.R")
@@ -128,6 +137,17 @@ if(1==1){ # update the data or not....
   swathx = data.frame(read.csv(
     paste0(data_dir,"NWFSC_SWATH_ALLYEARS_data_",data_year,".csv")))
   swathx = swathx %>% filter(!is.na(YEAR))
+  # remove some problematic Samhouri observations
+  swathx$COUNT = ifelse(swathx$OBSERVER=="Jameal Samhouri" &
+                        swathx$SITE == "Cape Johnson" &
+                        swathx$SIDE == "N" &
+                        swathx$CLASSCODE =="MACPYR" & 
+                        swathx$YEAR == 2024 &  
+                        swathx$METERS.sampled < 10, NA, swathx$COUNT)
+  
+  
+  
+  
   print("Running inverts & algae")
   source("update-swath-inverts.R")
 }
@@ -136,7 +156,7 @@ if(1==1){ # update the data or not....
 
 # Data import
 
-Currently the species codes are in separate files from the data. Need to change above xlsx files to contain additional columns for the code sheets.
+Bring in the initially processed data
 
 ```{r data-import}
 # fish
