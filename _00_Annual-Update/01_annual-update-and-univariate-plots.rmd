@@ -30,6 +30,7 @@ as helper files.
 Set the data year year
 
 ```{r data.year}
+
 rm(list = ls())
 data_year = 2024
 
@@ -239,7 +240,7 @@ theme_nt   <-   theme(legend.title=element_blank(),
                       legend.key.size = unit(0.25,'lines')
 )
 
-saveRDS(theme_nt, file = paste0(data_dir, 'theme_nt.rds') )
+saveRDS(theme_nt, file = 'theme_nt.rds') 
 
 ```
 

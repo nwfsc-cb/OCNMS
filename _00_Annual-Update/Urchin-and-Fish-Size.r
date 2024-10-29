@@ -5,9 +5,8 @@
 home_dir = getwd()
 
 fig_dir = paste0(home_dir,"/figures/")
-data_dir = paste0(home_dir,"/data/")
+data_dir = paste0("~/GitHub/OCNMS/Data/",data_year,"/")
 results_dir = paste0(home_dir,"/results/")
-#other_dir = paste0(home_dir,"/other/")
 
 # Load packages ###
 
@@ -20,23 +19,27 @@ library(readxl)
 
 # Load background files ####
 
-settings = readRDS( paste0(data_dir,'settings.RDS') )
-theme_nt = readRDS( paste0(data_dir, 'theme_nt.rds') )
+settings = readRDS( 'settings.rds') 
+theme_nt = readRDS( 'theme_nt.rds') 
 
+################################################################################
+### URCHINS ####################################################################
+################################################################################
 
-### URCHINS ####
 process_data = TRUE
 
 if(process_data == TRUE){
 # Load data files ####
 swathx = data.frame(read.csv(paste0(data_dir, "NWFSC_SWATH_ALLYEARS_data_2024.csv")), header=TRUE)
 
-swath = swathx %>% filter(CLASSCODE %in% c('STRPUR', 'STRDRO','MESFRA'))
+swath = swathx %>% 
+  dplyr::select(!entry.order) %>%
+  filter(CLASSCODE %in% c('STRPUR', 'STRDRO','MESFRA'))
 
-# 2021 data
-df = read.csv( paste0( data_dir, 'NWFSC_URCHINSIZES_data_2023.csv') )
-
-df_combined = swath %>% bind_rows(df)
+# 2023 data
+df_size = read.csv( paste0( data_dir, 'NWFSC_URCHINSIZES_data_2023.csv') )
+df_size = df_size %>% dplyr::select(!entry.order)
+df_combined = swath %>% bind_rows(df_size)
 
 # Tatoosh urchins ####
 
@@ -92,22 +95,19 @@ df_tatoosh <- z %>% filter(., Site == "Tatoosh Island")
 size_bins = max(df_tatoosh$Size) # gives 1cm bins
 
 
-graphics.off()
-
-jpeg( paste0( fig_dir, "Urchin_Sizes.jpg" ), units='in', res=300, width = 6 , height = 6)
-
 ggplot(df_tatoosh, aes(Size)) +
      geom_histogram(bins = size_bins) + 
-     facet_wrap(Species ~ Year, ncol=4)+
+     facet_wrap(Year ~ Species, ncol=3)+
      xlab("Test size (cm)")+
      ylab("Count")+
      theme_bw() + theme_nt
      
 
-dev.off()
+ggsave(paste0( fig_dir, "Urchin_Sizes.png" ), width = 6 , height = 8) 
 
-
-### FISH-Black Rockfish ####
+################################################################################
+### FISH-Black Rockfish ########################################################
+################################################################################
 
 fish = data.frame(read.csv( paste0(data_dir, "NWFSC_FISH_ALLYEARS_data_2024.csv"),
    header=TRUE))
@@ -124,7 +124,10 @@ df = fish %>% filter(SPECIES =='SEME',
 
 # expand data. uncount is a super useful tidyverse command.
 
-df_expanded = df %>% uncount(number) %>% group_by(year,site)
+df_expanded = df %>%
+  mutate(number = as.numeric(number)) %>%
+  uncount(number) %>% 
+  group_by(year,site)
 
 
 df_sites = df_expanded %>% mutate(n = 1) %>% group_by(site,year) %>%
@@ -133,13 +136,8 @@ df_sites = df_expanded %>% mutate(n = 1) %>% group_by(site,year) %>%
 df_coast = df_expanded %>% mutate(n = 1) %>% group_by(year) %>%
    summarise(md = median(min), mn = mean(min), stdev = sd(min), n = sum(n))
 
-
 df_sites
 df_coast
-
-
-
-
 
 seme_plot <- ggplot(data = df_expanded , aes(x = min)) + 
    facet_wrap(facets = df_expanded$year) +
@@ -149,10 +147,5 @@ seme_plot <- ggplot(data = df_expanded , aes(x = min)) +
          
 seme_plot + theme_bw() + theme_nt
 
-
-graphics.off()
-png(paste0(fig_dir,"Black-rockfish-size.png"), units = 'in', res = 300, height = 5, width = 5)
-seme_plot + theme_bw() + theme_nt
-dev.off()
-
+ggsave(paste0(fig_dir,"Black-rockfish-size.png"), height = 5, width = 5)
 
