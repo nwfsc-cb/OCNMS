@@ -123,7 +123,7 @@ swath_codes = swath_codes %>% rename(spp = species,species = CLASSCODE) %>%
   mutate(group = stringr::str_to_sentence(group))
 kelp_codes = swath_codes %>% filter(group=="Algae")
 
-if(1==1){ # update the data or not....
+if(1==2){ # update the data or not....
 # fish data ####
   print("Loading fish")
   fishx = data.frame(read.csv(
@@ -935,6 +935,7 @@ pycnos
 
 ```
 ## Urchins
+
 ### Total urchin density - site x year x depth 
 
 Total urchins by site by year. total urchins = purple + red + green
@@ -978,11 +979,6 @@ ggplot() +
 
 ```
 
-
-
-
-
-
 ```{r total-urchins, fig.width=5, fig.height=3.5}
   # Zoom in on urchins
 urchin1 <- invert_transect %>% filter(grp2=="URCHIN") %>%
@@ -1024,6 +1020,66 @@ tat_urchin2019 = urchin_zone[urchin_zone$year==2019 & urchin_zone$site =='Tatoos
 tat_urchin2021 = urchin_zone[urchin_zone$year==last.year & urchin_zone$site =='Tatoosh Island',]
 
 ```
+### Urchins mean tatoosh
+
+```{r total-urchins-tatoosh, fig.width=6, fig.height=3.5}
+  # Zoom in on urchins
+urchin1 <- invert_transect %>% filter(grp2=="URCHIN") %>%
+    group_by(year,site,transect,observer, area,grp2) %>%
+    summarise(tot.density = sum(density, na.rm = TRUE)) %>% 
+    group_by(year,site,area,grp2) %>%
+    summarise(mean.density=mean(tot.density, na.rm = TRUE), 
+              SD = sd(tot.density), 
+              N =length(year),
+              SE= SD/sqrt(N) ) 
+ 
+urchin_mean <- invert_transect %>% filter(grp2=="URCHIN") %>%
+    group_by(year,site,transect,observer,area,grp2) %>%
+    summarise(tot.density = sum(density, na.rm = TRUE)) %>% 
+    group_by(year,site,grp2) %>%
+    summarise(mean.density=mean(tot.density, na.rm = TRUE), 
+              SD = sd(tot.density), 
+              N =length(year),
+              SE= SD/sqrt(N) ) 
+urchin_meant = urchin_mean %>% filter(site=="Tatoosh Island")  
+
+ggplot() +
+     # geom_point(data= urchin1,aes(x=year,y=mean.density,color=site)) +
+      geom_point(data=urchin_meant,aes(x=year,y=mean.density)) +
+      geom_line(data= urchin_meant,
+                 aes(x=year,y=mean.density)) +
+      geom_errorbar(data=urchin_meant,
+                    aes(x=year,ymin=mean.density-SE,ymax=mean.density+SE),
+                    width=0) +
+      scale_x_continuous(breaks=seq(2015,last.year,2)) +
+      scale_y_continuous(expression("Urchin density (m"^-2*")")) +
+      # scale_color_viridis_d(option="plasma",end=0.75)+
+      scale_color_manual(values = site.col$col)+
+      theme_bw()+ theme_nt + xlab("")
+
+```
+```{r urchins-kelp-tatoosh}
+
+dat1 = algaex %>% 
+  filter(site=="Tatoosh Island", species=="NERLUE") %>% 
+  dplyr::select(year, mean.density) %>%
+  rename(nero = mean.density)
+
+dat2 = urchin_meant %>%
+  filter(site=="Tatoosh Island",grp2=="URCHIN") %>% 
+  dplyr::select(year, mean.density) %>%
+  rename(urchins = mean.density)
+
+
+dfx = left_join(dat1, dat2)
+
+ggplot(dfx, aes(urchins, nero)) +
+  xlab("Urchin density") + ylab("Nereo density") +
+  annotate("text", x=dfx$urchins,y=dfx$nero, label=dfx$year) + 
+  theme_nt + theme_bw()
+
+```
+
 
 Max total urchin density at Tatoosh
 
