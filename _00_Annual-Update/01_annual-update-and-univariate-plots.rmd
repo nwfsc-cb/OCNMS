@@ -67,7 +67,7 @@ source("R-functions-ocnms.r")
 # Paths for files
 # setwd('..')
 # home_dir = getwd()
-home_dir = getwd()
+home_dir = setwd("~/GitHub/OCNMS/_00_Annual-Update")
 
 fig_dir = paste0(home_dir,"/figures/")
 # data_dir = paste0(home_dir,"/data/")
@@ -620,19 +620,42 @@ saveRDS(algae3, file = paste0(data_dir,"Summarized_Data_Kelp_year_zone_spp.rds")
 
 Not sure why I started with this, but the figure is *Nereocystis* stipe counts at Tatoosh Island. 
 
-```{r canopy-kelp-tatoosh , fig.width=5, fig.height=3.5}
+```{r nerocystis-tatoosh , fig.width=5, fig.height=3.5}
  # Basic time-series by site and zone TATOOSH FOCUS
-kelp3 =  ggplot(canopy %>% filter(site=="Tatoosh Island",species=="NERLUE")) +
+nereo_tat =  ggplot(canopy %>% filter(site=="Tatoosh Island",species=="NERLUE")) +
    geom_point(aes(x=year,y=mean.density,color=zone),alpha=0.5) +
    geom_line(aes(x=year,y=mean.density,color=zone),alpha=0.5) +
    geom_errorbar(aes(x=year,ymin=mean.density-SE,ymax=mean.density+SE,color=zone),width=0) +
    #facet_grid(rows="species",scales="free_y") +
    scale_x_continuous(breaks=seq(2015,last.year,2)) +
-   scale_y_continuous(expression("Stipes m"^-2),limits=c(0,NA)) +
+   scale_y_continuous(expression("Nero stipes m"^-2),limits=c(0,NA)) +
    scale_color_viridis_d("Depth (m)",option="plasma",end=0.75)+
-   ggtitle("Tatoosh Island") +
    theme_bw() + theme_nt
-kelp3
+nereo_tat
+
+```
+
+```{r nerocystis-tatoosh-mean , fig.width=5, fig.height=3.5}
+ # Basic time-series by site and zone TATOOSH FOCUS
+
+algaex <- algae1 %>% 
+  group_by(year, site, species, fun_gr) %>%
+  summarise(mean.density=mean(density, na.rm = TRUE), 
+            SD = sd(density), 
+            N =length(year),
+            SE= SD/sqrt(N) ) 
+
+nereo_tat =  ggplot(algaex %>% filter(site=="Tatoosh Island",species=="NERLUE")) +
+   geom_point(aes(x=year,y=mean.density),alpha=0.5) +
+   geom_line(aes(x=year,y=mean.density),alpha=0.5) +
+   geom_errorbar(aes(x=year,ymin=mean.density-SE,ymax=mean.density+SE),width=0) +
+   #facet_grid(rows="species",scales="free_y") +
+   scale_x_continuous(breaks=seq(2015,last.year,2)) +
+   scale_y_continuous(expression("Nero stipes m"^-2),limits=c(0,NA)) +
+   scale_color_viridis_d("Depth (m)",option="plasma",end=0.75)+
+   xlab("Year") + 
+   theme_bw() + theme_nt
+nereo_tat
 
 ```
 
@@ -916,6 +939,50 @@ pycnos
 
 Total urchins by site by year. total urchins = purple + red + green
 
+Mean across depth zones
+
+
+```{r total-urchins-mean, fig.width=6, fig.height=3.5}
+  # Zoom in on urchins
+urchin1 <- invert_transect %>% filter(grp2=="URCHIN") %>%
+    group_by(year,site,transect,observer, area,grp2) %>%
+    summarise(tot.density = sum(density, na.rm = TRUE)) %>% 
+    group_by(year,site,area,grp2) %>%
+    summarise(mean.density=mean(tot.density, na.rm = TRUE), 
+              SD = sd(tot.density), 
+              N =length(year),
+              SE= SD/sqrt(N) ) 
+ 
+urchin_mean <- invert_transect %>% filter(grp2=="URCHIN") %>%
+    group_by(year,site,transect,observer,area,grp2) %>%
+    summarise(tot.density = sum(density, na.rm = TRUE)) %>% 
+    group_by(year,site,grp2) %>%
+    summarise(mean.density=mean(tot.density, na.rm = TRUE), 
+              SD = sd(tot.density), 
+              N =length(year),
+              SE= SD/sqrt(N) ) 
+  
+ggplot() +
+     # geom_point(data= urchin1,aes(x=year,y=mean.density,color=site)) +
+      geom_point(data=urchin_mean,aes(x=year,y=mean.density,color=site)) +
+      geom_line(data= urchin_mean,
+                 aes(x=year,y=mean.density,color=site)) +
+      geom_errorbar(data=urchin_mean,
+                    aes(x=year,ymin=mean.density-SE,ymax=mean.density+SE,color=site),
+                    width=0) +
+      scale_x_continuous(breaks=seq(2015,last.year,2)) +
+      scale_y_continuous(expression("Urchin density (m"^-2*")")) +
+      # scale_color_viridis_d(option="plasma",end=0.75)+
+      scale_color_manual(values = site.col$col)+
+      theme_bw()+ theme_nt + xlab("")
+
+```
+
+
+
+
+
+
 ```{r total-urchins, fig.width=5, fig.height=3.5}
   # Zoom in on urchins
 urchin1 <- invert_transect %>% filter(grp2=="URCHIN") %>%
@@ -1085,7 +1152,7 @@ Purple urchin density in 2015 = `r x2021` urchins per m^2
 
 Density compared to 2015 was `r x2021/x2015` fold.
 
-## Total seastar density: site x year x depth
+## Seastars: site x year x depth
 
 Sum of all observed seastars. Not species. 
 
