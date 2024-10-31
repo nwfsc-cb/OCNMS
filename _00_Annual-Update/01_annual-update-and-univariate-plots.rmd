@@ -29,19 +29,13 @@ as helper files.
 
 Set the data year year
 
-```{r data.year}
-
-rm(list = ls())
-data_year = 2024
-
-```
-
 ## some prep info
 
 ```{r SETUP, include=FALSE}
 # A bunch of initial set up junk
 
-
+rm(list = ls())
+data_year = 2024
 
 ##### knitr stuff and libraries ####
 # tools in use 
@@ -618,6 +612,8 @@ saveRDS(algae3, file = paste0(data_dir,"Summarized_Data_Kelp_year_zone_spp.rds")
 
 ## Nereocystis at Tatoosh
 
+### By depth
+
 Not sure why I started with this, but the figure is *Nereocystis* stipe counts at Tatoosh Island. 
 
 ```{r nerocystis-tatoosh , fig.width=5, fig.height=3.5}
@@ -630,10 +626,12 @@ nereo_tat =  ggplot(canopy %>% filter(site=="Tatoosh Island",species=="NERLUE"))
    scale_x_continuous(breaks=seq(2015,last.year,2)) +
    scale_y_continuous(expression("Nero stipes m"^-2),limits=c(0,NA)) +
    scale_color_viridis_d("Depth (m)",option="plasma",end=0.75)+
+  xlab("Year") +
    theme_bw() + theme_nt
 nereo_tat
 
 ```
+### Averaged across depths 
 
 ```{r nerocystis-tatoosh-mean , fig.width=5, fig.height=3.5}
  # Basic time-series by site and zone TATOOSH FOCUS
@@ -696,7 +694,9 @@ mac_ner_zone <- mac_ner %>% group_by(year,site,zone) %>%
  all_canopy_zone
 ```
 
-## Stipe counts for *Nerocystis*, *Macrocystis*, and *Pterogophora* by site x species x depth 
+## Stipe counts for *Nerocystis*, *Macrocystis*, and *Pterogophora*
+
+### Site x species x depth 
 
 Stipe counts across site and year for each species separatey. 
 
@@ -731,7 +731,7 @@ kelp1 + rotate_x_text(angle = 45)
 
 ```
 
-## Stipe counts for *Nerocystis*, *Macrocystis*, and *Pterogophora* by site x species at 5 m depth
+### At 5 m depth
 
 Just a subset of the plot above. 
 
@@ -764,6 +764,8 @@ kelp1 + rotate_x_text(angle = 45)
 ```
 
 ## Coastwide Stipe counts for *Nerocystis*, *Macrocystis*, and *Pterogophora*
+
+### Across depths
 
 Mean stipe count across sites for the big three algae
 
@@ -808,7 +810,7 @@ kelp_coast <- ggplot( dfx , aes(x=year, y=grand_mean, color=species)) +
 kelp_coast
 ```
 
-## Coastwide Stipe counts for *Nerocystis*, *Macrocystis*, and *Pterogophora* at 5 m depth
+### Just 5 m
 
 Same as above but subset out for just 5 m. Mean ignroes 10-m transects. 
 
@@ -883,10 +885,52 @@ kelp_coast5 <- ggplot( dfx5 , aes(x=year, y=grand_mean, color=species)) +
 
 kelp_coast5
 ```
+### Kelp summed coastwide mean
+
+```{r kelp-coastwide-total, fig.height=3.5, fig.width=5}
+
+# mean coastwide across depths
+
+dfx <-  kelp_transect %>% 
+      filter(., species %in% c("MACPYR",'NERLUE','PTECAL')) %>% 
+      group_by(site,year,species) %>%
+      summarise(Mean=mean(density, na.rm = TRUE),
+                SD=sd(density),
+                N=length(density),
+                SE=SD/sqrt(N),
+                SE_var=SE^2)  %>%
+      group_by(year) %>%
+      summarise(grand_sum = sum(Mean, na.rm = TRUE),
+            N=length(Mean),
+            grand_mean = grand_sum / N,
+            grand_sum_var = sum(SE_var, na.rm = TRUE), 
+            grand_SE = sqrt(grand_sum_var / N^2))
+
+kelp_coast <- ggplot( dfx , aes(x=year, y=grand_mean)) +
+                geom_point() +
+                geom_line() +
+                geom_errorbar(data=dfx, aes(x=year,
+                                  ymin=grand_mean-grand_SE,
+                                  ymax=grand_mean+grand_SE),width=0) +
+                # scale_color_manual(values = site.col$col)+
+                scale_x_continuous(breaks=seq(2015,last.year,2)) +
+                xlab("")+
+                scale_y_continuous(expression("Kelp stipes m"^-2)) +
+                theme_bw()+ theme_nt +
+                theme( legend.text = element_text(face = 'italic'),
+                       legend.key.size = unit(0.5,'lines')) 
+
+kelp_coast
+
+df_kelp_coast = dfx
+```
+
 
 # INVERTEBRATES
 
 Start with some data manipulations to sum up species by transect. 
+
+## Pycnopodia - total on all transects by year - table
 
 Table is count of *Pycnopodia* by year. 
 
@@ -936,7 +980,7 @@ pycnos
 ```
 ## Urchins
 
-### Total urchin density - site x year x depth 
+### Total urchin density - site x year
 
 Total urchins by site by year. total urchins = purple + red + green
 
@@ -978,6 +1022,7 @@ ggplot() +
       theme_bw()+ theme_nt + xlab("")
 
 ```
+### Total urchins by site x year x depth
 
 ```{r total-urchins, fig.width=5, fig.height=3.5}
   # Zoom in on urchins
@@ -1020,9 +1065,96 @@ tat_urchin2019 = urchin_zone[urchin_zone$year==2019 & urchin_zone$site =='Tatoos
 tat_urchin2021 = urchin_zone[urchin_zone$year==last.year & urchin_zone$site =='Tatoosh Island',]
 
 ```
-### Urchins mean tatoosh
 
-```{r total-urchins-tatoosh, fig.width=6, fig.height=3.5}
+### Coastwide total urchins
+
+Mean urchin density across all sites. Species summed because mostly purple urchins.
+
+```{r total-urchins-coast, fig.width=6, fig.height=3.5}
+  # Zoom in on urchins
+
+urchin_coast <- invert_transect %>% filter(grp2=="URCHIN") %>%
+    group_by(year,site,transect,observer,area,grp2) %>%
+    summarise(tot.density = sum(density, na.rm = TRUE)) %>% 
+    group_by(year, grp2) %>%
+    summarise(mean.density=mean(tot.density, na.rm = TRUE), 
+              SD = sd(tot.density), 
+              N =length(year),
+              SE= SD/sqrt(N) ) 
+  
+ggplot() +
+     # geom_point(data= urchin1,aes(x=year,y=mean.density,color=site)) +
+      geom_point(data=urchin_coast,aes(x=year,y=mean.density)) +
+      geom_line(data= urchin_coast,
+                 aes(x=year,y=mean.density)) +
+      geom_errorbar(data=urchin_coast,
+                    aes(x=year,
+                        ymin=mean.density-SE,
+                        ymax=mean.density+SE),
+                    width=0) +
+      scale_x_continuous(breaks=seq(2015,last.year,2)) +
+      scale_y_continuous(expression("Urchin density (m"^-2*")")) +
+      # scale_color_viridis_d(option="plasma",end=0.75)+
+      scale_color_manual(values = site.col$col)+
+      theme_bw()+ theme_nt + xlab("")
+
+```
+
+### Coastwode Urchins vs kelp
+
+```{r urchins-vs-kelp-coastwide, fig.width=5, fig.height=3}
+
+df_urchin_coast = urchin_coast %>%
+  dplyr::select(year, mean.density) %>%
+  rename(mean_urchins = mean.density)
+df_kelp_coast = df_kelp_coast %>%
+  dplyr::select(year, grand_mean) %>%
+  rename(mean_kelp = grand_mean)
+
+
+df1 = left_join(df_urchin_coast, df_kelp_coast)
+
+
+ggplot(df1, aes(mean_urchins, mean_kelp)) + 
+  geom_point() +
+  xlab("Urchin density") + ylab("Kelp stipe density") + 
+  theme_nt + theme_bw() + 
+  theme(axis.title = element_text(size=14),
+        axis.text = element_text(size=14))
+
+
+r = round(cor(df1$mean_urchins, df1$mean_kelp),2)
+
+# ggsave("Urchins-vs-kelp-coast.png", width=5, heigh=3)
+
+```
+
+### Coastwode Urchins vs kelp Differenced
+
+```{r urchins-vs-kelp-coastwide-diff, fig.width=5, fig.height=3}
+
+
+dif_kelp = diff(df1$mean_kelp)
+dif_urch = diff(df1$mean_urchins)
+df_dff = cbind(dif_kelp, dif_urch)  
+
+ggplot(df_dff, aes(dif_urch, dif_kelp)) + 
+  geom_point() +
+  xlab("Change in urchin density") + ylab("Change in kelp stipe density") + 
+  theme_nt + theme_bw() + 
+  theme(axis.title = element_text(size=14),
+        axis.text = element_text(size=14))
+
+
+r = round(cor(df1$mean_urchins, df1$mean_kelp),2)
+
+ggsave("Urchins-vs-kelp-coast-diff.png", width=5, heigh=3)
+
+```
+
+### Urchins at Tatoosh - mean across depths
+
+```{r total-urchins-tatoosh, fig.width=5, fig.height=3}
   # Zoom in on urchins
 urchin1 <- invert_transect %>% filter(grp2=="URCHIN") %>%
     group_by(year,site,transect,observer, area,grp2) %>%
@@ -1057,8 +1189,12 @@ ggplot() +
       scale_color_manual(values = site.col$col)+
       theme_bw()+ theme_nt + xlab("")
 
+
+
 ```
-```{r urchins-kelp-tatoosh}
+### Urchins vs Nereocystis at Tatoosh
+
+```{r urchins-kelp-tatoosh, fig.width=5, fig.height=3}
 
 dat1 = algaex %>% 
   filter(site=="Tatoosh Island", species=="NERLUE") %>% 
@@ -1085,6 +1221,27 @@ Max total urchin density at Tatoosh
 
  5-m = `r tat_urchin2019$mean.density[1]` m^-2
 10-m = `r tat_urchin2019$mean.density[2]` m^-2
+
+```{r urchins-kelp-tatoosh-diff, fig.width=5, fig.height=3}
+
+dnereo = diff(dfx$nero)
+durchin = diff(dfx$urchins)
+df1 = data.frame(cbind(dnereo, durchin))
+df1$year = c(dfx$year[2]:2019, 2021:max(dfx$year))
+
+ggplot(df1, aes(durchin,dnereo)) +
+  # geom_point() + 
+  xlab("Change in urchin density") + ylab("Change in Nereo density") +
+  annotate("text", x=df1$durchin,y=df1$dnereo, label=df1$year) + 
+  theme_nt + theme_bw() +
+  theme(axis.title = element_text(size=12), axis.text = element_text(size=12))
+
+
+
+```
+
+
+
 
 ### Urchin density by species: year x sites x depth
 
@@ -1242,7 +1399,7 @@ ggplot() +
 
 ```
 
-### Coastwide seastars by species
+### Coastwide seastars by species x site x year
 
 
 ```{r total-seastars-year-5-10m}
@@ -1627,8 +1784,43 @@ write.csv(invert_total, paste0(fig_dir,"Table-Inverts-Table.csv"))
 
 Imports data file from other R file. Plot just kelp canopy. Add to ggarrange below.
 
+## Long - 2015 on
 
-```{r kelp-canopy}
+```{r kelp-canopy-long}
+
+canopy = readRDS( "Data_Kelp_Canopy_Long.rds") 
+
+year.range = min(canopy$year):last.year
+
+canopy$species = factor(canopy$species, levels = c('Total','Macrocystis','Nereocystis'))
+
+canopy.kelp <- ggplot( canopy %>% filter(., site == 'Coastwide') %>% filter(., year %in% year.range), 
+                       aes(x=year, y = canopy_ha, color = species)) +
+                geom_point() +
+                geom_line() +
+                xlab("") +
+               #scale_x_continuous(breaks=seq(2015,last.year,2)) +
+                scale_x_continuous(breaks=seq(1990,last.year,5), minor_breaks = year.range) +
+                scale_y_continuous("Canopy area (ha)") +
+                scale_color_manual(values = site.col$col[c(5,1,2,3)],
+                                   labels = c('Total', 
+                                              bquote(italic('Macrocystis')),
+                                              bquote(italic('Nereocystis'))) )+
+                # scale_color_viridis_d(begin=0,end=0.75,option="plasma") +
+                theme_bw() + theme_nt + 
+                theme(legend.key.size = unit(0.5,'lines'),
+                      legend.position = 'inside',
+                      legend.position.inside = c(0.1,0.8))            
+
+
+canopy.kelp
+
+
+```
+
+## Short - 2015 on
+
+```{r kelp-canopy-short}
 
 canopy = readRDS( "Data_Kelp_Canopy_Long.rds") 
 

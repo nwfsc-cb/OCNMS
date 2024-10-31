@@ -15,18 +15,20 @@ fontsize: 11pt
 
 ```{r SETUP, include=FALSE}
 # A bunch of initial set up junk
-
 rm(list = ls())
+data_year = 2024
+
 
 ##### knitr stuff and libraries ####
 source("R-functions-ocnms.r")
 
 # Paths for files
 
-home_dir = getwd()
+home_dir = setwd("~/GitHub/OCNMS/_00_Annual-Update")
 
 fig_dir = paste0(home_dir,"/figures/")
-data_dir = paste0(home_dir,"/data/")
+# data_dir = paste0(home_dir,"/data/")
+data_dir = paste0("~/GitHub/OCNMS/Data/",data_year,"/")
 results_dir = paste0(home_dir,"/results/")
 other_dir = paste0(home_dir,"/other/")
 
@@ -108,10 +110,16 @@ invert.transform = 'log'
 nperm  = 999
 
 # Some csv files for naming later
-
-fish_codes = data.frame(read.csv( paste0(data_dir,"spp_codes_fish.csv") ))
-swath_codes = data.frame(read.csv( paste0(data_dir,"spp_codes_swath.csv") ))
-kelp_codes = data.frame(read.csv( paste0(data_dir,"spp_codes_kelp.csv") ))
+fish_codes = data.frame(read_xlsx(
+  paste0(data_dir,"NWFSC_FISH_ALLYEARS_data_",data_year,".xlsx"), sheet='species.codes'))
+swath_codes = data.frame(read_xlsx(
+  paste0(data_dir,"NWFSC_SWATH_ALLYEARS_data_",data_year,".xlsx"), sheet='species.codes'))
+swath_codes = swath_codes %>% rename(spp = species,species = CLASSCODE) %>%
+  mutate(group = stringr::str_to_sentence(group))
+kelp_codes = swath_codes %>% filter(group=="Algae")
+# fish_codes = data.frame(read.csv( paste0(data_dir,"spp_codes_fish.csv") ))
+# swath_codes = data.frame(read.csv( paste0(data_dir,"spp_codes_swath.csv") ))
+# kelp_codes = data.frame(read.csv( paste0(data_dir,"spp_codes_kelp.csv") ))
 
 theme_nt = readRDS(paste0(data_dir, 'theme_nt.rds') )
 
@@ -1159,8 +1167,8 @@ ptery.tat = ggplot(dfx , aes(x = urchins, y = kelp, color=zone)) +
         scale_color_manual(values=site.col$col[c(1,3)])+
         xlab( expression(paste('Urchins per ', m^2) ) )+
         ylab( expression(paste(italic('Ptery'), ' stipes per ', m^2)) )+
-        # annotate(geom="text", x=4, y=15, label = rstatement, hjust = 0, color="black", size = 3) +
-        # annotate(geom="text", x=4, y=13, label= pstatement, hjust = 0, color="black", size = 3) +
+        annotate(geom="text", x=4, y=15, label = rstatement, hjust = 0, color="black", size = 3) +
+        annotate(geom="text", x=4, y=13, label= pstatement, hjust = 0, color="black", size = 3) +
         theme_bw() + theme_nt
 
 ptery.tat
@@ -1214,8 +1222,8 @@ other.tat = ggplot(dfx , aes(x = urchins, y = kelp, color=zone)) +
         scale_color_manual(values=site.col$col[c(1,3)])+
         xlab( expression(paste('Urchins per ', m^2) ) )+
         ylab( expression(paste('Other stipes per ', m^2)) )+
-        # annotate(geom="text", x=4, y=15, label = rstatement, hjust = 0, color="black", size = 3) +
-        # annotate(geom="text", x=4, y=13, label= pstatement, hjust = 0, color="black", size = 3) +
+        annotate(geom="text", x=4, y=15, label = rstatement, hjust = 0, color="black", size = 3) +
+         annotate(geom="text", x=4, y=13, label= pstatement, hjust = 0, color="black", size = 3) +
         theme_bw() + theme_nt
 
 other.tat
