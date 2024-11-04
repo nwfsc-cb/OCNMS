@@ -1,7 +1,7 @@
 ---
-title: "Invert Analysis OCNMS"
+title: "Invert and KelpAnalysis OCNMS"
 author: "Ole Shelton"
-date: "10/11/2018"
+date: "04/15/2024"
 output: pdf_document
 ---
 
@@ -10,7 +10,8 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 library(xtable)
-source("/Users/ole.shelton/GitHub/OCNMS/R scripts/Fish, Invert, Kelp Analysis/Swath Inverts.R")
+library(here)
+source(here("R scripts","Fish, Invert, Kelp Analysis","Swath Inverts.R"))
 ```
 
 # Exploratory analysis 
@@ -352,7 +353,7 @@ GROUPS <- c("urchin","seastar","crab","bivalve","chiton","cucumber","gastropod",
 
 -->
 
-## Gastropodss
+## Gastropods
 Gastropod plots include these species
 ```{r  results="asis",echo=F,warning=F,message=F}
 GROUP <- "gastropod"
@@ -600,4 +601,102 @@ print(p1)
 print(p2)
 ```
 
+# Algae
+
+Ok. This section makes the same set of plots but does not group the species, but rather orders them from important to rare.
+
+
+```{r ,echo=F,warning=F,message=F}
+# drop No_ALG
+dat.algae.density <- dat.algae.density %>% filter(!species == "NO_ALG")
+dat.algae.density <- dat.algae.density %>% rename(Mean = MEAN)
+dat.algae.density$species <- factor(dat.algae.density$species,
+                                    levels= c(
+                                      "MACPYR","NERLUE","PTECAL",
+                                      "AGAFIM","ALAMAR","COSCOS",
+                                      "CYMTRI","DESSPP","EGRMEN","LAMSET",
+                                      "PLEGAR","SACGRO","SACLAT"))
+
+
+
+ALP <- 0.5
+p1 <- ggplot(dat.algae.density %>% 
+               filter(site %in% SITES, species %in% c("MACPYR","NERLUE","PTECAL" ))) +
+    geom_point(aes(x=year,y=MEAN.site.zone,color=site),alpha=ALP) +
+    geom_line(aes(x=year,y=MEAN.site.zone,color=site),alpha=ALP) +
+    geom_errorbar(aes(x=year,ymin=MEAN.site.zone-SE.site.zone,
+                      ymax=MEAN.site.zone+SE.site.zone,color=site),alpha=ALP)+
+    scale_y_continuous(expression("Mean density (m"^-2*")"),
+                       trans="sqrt",expand=c(NA,0))+
+   
+    xlab("Year") +
+    scale_color_discrete("Site") +
+    #ggtitle(paste(GROUP,"all depths")) +
+    facet_grid(species~zone,scales="free") +
+    theme_bw()
+
+p2 <-  ggplot(dat.algae.density %>% 
+               filter(site %in% SITES, species %in% c("AGAFIM","ALAMAR","COSCOS" ))) +
+    geom_point(aes(x=year,y=MEAN.site.zone,color=site),alpha=ALP) +
+    geom_line(aes(x=year,y=MEAN.site.zone,color=site),alpha=ALP) +
+    geom_errorbar(aes(x=year,ymin=MEAN.site.zone-SE.site.zone,
+                      ymax=MEAN.site.zone+SE.site.zone,color=site),alpha=ALP)+
+    scale_y_continuous(expression("Mean density (m"^-2*")"),
+                       trans="sqrt",expand=c(NA,0))+
+   
+    xlab("Year") +
+    scale_color_discrete("Site") +
+    #ggtitle(paste(GROUP,"all depths")) +
+    facet_grid(species~zone,scales="free") +
+    theme_bw()
+
+p3 <-  ggplot(dat.algae.density %>% 
+             filter(site %in% SITES, species %in% c("CYMTRI","DESSPP","EGRMEN","LAMSET"))) +
+    geom_point(aes(x=year,y=MEAN.site.zone,color=site),alpha=ALP) +
+    geom_line(aes(x=year,y=MEAN.site.zone,color=site),alpha=ALP) +
+    geom_errorbar(aes(x=year,ymin=MEAN.site.zone-SE.site.zone,
+                      ymax=MEAN.site.zone+SE.site.zone,color=site),alpha=ALP)+
+    scale_y_continuous(expression("Mean density (m"^-2*")"),
+                       trans="sqrt",expand=c(NA,0))+
+   
+    xlab("Year") +
+    scale_color_discrete("Site") +
+    #ggtitle(paste(GROUP,"all depths")) +
+    facet_grid(species~zone,scales="free") +
+    theme_bw()
+
+p4 <-  ggplot(dat.algae.density %>% 
+             filter(site %in% SITES, species %in% c("PLEGAR","SACGRO","SACLAT"))) +
+    geom_point(aes(x=year,y=MEAN.site.zone,color=site),alpha=ALP) +
+    geom_line(aes(x=year,y=MEAN.site.zone,color=site),alpha=ALP) +
+    geom_errorbar(aes(x=year,ymin=MEAN.site.zone-SE.site.zone,
+                      ymax=MEAN.site.zone+SE.site.zone,color=site),alpha=ALP)+
+    scale_y_continuous(expression("Mean density (m"^-2*")"),
+                       trans="sqrt",expand=c(NA,0))+
+   
+    xlab("Year") +
+    scale_color_discrete("Site") +
+    #ggtitle(paste(GROUP,"all depths")) +
+    facet_grid(species~zone,scales="free") +
+    theme_bw()
+
+```
+
+```{r ,echo=F,warning=F,message=F,fig.height=7}
+print(p1)
+```
+
+```{r ,echo=F,warning=F,message=F,fig.height=7}
+print(p2)
+
+```
+
+```{r ,echo=F,warning=F,message=F,fig.height=7}
+print(p3)
+
+```
+
+```{r ,echo=F,warning=F,message=F,fig.height=7}
+print(p4)
+```
 

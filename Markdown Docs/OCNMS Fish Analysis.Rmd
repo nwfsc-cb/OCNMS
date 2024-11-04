@@ -1,7 +1,7 @@
 ---
 title: "Fish Analysis OCNMS"
 author: "Ole Shelton"
-date: "9/28/2021"
+date: "04/15/2024"
 output:
   pdf_document: default
   word_document: default
@@ -11,7 +11,8 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-source("/Users/ole.shelton/GitHub/OCNMS/R scripts/Fish, Invert, Kelp Analysis/Swath Fish.R")
+library(here)
+source(here("R scripts","Fish, Invert, Kelp Analysis","Swath Fish.R"))
 ```
 
 # Exploratory analysis 
@@ -22,7 +23,7 @@ I first plotted a bunch of species together to look at the fish community.  Then
 During the sampling, the sampling they observed a total of `r length(unique(dat.fish$species))` species and species groups.  A few of these are redundant, though.  Here is how the sampling was distributed across sites and depths among years (underscores indicate sampling depth).
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-A<- dat.large.fish.summary %>% group_by(year,site,zone) %>% dplyr::summarise(N=max(N))
+A<- dat.large.fish.summary %>% group_by(year,site,zone) %>% dplyr::summarise(N=max(N)) 
 A$site <- factor(A$site,levels=nom)
 #A <- left_join(A,nom.merge,by=c("site"="nom"))
 B <- dcast(A, site~year+zone,value.var=c("N")) %>% left_join(.,nom.merge,by=c("site"="nom")) %>% arrange(id) %>% dplyr::select(-id)
@@ -87,4 +88,35 @@ These suggest to me that the 2m cut off that PISCO uses is going to be problemat
 ```{r echo=FALSE,warning=FALSE,fig.height = 4.25, fig.width = 7,fig.align='center'}
 print(vis.by.site)
 print(vis.hist)
+```
+
+\newpage
+#### Information on size data for black rockfish 2015-2022
+
+```{r echo=T,warning=FALSE,fig.height = 4.25, fig.width = 7,fig.align='center'}
+source("../R scripts/2022-23 Black Rockfish Assessment/Process Length Structure.R")
+
+```
+
+
+
+Plots of size distribution grouped into 5 cm bins.
+```{r echo=FALSE,warning=FALSE,fig.height = 7, fig.width = 8,fig.align='center'}
+print(p.seme.size.bin1)
+
+```
+
+
+```{r echo=FALSE,warning=FALSE,fig.width = 6, fig.height = 7,fig.align='center'}
+print(p.seme.size.bin2)
+
+```
+
+\newpage
+Plots of size distribution... but without 5cm bins
+
+
+```{r echo=FALSE,warning=FALSE,fig.width = 6, fig.height = 7,fig.align='center'}
+print(p.seme.size2)
+
 ```

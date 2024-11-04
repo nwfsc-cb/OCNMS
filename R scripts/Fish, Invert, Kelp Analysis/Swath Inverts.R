@@ -18,7 +18,7 @@ data.dir <- paste0(base.dir,"/Data/CSV_2015_on")
 setwd(data.dir)
 
 dat.2015 <- read.csv("2015_OCNMSDataComplete_standardized_122116.csv")
-dat.2016.on.swath <- read.csv("NWFSC_SWATH_ALLYEARS_data_2021.csv")
+dat.2016.on.swath <- read.csv("NWFSC_SWATH_ALLYEARS_data_2023.csv")
 
 species_names <- read.csv("species_code_list_swath.csv")
 
@@ -148,6 +148,11 @@ dat.2016.plus.swath <- dat.long %>% filter(!group == "MISSING")
 
 dat.2016.plus.swath <- dat.2016.plus.swath %>% mutate(METERS.sampled=ifelse(is.na(METERS.sampled)==T,10,METERS.sampled))
 
+# Drop missing data from a set of Tatoosh Island surveys in 2022,
+# these are identified by a Count of -99
+dat.2016.plus.swath <- dat.2016.plus.swath %>% filter(Count >= 0)
+
+
 # Tiny data fix for one dat point
 dat.2016.plus.swath <- dat.2016.plus.swath %>% 
                 mutate(METERS.sampled = ifelse(METERS.sampled==0 & species =="PISOCH",10,METERS.sampled)) 
@@ -212,7 +217,23 @@ dat.swath.base      <- dat.swath.base %>% ungroup() %>%
  dat.swath.base %>% ungroup() %>% dplyr::select(year, site,area,transect) %>% distinct(year,site,area) %>%
    as.data.frame()
 
-saveRDS(dat.swath.base,"Swath_2015-2021.rds")
+
+
+# saveRDS(dat.swath.base,"Swath_2015-2022.rds")
+
+###################################################################
+###################################################################
+###################################################################
+###################################################################
+###################################################################
+###################################################################
+###################################################################
+###################################################################
+###################################################################
+###################################################################
+###################################################################
+###################################################################
+
 
 ###################################################################
 # Separate out invertebrates and algae.
@@ -321,56 +342,47 @@ SITES  <- c("Destruction Island","Cape Johnson","Cape Alava","Tatoosh Island","N
 dat.invert.group$site <- factor(dat.invert.group$site,levels=SITES) 
 dat.invert.species.zone$site <- factor(dat.invert.species.zone$site,levels=SITES)
 dat.invert.group.zone$site <- factor(dat.invert.group.zone$site,levels=SITES)
-# A <- list()
-# for(i in 1:length(GROUPS)){
-# A[[i]] <- ggplot(dat.swath.group %>% filter(group.name == GROUPS[i],site %in% SITES )) +
-#     geom_point(aes(x=year,y=Mean,color=site)) +
-#     geom_line(aes(x=year,y=Mean,color=site)) +
-#     geom_errorbar(aes(x=year,ymin=Mean-SE,ymax=Mean+SE,color=site))+
-#     #facet_grid(group~.,scales = "free") +
-#     ylab(expression("Mean density (m"^-2*")"))+
-#     xlab("Year") +
-#     scale_color_discrete("Site") +
-#     ggtitle(GROUPS[i]) +
-#     theme_bw()
-# }
+
+
+##########
+##########
+# ALGAE
+##########
+##########
+
+
+dat.algae  <- dat.swath.base %>% filter(group == "Algae")
+
+#### ALGAE ANALYSIS and plotting.
+# Convert to m2 for comparability across all years.
+dat.algae.density <- dat.algae %>% mutate(density = Count / Transect.area) %>%
+  group_by(year,site,area,zone,common.name,species) %>% 
+  summarize(MEAN=mean(density),N.obs=length(Count),SD=sd(density),SE.tot=SD/sqrt(N.obs))
+
+tmp <- dat.algae %>% mutate(density = Count / Transect.area) %>%
+  group_by(year,site,zone,common.name,species) %>% 
+  summarize(MEAN.site.zone=mean(density),
+            N.obs.site.zone=length(Count),
+            SD.site.zone=sd(density),
+            SE.site.zone=SD.site.zone/sqrt(N.obs.site.zone))
+
+dat.algae.density <- dat.algae.density %>% left_join(.,tmp)
+
+# dat.algae.density <- dat.pre.2015 %>% dplyr::select(year=Year,site=Site,group.name,MEAN=MEAN,SE.tot=SE) %>% full_join(.,dat.algae.density) %>% 
+#   mutate(zone=ifelse(year<2015,5,zone))
+
+#dat.algae.density$group.name <- as.character(dat.invert.density$group.name)
+dat.algae.density$site <- as.character(dat.algae.density$site)
+
+# combine the names of the sites sensibly.
+dat.algae.density <- dat.algae.density %>% mutate(site=ifelse(site=="Anderson Pt.","Anderson Point",site)) %>%
+  mutate(site=ifelse(site=="Chibahdel","Chibadehl Rocks",site)) %>%
+  mutate(site=ifelse(site=="Destruction Island SW","Destruction Island",site)) %>%
+  mutate(site=ifelse(site=="Pt. of the Arches","Point of the Arches",site)) %>%
+  mutate(site=ifelse(site=="Teawhit Head","Teahwhit Head",site))
 
 
 
 
 
 
-
-
-
-
-
-
-# pdf(file=paste0(base.dir,"/Plots/__Chicago 12-2018/All Inverts.pdf"),onefile=T,width=7,height=5)
-# for(i in 1:length(GROUPS)){
-#   print(A[[i]])
-# }
-# dev.off()
-# 
-# 
-# ### FOR UCHICAGO PROPOSAL ON DIVERSITY.
-# 
-# dat.chicago <- dat.swath.group %>% filter(group %in% c("urchin","seastar"),site %in% c("Tatoosh Island","Neah Bay")) %>%
-#                           mutate(site=ifelse(site=="Neah Bay", "Koitlah",site),site=ifelse(site=="Tatoosh Island","Tatoosh",site))
-# 
-# B <- ggplot(dat.chicago ) +
-#   geom_point(aes(x=year,y=Mean,color=site)) +
-#   geom_line(aes(x=year,y=Mean,color=site)) +
-#   geom_errorbar(aes(x=year,ymin=Mean-SE,ymax=Mean+SE,color=site))+
-#   facet_grid(group~.,scales = "free") +
-#   ylab(expression("Mean density (m"^-2*")"))+
-#   xlab("Year") +
-#   scale_color_discrete("Site") +
-#   #theme(legend.position = c(0.9, 0.2)) +
-#   theme_bw() +
-#   theme(legend.position = c(0.7, 0.9)
-#       ,legend.background = element_rect(fill = "white", colour = NA))
-# 
-# quartz(file=paste0(base.dir,"/Plots/__Chicago 12-2018/Seastars and Urchins, Neah + Tatoosh.pdf"),type="pdf",dpi=600,width=4,height=5)
-# print(B)
-# dev.off()
