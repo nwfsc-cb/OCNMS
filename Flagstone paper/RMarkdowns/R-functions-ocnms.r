@@ -66,9 +66,7 @@ adonis2.correction <- function(data.file){
 
 #### ordination code ####
 
-# does not work. CAPdiscrim doesn't "see" df_matrix event hough it is made
-
-run.multivar.nt <- function(data.file, drop2015 = TRUE, spp, data.transform = NA, nperm = 999, 
+run.multivar.nt <- function(data.file, drop2015 = TRUE, spp, data.transform = NA, both_zones = TRUE, nperm = 999, 
                             outname = 'Results-' ){
      
      data.file1 = data.file
@@ -78,14 +76,18 @@ run.multivar.nt <- function(data.file, drop2015 = TRUE, spp, data.transform = NA
      df = data.file1[,spp]
      if(is.na(data.transform) == TRUE){df = data.file1[,spp]}
      if(is.na(data.transform) == FALSE){
-          if(data.transform == "sqrt"){df = data.file1[,spp]^(1/2)}
+          if(data.transform == "sqrt"){df = sqrt(data.file1[,spp])}
           if(data.transform == "4th-root"){df = data.file1[,spp]^(1/4)}
           if(data.transform == "log"){df = log(data.file1[,spp]+1) }
      }
      
-     ## capscale 
-     CAPid = as.factor(paste(data.file1$site , data.file1$zone , data.file1$year, sep = "_") )
+     ## CAPdiscrim
+     if(both_zones==TRUE){
+         CAPid = as.factor(paste(data.file1$site , data.file1$zone , data.file1$year, sep = "_") )}else{
+         CAPid = as.factor(paste(data.file1$site , data.file1$year, sep = "_") )}
      CAPfile = data.frame(cbind(CAPid,data.file1))
+     
+     colnames(CAPfile)[1] <- 'CAPid'
      
      #library(ecole)
      df_matrix <- ecole::bray0(df)
@@ -98,18 +100,21 @@ run.multivar.nt <- function(data.file, drop2015 = TRUE, spp, data.transform = NA
      cap.scores = scores(cap)
      cap.df = data.frame(cbind( data.file1 , cap.scores ) )
 
-     capture.output( cap, paste0(outname,"CAP_site_depth_year.txt") )
-     saveRDS( cap, paste0(outname,"CAP_site_depth_year.rds") )
-     saveRDS( cap.scores , paste( outname,  "cap.scores.rds") )
-     write.csv( cap.df , paste0(outname,  "data_YSD.csv"), row.names = FALSE )
+     # capture.output( cap, paste0("CAPdiscrim_", outname, ".txt") )
+     # saveRDS( cap, paste0(       "CAPdiscrim_", outname, ".rds") )
+     # saveRDS( cap.scores , paste("CAPdiscrim_", outname,  "_scores.rds") )
+     # write.csv( cap.df , paste0( "CAPdiscrim_", outname,  "_data.csv"), row.names = FALSE )
      
      ## permanova
      
      data.file1$year = as.factor(data.file1$year)
      
-     pman = adonis2( df_matrix ~ zone + site + year +
-                                 zone*site + zone*year + site*year, 
+     if(both_zones == TRUE){
+         pman = adonis2( df_matrix ~ zone + site + year +zone*site + zone*year + site*year, 
                                  data = data.file1, by="term", permutations = nperm )
+     }else{ pman = adonis2( df_matrix ~ site + year + site*year, 
+                     data = data.file1, by="term", permutations = nperm )
+     }
      
      pm.tab <- adonis2.correction(pman)
      
@@ -124,24 +129,26 @@ run.multivar.nt <- function(data.file, drop2015 = TRUE, spp, data.transform = NA
      
      ######### convert to random effects
      
-     vcomp = varcompnt( x = pm.tab, y = data.file1)
+     # vcomp = varcompnt( x = pm.tab, y = data.file1)
+     # 
+     # saveRDS(vcomp, file = paste0(outname, 'PerMANOVA_transect_all-var_comp.rds'))
+     # capture.output(vcomp, file =  paste0(outname, 'PerMANOVA_transect_all-var_comp.txt'))
      
-     saveRDS(vcomp, file = paste0(outname, 'PerMANOVA_transect_all-var_comp.rds'))
-     capture.output(vcomp, file =  paste0(outname, 'PerMANOVA_transect_all-var_comp.txt'))
+     results <- list(cap.df , cap, pman) #, vcomp)
      
-     results <- list(cap.df , cap, pman, vcomp)
-     
-     names(results) = c('cap.df','cap','pman', 'vcomp')
+     names(results) = c('cap.df','cap','pman') #, 'vcomp')
      return(results)
 }
 
 ### Plot capscale ordinations/summarize data ####
 
-Plot_Ordination <- function( data.file , ord.file, Yform, Xform,method = "CAPdiscrim",
+Plot_Ordination <- function( data.file , ord.file, plot.comm.scores=FALSE, comm.col = 'black',Yform, 
+                             Xform, pval=NA, pval.pos ="bottomright",method = "CAPdiscrim",
                              Xlim=NA, Ylim=NA, Xlim2 = NA, Ylim2=NA, Xlab = "Axis 1", Ylab = "Axis 2", 
-                             min.score = 0.0, plot.species = TRUE, spp.separate = FALSE, 
-                             fig.legend=NA, legend.pos='topleft', sppcol='red', bg.equals.col=TRUE){
-     
+                             min.score = 0.0, plot.species = TRUE, spp.separate = FALSE,
+                             scores.cex = 1,scores.font=1, fig.lab=NA, lab.pos='topleft', 
+                             fig.legend=FALSE, legend.pos="bottomleft", legend.inset = c(0,0),
+                             sppcol='red', bg.equals.col=TRUE){
      form1 = paste0(Yform, '1', Xform)
      form2 = paste0(Yform, '2', Xform)
      df_1 = Sum_Stats( form1 , data.file )
@@ -153,31 +160,52 @@ Plot_Ordination <- function( data.file , ord.file, Yform, Xform,method = "CAPdis
      }
      
      if(is.na(Xlim[1]) | is.na(Ylim[1])){
-          plot( df_1$mean , df_2$mean, pch = as.numeric(df_1$pch) , col = df_1$col, bg = df_1$bgcol , xlab=Xlab, ylab=Ylab)}else{
-               plot( df_1$mean , df_2$mean, pch = as.numeric(df_1$pch) , col =df_1$col, bg = df_1$bgcol, xlim = Xlim, ylim = Ylim , xlab=Xlab, ylab=Ylab )
+          plot( df_1$mean , df_2$mean, pch = as.numeric(df_1$pch) , col = df_1$col, bg = df_1$bgcol , 
+                xlab=Xlab, ylab=Ylab)}else{
+                    plot( df_1$mean , df_2$mean, pch = as.numeric(df_1$pch) , col =df_1$col, bg = df_1$bgcol, 
+                          xlim = Xlim, ylim = Ylim , xlab=Xlab, ylab=Ylab )
           }
      # error bars
      arrows( df_1$mean+df_1$se , df_2$mean,  df_1$mean-df_1$se , df_2$mean, col = df_1$col, length = 0)
      arrows( df_1$mean, df_2$mean+df_2$se , df_1$mean , df_2$mean-df_2$se, col = df_1$col, length = 0)
      segments( par()$usr[1],0,par()$usr[2],0, lty = 'dotted', lwd = 0.5)
      segments( 0, par()$usr[3],0,par()$usr[4], lty = 'dotted', lwd = 0.5)
+     
      # spp spp scores
+     if(!is.na(fig.lab)){legend(lab.pos, legend = fig.lab, bty='n', inset = c(-0.05 ,0))}
+     if(!is.na(pval)){legend(pval.pos, legend = pval, bty="n")}
+     if(fig.legend == TRUE){
+       legend(legend.pos, legend=site.col$site, pch=19, col=site.col$col, bty='n', cex=0.8, inset=legend.inset)
+       legend('topright', legend=yr$year, pch=as.numeric(yr$pch), col='darkgrey',pt.bg = 'black', bty='n', cex=0.8 )}
      
-     if(!is.na(fig.legend)){legend(legend.pos, legend = fig.legend, bty='n')}
-     
-     if(method == "CAPdiscrim"){spp_scores = ord.file$cproj}else{spp_scores = scores(ord.file)$species}
-     if(plot.species==TRUE){ 
-          spp_scores1 = spp_scores[ abs(spp_scores[,1]) > min.score | abs(spp_scores[,2]) > min.score, ]
-          text(spp_scores1[,1] , spp_scores1[,2], rownames(spp_scores1), cex=0.8 , col=sppcol)
+     # for plotting dependent community scores from capscale
+     if(plot.comm.scores == TRUE){
+         x = scores(ord.file)
+         comm.scores = x$species
+         comm.scores = data.frame(comm.scores)
+         comm.scores$species = rownames(comm.scores)
      }
-     if(spp.separate==TRUE){
+     
+     if(method == "CAPdiscrim"){spp_scores = ord.file$cproj}else{spp_scores = ord.file$CCA$biplot}
+     
+     if(plot.species == TRUE){ 
+          spp_scores1 = spp_scores[ abs(spp_scores[,1]) > min.score | abs(spp_scores[,2]) > min.score, ]
+          text(spp_scores1[,1] , spp_scores1[,2], rownames(spp_scores1), font = scores.font, cex=scores.cex , col=sppcol)
+     }
+     
+     if(spp.separate == TRUE){
           spp_scores1 = spp_scores[ abs(spp_scores[,1]) > min.score | abs(spp_scores[,2]) > min.score, ]
           if(is.na(Xlim2)[1] | is.na(Ylim2)[1] ){
-               plot(spp_scores1[,1] , spp_scores1[,2], pch="" , xlab=Xlab, ylab=Ylab)}else{
+               plot(spp_scores1[,1] , spp_scores1[,2], pch="" , xlab=Xlab, ylab=Ylab)
+          if(plot.comm.scores==TRUE){
+              text(comm.scores[,1],comm.scores[,2],comm.scores$species, col = comm.col)}
+              }else{
                     plot(spp_scores1[,1] , spp_scores1[,2], pch="" , xlim = Xlim2, ylim = Ylim2 , xlab=Xlab, ylab=Ylab)
+                    if(plot.comm.scores==TRUE){
+                      text(comm.scores[,1],comm.scores[,2],comm.scores$species, col = comm.col)}
                }
           
-          text(spp_scores1[,1] , spp_scores1[,2], rownames(spp_scores1), cex=0.8 , col=sppcol)
+          text(spp_scores1[,1] , spp_scores1[,2], rownames(spp_scores1), font = scores.font, cex=scores.cex , col=sppcol)
           segments( par()$usr[1],0,par()$usr[2],0, lty = 'dotted', lwd = 0.5)
           segments( 0, par()$usr[3],0,par()$usr[4], lty = 'dotted', lwd = 0.5)
      }
@@ -324,6 +352,15 @@ species.plot.SxY <- function(data.file ,
                              Ylab = "Mean"
 ){
      #data.file = fishx[fishx$taxa=="SEME",]
+    
+     data.file <- data.file[data.file$site %in% c('Neah Bay',
+                                                  'Tatoosh Island',
+                                                  'Cape Alava',
+                                                  'Cape Johnson',
+                                                  'Destruction Island'),]
+    
+    
+    
      data.file$site <- factor(data.file$site, levels = c('Neah Bay',
                                                          'Tatoosh Island',
                                                          'Cape Alava',
@@ -334,6 +371,7 @@ species.plot.SxY <- function(data.file ,
           geom_point(size = 2) +
           xlab(Xlab) +
           ylab(Ylab) +
+          ggtitle(data.file$taxa[1]) + 
           # ylim(Ylim) +
           scale_x_continuous('', labels = as.character(years), breaks = years)+
           scale_color_manual(values = col) +
@@ -391,4 +429,22 @@ species.plot.SxYxD <- function(data.file ,
 
 # plot1 = species.plot.SxY(data.file = fishx[fishx$taxa=="SEME",])
 # plot1
+
+#### matrix transform pre ecole::bray0 ####
+
+# for transforming all RxC for subsetted data matrix prior to distance estimation
+
+matrix.transform <- function(data.file, data.transform = 'none'){
+     
+     if(data.transform == 'none'){ df = data.file }
+     if(is.na(data.transform) == TRUE){ df = data.file }
+     if(data.transform == "sqrt"){df = data.file^(1/2)}
+     if(data.transform == "4th-root"){df = data.file^(1/4)}
+     if(data.transform == "log"){df = log(data.file+1) }
+     return(df)
+     
+}
+
+
+
 
