@@ -166,6 +166,44 @@
 1999,"Teahwhit Head","nudibranch",0,0,NA,5,NA,NA,NA,NA
 1999,"Teahwhit Head","seastar",0.266666667,0.185282222375957,NA,5,NA,NA,NA,NA
 1999,"Teahwhit Head","urchin",0,0,NA,5,NA,NA,NA,NA
+<<<<<<< HEAD
+2015,"Anderson Point","anenome",0,0,NA,5,"Anthopleura xanthogrammica","ANTXAN",4,0
+2015,"Anderson Point","gastropod",0,0,NA,5,"Ceratostoma","CERFOL",4,0
+2015,"Anderson Point",NA,0,0,NA,5,"Chiton","CHITON",4,0
+2015,"Anderson Point","bivalve",0,0,NA,5,"Clinocardium","CLAMSP",4,0
+2015,"Anderson Point","cucumber",0.158333333333333,0.0853912563829967,NA,5,"Cucumaria","CUCMIN",4,0.170782512765993
+2015,"Anderson Point","seastar",0.05,0.0215165741455968,NA,5,"Dermasterias","DERIMB",4,0.0430331482911935
+2015,"Anderson Point","gastropod",0,0,NA,5,"Diodora aspera","DIOASP",4,0
+2015,"Anderson Point","nudibranch",0,0,NA,5,"Dirona","DIRALB",4,0
+2015,"Anderson Point","nudibranch",0,0,NA,5,"Doris odhneri","DORODH",4,0
+2015,"Anderson Point","anenome",0,0,NA,5,"Epiactis prolifera","EPIPRO",4,0
+2015,"Anderson Point","cucumber",0,0,NA,5,"Eupentacta","EUPQUI",4,0
+2015,"Anderson Point","seastar",0,0,NA,5,"Evasterias","EVATRO",4,0
+2015,"Anderson Point","gastropod",0,0,NA,5,"Fusitriton oregonensis","FUSORE",4,0
+2015,"Anderson Point","urchin",0,0,NA,5,"green urchin","STRDRO",4,0
+2015,"Anderson Point","chiton",0,0,NA,5,"Gumboot chiton","CRYSTE",4,0
+2015,"Anderson Point","seastar",0.025,0.0159571184626056,NA,5,"Henricia leviuscula","HENLEV",4,0.0319142369252113
+2015,"Anderson Point","bivalve",0,0,NA,5,"jingle shell","PODSPP",4,0
+2015,"Anderson Point","seastar",0,0,NA,5,"Mediaster aequalis","MEDAEQ",4,0
+2015,"Anderson Point","crab",0,0,NA,5,"Mimulus","MIMFOL",4,0
+2015,"Anderson Point","crab",0,0,NA,5,"Northern kelp crab","PUGPRO",4,0
+2015,"Anderson Point","nudibranch",0,0,NA,5,"Nudibranch","NUDIBR",4,0
+2015,"Anderson Point","cucumber",0,0,NA,5,"Parastichopus","PARCAL",4,0
+2015,"Anderson Point","nudibranch",0.00833333333333333,0.00833333333333333,NA,5,"Peltodoris nobilis","PELNOB",4,0.0166666666666667
+2015,"Anderson Point","crab",0,0,NA,5,"Phyllolithodes papillosus","CRYDEC",4,0
+2015,"Anderson Point","seastar",0,0,NA,5,"Pisaster","PISOCH",4,0
+2015,"Anderson Point","seastar",0,0,NA,5,"Pycnopodia helianthoides","PYCHEL",4,0
+2015,"Anderson Point","bivalve",0.0166666666666667,0.0166666666666667,NA,5,"Rock scallop","CRAGIG",4,0.0333333333333333
+2015,"Anderson Point","crab",0.0166666666666667,0.0166666666666667,NA,5,"Scyra acutifrons","SCYDEC",4,0.0333333333333333
+2015,"Anderson Point","seastar.small",0,0,NA,5,"Seastar","STARREC",4,0
+2015,"Anderson Point","seastar",0,0,NA,5,"Solaster stimpsoni","SOLSTI",4,0
+2015,"Anderson Point","urchin",0.00833333333333333,0.00833333333333333,NA,5,"Strongylocentrotus purpuratus","STRPUR",4,0.0166666666666667
+2015,"Anderson Point","tunicate",0.225,0.0209717623201965,NA,5,"Styela","STYMON",4,0.0419435246403931
+2015,"Anderson Point","nudibranch",0,0,NA,5,"Triophe catalinidae","TRICAT",4,0
+2015,"Anderson Point","anenome",0.00833333333333333,0.00833333333333333,NA,5,"Urticina crassicornis","URTCRA",4,0.0166666666666667
+2015,"Anderson Point","anenome",0,0,NA,5,"Urticina lofotensis","URTLOF",4,0
+=======
+>>>>>>> master
 2015,"Anderson Point","nudibranch",0,0,NA,5,"Acanthodoris hudsoni, white nudibranch with yellow margin (we lump with Cadlina luteomarginata)","ACAHUD",4,0
 2015,"Anderson Point","nudibranch",0,0,NA,5,"Acanthodoris nanaimo","ACANAN",4,0
 2015,"Anderson Point","gastropod",0,0,NA,5,"Acmaea mitra, white cap limpet","ACMMIT",4,0
@@ -183,6 +221,10 @@
 2015,"Anderson Point","cucumber",0.158333333333333,0.0853912563829967,NA,5,"Cucumaria","CUCMIN",4,0.170782512765993
 2015,"Anderson Point","seastar",0.05,0.0215165741455968,NA,5,"Dermasterias","DERIMB",4,0.0430331482911935
 2015,"Anderson Point","nudibranch",0,0,NA,5,"Dialula sandiegensis","DIASAN",4,0
+<<<<<<< HEAD
+2015,"Anderson Point","octopus",0,0,NA,5,"Enteroctopus dofleini","ENTDOF",4,0
+2015,"Anderson Point","gastropod",0,0,NA,5,"Haliotis kamtschatkana, pinto abalone","HALKAM",4,0
+=======
 2015,"Anderson Point","gastropod",0,0,NA,5,"Diodora aspera","DIOASP",4,0
 2015,"Anderson Point","nudibranch",0,0,NA,5,"Dirona","DIRALB",4,0
 2015,"Anderson Point","nudibranch",0,0,NA,5,"Doris odhneri","DORODH",4,0
@@ -194,6 +236,7 @@
 2015,"Anderson Point","chiton",0,0,NA,5,"Gumboot chiton","CRYSTE",4,0
 2015,"Anderson Point","gastropod",0,0,NA,5,"Haliotis kamtschatkana, pinto abalone","HALKAM",4,0
 2015,"Anderson Point","seastar",0.025,0.0159571184626056,NA,5,"Henricia leviuscula","HENLEV",4,0.0319142369252113
+>>>>>>> master
 2015,"Anderson Point","nudibranch",0,0,NA,5,"Hermissenda crassicornis, opalescent nudibranch","HERCRA",4,0
 2015,"Anderson Point","nudibranch",0,0,NA,5,"Janolus fuscus, nudibranch","JANFUS",4,0
 2015,"Anderson Point","seastar.small",0,0,NA,5,"Lepasterias spp.","LEPSPP",4,0
@@ -204,7 +247,11 @@
 2015,"Anderson Point","urchin",0,0,NA,5,"Mesocentrotus franciscanus, red urchin","MESFRA",4,0
 2015,"Anderson Point","anenome",0,0,NA,5,"Metridium giganteum, giant plumose anemone","METGIG",4,0
 2015,"Anderson Point","anenome",0,0,NA,5,"Metridium spp., white plumed anemones","METSPP",4,0
+<<<<<<< HEAD
+2015,"Anderson Point","bivalve",0,0,NA,5,"misc. scallops (not rock)","SCALLOP",4,0
+=======
 2015,"Anderson Point","crab",0,0,NA,5,"Mimulus","MIMFOL",4,0
+>>>>>>> master
 2015,"Anderson Point","bivalve",0,0,NA,5,"Mytilus californianus, California mussel","MYTCAL",4,0
 2015,"Anderson Point","crab",0,0,NA,5,"Northern kelp crab","PUGPRO",4,0
 2015,"Anderson Point","gastropod",0,0,NA,5,"Nucella lamellosa, whelk (used generally for rough predatory whelks)","NUCLAM",4,0
@@ -219,6 +266,8 @@
 2015,"Anderson Point","seastar",0,0,NA,5,"Pisaster brevispinus, short spined star","PISBRE",4,0
 2015,"Anderson Point","seastar",0,0,NA,5,"Pisaster giganteus, giant spined star","PISGIG",4,0
 2015,"Anderson Point","crab",0,0,NA,5,"Pugettia gracilis, graceful kelp crab","PUGGRA",4,0
+<<<<<<< HEAD
+=======
 2015,"Anderson Point","seastar",0,0,NA,5,"Pycnopodia helianthoides","PYCHEL",4,0
 2015,"Anderson Point","bivalve",0.0166666666666667,0.0166666666666667,NA,5,"Rock scallop","CRAGIG",4,0.0333333333333333
 2015,"Anderson Point","crab",0.0166666666666667,0.0166666666666667,NA,5,"Scyra acutifrons","SCYDEC",4,0.0333333333333333
@@ -226,6 +275,7 @@
 2015,"Anderson Point","seastar",0,0,NA,5,"Solaster stimpsoni","SOLSTI",4,0
 2015,"Anderson Point","urchin",0.00833333333333333,0.00833333333333333,NA,5,"Strongylocentrotus purpuratus","STRPUR",4,0.0166666666666667
 2015,"Anderson Point","tunicate",0.225,0.0209717623201965,NA,5,"Styela","STYMON",4,0.0419435246403931
+>>>>>>> master
 2015,"Anderson Point","gastropod",0,0,NA,5,"Tegula spp., turban snails","TEGSPP",4,0
 2015,"Anderson Point","nudibranch",0,0,NA,5,"Triophe catalinidae","TRICAT",4,0
 2015,"Anderson Point",NA,0,0,NA,5,"UNKOWN","STYFOR",4,0
@@ -234,10 +284,48 @@
 2015,"Anderson Point","anenome",0,0,NA,5,"Urticina lofotensis","URTLOF",4,0
 2015,"Anderson Point","anenome",0,0,NA,5,"Urticina piscivora, fish-eating anemone","URTPIS",4,0
 2015,"Anderson Point","anenome",0,0,NA,5,"Urticina spp., Urticina spp.","URTSPP",4,0
+<<<<<<< HEAD
+2015,"Cape Alava","anenome",0,0,NA,5,"Anthopleura xanthogrammica","ANTXAN",4,0
+2015,"Cape Alava","gastropod",0,0,NA,5,"Ceratostoma","CERFOL",4,0
+2015,"Cape Alava",NA,0,0,NA,5,"Chiton","CHITON",4,0
+2015,"Cape Alava","bivalve",0,0,NA,5,"Clinocardium","CLAMSP",4,0
+2015,"Cape Alava","cucumber",0.0666666666666667,0.0408248290463863,NA,5,"Cucumaria","CUCMIN",4,0.0816496580927726
+2015,"Cape Alava","seastar",0.05,0.0166666666666667,NA,5,"Dermasterias","DERIMB",4,0.0333333333333333
+2015,"Cape Alava","gastropod",0,0,NA,5,"Diodora aspera","DIOASP",4,0
+2015,"Cape Alava","nudibranch",0,0,NA,5,"Dirona","DIRALB",4,0
+2015,"Cape Alava","nudibranch",0,0,NA,5,"Doris odhneri","DORODH",4,0
+2015,"Cape Alava","anenome",0,0,NA,5,"Epiactis prolifera","EPIPRO",4,0
+2015,"Cape Alava","cucumber",0,0,NA,5,"Eupentacta","EUPQUI",4,0
+2015,"Cape Alava","seastar",0.00833333333333333,0.00833333333333333,NA,5,"Evasterias","EVATRO",4,0.0166666666666667
+2015,"Cape Alava","gastropod",0,0,NA,5,"Fusitriton oregonensis","FUSORE",4,0
+2015,"Cape Alava","urchin",0,0,NA,5,"green urchin","STRDRO",4,0
+2015,"Cape Alava","chiton",0,0,NA,5,"Gumboot chiton","CRYSTE",4,0
+2015,"Cape Alava","seastar",0.0416666666666667,0.0315494908100015,NA,5,"Henricia leviuscula","HENLEV",4,0.063098981620003
+2015,"Cape Alava","bivalve",0,0,NA,5,"jingle shell","PODSPP",4,0
+2015,"Cape Alava","seastar",0,0,NA,5,"Mediaster aequalis","MEDAEQ",4,0
+2015,"Cape Alava","crab",0.00833333333333333,0.00481125224324688,NA,5,"Mimulus","MIMFOL",4,0.00962250448649376
+2015,"Cape Alava","crab",0,0,NA,5,"Northern kelp crab","PUGPRO",4,0
+2015,"Cape Alava","nudibranch",0,0,NA,5,"Nudibranch","NUDIBR",4,0
+2015,"Cape Alava","cucumber",0,0,NA,5,"Parastichopus","PARCAL",4,0
+2015,"Cape Alava","nudibranch",0.0416666666666667,0.0198373011903968,NA,5,"Peltodoris nobilis","PELNOB",4,0.0396746023807936
+2015,"Cape Alava","crab",0,0,NA,5,"Phyllolithodes papillosus","CRYDEC",4,0
+2015,"Cape Alava","seastar",0.00833333333333333,0.00833333333333333,NA,5,"Pisaster","PISOCH",4,0.0166666666666667
+2015,"Cape Alava","seastar",0,0,NA,5,"Pycnopodia helianthoides","PYCHEL",4,0
+2015,"Cape Alava","bivalve",0.00833333333333333,0.00833333333333333,NA,5,"Rock scallop","CRAGIG",4,0.0166666666666667
+2015,"Cape Alava","crab",0.00416666666666667,0.00416666666666667,NA,5,"Scyra acutifrons","SCYDEC",4,0.00833333333333333
+2015,"Cape Alava","seastar.small",0,0,NA,5,"Seastar","STARREC",4,0
+2015,"Cape Alava","seastar",0,0,NA,5,"Solaster stimpsoni","SOLSTI",4,0
+2015,"Cape Alava","urchin",0,0,NA,5,"Strongylocentrotus purpuratus","STRPUR",4,0
+2015,"Cape Alava","tunicate",0.0541666666666667,0.0314576434802948,NA,5,"Styela","STYMON",4,0.0629152869605896
+2015,"Cape Alava","nudibranch",0.00833333333333333,0.00833333333333333,NA,5,"Triophe catalinidae","TRICAT",4,0.0166666666666667
+2015,"Cape Alava","anenome",0,0,NA,5,"Urticina crassicornis","URTCRA",4,0
+2015,"Cape Alava","anenome",0,0,NA,5,"Urticina lofotensis","URTLOF",4,0
+=======
 2015,"Anderson Point","urchin",0,0,NA,5,"green urchin","STRDRO",4,0
 2015,"Anderson Point","bivalve",0,0,NA,5,"jingle shell","PODSPP",4,0
 2015,"Anderson Point","bivalve",0,0,NA,5,"misc clams","CLAMSP",4,0
 2015,"Anderson Point","bivalve",0,0,NA,5,"misc. scallops (not rock)","SCALLOP",4,0
+>>>>>>> master
 2015,"Cape Alava","nudibranch",0,0,NA,5,"Acanthodoris hudsoni, white nudibranch with yellow margin (we lump with Cadlina luteomarginata)","ACAHUD",4,0
 2015,"Cape Alava","nudibranch",0,0,NA,5,"Acanthodoris nanaimo","ACANAN",4,0
 2015,"Cape Alava","gastropod",0,0,NA,5,"Acmaea mitra, white cap limpet","ACMMIT",4,0
@@ -255,6 +343,10 @@
 2015,"Cape Alava","cucumber",0.0666666666666667,0.0408248290463863,NA,5,"Cucumaria","CUCMIN",4,0.0816496580927726
 2015,"Cape Alava","seastar",0.05,0.0166666666666667,NA,5,"Dermasterias","DERIMB",4,0.0333333333333333
 2015,"Cape Alava","nudibranch",0,0,NA,5,"Dialula sandiegensis","DIASAN",4,0
+<<<<<<< HEAD
+2015,"Cape Alava","octopus",0,0,NA,5,"Enteroctopus dofleini","ENTDOF",4,0
+2015,"Cape Alava","gastropod",0,0,NA,5,"Haliotis kamtschatkana, pinto abalone","HALKAM",4,0
+=======
 2015,"Cape Alava","gastropod",0,0,NA,5,"Diodora aspera","DIOASP",4,0
 2015,"Cape Alava","nudibranch",0,0,NA,5,"Dirona","DIRALB",4,0
 2015,"Cape Alava","nudibranch",0,0,NA,5,"Doris odhneri","DORODH",4,0
@@ -266,6 +358,7 @@
 2015,"Cape Alava","chiton",0,0,NA,5,"Gumboot chiton","CRYSTE",4,0
 2015,"Cape Alava","gastropod",0,0,NA,5,"Haliotis kamtschatkana, pinto abalone","HALKAM",4,0
 2015,"Cape Alava","seastar",0.0416666666666667,0.0315494908100015,NA,5,"Henricia leviuscula","HENLEV",4,0.063098981620003
+>>>>>>> master
 2015,"Cape Alava","nudibranch",0,0,NA,5,"Hermissenda crassicornis, opalescent nudibranch","HERCRA",4,0
 2015,"Cape Alava","nudibranch",0,0,NA,5,"Janolus fuscus, nudibranch","JANFUS",4,0
 2015,"Cape Alava","seastar.small",0,0,NA,5,"Lepasterias spp.","LEPSPP",4,0
@@ -276,7 +369,11 @@
 2015,"Cape Alava","urchin",0,0,NA,5,"Mesocentrotus franciscanus, red urchin","MESFRA",4,0
 2015,"Cape Alava","anenome",0,0,NA,5,"Metridium giganteum, giant plumose anemone","METGIG",4,0
 2015,"Cape Alava","anenome",0,0,NA,5,"Metridium spp., white plumed anemones","METSPP",4,0
+<<<<<<< HEAD
+2015,"Cape Alava","bivalve",0,0,NA,5,"misc. scallops (not rock)","SCALLOP",4,0
+=======
 2015,"Cape Alava","crab",0.00833333333333333,0.00481125224324688,NA,5,"Mimulus","MIMFOL",4,0.00962250448649376
+>>>>>>> master
 2015,"Cape Alava","bivalve",0,0,NA,5,"Mytilus californianus, California mussel","MYTCAL",4,0
 2015,"Cape Alava","crab",0,0,NA,5,"Northern kelp crab","PUGPRO",4,0
 2015,"Cape Alava","gastropod",0,0,NA,5,"Nucella lamellosa, whelk (used generally for rough predatory whelks)","NUCLAM",4,0
@@ -291,6 +388,8 @@
 2015,"Cape Alava","seastar",0,0,NA,5,"Pisaster brevispinus, short spined star","PISBRE",4,0
 2015,"Cape Alava","seastar",0,0,NA,5,"Pisaster giganteus, giant spined star","PISGIG",4,0
 2015,"Cape Alava","crab",0,0,NA,5,"Pugettia gracilis, graceful kelp crab","PUGGRA",4,0
+<<<<<<< HEAD
+=======
 2015,"Cape Alava","seastar",0,0,NA,5,"Pycnopodia helianthoides","PYCHEL",4,0
 2015,"Cape Alava","bivalve",0.00833333333333333,0.00833333333333333,NA,5,"Rock scallop","CRAGIG",4,0.0166666666666667
 2015,"Cape Alava","crab",0.00416666666666667,0.00416666666666667,NA,5,"Scyra acutifrons","SCYDEC",4,0.00833333333333333
@@ -298,6 +397,7 @@
 2015,"Cape Alava","seastar",0,0,NA,5,"Solaster stimpsoni","SOLSTI",4,0
 2015,"Cape Alava","urchin",0,0,NA,5,"Strongylocentrotus purpuratus","STRPUR",4,0
 2015,"Cape Alava","tunicate",0.0541666666666667,0.0314576434802948,NA,5,"Styela","STYMON",4,0.0629152869605896
+>>>>>>> master
 2015,"Cape Alava","gastropod",0,0,NA,5,"Tegula spp., turban snails","TEGSPP",4,0
 2015,"Cape Alava","nudibranch",0.00833333333333333,0.00833333333333333,NA,5,"Triophe catalinidae","TRICAT",4,0.0166666666666667
 2015,"Cape Alava",NA,0,0,NA,5,"UNKOWN","STYFOR",4,0
@@ -306,10 +406,48 @@
 2015,"Cape Alava","anenome",0,0,NA,5,"Urticina lofotensis","URTLOF",4,0
 2015,"Cape Alava","anenome",0,0,NA,5,"Urticina piscivora, fish-eating anemone","URTPIS",4,0
 2015,"Cape Alava","anenome",0,0,NA,5,"Urticina spp., Urticina spp.","URTSPP",4,0
+<<<<<<< HEAD
+2015,"Cape Johnson","anenome",0.00833333333333333,0.00833333333333333,NA,5,"Anthopleura xanthogrammica","ANTXAN",4,0.0166666666666667
+2015,"Cape Johnson","gastropod",0.00833333333333333,0.00833333333333333,NA,5,"Ceratostoma","CERFOL",4,0.0166666666666667
+2015,"Cape Johnson",NA,0,0,NA,5,"Chiton","CHITON",4,0
+2015,"Cape Johnson","bivalve",0.00833333333333333,0.00833333333333333,NA,5,"Clinocardium","CLAMSP",4,0.0166666666666667
+2015,"Cape Johnson","cucumber",0,0,NA,5,"Cucumaria","CUCMIN",4,0
+2015,"Cape Johnson","seastar",0.0166666666666667,0.0166666666666667,NA,5,"Dermasterias","DERIMB",4,0.0333333333333333
+2015,"Cape Johnson","gastropod",0,0,NA,5,"Diodora aspera","DIOASP",4,0
+2015,"Cape Johnson","nudibranch",0,0,NA,5,"Dirona","DIRALB",4,0
+2015,"Cape Johnson","nudibranch",0.075,0.0343592135468138,NA,5,"Doris odhneri","DORODH",4,0.0687184270936277
+2015,"Cape Johnson","anenome",0,0,NA,5,"Epiactis prolifera","EPIPRO",4,0
+2015,"Cape Johnson","cucumber",0,0,NA,5,"Eupentacta","EUPQUI",4,0
+2015,"Cape Johnson","seastar",0,0,NA,5,"Evasterias","EVATRO",4,0
+2015,"Cape Johnson","gastropod",0,0,NA,5,"Fusitriton oregonensis","FUSORE",4,0
+2015,"Cape Johnson","urchin",0,0,NA,5,"green urchin","STRDRO",4,0
+2015,"Cape Johnson","chiton",0,0,NA,5,"Gumboot chiton","CRYSTE",4,0
+2015,"Cape Johnson","seastar",0,0,NA,5,"Henricia leviuscula","HENLEV",4,0
+2015,"Cape Johnson","bivalve",0,0,NA,5,"jingle shell","PODSPP",4,0
+2015,"Cape Johnson","seastar",0,0,NA,5,"Mediaster aequalis","MEDAEQ",4,0
+2015,"Cape Johnson","crab",0,0,NA,5,"Mimulus","MIMFOL",4,0
+2015,"Cape Johnson","crab",0,0,NA,5,"Northern kelp crab","PUGPRO",4,0
+2015,"Cape Johnson","nudibranch",0,0,NA,5,"Nudibranch","NUDIBR",4,0
+2015,"Cape Johnson","cucumber",0,0,NA,5,"Parastichopus","PARCAL",4,0
+2015,"Cape Johnson","nudibranch",0,0,NA,5,"Peltodoris nobilis","PELNOB",4,0
+2015,"Cape Johnson","crab",0,0,NA,5,"Phyllolithodes papillosus","CRYDEC",4,0
+2015,"Cape Johnson","seastar",0,0,NA,5,"Pisaster","PISOCH",4,0
+2015,"Cape Johnson","seastar",0,0,NA,5,"Pycnopodia helianthoides","PYCHEL",4,0
+2015,"Cape Johnson","bivalve",0,0,NA,5,"Rock scallop","CRAGIG",4,0
+2015,"Cape Johnson","crab",0,0,NA,5,"Scyra acutifrons","SCYDEC",4,0
+2015,"Cape Johnson","seastar.small",0.025,0.0159571184626056,NA,5,"Seastar","STARREC",4,0.0319142369252113
+2015,"Cape Johnson","seastar",0,0,NA,5,"Solaster stimpsoni","SOLSTI",4,0
+2015,"Cape Johnson","urchin",0,0,NA,5,"Strongylocentrotus purpuratus","STRPUR",4,0
+2015,"Cape Johnson","tunicate",0.025,0.025,NA,5,"Styela","STYMON",4,0.05
+2015,"Cape Johnson","nudibranch",0,0,NA,5,"Triophe catalinidae","TRICAT",4,0
+2015,"Cape Johnson","anenome",0,0,NA,5,"Urticina crassicornis","URTCRA",4,0
+2015,"Cape Johnson","anenome",0,0,NA,5,"Urticina lofotensis","URTLOF",4,0
+=======
 2015,"Cape Alava","urchin",0,0,NA,5,"green urchin","STRDRO",4,0
 2015,"Cape Alava","bivalve",0,0,NA,5,"jingle shell","PODSPP",4,0
 2015,"Cape Alava","bivalve",0,0,NA,5,"misc clams","CLAMSP",4,0
 2015,"Cape Alava","bivalve",0,0,NA,5,"misc. scallops (not rock)","SCALLOP",4,0
+>>>>>>> master
 2015,"Cape Johnson","nudibranch",0,0,NA,5,"Acanthodoris hudsoni, white nudibranch with yellow margin (we lump with Cadlina luteomarginata)","ACAHUD",4,0
 2015,"Cape Johnson","nudibranch",0,0,NA,5,"Acanthodoris nanaimo","ACANAN",4,0
 2015,"Cape Johnson","gastropod",0,0,NA,5,"Acmaea mitra, white cap limpet","ACMMIT",4,0
@@ -327,6 +465,10 @@
 2015,"Cape Johnson","cucumber",0,0,NA,5,"Cucumaria","CUCMIN",4,0
 2015,"Cape Johnson","seastar",0.0166666666666667,0.0166666666666667,NA,5,"Dermasterias","DERIMB",4,0.0333333333333333
 2015,"Cape Johnson","nudibranch",0,0,NA,5,"Dialula sandiegensis","DIASAN",4,0
+<<<<<<< HEAD
+2015,"Cape Johnson","octopus",0,0,NA,5,"Enteroctopus dofleini","ENTDOF",4,0
+2015,"Cape Johnson","gastropod",0,0,NA,5,"Haliotis kamtschatkana, pinto abalone","HALKAM",4,0
+=======
 2015,"Cape Johnson","gastropod",0,0,NA,5,"Diodora aspera","DIOASP",4,0
 2015,"Cape Johnson","nudibranch",0,0,NA,5,"Dirona","DIRALB",4,0
 2015,"Cape Johnson","nudibranch",0.075,0.0343592135468138,NA,5,"Doris odhneri","DORODH",4,0.0687184270936277
@@ -338,6 +480,7 @@
 2015,"Cape Johnson","chiton",0,0,NA,5,"Gumboot chiton","CRYSTE",4,0
 2015,"Cape Johnson","gastropod",0,0,NA,5,"Haliotis kamtschatkana, pinto abalone","HALKAM",4,0
 2015,"Cape Johnson","seastar",0,0,NA,5,"Henricia leviuscula","HENLEV",4,0
+>>>>>>> master
 2015,"Cape Johnson","nudibranch",0,0,NA,5,"Hermissenda crassicornis, opalescent nudibranch","HERCRA",4,0
 2015,"Cape Johnson","nudibranch",0,0,NA,5,"Janolus fuscus, nudibranch","JANFUS",4,0
 2015,"Cape Johnson","seastar.small",0,0,NA,5,"Lepasterias spp.","LEPSPP",4,0
@@ -348,7 +491,11 @@
 2015,"Cape Johnson","urchin",0,0,NA,5,"Mesocentrotus franciscanus, red urchin","MESFRA",4,0
 2015,"Cape Johnson","anenome",0,0,NA,5,"Metridium giganteum, giant plumose anemone","METGIG",4,0
 2015,"Cape Johnson","anenome",0,0,NA,5,"Metridium spp., white plumed anemones","METSPP",4,0
+<<<<<<< HEAD
+2015,"Cape Johnson","bivalve",0,0,NA,5,"misc. scallops (not rock)","SCALLOP",4,0
+=======
 2015,"Cape Johnson","crab",0,0,NA,5,"Mimulus","MIMFOL",4,0
+>>>>>>> master
 2015,"Cape Johnson","bivalve",0,0,NA,5,"Mytilus californianus, California mussel","MYTCAL",4,0
 2015,"Cape Johnson","crab",0,0,NA,5,"Northern kelp crab","PUGPRO",4,0
 2015,"Cape Johnson","gastropod",0,0,NA,5,"Nucella lamellosa, whelk (used generally for rough predatory whelks)","NUCLAM",4,0
@@ -363,6 +510,8 @@
 2015,"Cape Johnson","seastar",0,0,NA,5,"Pisaster brevispinus, short spined star","PISBRE",4,0
 2015,"Cape Johnson","seastar",0,0,NA,5,"Pisaster giganteus, giant spined star","PISGIG",4,0
 2015,"Cape Johnson","crab",0,0,NA,5,"Pugettia gracilis, graceful kelp crab","PUGGRA",4,0
+<<<<<<< HEAD
+=======
 2015,"Cape Johnson","seastar",0,0,NA,5,"Pycnopodia helianthoides","PYCHEL",4,0
 2015,"Cape Johnson","bivalve",0,0,NA,5,"Rock scallop","CRAGIG",4,0
 2015,"Cape Johnson","crab",0,0,NA,5,"Scyra acutifrons","SCYDEC",4,0
@@ -370,6 +519,7 @@
 2015,"Cape Johnson","seastar",0,0,NA,5,"Solaster stimpsoni","SOLSTI",4,0
 2015,"Cape Johnson","urchin",0,0,NA,5,"Strongylocentrotus purpuratus","STRPUR",4,0
 2015,"Cape Johnson","tunicate",0.025,0.025,NA,5,"Styela","STYMON",4,0.05
+>>>>>>> master
 2015,"Cape Johnson","gastropod",0,0,NA,5,"Tegula spp., turban snails","TEGSPP",4,0
 2015,"Cape Johnson","nudibranch",0,0,NA,5,"Triophe catalinidae","TRICAT",4,0
 2015,"Cape Johnson",NA,0,0,NA,5,"UNKOWN","STYFOR",4,0
@@ -378,10 +528,48 @@
 2015,"Cape Johnson","anenome",0,0,NA,5,"Urticina lofotensis","URTLOF",4,0
 2015,"Cape Johnson","anenome",0,0,NA,5,"Urticina piscivora, fish-eating anemone","URTPIS",4,0
 2015,"Cape Johnson","anenome",0,0,NA,5,"Urticina spp., Urticina spp.","URTSPP",4,0
+<<<<<<< HEAD
+2015,"Chibadehl Rocks","anenome",0,0,NA,5,"Anthopleura xanthogrammica","ANTXAN",4,0
+2015,"Chibadehl Rocks","gastropod",0,0,NA,5,"Ceratostoma","CERFOL",4,0
+2015,"Chibadehl Rocks",NA,0,0,NA,5,"Chiton","CHITON",4,0
+2015,"Chibadehl Rocks","bivalve",0,0,NA,5,"Clinocardium","CLAMSP",4,0
+2015,"Chibadehl Rocks","cucumber",0.00833333333333333,0.00833333333333333,NA,5,"Cucumaria","CUCMIN",4,0.0166666666666667
+2015,"Chibadehl Rocks","seastar",0,0,NA,5,"Dermasterias","DERIMB",4,0
+2015,"Chibadehl Rocks","gastropod",0.025,0.025,NA,5,"Diodora aspera","DIOASP",4,0.05
+2015,"Chibadehl Rocks","nudibranch",0,0,NA,5,"Dirona","DIRALB",4,0
+2015,"Chibadehl Rocks","nudibranch",0,0,NA,5,"Doris odhneri","DORODH",4,0
+2015,"Chibadehl Rocks","anenome",0,0,NA,5,"Epiactis prolifera","EPIPRO",4,0
+2015,"Chibadehl Rocks","cucumber",0,0,NA,5,"Eupentacta","EUPQUI",4,0
+2015,"Chibadehl Rocks","seastar",0,0,NA,5,"Evasterias","EVATRO",4,0
+2015,"Chibadehl Rocks","gastropod",0.0166666666666667,0.0166666666666667,NA,5,"Fusitriton oregonensis","FUSORE",4,0.0333333333333333
+2015,"Chibadehl Rocks","urchin",0.1,0.1,NA,5,"green urchin","STRDRO",4,0.2
+2015,"Chibadehl Rocks","chiton",0,0,NA,5,"Gumboot chiton","CRYSTE",4,0
+2015,"Chibadehl Rocks","seastar",0.0333333333333333,0.0235702260395516,NA,5,"Henricia leviuscula","HENLEV",4,0.0471404520791032
+2015,"Chibadehl Rocks","bivalve",0,0,NA,5,"jingle shell","PODSPP",4,0
+2015,"Chibadehl Rocks","seastar",0,0,NA,5,"Mediaster aequalis","MEDAEQ",4,0
+2015,"Chibadehl Rocks","crab",0,0,NA,5,"Mimulus","MIMFOL",4,0
+2015,"Chibadehl Rocks","crab",0,0,NA,5,"Northern kelp crab","PUGPRO",4,0
+2015,"Chibadehl Rocks","nudibranch",0,0,NA,5,"Nudibranch","NUDIBR",4,0
+2015,"Chibadehl Rocks","cucumber",0,0,NA,5,"Parastichopus","PARCAL",4,0
+2015,"Chibadehl Rocks","nudibranch",0,0,NA,5,"Peltodoris nobilis","PELNOB",4,0
+2015,"Chibadehl Rocks","crab",0.00833333333333333,0.00833333333333333,NA,5,"Phyllolithodes papillosus","CRYDEC",4,0.0166666666666667
+2015,"Chibadehl Rocks","seastar",0,0,NA,5,"Pisaster","PISOCH",4,0
+2015,"Chibadehl Rocks","seastar",0,0,NA,5,"Pycnopodia helianthoides","PYCHEL",4,0
+2015,"Chibadehl Rocks","bivalve",0,0,NA,5,"Rock scallop","CRAGIG",4,0
+2015,"Chibadehl Rocks","crab",0.00833333333333333,0.00833333333333333,NA,5,"Scyra acutifrons","SCYDEC",4,0.0166666666666667
+2015,"Chibadehl Rocks","seastar.small",0,0,NA,5,"Seastar","STARREC",4,0
+2015,"Chibadehl Rocks","seastar",0,0,NA,5,"Solaster stimpsoni","SOLSTI",4,0
+2015,"Chibadehl Rocks","urchin",0.00833333333333333,0.00833333333333333,NA,5,"Strongylocentrotus purpuratus","STRPUR",4,0.0166666666666667
+2015,"Chibadehl Rocks","tunicate",0,0,NA,5,"Styela","STYMON",4,0
+2015,"Chibadehl Rocks","nudibranch",0,0,NA,5,"Triophe catalinidae","TRICAT",4,0
+2015,"Chibadehl Rocks","anenome",0.108333333333333,0.0975391659226635,NA,5,"Urticina crassicornis","URTCRA",4,0.195078331845327
+2015,"Chibadehl Rocks","anenome",0,0,NA,5,"Urticina lofotensis","URTLOF",4,0
+=======
 2015,"Cape Johnson","urchin",0,0,NA,5,"green urchin","STRDRO",4,0
 2015,"Cape Johnson","bivalve",0,0,NA,5,"jingle shell","PODSPP",4,0
 2015,"Cape Johnson","bivalve",0,0,NA,5,"misc clams","CLAMSP",4,0
 2015,"Cape Johnson","bivalve",0,0,NA,5,"misc. scallops (not rock)","SCALLOP",4,0
+>>>>>>> master
 2015,"Chibadehl Rocks","nudibranch",0,0,NA,5,"Acanthodoris hudsoni, white nudibranch with yellow margin (we lump with Cadlina luteomarginata)","ACAHUD",4,0
 2015,"Chibadehl Rocks","nudibranch",0,0,NA,5,"Acanthodoris nanaimo","ACANAN",4,0
 2015,"Chibadehl Rocks","gastropod",0,0,NA,5,"Acmaea mitra, white cap limpet","ACMMIT",4,0
@@ -399,6 +587,10 @@
 2015,"Chibadehl Rocks","cucumber",0.00833333333333333,0.00833333333333333,NA,5,"Cucumaria","CUCMIN",4,0.0166666666666667
 2015,"Chibadehl Rocks","seastar",0,0,NA,5,"Dermasterias","DERIMB",4,0
 2015,"Chibadehl Rocks","nudibranch",0,0,NA,5,"Dialula sandiegensis","DIASAN",4,0
+<<<<<<< HEAD
+2015,"Chibadehl Rocks","octopus",0,0,NA,5,"Enteroctopus dofleini","ENTDOF",4,0
+2015,"Chibadehl Rocks","gastropod",0,0,NA,5,"Haliotis kamtschatkana, pinto abalone","HALKAM",4,0
+=======
 2015,"Chibadehl Rocks","gastropod",0.025,0.025,NA,5,"Diodora aspera","DIOASP",4,0.05
 2015,"Chibadehl Rocks","nudibranch",0,0,NA,5,"Dirona","DIRALB",4,0
 2015,"Chibadehl Rocks","nudibranch",0,0,NA,5,"Doris odhneri","DORODH",4,0
@@ -410,6 +602,7 @@
 2015,"Chibadehl Rocks","chiton",0,0,NA,5,"Gumboot chiton","CRYSTE",4,0
 2015,"Chibadehl Rocks","gastropod",0,0,NA,5,"Haliotis kamtschatkana, pinto abalone","HALKAM",4,0
 2015,"Chibadehl Rocks","seastar",0.0333333333333333,0.0235702260395516,NA,5,"Henricia leviuscula","HENLEV",4,0.0471404520791032
+>>>>>>> master
 2015,"Chibadehl Rocks","nudibranch",0,0,NA,5,"Hermissenda crassicornis, opalescent nudibranch","HERCRA",4,0
 2015,"Chibadehl Rocks","nudibranch",0,0,NA,5,"Janolus fuscus, nudibranch","JANFUS",4,0
 2015,"Chibadehl Rocks","seastar.small",0,0,NA,5,"Lepasterias spp.","LEPSPP",4,0
@@ -420,7 +613,11 @@
 2015,"Chibadehl Rocks","urchin",0,0,NA,5,"Mesocentrotus franciscanus, red urchin","MESFRA",4,0
 2015,"Chibadehl Rocks","anenome",0,0,NA,5,"Metridium giganteum, giant plumose anemone","METGIG",4,0
 2015,"Chibadehl Rocks","anenome",0,0,NA,5,"Metridium spp., white plumed anemones","METSPP",4,0
+<<<<<<< HEAD
+2015,"Chibadehl Rocks","bivalve",0,0,NA,5,"misc. scallops (not rock)","SCALLOP",4,0
+=======
 2015,"Chibadehl Rocks","crab",0,0,NA,5,"Mimulus","MIMFOL",4,0
+>>>>>>> master
 2015,"Chibadehl Rocks","bivalve",0,0,NA,5,"Mytilus californianus, California mussel","MYTCAL",4,0
 2015,"Chibadehl Rocks","crab",0,0,NA,5,"Northern kelp crab","PUGPRO",4,0
 2015,"Chibadehl Rocks","gastropod",0,0,NA,5,"Nucella lamellosa, whelk (used generally for rough predatory whelks)","NUCLAM",4,0
@@ -435,6 +632,8 @@
 2015,"Chibadehl Rocks","seastar",0,0,NA,5,"Pisaster brevispinus, short spined star","PISBRE",4,0
 2015,"Chibadehl Rocks","seastar",0,0,NA,5,"Pisaster giganteus, giant spined star","PISGIG",4,0
 2015,"Chibadehl Rocks","crab",0,0,NA,5,"Pugettia gracilis, graceful kelp crab","PUGGRA",4,0
+<<<<<<< HEAD
+=======
 2015,"Chibadehl Rocks","seastar",0,0,NA,5,"Pycnopodia helianthoides","PYCHEL",4,0
 2015,"Chibadehl Rocks","bivalve",0,0,NA,5,"Rock scallop","CRAGIG",4,0
 2015,"Chibadehl Rocks","crab",0.00833333333333333,0.00833333333333333,NA,5,"Scyra acutifrons","SCYDEC",4,0.0166666666666667
@@ -442,6 +641,7 @@
 2015,"Chibadehl Rocks","seastar",0,0,NA,5,"Solaster stimpsoni","SOLSTI",4,0
 2015,"Chibadehl Rocks","urchin",0.00833333333333333,0.00833333333333333,NA,5,"Strongylocentrotus purpuratus","STRPUR",4,0.0166666666666667
 2015,"Chibadehl Rocks","tunicate",0,0,NA,5,"Styela","STYMON",4,0
+>>>>>>> master
 2015,"Chibadehl Rocks","gastropod",0,0,NA,5,"Tegula spp., turban snails","TEGSPP",4,0
 2015,"Chibadehl Rocks","nudibranch",0,0,NA,5,"Triophe catalinidae","TRICAT",4,0
 2015,"Chibadehl Rocks",NA,0,0,NA,5,"UNKOWN","STYFOR",4,0
@@ -450,10 +650,48 @@
 2015,"Chibadehl Rocks","anenome",0,0,NA,5,"Urticina lofotensis","URTLOF",4,0
 2015,"Chibadehl Rocks","anenome",0,0,NA,5,"Urticina piscivora, fish-eating anemone","URTPIS",4,0
 2015,"Chibadehl Rocks","anenome",0,0,NA,5,"Urticina spp., Urticina spp.","URTSPP",4,0
+<<<<<<< HEAD
+2015,"Destruction Island","anenome",0.0333333333333333,0.0333333333333333,NA,5,"Anthopleura xanthogrammica","ANTXAN",2,0.0471404520791032
+2015,"Destruction Island","gastropod",0,0,NA,5,"Ceratostoma","CERFOL",2,0
+2015,"Destruction Island",NA,0,0,NA,5,"Chiton","CHITON",2,0
+2015,"Destruction Island","bivalve",0,0,NA,5,"Clinocardium","CLAMSP",2,0
+2015,"Destruction Island","cucumber",0,0,NA,5,"Cucumaria","CUCMIN",2,0
+2015,"Destruction Island","seastar",0.516666666666667,0.0166666666666667,NA,5,"Dermasterias","DERIMB",2,0.0235702260395516
+2015,"Destruction Island","gastropod",0,0,NA,5,"Diodora aspera","DIOASP",2,0
+2015,"Destruction Island","nudibranch",0,0,NA,5,"Dirona","DIRALB",2,0
+2015,"Destruction Island","nudibranch",0,0,NA,5,"Doris odhneri","DORODH",2,0
+2015,"Destruction Island","anenome",0,0,NA,5,"Epiactis prolifera","EPIPRO",2,0
+2015,"Destruction Island","cucumber",0,0,NA,5,"Eupentacta","EUPQUI",2,0
+2015,"Destruction Island","seastar",0,0,NA,5,"Evasterias","EVATRO",2,0
+2015,"Destruction Island","gastropod",0,0,NA,5,"Fusitriton oregonensis","FUSORE",2,0
+2015,"Destruction Island","urchin",0,0,NA,5,"green urchin","STRDRO",2,0
+2015,"Destruction Island","chiton",0,0,NA,5,"Gumboot chiton","CRYSTE",2,0
+2015,"Destruction Island","seastar",0.1,0.0666666666666667,NA,5,"Henricia leviuscula","HENLEV",2,0.0942809041582063
+2015,"Destruction Island","bivalve",0,0,NA,5,"jingle shell","PODSPP",2,0
+2015,"Destruction Island","seastar",0,0,NA,5,"Mediaster aequalis","MEDAEQ",2,0
+2015,"Destruction Island","crab",0,0,NA,5,"Mimulus","MIMFOL",2,0
+2015,"Destruction Island","crab",0,0,NA,5,"Northern kelp crab","PUGPRO",2,0
+2015,"Destruction Island","nudibranch",0,0,NA,5,"Nudibranch","NUDIBR",2,0
+2015,"Destruction Island","cucumber",0,0,NA,5,"Parastichopus","PARCAL",2,0
+2015,"Destruction Island","nudibranch",0.0333333333333333,0.0333333333333333,NA,5,"Peltodoris nobilis","PELNOB",2,0.0471404520791032
+2015,"Destruction Island","crab",0,0,NA,5,"Phyllolithodes papillosus","CRYDEC",2,0
+2015,"Destruction Island","seastar",0.0166666666666667,0.0166666666666667,NA,5,"Pisaster","PISOCH",2,0.0235702260395516
+2015,"Destruction Island","seastar",0,0,NA,5,"Pycnopodia helianthoides","PYCHEL",2,0
+2015,"Destruction Island","bivalve",0,0,NA,5,"Rock scallop","CRAGIG",2,0
+2015,"Destruction Island","crab",0,0,NA,5,"Scyra acutifrons","SCYDEC",2,0
+2015,"Destruction Island","seastar.small",0,0,NA,5,"Seastar","STARREC",2,0
+2015,"Destruction Island","seastar",0,0,NA,5,"Solaster stimpsoni","SOLSTI",2,0
+2015,"Destruction Island","urchin",0,0,NA,5,"Strongylocentrotus purpuratus","STRPUR",2,0
+2015,"Destruction Island","tunicate",0,0,NA,5,"Styela","STYMON",2,0
+2015,"Destruction Island","nudibranch",0,0,NA,5,"Triophe catalinidae","TRICAT",2,0
+2015,"Destruction Island","anenome",0,0,NA,5,"Urticina crassicornis","URTCRA",2,0
+2015,"Destruction Island","anenome",0,0,NA,5,"Urticina lofotensis","URTLOF",2,0
+=======
 2015,"Chibadehl Rocks","urchin",0.1,0.1,NA,5,"green urchin","STRDRO",4,0.2
 2015,"Chibadehl Rocks","bivalve",0,0,NA,5,"jingle shell","PODSPP",4,0
 2015,"Chibadehl Rocks","bivalve",0,0,NA,5,"misc clams","CLAMSP",4,0
 2015,"Chibadehl Rocks","bivalve",0,0,NA,5,"misc. scallops (not rock)","SCALLOP",4,0
+>>>>>>> master
 2015,"Destruction Island","nudibranch",0,0,NA,5,"Acanthodoris hudsoni, white nudibranch with yellow margin (we lump with Cadlina luteomarginata)","ACAHUD",2,0
 2015,"Destruction Island","nudibranch",0,0,NA,5,"Acanthodoris nanaimo","ACANAN",2,0
 2015,"Destruction Island","gastropod",0,0,NA,5,"Acmaea mitra, white cap limpet","ACMMIT",2,0
@@ -471,6 +709,10 @@
 2015,"Destruction Island","cucumber",0,0,NA,5,"Cucumaria","CUCMIN",2,0
 2015,"Destruction Island","seastar",0.516666666666667,0.0166666666666667,NA,5,"Dermasterias","DERIMB",2,0.0235702260395516
 2015,"Destruction Island","nudibranch",0,0,NA,5,"Dialula sandiegensis","DIASAN",2,0
+<<<<<<< HEAD
+2015,"Destruction Island","octopus",0,0,NA,5,"Enteroctopus dofleini","ENTDOF",2,0
+2015,"Destruction Island","gastropod",0,0,NA,5,"Haliotis kamtschatkana, pinto abalone","HALKAM",2,0
+=======
 2015,"Destruction Island","gastropod",0,0,NA,5,"Diodora aspera","DIOASP",2,0
 2015,"Destruction Island","nudibranch",0,0,NA,5,"Dirona","DIRALB",2,0
 2015,"Destruction Island","nudibranch",0,0,NA,5,"Doris odhneri","DORODH",2,0
@@ -482,6 +724,7 @@
 2015,"Destruction Island","chiton",0,0,NA,5,"Gumboot chiton","CRYSTE",2,0
 2015,"Destruction Island","gastropod",0,0,NA,5,"Haliotis kamtschatkana, pinto abalone","HALKAM",2,0
 2015,"Destruction Island","seastar",0.1,0.0666666666666667,NA,5,"Henricia leviuscula","HENLEV",2,0.0942809041582063
+>>>>>>> master
 2015,"Destruction Island","nudibranch",0,0,NA,5,"Hermissenda crassicornis, opalescent nudibranch","HERCRA",2,0
 2015,"Destruction Island","nudibranch",0,0,NA,5,"Janolus fuscus, nudibranch","JANFUS",2,0
 2015,"Destruction Island","seastar.small",0,0,NA,5,"Lepasterias spp.","LEPSPP",2,0
@@ -492,7 +735,11 @@
 2015,"Destruction Island","urchin",0,0,NA,5,"Mesocentrotus franciscanus, red urchin","MESFRA",2,0
 2015,"Destruction Island","anenome",0,0,NA,5,"Metridium giganteum, giant plumose anemone","METGIG",2,0
 2015,"Destruction Island","anenome",0,0,NA,5,"Metridium spp., white plumed anemones","METSPP",2,0
+<<<<<<< HEAD
+2015,"Destruction Island","bivalve",0,0,NA,5,"misc. scallops (not rock)","SCALLOP",2,0
+=======
 2015,"Destruction Island","crab",0,0,NA,5,"Mimulus","MIMFOL",2,0
+>>>>>>> master
 2015,"Destruction Island","bivalve",0,0,NA,5,"Mytilus californianus, California mussel","MYTCAL",2,0
 2015,"Destruction Island","crab",0,0,NA,5,"Northern kelp crab","PUGPRO",2,0
 2015,"Destruction Island","gastropod",0,0,NA,5,"Nucella lamellosa, whelk (used generally for rough predatory whelks)","NUCLAM",2,0
@@ -507,6 +754,8 @@
 2015,"Destruction Island","seastar",0,0,NA,5,"Pisaster brevispinus, short spined star","PISBRE",2,0
 2015,"Destruction Island","seastar",0,0,NA,5,"Pisaster giganteus, giant spined star","PISGIG",2,0
 2015,"Destruction Island","crab",0,0,NA,5,"Pugettia gracilis, graceful kelp crab","PUGGRA",2,0
+<<<<<<< HEAD
+=======
 2015,"Destruction Island","seastar",0,0,NA,5,"Pycnopodia helianthoides","PYCHEL",2,0
 2015,"Destruction Island","bivalve",0,0,NA,5,"Rock scallop","CRAGIG",2,0
 2015,"Destruction Island","crab",0,0,NA,5,"Scyra acutifrons","SCYDEC",2,0
@@ -514,6 +763,7 @@
 2015,"Destruction Island","seastar",0,0,NA,5,"Solaster stimpsoni","SOLSTI",2,0
 2015,"Destruction Island","urchin",0,0,NA,5,"Strongylocentrotus purpuratus","STRPUR",2,0
 2015,"Destruction Island","tunicate",0,0,NA,5,"Styela","STYMON",2,0
+>>>>>>> master
 2015,"Destruction Island","gastropod",0,0,NA,5,"Tegula spp., turban snails","TEGSPP",2,0
 2015,"Destruction Island","nudibranch",0,0,NA,5,"Triophe catalinidae","TRICAT",2,0
 2015,"Destruction Island",NA,0,0,NA,5,"UNKOWN","STYFOR",2,0
@@ -522,10 +772,48 @@
 2015,"Destruction Island","anenome",0,0,NA,5,"Urticina lofotensis","URTLOF",2,0
 2015,"Destruction Island","anenome",0,0,NA,5,"Urticina piscivora, fish-eating anemone","URTPIS",2,0
 2015,"Destruction Island","anenome",0,0,NA,5,"Urticina spp., Urticina spp.","URTSPP",2,0
+<<<<<<< HEAD
+2015,"Neah Bay","anenome",0,0,NA,5,"Anthopleura xanthogrammica","ANTXAN",4,0
+2015,"Neah Bay","gastropod",0,0,NA,5,"Ceratostoma","CERFOL",4,0
+2015,"Neah Bay",NA,0.025,0.025,NA,5,"Chiton","CHITON",4,0.05
+2015,"Neah Bay","bivalve",0,0,NA,5,"Clinocardium","CLAMSP",4,0
+2015,"Neah Bay","cucumber",0.116666666666667,0.105847549351431,NA,5,"Cucumaria","CUCMIN",4,0.211695098702863
+2015,"Neah Bay","seastar",0,0,NA,5,"Dermasterias","DERIMB",4,0
+2015,"Neah Bay","gastropod",0,0,NA,5,"Diodora aspera","DIOASP",4,0
+2015,"Neah Bay","nudibranch",0,0,NA,5,"Dirona","DIRALB",4,0
+2015,"Neah Bay","nudibranch",0.00833333333333333,0.00833333333333333,NA,5,"Doris odhneri","DORODH",4,0.0166666666666667
+2015,"Neah Bay","anenome",0,0,NA,5,"Epiactis prolifera","EPIPRO",4,0
+2015,"Neah Bay","cucumber",0,0,NA,5,"Eupentacta","EUPQUI",4,0
+2015,"Neah Bay","seastar",0,0,NA,5,"Evasterias","EVATRO",4,0
+2015,"Neah Bay","gastropod",0,0,NA,5,"Fusitriton oregonensis","FUSORE",4,0
+2015,"Neah Bay","urchin",0,0,NA,5,"green urchin","STRDRO",4,0
+2015,"Neah Bay","chiton",0.00833333333333333,0.00833333333333333,NA,5,"Gumboot chiton","CRYSTE",4,0.0166666666666667
+2015,"Neah Bay","seastar",0.175,0.0416666666666667,NA,5,"Henricia leviuscula","HENLEV",4,0.0833333333333333
+2015,"Neah Bay","bivalve",0,0,NA,5,"jingle shell","PODSPP",4,0
+2015,"Neah Bay","seastar",0.00833333333333333,0.00833333333333333,NA,5,"Mediaster aequalis","MEDAEQ",4,0.0166666666666667
+2015,"Neah Bay","crab",0,0,NA,5,"Mimulus","MIMFOL",4,0
+2015,"Neah Bay","crab",0,0,NA,5,"Northern kelp crab","PUGPRO",4,0
+2015,"Neah Bay","nudibranch",0,0,NA,5,"Nudibranch","NUDIBR",4,0
+2015,"Neah Bay","cucumber",0.0166666666666667,0.00962250448649376,NA,5,"Parastichopus","PARCAL",4,0.0192450089729875
+2015,"Neah Bay","nudibranch",0.0583333333333333,0.0159571184626056,NA,5,"Peltodoris nobilis","PELNOB",4,0.0319142369252113
+2015,"Neah Bay","crab",0,0,NA,5,"Phyllolithodes papillosus","CRYDEC",4,0
+2015,"Neah Bay","seastar",0,0,NA,5,"Pisaster","PISOCH",4,0
+2015,"Neah Bay","seastar",0,0,NA,5,"Pycnopodia helianthoides","PYCHEL",4,0
+2015,"Neah Bay","bivalve",0,0,NA,5,"Rock scallop","CRAGIG",4,0
+2015,"Neah Bay","crab",0.025,0.00833333333333333,NA,5,"Scyra acutifrons","SCYDEC",4,0.0166666666666667
+2015,"Neah Bay","seastar.small",0,0,NA,5,"Seastar","STARREC",4,0
+2015,"Neah Bay","seastar",0,0,NA,5,"Solaster stimpsoni","SOLSTI",4,0
+2015,"Neah Bay","urchin",0.0583333333333333,0.0343592135468138,NA,5,"Strongylocentrotus purpuratus","STRPUR",4,0.0687184270936277
+2015,"Neah Bay","tunicate",0.0333333333333333,0.0192450089729875,NA,5,"Styela","STYMON",4,0.038490017945975
+2015,"Neah Bay","nudibranch",0.0166666666666667,0.0166666666666667,NA,5,"Triophe catalinidae","TRICAT",4,0.0333333333333333
+2015,"Neah Bay","anenome",0,0,NA,5,"Urticina crassicornis","URTCRA",4,0
+2015,"Neah Bay","anenome",0,0,NA,5,"Urticina lofotensis","URTLOF",4,0
+=======
 2015,"Destruction Island","urchin",0,0,NA,5,"green urchin","STRDRO",2,0
 2015,"Destruction Island","bivalve",0,0,NA,5,"jingle shell","PODSPP",2,0
 2015,"Destruction Island","bivalve",0,0,NA,5,"misc clams","CLAMSP",2,0
 2015,"Destruction Island","bivalve",0,0,NA,5,"misc. scallops (not rock)","SCALLOP",2,0
+>>>>>>> master
 2015,"Neah Bay","nudibranch",0,0,NA,5,"Acanthodoris hudsoni, white nudibranch with yellow margin (we lump with Cadlina luteomarginata)","ACAHUD",4,0
 2015,"Neah Bay","nudibranch",0,0,NA,5,"Acanthodoris nanaimo","ACANAN",4,0
 2015,"Neah Bay","gastropod",0,0,NA,5,"Acmaea mitra, white cap limpet","ACMMIT",4,0
@@ -543,6 +831,10 @@
 2015,"Neah Bay","cucumber",0.116666666666667,0.105847549351431,NA,5,"Cucumaria","CUCMIN",4,0.211695098702863
 2015,"Neah Bay","seastar",0,0,NA,5,"Dermasterias","DERIMB",4,0
 2015,"Neah Bay","nudibranch",0,0,NA,5,"Dialula sandiegensis","DIASAN",4,0
+<<<<<<< HEAD
+2015,"Neah Bay","octopus",0,0,NA,5,"Enteroctopus dofleini","ENTDOF",4,0
+2015,"Neah Bay","gastropod",0,0,NA,5,"Haliotis kamtschatkana, pinto abalone","HALKAM",4,0
+=======
 2015,"Neah Bay","gastropod",0,0,NA,5,"Diodora aspera","DIOASP",4,0
 2015,"Neah Bay","nudibranch",0,0,NA,5,"Dirona","DIRALB",4,0
 2015,"Neah Bay","nudibranch",0.00833333333333333,0.00833333333333333,NA,5,"Doris odhneri","DORODH",4,0.0166666666666667
@@ -554,6 +846,7 @@
 2015,"Neah Bay","chiton",0.00833333333333333,0.00833333333333333,NA,5,"Gumboot chiton","CRYSTE",4,0.0166666666666667
 2015,"Neah Bay","gastropod",0,0,NA,5,"Haliotis kamtschatkana, pinto abalone","HALKAM",4,0
 2015,"Neah Bay","seastar",0.175,0.0416666666666667,NA,5,"Henricia leviuscula","HENLEV",4,0.0833333333333333
+>>>>>>> master
 2015,"Neah Bay","nudibranch",0,0,NA,5,"Hermissenda crassicornis, opalescent nudibranch","HERCRA",4,0
 2015,"Neah Bay","nudibranch",0,0,NA,5,"Janolus fuscus, nudibranch","JANFUS",4,0
 2015,"Neah Bay","seastar.small",0,0,NA,5,"Lepasterias spp.","LEPSPP",4,0
@@ -564,7 +857,11 @@
 2015,"Neah Bay","urchin",0,0,NA,5,"Mesocentrotus franciscanus, red urchin","MESFRA",4,0
 2015,"Neah Bay","anenome",0,0,NA,5,"Metridium giganteum, giant plumose anemone","METGIG",4,0
 2015,"Neah Bay","anenome",0,0,NA,5,"Metridium spp., white plumed anemones","METSPP",4,0
+<<<<<<< HEAD
+2015,"Neah Bay","bivalve",0,0,NA,5,"misc. scallops (not rock)","SCALLOP",4,0
+=======
 2015,"Neah Bay","crab",0,0,NA,5,"Mimulus","MIMFOL",4,0
+>>>>>>> master
 2015,"Neah Bay","bivalve",0,0,NA,5,"Mytilus californianus, California mussel","MYTCAL",4,0
 2015,"Neah Bay","crab",0,0,NA,5,"Northern kelp crab","PUGPRO",4,0
 2015,"Neah Bay","gastropod",0,0,NA,5,"Nucella lamellosa, whelk (used generally for rough predatory whelks)","NUCLAM",4,0
@@ -579,6 +876,8 @@
 2015,"Neah Bay","seastar",0,0,NA,5,"Pisaster brevispinus, short spined star","PISBRE",4,0
 2015,"Neah Bay","seastar",0,0,NA,5,"Pisaster giganteus, giant spined star","PISGIG",4,0
 2015,"Neah Bay","crab",0,0,NA,5,"Pugettia gracilis, graceful kelp crab","PUGGRA",4,0
+<<<<<<< HEAD
+=======
 2015,"Neah Bay","seastar",0,0,NA,5,"Pycnopodia helianthoides","PYCHEL",4,0
 2015,"Neah Bay","bivalve",0,0,NA,5,"Rock scallop","CRAGIG",4,0
 2015,"Neah Bay","crab",0.025,0.00833333333333333,NA,5,"Scyra acutifrons","SCYDEC",4,0.0166666666666667
@@ -586,6 +885,7 @@
 2015,"Neah Bay","seastar",0,0,NA,5,"Solaster stimpsoni","SOLSTI",4,0
 2015,"Neah Bay","urchin",0.0583333333333333,0.0343592135468138,NA,5,"Strongylocentrotus purpuratus","STRPUR",4,0.0687184270936277
 2015,"Neah Bay","tunicate",0.0333333333333333,0.0192450089729875,NA,5,"Styela","STYMON",4,0.038490017945975
+>>>>>>> master
 2015,"Neah Bay","gastropod",0,0,NA,5,"Tegula spp., turban snails","TEGSPP",4,0
 2015,"Neah Bay","nudibranch",0.0166666666666667,0.0166666666666667,NA,5,"Triophe catalinidae","TRICAT",4,0.0333333333333333
 2015,"Neah Bay",NA,0,0,NA,5,"UNKOWN","STYFOR",4,0
@@ -594,10 +894,48 @@
 2015,"Neah Bay","anenome",0,0,NA,5,"Urticina lofotensis","URTLOF",4,0
 2015,"Neah Bay","anenome",0,0,NA,5,"Urticina piscivora, fish-eating anemone","URTPIS",4,0
 2015,"Neah Bay","anenome",0,0,NA,5,"Urticina spp., Urticina spp.","URTSPP",4,0
+<<<<<<< HEAD
+2015,"Point of the Arches","anenome",0.00416666666666667,0.00416666666666667,NA,5,"Anthopleura xanthogrammica","ANTXAN",4,0.00833333333333333
+2015,"Point of the Arches","gastropod",0,0,NA,5,"Ceratostoma","CERFOL",4,0
+2015,"Point of the Arches",NA,0,0,NA,5,"Chiton","CHITON",4,0
+2015,"Point of the Arches","bivalve",0,0,NA,5,"Clinocardium","CLAMSP",4,0
+2015,"Point of the Arches","cucumber",0.0291666666666667,0.0171796067734069,NA,5,"Cucumaria","CUCMIN",4,0.0343592135468138
+2015,"Point of the Arches","seastar",0.0541666666666667,0.00797855923130282,NA,5,"Dermasterias","DERIMB",4,0.0159571184626056
+2015,"Point of the Arches","gastropod",0.00416666666666667,0.00416666666666667,NA,5,"Diodora aspera","DIOASP",4,0.00833333333333333
+2015,"Point of the Arches","nudibranch",0.00833333333333333,0.00833333333333333,NA,5,"Dirona","DIRALB",4,0.0166666666666667
+2015,"Point of the Arches","nudibranch",0.00416666666666667,0.00416666666666667,NA,5,"Doris odhneri","DORODH",4,0.00833333333333333
+2015,"Point of the Arches","anenome",0,0,NA,5,"Epiactis prolifera","EPIPRO",4,0
+2015,"Point of the Arches","cucumber",0,0,NA,5,"Eupentacta","EUPQUI",4,0
+2015,"Point of the Arches","seastar",0.00416666666666667,0.00416666666666667,NA,5,"Evasterias","EVATRO",4,0.00833333333333333
+2015,"Point of the Arches","gastropod",0,0,NA,5,"Fusitriton oregonensis","FUSORE",4,0
+2015,"Point of the Arches","urchin",0,0,NA,5,"green urchin","STRDRO",4,0
+2015,"Point of the Arches","chiton",0.0125,0.00797855923130282,NA,5,"Gumboot chiton","CRYSTE",4,0.0159571184626056
+2015,"Point of the Arches","seastar",0.0708333333333333,0.0275336494466653,NA,5,"Henricia leviuscula","HENLEV",4,0.0550672988933306
+2015,"Point of the Arches","bivalve",0,0,NA,5,"jingle shell","PODSPP",4,0
+2015,"Point of the Arches","seastar",0,0,NA,5,"Mediaster aequalis","MEDAEQ",4,0
+2015,"Point of the Arches","crab",0,0,NA,5,"Mimulus","MIMFOL",4,0
+2015,"Point of the Arches","crab",0.00833333333333333,0.00833333333333333,NA,5,"Northern kelp crab","PUGPRO",4,0.0166666666666667
+2015,"Point of the Arches","nudibranch",0,0,NA,5,"Nudibranch","NUDIBR",4,0
+2015,"Point of the Arches","cucumber",0,0,NA,5,"Parastichopus","PARCAL",4,0
+2015,"Point of the Arches","nudibranch",0.0166666666666667,0.0166666666666667,NA,5,"Peltodoris nobilis","PELNOB",4,0.0333333333333333
+2015,"Point of the Arches","crab",0,0,NA,5,"Phyllolithodes papillosus","CRYDEC",4,0
+2015,"Point of the Arches","seastar",0.0166666666666667,0.0166666666666667,NA,5,"Pisaster","PISOCH",4,0.0333333333333333
+2015,"Point of the Arches","seastar",0.00833333333333333,0.00481125224324688,NA,5,"Pycnopodia helianthoides","PYCHEL",4,0.00962250448649376
+2015,"Point of the Arches","bivalve",0,0,NA,5,"Rock scallop","CRAGIG",4,0
+2015,"Point of the Arches","crab",0,0,NA,5,"Scyra acutifrons","SCYDEC",4,0
+2015,"Point of the Arches","seastar.small",0,0,NA,5,"Seastar","STARREC",4,0
+2015,"Point of the Arches","seastar",0,0,NA,5,"Solaster stimpsoni","SOLSTI",4,0
+2015,"Point of the Arches","urchin",0,0,NA,5,"Strongylocentrotus purpuratus","STRPUR",4,0
+2015,"Point of the Arches","tunicate",0.0875,0.0506325725932172,NA,5,"Styela","STYMON",4,0.101265145186434
+2015,"Point of the Arches","nudibranch",0,0,NA,5,"Triophe catalinidae","TRICAT",4,0
+2015,"Point of the Arches","anenome",0.00416666666666667,0.00416666666666667,NA,5,"Urticina crassicornis","URTCRA",4,0.00833333333333333
+2015,"Point of the Arches","anenome",0,0,NA,5,"Urticina lofotensis","URTLOF",4,0
+=======
 2015,"Neah Bay","urchin",0,0,NA,5,"green urchin","STRDRO",4,0
 2015,"Neah Bay","bivalve",0,0,NA,5,"jingle shell","PODSPP",4,0
 2015,"Neah Bay","bivalve",0,0,NA,5,"misc clams","CLAMSP",4,0
 2015,"Neah Bay","bivalve",0,0,NA,5,"misc. scallops (not rock)","SCALLOP",4,0
+>>>>>>> master
 2015,"Point of the Arches","nudibranch",0,0,NA,5,"Acanthodoris hudsoni, white nudibranch with yellow margin (we lump with Cadlina luteomarginata)","ACAHUD",4,0
 2015,"Point of the Arches","nudibranch",0,0,NA,5,"Acanthodoris nanaimo","ACANAN",4,0
 2015,"Point of the Arches","gastropod",0,0,NA,5,"Acmaea mitra, white cap limpet","ACMMIT",4,0
@@ -615,6 +953,10 @@
 2015,"Point of the Arches","cucumber",0.0291666666666667,0.0171796067734069,NA,5,"Cucumaria","CUCMIN",4,0.0343592135468138
 2015,"Point of the Arches","seastar",0.0541666666666667,0.00797855923130282,NA,5,"Dermasterias","DERIMB",4,0.0159571184626056
 2015,"Point of the Arches","nudibranch",0,0,NA,5,"Dialula sandiegensis","DIASAN",4,0
+<<<<<<< HEAD
+2015,"Point of the Arches","octopus",0,0,NA,5,"Enteroctopus dofleini","ENTDOF",4,0
+2015,"Point of the Arches","gastropod",0,0,NA,5,"Haliotis kamtschatkana, pinto abalone","HALKAM",4,0
+=======
 2015,"Point of the Arches","gastropod",0.00416666666666667,0.00416666666666667,NA,5,"Diodora aspera","DIOASP",4,0.00833333333333333
 2015,"Point of the Arches","nudibranch",0.00833333333333333,0.00833333333333333,NA,5,"Dirona","DIRALB",4,0.0166666666666667
 2015,"Point of the Arches","nudibranch",0.00416666666666667,0.00416666666666667,NA,5,"Doris odhneri","DORODH",4,0.00833333333333333
@@ -626,6 +968,7 @@
 2015,"Point of the Arches","chiton",0.0125,0.00797855923130282,NA,5,"Gumboot chiton","CRYSTE",4,0.0159571184626056
 2015,"Point of the Arches","gastropod",0,0,NA,5,"Haliotis kamtschatkana, pinto abalone","HALKAM",4,0
 2015,"Point of the Arches","seastar",0.0708333333333333,0.0275336494466653,NA,5,"Henricia leviuscula","HENLEV",4,0.0550672988933306
+>>>>>>> master
 2015,"Point of the Arches","nudibranch",0,0,NA,5,"Hermissenda crassicornis, opalescent nudibranch","HERCRA",4,0
 2015,"Point of the Arches","nudibranch",0,0,NA,5,"Janolus fuscus, nudibranch","JANFUS",4,0
 2015,"Point of the Arches","seastar.small",0,0,NA,5,"Lepasterias spp.","LEPSPP",4,0
@@ -636,7 +979,11 @@
 2015,"Point of the Arches","urchin",0,0,NA,5,"Mesocentrotus franciscanus, red urchin","MESFRA",4,0
 2015,"Point of the Arches","anenome",0,0,NA,5,"Metridium giganteum, giant plumose anemone","METGIG",4,0
 2015,"Point of the Arches","anenome",0,0,NA,5,"Metridium spp., white plumed anemones","METSPP",4,0
+<<<<<<< HEAD
+2015,"Point of the Arches","bivalve",0,0,NA,5,"misc. scallops (not rock)","SCALLOP",4,0
+=======
 2015,"Point of the Arches","crab",0,0,NA,5,"Mimulus","MIMFOL",4,0
+>>>>>>> master
 2015,"Point of the Arches","bivalve",0,0,NA,5,"Mytilus californianus, California mussel","MYTCAL",4,0
 2015,"Point of the Arches","crab",0.00833333333333333,0.00833333333333333,NA,5,"Northern kelp crab","PUGPRO",4,0.0166666666666667
 2015,"Point of the Arches","gastropod",0,0,NA,5,"Nucella lamellosa, whelk (used generally for rough predatory whelks)","NUCLAM",4,0
@@ -651,6 +998,8 @@
 2015,"Point of the Arches","seastar",0,0,NA,5,"Pisaster brevispinus, short spined star","PISBRE",4,0
 2015,"Point of the Arches","seastar",0,0,NA,5,"Pisaster giganteus, giant spined star","PISGIG",4,0
 2015,"Point of the Arches","crab",0,0,NA,5,"Pugettia gracilis, graceful kelp crab","PUGGRA",4,0
+<<<<<<< HEAD
+=======
 2015,"Point of the Arches","seastar",0.00833333333333333,0.00481125224324688,NA,5,"Pycnopodia helianthoides","PYCHEL",4,0.00962250448649376
 2015,"Point of the Arches","bivalve",0,0,NA,5,"Rock scallop","CRAGIG",4,0
 2015,"Point of the Arches","crab",0,0,NA,5,"Scyra acutifrons","SCYDEC",4,0
@@ -658,6 +1007,7 @@
 2015,"Point of the Arches","seastar",0,0,NA,5,"Solaster stimpsoni","SOLSTI",4,0
 2015,"Point of the Arches","urchin",0,0,NA,5,"Strongylocentrotus purpuratus","STRPUR",4,0
 2015,"Point of the Arches","tunicate",0.0875,0.0506325725932172,NA,5,"Styela","STYMON",4,0.101265145186434
+>>>>>>> master
 2015,"Point of the Arches","gastropod",0,0,NA,5,"Tegula spp., turban snails","TEGSPP",4,0
 2015,"Point of the Arches","nudibranch",0,0,NA,5,"Triophe catalinidae","TRICAT",4,0
 2015,"Point of the Arches",NA,0,0,NA,5,"UNKOWN","STYFOR",4,0
@@ -666,10 +1016,48 @@
 2015,"Point of the Arches","anenome",0,0,NA,5,"Urticina lofotensis","URTLOF",4,0
 2015,"Point of the Arches","anenome",0,0,NA,5,"Urticina piscivora, fish-eating anemone","URTPIS",4,0
 2015,"Point of the Arches","anenome",0,0,NA,5,"Urticina spp., Urticina spp.","URTSPP",4,0
+<<<<<<< HEAD
+2015,"Rock 305","anenome",0.0375,0.0171796067734069,NA,5,"Anthopleura xanthogrammica","ANTXAN",4,0.0343592135468138
+2015,"Rock 305","gastropod",0.00833333333333333,0.00833333333333333,NA,5,"Ceratostoma","CERFOL",4,0.0166666666666667
+2015,"Rock 305",NA,0,0,NA,5,"Chiton","CHITON",4,0
+2015,"Rock 305","bivalve",0,0,NA,5,"Clinocardium","CLAMSP",4,0
+2015,"Rock 305","cucumber",0.0125,0.00797855923130282,NA,5,"Cucumaria","CUCMIN",4,0.0159571184626056
+2015,"Rock 305","seastar",0.0166666666666667,0.00680413817439772,NA,5,"Dermasterias","DERIMB",4,0.0136082763487954
+2015,"Rock 305","gastropod",0,0,NA,5,"Diodora aspera","DIOASP",4,0
+2015,"Rock 305","nudibranch",0,0,NA,5,"Dirona","DIRALB",4,0
+2015,"Rock 305","nudibranch",0.05,0.0319142369252113,NA,5,"Doris odhneri","DORODH",4,0.0638284738504225
+2015,"Rock 305","anenome",0,0,NA,5,"Epiactis prolifera","EPIPRO",4,0
+2015,"Rock 305","cucumber",0,0,NA,5,"Eupentacta","EUPQUI",4,0
+2015,"Rock 305","seastar",0,0,NA,5,"Evasterias","EVATRO",4,0
+2015,"Rock 305","gastropod",0,0,NA,5,"Fusitriton oregonensis","FUSORE",4,0
+2015,"Rock 305","urchin",0,0,NA,5,"green urchin","STRDRO",4,0
+2015,"Rock 305","chiton",0,0,NA,5,"Gumboot chiton","CRYSTE",4,0
+2015,"Rock 305","seastar",0.0208333333333333,0.00797855923130282,NA,5,"Henricia leviuscula","HENLEV",4,0.0159571184626056
+2015,"Rock 305","bivalve",0,0,NA,5,"jingle shell","PODSPP",4,0
+2015,"Rock 305","seastar",0,0,NA,5,"Mediaster aequalis","MEDAEQ",4,0
+2015,"Rock 305","crab",0,0,NA,5,"Mimulus","MIMFOL",4,0
+2015,"Rock 305","crab",0,0,NA,5,"Northern kelp crab","PUGPRO",4,0
+2015,"Rock 305","nudibranch",0.00416666666666667,0.00416666666666667,NA,5,"Nudibranch","NUDIBR",4,0.00833333333333333
+2015,"Rock 305","cucumber",0,0,NA,5,"Parastichopus","PARCAL",4,0
+2015,"Rock 305","nudibranch",0,0,NA,5,"Peltodoris nobilis","PELNOB",4,0
+2015,"Rock 305","crab",0,0,NA,5,"Phyllolithodes papillosus","CRYDEC",4,0
+2015,"Rock 305","seastar",0,0,NA,5,"Pisaster","PISOCH",4,0
+2015,"Rock 305","seastar",0,0,NA,5,"Pycnopodia helianthoides","PYCHEL",4,0
+2015,"Rock 305","bivalve",0,0,NA,5,"Rock scallop","CRAGIG",4,0
+2015,"Rock 305","crab",0,0,NA,5,"Scyra acutifrons","SCYDEC",4,0
+2015,"Rock 305","seastar.small",0,0,NA,5,"Seastar","STARREC",4,0
+2015,"Rock 305","seastar",0,0,NA,5,"Solaster stimpsoni","SOLSTI",4,0
+2015,"Rock 305","urchin",0,0,NA,5,"Strongylocentrotus purpuratus","STRPUR",4,0
+2015,"Rock 305","tunicate",0.0625,0.0362444120852775,NA,5,"Styela","STYMON",4,0.0724888241705549
+2015,"Rock 305","nudibranch",0,0,NA,5,"Triophe catalinidae","TRICAT",4,0
+2015,"Rock 305","anenome",0.0166666666666667,0.0166666666666667,NA,5,"Urticina crassicornis","URTCRA",4,0.0333333333333333
+2015,"Rock 305","anenome",0,0,NA,5,"Urticina lofotensis","URTLOF",4,0
+=======
 2015,"Point of the Arches","urchin",0,0,NA,5,"green urchin","STRDRO",4,0
 2015,"Point of the Arches","bivalve",0,0,NA,5,"jingle shell","PODSPP",4,0
 2015,"Point of the Arches","bivalve",0,0,NA,5,"misc clams","CLAMSP",4,0
 2015,"Point of the Arches","bivalve",0,0,NA,5,"misc. scallops (not rock)","SCALLOP",4,0
+>>>>>>> master
 2015,"Rock 305","nudibranch",0,0,NA,5,"Acanthodoris hudsoni, white nudibranch with yellow margin (we lump with Cadlina luteomarginata)","ACAHUD",4,0
 2015,"Rock 305","nudibranch",0,0,NA,5,"Acanthodoris nanaimo","ACANAN",4,0
 2015,"Rock 305","gastropod",0,0,NA,5,"Acmaea mitra, white cap limpet","ACMMIT",4,0
@@ -687,6 +1075,10 @@
 2015,"Rock 305","cucumber",0.0125,0.00797855923130282,NA,5,"Cucumaria","CUCMIN",4,0.0159571184626056
 2015,"Rock 305","seastar",0.0166666666666667,0.00680413817439772,NA,5,"Dermasterias","DERIMB",4,0.0136082763487954
 2015,"Rock 305","nudibranch",0,0,NA,5,"Dialula sandiegensis","DIASAN",4,0
+<<<<<<< HEAD
+2015,"Rock 305","octopus",0,0,NA,5,"Enteroctopus dofleini","ENTDOF",4,0
+2015,"Rock 305","gastropod",0,0,NA,5,"Haliotis kamtschatkana, pinto abalone","HALKAM",4,0
+=======
 2015,"Rock 305","gastropod",0,0,NA,5,"Diodora aspera","DIOASP",4,0
 2015,"Rock 305","nudibranch",0,0,NA,5,"Dirona","DIRALB",4,0
 2015,"Rock 305","nudibranch",0.05,0.0319142369252113,NA,5,"Doris odhneri","DORODH",4,0.0638284738504225
@@ -698,6 +1090,7 @@
 2015,"Rock 305","chiton",0,0,NA,5,"Gumboot chiton","CRYSTE",4,0
 2015,"Rock 305","gastropod",0,0,NA,5,"Haliotis kamtschatkana, pinto abalone","HALKAM",4,0
 2015,"Rock 305","seastar",0.0208333333333333,0.00797855923130282,NA,5,"Henricia leviuscula","HENLEV",4,0.0159571184626056
+>>>>>>> master
 2015,"Rock 305","nudibranch",0,0,NA,5,"Hermissenda crassicornis, opalescent nudibranch","HERCRA",4,0
 2015,"Rock 305","nudibranch",0,0,NA,5,"Janolus fuscus, nudibranch","JANFUS",4,0
 2015,"Rock 305","seastar.small",0,0,NA,5,"Lepasterias spp.","LEPSPP",4,0
@@ -708,7 +1101,11 @@
 2015,"Rock 305","urchin",0,0,NA,5,"Mesocentrotus franciscanus, red urchin","MESFRA",4,0
 2015,"Rock 305","anenome",0,0,NA,5,"Metridium giganteum, giant plumose anemone","METGIG",4,0
 2015,"Rock 305","anenome",0,0,NA,5,"Metridium spp., white plumed anemones","METSPP",4,0
+<<<<<<< HEAD
+2015,"Rock 305","bivalve",0,0,NA,5,"misc. scallops (not rock)","SCALLOP",4,0
+=======
 2015,"Rock 305","crab",0,0,NA,5,"Mimulus","MIMFOL",4,0
+>>>>>>> master
 2015,"Rock 305","bivalve",0,0,NA,5,"Mytilus californianus, California mussel","MYTCAL",4,0
 2015,"Rock 305","crab",0,0,NA,5,"Northern kelp crab","PUGPRO",4,0
 2015,"Rock 305","gastropod",0,0,NA,5,"Nucella lamellosa, whelk (used generally for rough predatory whelks)","NUCLAM",4,0
@@ -723,6 +1120,8 @@
 2015,"Rock 305","seastar",0,0,NA,5,"Pisaster brevispinus, short spined star","PISBRE",4,0
 2015,"Rock 305","seastar",0,0,NA,5,"Pisaster giganteus, giant spined star","PISGIG",4,0
 2015,"Rock 305","crab",0,0,NA,5,"Pugettia gracilis, graceful kelp crab","PUGGRA",4,0
+<<<<<<< HEAD
+=======
 2015,"Rock 305","seastar",0,0,NA,5,"Pycnopodia helianthoides","PYCHEL",4,0
 2015,"Rock 305","bivalve",0,0,NA,5,"Rock scallop","CRAGIG",4,0
 2015,"Rock 305","crab",0,0,NA,5,"Scyra acutifrons","SCYDEC",4,0
@@ -730,6 +1129,7 @@
 2015,"Rock 305","seastar",0,0,NA,5,"Solaster stimpsoni","SOLSTI",4,0
 2015,"Rock 305","urchin",0,0,NA,5,"Strongylocentrotus purpuratus","STRPUR",4,0
 2015,"Rock 305","tunicate",0.0625,0.0362444120852775,NA,5,"Styela","STYMON",4,0.0724888241705549
+>>>>>>> master
 2015,"Rock 305","gastropod",0,0,NA,5,"Tegula spp., turban snails","TEGSPP",4,0
 2015,"Rock 305","nudibranch",0,0,NA,5,"Triophe catalinidae","TRICAT",4,0
 2015,"Rock 305",NA,0,0,NA,5,"UNKOWN","STYFOR",4,0
@@ -738,10 +1138,48 @@
 2015,"Rock 305","anenome",0,0,NA,5,"Urticina lofotensis","URTLOF",4,0
 2015,"Rock 305","anenome",0,0,NA,5,"Urticina piscivora, fish-eating anemone","URTPIS",4,0
 2015,"Rock 305","anenome",0,0,NA,5,"Urticina spp., Urticina spp.","URTSPP",4,0
+<<<<<<< HEAD
+2015,"Tatoosh Island","anenome",0,0,NA,5,"Anthopleura xanthogrammica","ANTXAN",4,0
+2015,"Tatoosh Island","gastropod",0.00833333333333333,0.00833333333333333,NA,5,"Ceratostoma","CERFOL",4,0.0166666666666667
+2015,"Tatoosh Island",NA,0,0,NA,5,"Chiton","CHITON",4,0
+2015,"Tatoosh Island","bivalve",0,0,NA,5,"Clinocardium","CLAMSP",4,0
+2015,"Tatoosh Island","cucumber",0.0166666666666667,0.0166666666666667,NA,5,"Cucumaria","CUCMIN",4,0.0333333333333333
+2015,"Tatoosh Island","seastar",0.0333333333333333,0.0136082763487954,NA,5,"Dermasterias","DERIMB",4,0.0272165526975909
+2015,"Tatoosh Island","gastropod",0.0166666666666667,0.0166666666666667,NA,5,"Diodora aspera","DIOASP",4,0.0333333333333333
+2015,"Tatoosh Island","nudibranch",0,0,NA,5,"Dirona","DIRALB",4,0
+2015,"Tatoosh Island","nudibranch",0.00833333333333333,0.00833333333333333,NA,5,"Doris odhneri","DORODH",4,0.0166666666666667
+2015,"Tatoosh Island","anenome",0.0166666666666667,0.0166666666666667,NA,5,"Epiactis prolifera","EPIPRO",4,0.0333333333333333
+2015,"Tatoosh Island","cucumber",0.00833333333333333,0.00833333333333333,NA,5,"Eupentacta","EUPQUI",4,0.0166666666666667
+2015,"Tatoosh Island","seastar",0,0,NA,5,"Evasterias","EVATRO",4,0
+2015,"Tatoosh Island","gastropod",0,0,NA,5,"Fusitriton oregonensis","FUSORE",4,0
+2015,"Tatoosh Island","urchin",0,0,NA,5,"green urchin","STRDRO",4,0
+2015,"Tatoosh Island","chiton",0.00833333333333333,0.00833333333333333,NA,5,"Gumboot chiton","CRYSTE",4,0.0166666666666667
+2015,"Tatoosh Island","seastar",0.05,0.0215165741455968,NA,5,"Henricia leviuscula","HENLEV",4,0.0430331482911935
+2015,"Tatoosh Island","bivalve",0.00833333333333333,0.00833333333333333,NA,5,"jingle shell","PODSPP",4,0.0166666666666667
+2015,"Tatoosh Island","seastar",0,0,NA,5,"Mediaster aequalis","MEDAEQ",4,0
+2015,"Tatoosh Island","crab",0,0,NA,5,"Mimulus","MIMFOL",4,0
+2015,"Tatoosh Island","crab",0,0,NA,5,"Northern kelp crab","PUGPRO",4,0
+2015,"Tatoosh Island","nudibranch",0,0,NA,5,"Nudibranch","NUDIBR",4,0
+2015,"Tatoosh Island","cucumber",0,0,NA,5,"Parastichopus","PARCAL",4,0
+2015,"Tatoosh Island","nudibranch",0.0166666666666667,0.00962250448649376,NA,5,"Peltodoris nobilis","PELNOB",4,0.0192450089729875
+2015,"Tatoosh Island","crab",0,0,NA,5,"Phyllolithodes papillosus","CRYDEC",4,0
+2015,"Tatoosh Island","seastar",0.00833333333333333,0.00833333333333333,NA,5,"Pisaster","PISOCH",4,0.0166666666666667
+2015,"Tatoosh Island","seastar",0,0,NA,5,"Pycnopodia helianthoides","PYCHEL",4,0
+2015,"Tatoosh Island","bivalve",0.025,0.0159571184626056,NA,5,"Rock scallop","CRAGIG",4,0.0319142369252113
+2015,"Tatoosh Island","crab",0,0,NA,5,"Scyra acutifrons","SCYDEC",4,0
+2015,"Tatoosh Island","seastar.small",0,0,NA,5,"Seastar","STARREC",4,0
+2015,"Tatoosh Island","seastar",0.00833333333333333,0.00833333333333333,NA,5,"Solaster stimpsoni","SOLSTI",4,0.0166666666666667
+2015,"Tatoosh Island","urchin",0,0,NA,5,"Strongylocentrotus purpuratus","STRPUR",4,0
+2015,"Tatoosh Island","tunicate",0.025,0.025,NA,5,"Styela","STYMON",4,0.05
+2015,"Tatoosh Island","nudibranch",0,0,NA,5,"Triophe catalinidae","TRICAT",4,0
+2015,"Tatoosh Island","anenome",0.0583333333333333,0.0343592135468138,NA,5,"Urticina crassicornis","URTCRA",4,0.0687184270936277
+2015,"Tatoosh Island","anenome",0,0,NA,5,"Urticina lofotensis","URTLOF",4,0
+=======
 2015,"Rock 305","urchin",0,0,NA,5,"green urchin","STRDRO",4,0
 2015,"Rock 305","bivalve",0,0,NA,5,"jingle shell","PODSPP",4,0
 2015,"Rock 305","bivalve",0,0,NA,5,"misc clams","CLAMSP",4,0
 2015,"Rock 305","bivalve",0,0,NA,5,"misc. scallops (not rock)","SCALLOP",4,0
+>>>>>>> master
 2015,"Tatoosh Island","nudibranch",0,0,NA,5,"Acanthodoris hudsoni, white nudibranch with yellow margin (we lump with Cadlina luteomarginata)","ACAHUD",4,0
 2015,"Tatoosh Island","nudibranch",0,0,NA,5,"Acanthodoris nanaimo","ACANAN",4,0
 2015,"Tatoosh Island","gastropod",0,0,NA,5,"Acmaea mitra, white cap limpet","ACMMIT",4,0
@@ -759,6 +1197,10 @@
 2015,"Tatoosh Island","cucumber",0.0166666666666667,0.0166666666666667,NA,5,"Cucumaria","CUCMIN",4,0.0333333333333333
 2015,"Tatoosh Island","seastar",0.0333333333333333,0.0136082763487954,NA,5,"Dermasterias","DERIMB",4,0.0272165526975909
 2015,"Tatoosh Island","nudibranch",0,0,NA,5,"Dialula sandiegensis","DIASAN",4,0
+<<<<<<< HEAD
+2015,"Tatoosh Island","octopus",0,0,NA,5,"Enteroctopus dofleini","ENTDOF",4,0
+2015,"Tatoosh Island","gastropod",0,0,NA,5,"Haliotis kamtschatkana, pinto abalone","HALKAM",4,0
+=======
 2015,"Tatoosh Island","gastropod",0.0166666666666667,0.0166666666666667,NA,5,"Diodora aspera","DIOASP",4,0.0333333333333333
 2015,"Tatoosh Island","nudibranch",0,0,NA,5,"Dirona","DIRALB",4,0
 2015,"Tatoosh Island","nudibranch",0.00833333333333333,0.00833333333333333,NA,5,"Doris odhneri","DORODH",4,0.0166666666666667
@@ -770,6 +1212,7 @@
 2015,"Tatoosh Island","chiton",0.00833333333333333,0.00833333333333333,NA,5,"Gumboot chiton","CRYSTE",4,0.0166666666666667
 2015,"Tatoosh Island","gastropod",0,0,NA,5,"Haliotis kamtschatkana, pinto abalone","HALKAM",4,0
 2015,"Tatoosh Island","seastar",0.05,0.0215165741455968,NA,5,"Henricia leviuscula","HENLEV",4,0.0430331482911935
+>>>>>>> master
 2015,"Tatoosh Island","nudibranch",0,0,NA,5,"Hermissenda crassicornis, opalescent nudibranch","HERCRA",4,0
 2015,"Tatoosh Island","nudibranch",0,0,NA,5,"Janolus fuscus, nudibranch","JANFUS",4,0
 2015,"Tatoosh Island","seastar.small",0,0,NA,5,"Lepasterias spp.","LEPSPP",4,0
@@ -780,7 +1223,11 @@
 2015,"Tatoosh Island","urchin",0,0,NA,5,"Mesocentrotus franciscanus, red urchin","MESFRA",4,0
 2015,"Tatoosh Island","anenome",0,0,NA,5,"Metridium giganteum, giant plumose anemone","METGIG",4,0
 2015,"Tatoosh Island","anenome",0,0,NA,5,"Metridium spp., white plumed anemones","METSPP",4,0
+<<<<<<< HEAD
+2015,"Tatoosh Island","bivalve",0,0,NA,5,"misc. scallops (not rock)","SCALLOP",4,0
+=======
 2015,"Tatoosh Island","crab",0,0,NA,5,"Mimulus","MIMFOL",4,0
+>>>>>>> master
 2015,"Tatoosh Island","bivalve",0,0,NA,5,"Mytilus californianus, California mussel","MYTCAL",4,0
 2015,"Tatoosh Island","crab",0,0,NA,5,"Northern kelp crab","PUGPRO",4,0
 2015,"Tatoosh Island","gastropod",0,0,NA,5,"Nucella lamellosa, whelk (used generally for rough predatory whelks)","NUCLAM",4,0
@@ -795,6 +1242,8 @@
 2015,"Tatoosh Island","seastar",0,0,NA,5,"Pisaster brevispinus, short spined star","PISBRE",4,0
 2015,"Tatoosh Island","seastar",0,0,NA,5,"Pisaster giganteus, giant spined star","PISGIG",4,0
 2015,"Tatoosh Island","crab",0,0,NA,5,"Pugettia gracilis, graceful kelp crab","PUGGRA",4,0
+<<<<<<< HEAD
+=======
 2015,"Tatoosh Island","seastar",0,0,NA,5,"Pycnopodia helianthoides","PYCHEL",4,0
 2015,"Tatoosh Island","bivalve",0.025,0.0159571184626056,NA,5,"Rock scallop","CRAGIG",4,0.0319142369252113
 2015,"Tatoosh Island","crab",0,0,NA,5,"Scyra acutifrons","SCYDEC",4,0
@@ -802,6 +1251,7 @@
 2015,"Tatoosh Island","seastar",0.00833333333333333,0.00833333333333333,NA,5,"Solaster stimpsoni","SOLSTI",4,0.0166666666666667
 2015,"Tatoosh Island","urchin",0,0,NA,5,"Strongylocentrotus purpuratus","STRPUR",4,0
 2015,"Tatoosh Island","tunicate",0.025,0.025,NA,5,"Styela","STYMON",4,0.05
+>>>>>>> master
 2015,"Tatoosh Island","gastropod",0,0,NA,5,"Tegula spp., turban snails","TEGSPP",4,0
 2015,"Tatoosh Island","nudibranch",0,0,NA,5,"Triophe catalinidae","TRICAT",4,0
 2015,"Tatoosh Island",NA,0,0,NA,5,"UNKOWN","STYFOR",4,0
@@ -810,10 +1260,48 @@
 2015,"Tatoosh Island","anenome",0,0,NA,5,"Urticina lofotensis","URTLOF",4,0
 2015,"Tatoosh Island","anenome",0,0,NA,5,"Urticina piscivora, fish-eating anemone","URTPIS",4,0
 2015,"Tatoosh Island","anenome",0,0,NA,5,"Urticina spp., Urticina spp.","URTSPP",4,0
+<<<<<<< HEAD
+2015,"Teahwhit Head","anenome",0.0375,0.0275336494466653,NA,5,"Anthopleura xanthogrammica","ANTXAN",4,0.0550672988933306
+2015,"Teahwhit Head","gastropod",0.0166666666666667,0.0166666666666667,NA,5,"Ceratostoma","CERFOL",4,0.0333333333333333
+2015,"Teahwhit Head",NA,0,0,NA,5,"Chiton","CHITON",4,0
+2015,"Teahwhit Head","bivalve",0,0,NA,5,"Clinocardium","CLAMSP",4,0
+2015,"Teahwhit Head","cucumber",0.3875,0.219360919406723,NA,5,"Cucumaria","CUCMIN",4,0.438721838813447
+2015,"Teahwhit Head","seastar",0.141666666666667,0.0550672988933306,NA,5,"Dermasterias","DERIMB",4,0.110134597786661
+2015,"Teahwhit Head","gastropod",0,0,NA,5,"Diodora aspera","DIOASP",4,0
+2015,"Teahwhit Head","nudibranch",0,0,NA,5,"Dirona","DIRALB",4,0
+2015,"Teahwhit Head","nudibranch",0.00416666666666667,0.00416666666666667,NA,5,"Doris odhneri","DORODH",4,0.00833333333333333
+2015,"Teahwhit Head","anenome",0,0,NA,5,"Epiactis prolifera","EPIPRO",4,0
+2015,"Teahwhit Head","cucumber",0,0,NA,5,"Eupentacta","EUPQUI",4,0
+2015,"Teahwhit Head","seastar",0.00833333333333333,0.00833333333333333,NA,5,"Evasterias","EVATRO",4,0.0166666666666667
+2015,"Teahwhit Head","gastropod",0,0,NA,5,"Fusitriton oregonensis","FUSORE",4,0
+2015,"Teahwhit Head","urchin",0,0,NA,5,"green urchin","STRDRO",4,0
+2015,"Teahwhit Head","chiton",0.0166666666666667,0.0166666666666667,NA,5,"Gumboot chiton","CRYSTE",4,0.0333333333333333
+2015,"Teahwhit Head","seastar",0.325,0.184403442564475,NA,5,"Henricia leviuscula","HENLEV",4,0.36880688512895
+2015,"Teahwhit Head","bivalve",0,0,NA,5,"jingle shell","PODSPP",4,0
+2015,"Teahwhit Head","seastar",0,0,NA,5,"Mediaster aequalis","MEDAEQ",4,0
+2015,"Teahwhit Head","crab",0,0,NA,5,"Mimulus","MIMFOL",4,0
+2015,"Teahwhit Head","crab",0,0,NA,5,"Northern kelp crab","PUGPRO",4,0
+2015,"Teahwhit Head","nudibranch",0,0,NA,5,"Nudibranch","NUDIBR",4,0
+2015,"Teahwhit Head","cucumber",0,0,NA,5,"Parastichopus","PARCAL",4,0
+2015,"Teahwhit Head","nudibranch",0.025,0.00833333333333333,NA,5,"Peltodoris nobilis","PELNOB",4,0.0166666666666667
+2015,"Teahwhit Head","crab",0,0,NA,5,"Phyllolithodes papillosus","CRYDEC",4,0
+2015,"Teahwhit Head","seastar",0.0166666666666667,0.00962250448649376,NA,5,"Pisaster","PISOCH",4,0.0192450089729875
+2015,"Teahwhit Head","seastar",0,0,NA,5,"Pycnopodia helianthoides","PYCHEL",4,0
+2015,"Teahwhit Head","bivalve",0,0,NA,5,"Rock scallop","CRAGIG",4,0
+2015,"Teahwhit Head","crab",0,0,NA,5,"Scyra acutifrons","SCYDEC",4,0
+2015,"Teahwhit Head","seastar.small",0,0,NA,5,"Seastar","STARREC",4,0
+2015,"Teahwhit Head","seastar",0,0,NA,5,"Solaster stimpsoni","SOLSTI",4,0
+2015,"Teahwhit Head","urchin",0,0,NA,5,"Strongylocentrotus purpuratus","STRPUR",4,0
+2015,"Teahwhit Head","tunicate",0,0,NA,5,"Styela","STYMON",4,0
+2015,"Teahwhit Head","nudibranch",0,0,NA,5,"Triophe catalinidae","TRICAT",4,0
+2015,"Teahwhit Head","anenome",0,0,NA,5,"Urticina crassicornis","URTCRA",4,0
+2015,"Teahwhit Head","anenome",0.0166666666666667,0.0166666666666667,NA,5,"Urticina lofotensis","URTLOF",4,0.0333333333333333
+=======
 2015,"Tatoosh Island","urchin",0,0,NA,5,"green urchin","STRDRO",4,0
 2015,"Tatoosh Island","bivalve",0.00833333333333333,0.00833333333333333,NA,5,"jingle shell","PODSPP",4,0.0166666666666667
 2015,"Tatoosh Island","bivalve",0,0,NA,5,"misc clams","CLAMSP",4,0
 2015,"Tatoosh Island","bivalve",0,0,NA,5,"misc. scallops (not rock)","SCALLOP",4,0
+>>>>>>> master
 2015,"Teahwhit Head","nudibranch",0,0,NA,5,"Acanthodoris hudsoni, white nudibranch with yellow margin (we lump with Cadlina luteomarginata)","ACAHUD",4,0
 2015,"Teahwhit Head","nudibranch",0,0,NA,5,"Acanthodoris nanaimo","ACANAN",4,0
 2015,"Teahwhit Head","gastropod",0,0,NA,5,"Acmaea mitra, white cap limpet","ACMMIT",4,0
@@ -831,6 +1319,10 @@
 2015,"Teahwhit Head","cucumber",0.3875,0.219360919406723,NA,5,"Cucumaria","CUCMIN",4,0.438721838813447
 2015,"Teahwhit Head","seastar",0.141666666666667,0.0550672988933306,NA,5,"Dermasterias","DERIMB",4,0.110134597786661
 2015,"Teahwhit Head","nudibranch",0,0,NA,5,"Dialula sandiegensis","DIASAN",4,0
+<<<<<<< HEAD
+2015,"Teahwhit Head","octopus",0,0,NA,5,"Enteroctopus dofleini","ENTDOF",4,0
+2015,"Teahwhit Head","gastropod",0,0,NA,5,"Haliotis kamtschatkana, pinto abalone","HALKAM",4,0
+=======
 2015,"Teahwhit Head","gastropod",0,0,NA,5,"Diodora aspera","DIOASP",4,0
 2015,"Teahwhit Head","nudibranch",0,0,NA,5,"Dirona","DIRALB",4,0
 2015,"Teahwhit Head","nudibranch",0.00416666666666667,0.00416666666666667,NA,5,"Doris odhneri","DORODH",4,0.00833333333333333
@@ -842,6 +1334,7 @@
 2015,"Teahwhit Head","chiton",0.0166666666666667,0.0166666666666667,NA,5,"Gumboot chiton","CRYSTE",4,0.0333333333333333
 2015,"Teahwhit Head","gastropod",0,0,NA,5,"Haliotis kamtschatkana, pinto abalone","HALKAM",4,0
 2015,"Teahwhit Head","seastar",0.325,0.184403442564475,NA,5,"Henricia leviuscula","HENLEV",4,0.36880688512895
+>>>>>>> master
 2015,"Teahwhit Head","nudibranch",0,0,NA,5,"Hermissenda crassicornis, opalescent nudibranch","HERCRA",4,0
 2015,"Teahwhit Head","nudibranch",0,0,NA,5,"Janolus fuscus, nudibranch","JANFUS",4,0
 2015,"Teahwhit Head","seastar.small",0,0,NA,5,"Lepasterias spp.","LEPSPP",4,0
@@ -852,7 +1345,11 @@
 2015,"Teahwhit Head","urchin",0,0,NA,5,"Mesocentrotus franciscanus, red urchin","MESFRA",4,0
 2015,"Teahwhit Head","anenome",0,0,NA,5,"Metridium giganteum, giant plumose anemone","METGIG",4,0
 2015,"Teahwhit Head","anenome",0,0,NA,5,"Metridium spp., white plumed anemones","METSPP",4,0
+<<<<<<< HEAD
+2015,"Teahwhit Head","bivalve",0,0,NA,5,"misc. scallops (not rock)","SCALLOP",4,0
+=======
 2015,"Teahwhit Head","crab",0,0,NA,5,"Mimulus","MIMFOL",4,0
+>>>>>>> master
 2015,"Teahwhit Head","bivalve",0,0,NA,5,"Mytilus californianus, California mussel","MYTCAL",4,0
 2015,"Teahwhit Head","crab",0,0,NA,5,"Northern kelp crab","PUGPRO",4,0
 2015,"Teahwhit Head","gastropod",0,0,NA,5,"Nucella lamellosa, whelk (used generally for rough predatory whelks)","NUCLAM",4,0
@@ -867,6 +1364,8 @@
 2015,"Teahwhit Head","seastar",0,0,NA,5,"Pisaster brevispinus, short spined star","PISBRE",4,0
 2015,"Teahwhit Head","seastar",0,0,NA,5,"Pisaster giganteus, giant spined star","PISGIG",4,0
 2015,"Teahwhit Head","crab",0,0,NA,5,"Pugettia gracilis, graceful kelp crab","PUGGRA",4,0
+<<<<<<< HEAD
+=======
 2015,"Teahwhit Head","seastar",0,0,NA,5,"Pycnopodia helianthoides","PYCHEL",4,0
 2015,"Teahwhit Head","bivalve",0,0,NA,5,"Rock scallop","CRAGIG",4,0
 2015,"Teahwhit Head","crab",0,0,NA,5,"Scyra acutifrons","SCYDEC",4,0
@@ -874,6 +1373,7 @@
 2015,"Teahwhit Head","seastar",0,0,NA,5,"Solaster stimpsoni","SOLSTI",4,0
 2015,"Teahwhit Head","urchin",0,0,NA,5,"Strongylocentrotus purpuratus","STRPUR",4,0
 2015,"Teahwhit Head","tunicate",0,0,NA,5,"Styela","STYMON",4,0
+>>>>>>> master
 2015,"Teahwhit Head","gastropod",0,0,NA,5,"Tegula spp., turban snails","TEGSPP",4,0
 2015,"Teahwhit Head","nudibranch",0,0,NA,5,"Triophe catalinidae","TRICAT",4,0
 2015,"Teahwhit Head",NA,0,0,NA,5,"UNKOWN","STYFOR",4,0
@@ -882,17 +1382,23 @@
 2015,"Teahwhit Head","anenome",0.0166666666666667,0.0166666666666667,NA,5,"Urticina lofotensis","URTLOF",4,0.0333333333333333
 2015,"Teahwhit Head","anenome",0,0,NA,5,"Urticina piscivora, fish-eating anemone","URTPIS",4,0
 2015,"Teahwhit Head","anenome",0,0,NA,5,"Urticina spp., Urticina spp.","URTSPP",4,0
+<<<<<<< HEAD
+=======
 2015,"Teahwhit Head","urchin",0,0,NA,5,"green urchin","STRDRO",4,0
 2015,"Teahwhit Head","bivalve",0,0,NA,5,"jingle shell","PODSPP",4,0
 2015,"Teahwhit Head","bivalve",0,0,NA,5,"misc clams","CLAMSP",4,0
 2015,"Teahwhit Head","bivalve",0,0,NA,5,"misc. scallops (not rock)","SCALLOP",4,0
+>>>>>>> master
 2016,"Cape Alava","nudibranch",0,0,"E",5,NA,"ACAHUD",3,0
 2016,"Cape Alava","nudibranch",0,0,"E",5,NA,"ACANAN",3,0
 2016,"Cape Alava","gastropod",0.0111111111111111,0.0111111111111111,"E",5,NA,"ACMMIT",3,0.0192450089729875
 2016,"Cape Alava","anenome",0,0,"E",5,NA,"ANTELE",3,0
 2016,"Cape Alava","anenome",0,0,"E",5,NA,"ANTXAN",3,0
 2016,"Cape Alava",NA,0,0,"E",5,NA,"BALNUB",3,0
+<<<<<<< HEAD
+=======
 2016,"Cape Alava",NA,0,0,"E",5,NA,"CADLUT",3,0
+>>>>>>> master
 2016,"Cape Alava","crab",0,0,"E",5,NA,"CANORE",3,0
 2016,"Cape Alava","crab",0,0,"E",5,NA,"CANSPP",3,0
 2016,"Cape Alava","gastropod",0.0222222222222222,0.0111111111111111,"E",5,NA,"CERFOL",3,0.0192450089729875
@@ -949,7 +1455,10 @@
 2016,"Cape Alava","seastar.small",0,0,"E",5,NA,"STARREC",3,0
 2016,"Cape Alava","urchin",0,0,"E",5,NA,"STRDRO",3,0
 2016,"Cape Alava","urchin",0,0,"E",5,NA,"STRPUR",3,0
+<<<<<<< HEAD
+=======
 2016,"Cape Alava",NA,0,0,"E",5,NA,"STYFOR",3,0
+>>>>>>> master
 2016,"Cape Alava","tunicate",0.105555555555556,0.0818384436814235,"E",5,NA,"STYMON",3,0.14174834246859
 2016,"Cape Alava","gastropod",0,0,"E",5,NA,"TEGSPP",3,0
 2016,"Cape Alava","nudibranch",0.0111111111111111,0.00555555555555556,"E",5,NA,"TRICAT",3,0.00962250448649376
@@ -964,7 +1473,10 @@
 2016,"Cape Alava","anenome",0,0,"W",5,NA,"ANTELE",2,0
 2016,"Cape Alava","anenome",0,0,"W",5,NA,"ANTXAN",2,0
 2016,"Cape Alava",NA,0,0,"W",5,NA,"BALNUB",2,0
+<<<<<<< HEAD
+=======
 2016,"Cape Alava",NA,0,0,"W",5,NA,"CADLUT",2,0
+>>>>>>> master
 2016,"Cape Alava","crab",0,0,"W",5,NA,"CANORE",2,0
 2016,"Cape Alava","crab",0,0,"W",5,NA,"CANSPP",2,0
 2016,"Cape Alava","gastropod",0.0333333333333333,0,"W",5,NA,"CERFOL",2,0
@@ -1021,7 +1533,10 @@
 2016,"Cape Alava","seastar.small",0,0,"W",5,NA,"STARREC",2,0
 2016,"Cape Alava","urchin",0,0,"W",5,NA,"STRDRO",2,0
 2016,"Cape Alava","urchin",0,0,"W",5,NA,"STRPUR",2,0
+<<<<<<< HEAD
+=======
 2016,"Cape Alava",NA,0,0,"W",5,NA,"STYFOR",2,0
+>>>>>>> master
 2016,"Cape Alava","tunicate",0.108333333333333,0.0416666666666667,"W",5,NA,"STYMON",2,0.058925565098879
 2016,"Cape Alava","gastropod",0,0,"W",5,NA,"TEGSPP",2,0
 2016,"Cape Alava","nudibranch",0.0416666666666667,0.025,"W",5,NA,"TRICAT",2,0.0353553390593274
@@ -1036,7 +1551,10 @@
 2016,"Cape Alava","anenome",0,0,"W",10,NA,"ANTELE",5,0
 2016,"Cape Alava","anenome",0,0,"W",10,NA,"ANTXAN",5,0
 2016,"Cape Alava",NA,0.065,0.0533853912601566,"W",10,NA,"BALNUB",5,0.119373363863133
+<<<<<<< HEAD
+=======
 2016,"Cape Alava",NA,0,0,"W",10,NA,"CADLUT",5,0
+>>>>>>> master
 2016,"Cape Alava","crab",0,0,"W",10,NA,"CANORE",5,0
 2016,"Cape Alava","crab",0,0,"W",10,NA,"CANSPP",5,0
 2016,"Cape Alava","gastropod",0.06,0.025603819159562,"W",10,NA,"CERFOL",5,0.0572518801243922
@@ -1093,7 +1611,10 @@
 2016,"Cape Alava","seastar.small",0,0,"W",10,NA,"STARREC",5,0
 2016,"Cape Alava","urchin",0,0,"W",10,NA,"STRDRO",5,0
 2016,"Cape Alava","urchin",0,0,"W",10,NA,"STRPUR",5,0
+<<<<<<< HEAD
+=======
 2016,"Cape Alava",NA,0,0,"W",10,NA,"STYFOR",5,0
+>>>>>>> master
 2016,"Cape Alava","tunicate",0.306666666666667,0.0507170801823431,"W",10,NA,"STYMON",5,0.113406838908027
 2016,"Cape Alava","gastropod",0,0,"W",10,NA,"TEGSPP",5,0
 2016,"Cape Alava","nudibranch",0,0,"W",10,NA,"TRICAT",5,0
@@ -1108,7 +1629,10 @@
 2016,"Cape Johnson","anenome",0.00555555555555556,0.00555555555555556,"N",5,NA,"ANTELE",3,0.00962250448649376
 2016,"Cape Johnson","anenome",0,0,"N",5,NA,"ANTXAN",3,0
 2016,"Cape Johnson",NA,0.405555555555556,0.405555555555556,"N",5,NA,"BALNUB",3,0.702442827514045
+<<<<<<< HEAD
+=======
 2016,"Cape Johnson",NA,0,0,"N",5,NA,"CADLUT",3,0
+>>>>>>> master
 2016,"Cape Johnson","crab",0,0,"N",5,NA,"CANORE",3,0
 2016,"Cape Johnson","crab",0,0,"N",5,NA,"CANSPP",3,0
 2016,"Cape Johnson","gastropod",0.1,0.1,"N",5,NA,"CERFOL",3,0.173205080756888
@@ -1165,7 +1689,10 @@
 2016,"Cape Johnson","seastar.small",0,0,"N",5,NA,"STARREC",3,0
 2016,"Cape Johnson","urchin",0,0,"N",5,NA,"STRDRO",3,0
 2016,"Cape Johnson","urchin",0,0,"N",5,NA,"STRPUR",3,0
+<<<<<<< HEAD
+=======
 2016,"Cape Johnson",NA,0,0,"N",5,NA,"STYFOR",3,0
+>>>>>>> master
 2016,"Cape Johnson","tunicate",0.0555555555555556,0.00555555555555555,"N",5,NA,"STYMON",3,0.00962250448649376
 2016,"Cape Johnson","gastropod",0,0,"N",5,NA,"TEGSPP",3,0
 2016,"Cape Johnson","nudibranch",0.00555555555555556,0.00555555555555556,"N",5,NA,"TRICAT",3,0.00962250448649376
@@ -1180,7 +1707,10 @@
 2016,"Cape Johnson","anenome",0,0,"S",5,NA,"ANTELE",3,0
 2016,"Cape Johnson","anenome",0.00555555555555556,0.00555555555555556,"S",5,NA,"ANTXAN",3,0.00962250448649376
 2016,"Cape Johnson",NA,0.0111111111111111,0.0111111111111111,"S",5,NA,"BALNUB",3,0.0192450089729875
+<<<<<<< HEAD
+=======
 2016,"Cape Johnson",NA,0,0,"S",5,NA,"CADLUT",3,0
+>>>>>>> master
 2016,"Cape Johnson","crab",0,0,"S",5,NA,"CANORE",3,0
 2016,"Cape Johnson","crab",0,0,"S",5,NA,"CANSPP",3,0
 2016,"Cape Johnson","gastropod",0,0,"S",5,NA,"CERFOL",3,0
@@ -1237,7 +1767,10 @@
 2016,"Cape Johnson","seastar.small",0,0,"S",5,NA,"STARREC",3,0
 2016,"Cape Johnson","urchin",0,0,"S",5,NA,"STRDRO",3,0
 2016,"Cape Johnson","urchin",0,0,"S",5,NA,"STRPUR",3,0
+<<<<<<< HEAD
+=======
 2016,"Cape Johnson",NA,0,0,"S",5,NA,"STYFOR",3,0
+>>>>>>> master
 2016,"Cape Johnson","tunicate",0.0166666666666667,0.00962250448649376,"S",5,NA,"STYMON",3,0.0166666666666667
 2016,"Cape Johnson","gastropod",0,0,"S",5,NA,"TEGSPP",3,0
 2016,"Cape Johnson","nudibranch",0,0,"S",5,NA,"TRICAT",3,0
@@ -1252,7 +1785,10 @@
 2016,"Cape Johnson","anenome",0,0,"S",10,NA,"ANTELE",7,0
 2016,"Cape Johnson","anenome",0,0,"S",10,NA,"ANTXAN",7,0
 2016,"Cape Johnson",NA,0,0,"S",10,NA,"BALNUB",7,0
+<<<<<<< HEAD
+=======
 2016,"Cape Johnson",NA,0,0,"S",10,NA,"CADLUT",7,0
+>>>>>>> master
 2016,"Cape Johnson","crab",0,0,"S",10,NA,"CANORE",7,0
 2016,"Cape Johnson","crab",0.00714285714285714,0.00714285714285714,"S",10,NA,"CANSPP",7,0.0188982236504614
 2016,"Cape Johnson","gastropod",0.0285714285714286,0.0148690428533295,"S",10,NA,"CERFOL",7,0.0393397896234722
@@ -1309,7 +1845,10 @@
 2016,"Cape Johnson","seastar.small",0,0,"S",10,NA,"STARREC",7,0
 2016,"Cape Johnson","urchin",0,0,"S",10,NA,"STRDRO",7,0
 2016,"Cape Johnson","urchin",0,0,"S",10,NA,"STRPUR",7,0
+<<<<<<< HEAD
+=======
 2016,"Cape Johnson",NA,0,0,"S",10,NA,"STYFOR",7,0
+>>>>>>> master
 2016,"Cape Johnson","tunicate",0.121428571428571,0.0586120648813865,"S",10,NA,"STYMON",7,0.155072947504131
 2016,"Cape Johnson","gastropod",0.00714285714285714,0.00714285714285714,"S",10,NA,"TEGSPP",7,0.0188982236504614
 2016,"Cape Johnson","nudibranch",0,0,"S",10,NA,"TRICAT",7,0
@@ -1324,7 +1863,10 @@
 2016,"Destruction Island","anenome",0,NA,"N",5,NA,"ANTELE",1,NA
 2016,"Destruction Island","anenome",0.05,NA,"N",5,NA,"ANTXAN",1,NA
 2016,"Destruction Island",NA,0,NA,"N",5,NA,"BALNUB",1,NA
+<<<<<<< HEAD
+=======
 2016,"Destruction Island",NA,0,NA,"N",5,NA,"CADLUT",1,NA
+>>>>>>> master
 2016,"Destruction Island","crab",0,NA,"N",5,NA,"CANORE",1,NA
 2016,"Destruction Island","crab",0,NA,"N",5,NA,"CANSPP",1,NA
 2016,"Destruction Island","gastropod",0,NA,"N",5,NA,"CERFOL",1,NA
@@ -1381,7 +1923,10 @@
 2016,"Destruction Island","seastar.small",0,NA,"N",5,NA,"STARREC",1,NA
 2016,"Destruction Island","urchin",0,NA,"N",5,NA,"STRDRO",1,NA
 2016,"Destruction Island","urchin",0.0166666666666667,NA,"N",5,NA,"STRPUR",1,NA
+<<<<<<< HEAD
+=======
 2016,"Destruction Island",NA,0,NA,"N",5,NA,"STYFOR",1,NA
+>>>>>>> master
 2016,"Destruction Island","tunicate",0.0333333333333333,NA,"N",5,NA,"STYMON",1,NA
 2016,"Destruction Island","gastropod",0,NA,"N",5,NA,"TEGSPP",1,NA
 2016,"Destruction Island","nudibranch",0,NA,"N",5,NA,"TRICAT",1,NA
@@ -1396,7 +1941,10 @@
 2016,"Destruction Island","anenome",0,0,"N",10,NA,"ANTELE",2,0
 2016,"Destruction Island","anenome",0,0,"N",10,NA,"ANTXAN",2,0
 2016,"Destruction Island",NA,0.0333333333333333,0,"N",10,NA,"BALNUB",2,0
+<<<<<<< HEAD
+=======
 2016,"Destruction Island",NA,0,0,"N",10,NA,"CADLUT",2,0
+>>>>>>> master
 2016,"Destruction Island","crab",0,0,"N",10,NA,"CANORE",2,0
 2016,"Destruction Island","crab",0,0,"N",10,NA,"CANSPP",2,0
 2016,"Destruction Island","gastropod",0.108333333333333,0.0416666666666667,"N",10,NA,"CERFOL",2,0.058925565098879
@@ -1453,7 +2001,10 @@
 2016,"Destruction Island","seastar.small",0,0,"N",10,NA,"STARREC",2,0
 2016,"Destruction Island","urchin",0,0,"N",10,NA,"STRDRO",2,0
 2016,"Destruction Island","urchin",0,0,"N",10,NA,"STRPUR",2,0
+<<<<<<< HEAD
+=======
 2016,"Destruction Island",NA,0,0,"N",10,NA,"STYFOR",2,0
+>>>>>>> master
 2016,"Destruction Island","tunicate",0.0916666666666667,0.00833333333333334,"N",10,NA,"STYMON",2,0.0117851130197758
 2016,"Destruction Island","gastropod",0,0,"N",10,NA,"TEGSPP",2,0
 2016,"Destruction Island","nudibranch",0,0,"N",10,NA,"TRICAT",2,0
@@ -1468,7 +2019,10 @@
 2016,"Destruction Island","anenome",0,0,"S",5,NA,"ANTELE",2,0
 2016,"Destruction Island","anenome",0.025,0.025,"S",5,NA,"ANTXAN",2,0.0353553390593274
 2016,"Destruction Island",NA,0,0,"S",5,NA,"BALNUB",2,0
+<<<<<<< HEAD
+=======
 2016,"Destruction Island",NA,0,0,"S",5,NA,"CADLUT",2,0
+>>>>>>> master
 2016,"Destruction Island","crab",0,0,"S",5,NA,"CANORE",2,0
 2016,"Destruction Island","crab",0.0166666666666667,0.0166666666666667,"S",5,NA,"CANSPP",2,0.0235702260395516
 2016,"Destruction Island","gastropod",0.0333333333333333,0.0333333333333333,"S",5,NA,"CERFOL",2,0.0471404520791032
@@ -1525,7 +2079,10 @@
 2016,"Destruction Island","seastar.small",0,0,"S",5,NA,"STARREC",2,0
 2016,"Destruction Island","urchin",0,0,"S",5,NA,"STRDRO",2,0
 2016,"Destruction Island","urchin",0,0,"S",5,NA,"STRPUR",2,0
+<<<<<<< HEAD
+=======
 2016,"Destruction Island",NA,0,0,"S",5,NA,"STYFOR",2,0
+>>>>>>> master
 2016,"Destruction Island","tunicate",0.104166666666667,0.0791666666666666,"S",5,NA,"STYMON",2,0.11195857368787
 2016,"Destruction Island","gastropod",0,0,"S",5,NA,"TEGSPP",2,0
 2016,"Destruction Island","nudibranch",0,0,"S",5,NA,"TRICAT",2,0
@@ -1534,6 +2091,218 @@
 2016,"Destruction Island","anenome",0,0,"S",5,NA,"URTLOF",2,0
 2016,"Destruction Island","anenome",0,0,"S",5,NA,"URTPIS",2,0
 2016,"Destruction Island","anenome",0.00833333333333333,0.00833333333333333,"S",5,NA,"URTSPP",2,0.0117851130197758
+<<<<<<< HEAD
+2016,"Neah Bay","nudibranch",0.0125,0.0125,"N",5,NA,"ACAHUD",2,0.0176776695296637
+2016,"Neah Bay","nudibranch",0,0,"N",5,NA,"ACANAN",2,0
+2016,"Neah Bay","gastropod",0.0166666666666667,0.0166666666666667,"N",5,NA,"ACMMIT",2,0.0235702260395516
+2016,"Neah Bay","anenome",0,0,"N",5,NA,"ANTELE",2,0
+2016,"Neah Bay","anenome",0,0,"N",5,NA,"ANTXAN",2,0
+2016,"Neah Bay",NA,0,0,"N",5,NA,"BALNUB",2,0
+2016,"Neah Bay","crab",0,0,"N",5,NA,"CANORE",2,0
+2016,"Neah Bay","crab",0,0,"N",5,NA,"CANSPP",2,0
+2016,"Neah Bay","gastropod",0.0416666666666667,0.00833333333333333,"N",5,NA,"CERFOL",2,0.0117851130197758
+2016,"Neah Bay",NA,0,0,"N",5,NA,"CHITON",2,0
+2016,"Neah Bay","bivalve",0,0,"N",5,NA,"CLAMSP",2,0
+2016,"Neah Bay","sponge",0,0,"N",5,NA,"CRAARB",2,0
+2016,"Neah Bay","bivalve",0.0125,0.0125,"N",5,NA,"CRAGIG",2,0.0176776695296637
+2016,"Neah Bay","seastar",0,0,"N",5,NA,"CROPAP",2,0
+2016,"Neah Bay","crab",0,0,"N",5,NA,"CRYDEC",2,0
+2016,"Neah Bay","crab",0,0,"N",5,NA,"CRYSIT",2,0
+2016,"Neah Bay","chiton",0,0,"N",5,NA,"CRYSTE",2,0
+2016,"Neah Bay","cucumber",0,0,"N",5,NA,"CUCMIN",2,0
+2016,"Neah Bay","seastar",0.00833333333333333,0.00833333333333333,"N",5,NA,"DERIMB",2,0.0117851130197758
+2016,"Neah Bay","nudibranch",0,0,"N",5,NA,"DIASAN",2,0
+2016,"Neah Bay","gastropod",0.0916666666666667,0.00833333333333334,"N",5,NA,"DIOASP",2,0.0117851130197758
+2016,"Neah Bay","nudibranch",0,0,"N",5,NA,"DIRALB",2,0
+2016,"Neah Bay","nudibranch",0.0125,0.0125,"N",5,NA,"DORODH",2,0.0176776695296637
+2016,"Neah Bay","octopus",0,0,"N",5,NA,"ENTDOF",2,0
+2016,"Neah Bay","anenome",0.0125,0.0125,"N",5,NA,"EPIPRO",2,0.0176776695296637
+2016,"Neah Bay","cucumber",0.0875,0.0375,"N",5,NA,"EUPQUI",2,0.0530330085889911
+2016,"Neah Bay","seastar",0,0,"N",5,NA,"EVATRO",2,0
+2016,"Neah Bay","gastropod",0,0,"N",5,NA,"FUSORE",2,0
+2016,"Neah Bay","gastropod",0,0,"N",5,NA,"HALKAM",2,0
+2016,"Neah Bay","seastar",0.0708333333333333,0.00416666666666667,"N",5,NA,"HENLEV",2,0.0058925565098879
+2016,"Neah Bay","nudibranch",0,0,"N",5,NA,"HERCRA",2,0
+2016,"Neah Bay","nudibranch",0.0125,0.0125,"N",5,NA,"JANFUS",2,0.0176776695296637
+2016,"Neah Bay","seastar.small",0,0,"N",5,NA,"LEPSPP",2,0
+2016,"Neah Bay","nudibranch",0,0,"N",5,NA,"LIMCOC",2,0
+2016,"Neah Bay","gastropod",0.025,0.025,"N",5,NA,"LIRDIR",2,0.0353553390593274
+2016,"Neah Bay","crab",0,0,"N",5,NA,"LOPMAN",2,0
+2016,"Neah Bay","seastar",0,0,"N",5,NA,"MEDAEQ",2,0
+2016,"Neah Bay","urchin",0,0,"N",5,NA,"MESFRA",2,0
+2016,"Neah Bay","anenome",0,0,"N",5,NA,"METGIG",2,0
+2016,"Neah Bay","anenome",0,0,"N",5,NA,"METSPP",2,0
+2016,"Neah Bay","crab",0,0,"N",5,NA,"MIMFOL",2,0
+2016,"Neah Bay","bivalve",0,0,"N",5,NA,"MYTCAL",2,0
+2016,"Neah Bay","gastropod",0,0,"N",5,NA,"NUCLAM",2,0
+2016,"Neah Bay","nudibranch",0,0,"N",5,NA,"NUDIBR",2,0
+2016,"Neah Bay","seastar",0.0291666666666667,0.00416666666666667,"N",5,NA,"ORTKOE",2,0.0058925565098879
+2016,"Neah Bay",NA,0,0,"N",5,NA,"PAGSPP",2,0
+2016,"Neah Bay","cucumber",0,0,"N",5,NA,"PARCAL",2,0
+2016,"Neah Bay","seastar",0,0,"N",5,NA,"PATMIN",2,0
+2016,"Neah Bay","nudibranch",0.1125,0.1125,"N",5,NA,"PELNOB",2,0.159099025766973
+2016,"Neah Bay","seastar",0,0,"N",5,NA,"PISBRE",2,0
+2016,"Neah Bay","seastar",0,0,"N",5,NA,"PISGIG",2,0
+2016,"Neah Bay","seastar",0,0,"N",5,NA,"PISOCH",2,0
+2016,"Neah Bay","bivalve",0,0,"N",5,NA,"PODSPP",2,0
+2016,"Neah Bay","crab",0,0,"N",5,NA,"PUGGRA",2,0
+2016,"Neah Bay","crab",0.0125,0.0125,"N",5,NA,"PUGPRO",2,0.0176776695296637
+2016,"Neah Bay","seastar",0,0,"N",5,NA,"PYCHEL",2,0
+2016,"Neah Bay","bivalve",0,0,"N",5,NA,"SCALLOP",2,0
+2016,"Neah Bay","crab",0.0208333333333333,0.00416666666666667,"N",5,NA,"SCYDEC",2,0.0058925565098879
+2016,"Neah Bay","seastar",0,0,"N",5,NA,"SOLSTI",2,0
+2016,"Neah Bay","seastar.small",0,0,"N",5,NA,"STARREC",2,0
+2016,"Neah Bay","urchin",0,0,"N",5,NA,"STRDRO",2,0
+2016,"Neah Bay","urchin",0,0,"N",5,NA,"STRPUR",2,0
+2016,"Neah Bay","tunicate",0.025,0.025,"N",5,NA,"STYMON",2,0.0353553390593274
+2016,"Neah Bay","gastropod",0,0,"N",5,NA,"TEGSPP",2,0
+2016,"Neah Bay","nudibranch",0,0,"N",5,NA,"TRICAT",2,0
+2016,"Neah Bay",NA,0,0,"N",5,NA,"UNIDSP",2,0
+2016,"Neah Bay","anenome",0,0,"N",5,NA,"URTCRA",2,0
+2016,"Neah Bay","anenome",0,0,"N",5,NA,"URTLOF",2,0
+2016,"Neah Bay","anenome",0,0,"N",5,NA,"URTPIS",2,0
+2016,"Neah Bay","anenome",0,0,"N",5,NA,"URTSPP",2,0
+2016,"Neah Bay","nudibranch",0,0,"S",5,NA,"ACAHUD",3,0
+2016,"Neah Bay","nudibranch",0,0,"S",5,NA,"ACANAN",3,0
+2016,"Neah Bay","gastropod",0.00555555555555556,0.00555555555555556,"S",5,NA,"ACMMIT",3,0.00962250448649376
+2016,"Neah Bay","anenome",0,0,"S",5,NA,"ANTELE",3,0
+2016,"Neah Bay","anenome",0,0,"S",5,NA,"ANTXAN",3,0
+2016,"Neah Bay",NA,0,0,"S",5,NA,"BALNUB",3,0
+2016,"Neah Bay","crab",0.00555555555555556,0.00555555555555556,"S",5,NA,"CANORE",3,0.00962250448649376
+2016,"Neah Bay","crab",0,0,"S",5,NA,"CANSPP",3,0
+2016,"Neah Bay","gastropod",0.0222222222222222,0.0146986183948033,"S",5,NA,"CERFOL",3,0.0254587538608658
+2016,"Neah Bay",NA,0,0,"S",5,NA,"CHITON",3,0
+2016,"Neah Bay","bivalve",0,0,"S",5,NA,"CLAMSP",3,0
+2016,"Neah Bay","sponge",0,0,"S",5,NA,"CRAARB",3,0
+2016,"Neah Bay","bivalve",0,0,"S",5,NA,"CRAGIG",3,0
+2016,"Neah Bay","seastar",0,0,"S",5,NA,"CROPAP",3,0
+2016,"Neah Bay","crab",0,0,"S",5,NA,"CRYDEC",3,0
+2016,"Neah Bay","crab",0.0111111111111111,0.00555555555555556,"S",5,NA,"CRYSIT",3,0.00962250448649376
+2016,"Neah Bay","chiton",0,0,"S",5,NA,"CRYSTE",3,0
+2016,"Neah Bay","cucumber",0.0111111111111111,0.0111111111111111,"S",5,NA,"CUCMIN",3,0.0192450089729875
+2016,"Neah Bay","seastar",0,0,"S",5,NA,"DERIMB",3,0
+2016,"Neah Bay","nudibranch",0,0,"S",5,NA,"DIASAN",3,0
+2016,"Neah Bay","gastropod",0.0111111111111111,0.0111111111111111,"S",5,NA,"DIOASP",3,0.0192450089729875
+2016,"Neah Bay","nudibranch",0.00555555555555556,0.00555555555555556,"S",5,NA,"DIRALB",3,0.00962250448649376
+2016,"Neah Bay","nudibranch",0,0,"S",5,NA,"DORODH",3,0
+2016,"Neah Bay","octopus",0,0,"S",5,NA,"ENTDOF",3,0
+2016,"Neah Bay","anenome",0,0,"S",5,NA,"EPIPRO",3,0
+2016,"Neah Bay","cucumber",0,0,"S",5,NA,"EUPQUI",3,0
+2016,"Neah Bay","seastar",0,0,"S",5,NA,"EVATRO",3,0
+2016,"Neah Bay","gastropod",0,0,"S",5,NA,"FUSORE",3,0
+2016,"Neah Bay","gastropod",0,0,"S",5,NA,"HALKAM",3,0
+2016,"Neah Bay","seastar",0.0666666666666667,0.0333333333333333,"S",5,NA,"HENLEV",3,0.0577350269189626
+2016,"Neah Bay","nudibranch",0,0,"S",5,NA,"HERCRA",3,0
+2016,"Neah Bay","nudibranch",0,0,"S",5,NA,"JANFUS",3,0
+2016,"Neah Bay","seastar.small",0.0166666666666667,0.00962250448649376,"S",5,NA,"LEPSPP",3,0.0166666666666667
+2016,"Neah Bay","nudibranch",0,0,"S",5,NA,"LIMCOC",3,0
+2016,"Neah Bay","gastropod",0.0166666666666667,0.0166666666666667,"S",5,NA,"LIRDIR",3,0.0288675134594813
+2016,"Neah Bay","crab",0,0,"S",5,NA,"LOPMAN",3,0
+2016,"Neah Bay","seastar",0,0,"S",5,NA,"MEDAEQ",3,0
+2016,"Neah Bay","urchin",0.0166666666666667,0.0166666666666667,"S",5,NA,"MESFRA",3,0.0288675134594813
+2016,"Neah Bay","anenome",0,0,"S",5,NA,"METGIG",3,0
+2016,"Neah Bay","anenome",0,0,"S",5,NA,"METSPP",3,0
+2016,"Neah Bay","crab",0,0,"S",5,NA,"MIMFOL",3,0
+2016,"Neah Bay","bivalve",0,0,"S",5,NA,"MYTCAL",3,0
+2016,"Neah Bay","gastropod",0.0444444444444444,0.0293972367896066,"S",5,NA,"NUCLAM",3,0.0509175077217316
+2016,"Neah Bay","nudibranch",0,0,"S",5,NA,"NUDIBR",3,0
+2016,"Neah Bay","seastar",0.00555555555555556,0.00555555555555556,"S",5,NA,"ORTKOE",3,0.00962250448649376
+2016,"Neah Bay",NA,0.00555555555555556,0.00555555555555556,"S",5,NA,"PAGSPP",3,0.00962250448649376
+2016,"Neah Bay","cucumber",0,0,"S",5,NA,"PARCAL",3,0
+2016,"Neah Bay","seastar",0,0,"S",5,NA,"PATMIN",3,0
+2016,"Neah Bay","nudibranch",0.00555555555555556,0.00555555555555556,"S",5,NA,"PELNOB",3,0.00962250448649376
+2016,"Neah Bay","seastar",0,0,"S",5,NA,"PISBRE",3,0
+2016,"Neah Bay","seastar",0,0,"S",5,NA,"PISGIG",3,0
+2016,"Neah Bay","seastar",0,0,"S",5,NA,"PISOCH",3,0
+2016,"Neah Bay","bivalve",0,0,"S",5,NA,"PODSPP",3,0
+2016,"Neah Bay","crab",0,0,"S",5,NA,"PUGGRA",3,0
+2016,"Neah Bay","crab",0,0,"S",5,NA,"PUGPRO",3,0
+2016,"Neah Bay","seastar",0,0,"S",5,NA,"PYCHEL",3,0
+2016,"Neah Bay","bivalve",0,0,"S",5,NA,"SCALLOP",3,0
+2016,"Neah Bay","crab",0,0,"S",5,NA,"SCYDEC",3,0
+2016,"Neah Bay","seastar",0,0,"S",5,NA,"SOLSTI",3,0
+2016,"Neah Bay","seastar.small",0,0,"S",5,NA,"STARREC",3,0
+2016,"Neah Bay","urchin",0,0,"S",5,NA,"STRDRO",3,0
+2016,"Neah Bay","urchin",0.0388888888888889,0.0111111111111111,"S",5,NA,"STRPUR",3,0.0192450089729875
+2016,"Neah Bay","tunicate",0,0,"S",5,NA,"STYMON",3,0
+2016,"Neah Bay","gastropod",0,0,"S",5,NA,"TEGSPP",3,0
+2016,"Neah Bay","nudibranch",0,0,"S",5,NA,"TRICAT",3,0
+2016,"Neah Bay",NA,0,0,"S",5,NA,"UNIDSP",3,0
+2016,"Neah Bay","anenome",0,0,"S",5,NA,"URTCRA",3,0
+2016,"Neah Bay","anenome",0,0,"S",5,NA,"URTLOF",3,0
+2016,"Neah Bay","anenome",0,0,"S",5,NA,"URTPIS",3,0
+2016,"Neah Bay","anenome",0,0,"S",5,NA,"URTSPP",3,0
+2016,"Neah Bay","nudibranch",0,0,"S",10,NA,"ACAHUD",5,0
+2016,"Neah Bay","nudibranch",0,0,"S",10,NA,"ACANAN",5,0
+2016,"Neah Bay","gastropod",0,0,"S",10,NA,"ACMMIT",5,0
+2016,"Neah Bay","anenome",0,0,"S",10,NA,"ANTELE",5,0
+2016,"Neah Bay","anenome",0.00333333333333333,0.00333333333333333,"S",10,NA,"ANTXAN",5,0.0074535599249993
+2016,"Neah Bay",NA,0,0,"S",10,NA,"BALNUB",5,0
+2016,"Neah Bay","crab",0.00333333333333333,0.00333333333333333,"S",10,NA,"CANORE",5,0.0074535599249993
+2016,"Neah Bay","crab",0,0,"S",10,NA,"CANSPP",5,0
+2016,"Neah Bay","gastropod",0.00333333333333333,0.00333333333333333,"S",10,NA,"CERFOL",5,0.0074535599249993
+2016,"Neah Bay",NA,0,0,"S",10,NA,"CHITON",5,0
+2016,"Neah Bay","bivalve",0,0,"S",10,NA,"CLAMSP",5,0
+2016,"Neah Bay","sponge",0,0,"S",10,NA,"CRAARB",5,0
+2016,"Neah Bay","bivalve",0.0133333333333333,0.00623609564462324,"S",10,NA,"CRAGIG",5,0.0139443337755679
+2016,"Neah Bay","seastar",0,0,"S",10,NA,"CROPAP",5,0
+2016,"Neah Bay","crab",0,0,"S",10,NA,"CRYDEC",5,0
+2016,"Neah Bay","crab",0,0,"S",10,NA,"CRYSIT",5,0
+2016,"Neah Bay","chiton",0.00333333333333333,0.00333333333333333,"S",10,NA,"CRYSTE",5,0.0074535599249993
+2016,"Neah Bay","cucumber",0.08,0.0487054639873415,"S",10,NA,"CUCMIN",5,0.108908728351364
+2016,"Neah Bay","seastar",0.00333333333333333,0.00333333333333333,"S",10,NA,"DERIMB",5,0.0074535599249993
+2016,"Neah Bay","nudibranch",0,0,"S",10,NA,"DIASAN",5,0
+2016,"Neah Bay","gastropod",0.01,0.00666666666666667,"S",10,NA,"DIOASP",5,0.0149071198499986
+2016,"Neah Bay","nudibranch",0,0,"S",10,NA,"DIRALB",5,0
+2016,"Neah Bay","nudibranch",0,0,"S",10,NA,"DORODH",5,0
+2016,"Neah Bay","octopus",0,0,"S",10,NA,"ENTDOF",5,0
+2016,"Neah Bay","anenome",0.0866666666666667,0.0785988408170106,"S",10,NA,"EPIPRO",5,0.175752351019521
+2016,"Neah Bay","cucumber",0.0733333333333333,0.0581186525805423,"S",10,NA,"EUPQUI",5,0.129957257930786
+2016,"Neah Bay","seastar",0,0,"S",10,NA,"EVATRO",5,0
+2016,"Neah Bay","gastropod",0,0,"S",10,NA,"FUSORE",5,0
+2016,"Neah Bay","gastropod",0,0,"S",10,NA,"HALKAM",5,0
+2016,"Neah Bay","seastar",0.0633333333333333,0.0192930615046504,"S",10,NA,"HENLEV",5,0.0431405970184826
+2016,"Neah Bay","nudibranch",0,0,"S",10,NA,"HERCRA",5,0
+2016,"Neah Bay","nudibranch",0,0,"S",10,NA,"JANFUS",5,0
+2016,"Neah Bay","seastar.small",0,0,"S",10,NA,"LEPSPP",5,0
+2016,"Neah Bay","nudibranch",0,0,"S",10,NA,"LIMCOC",5,0
+2016,"Neah Bay","gastropod",0,0,"S",10,NA,"LIRDIR",5,0
+2016,"Neah Bay","crab",0.00333333333333333,0.00333333333333333,"S",10,NA,"LOPMAN",5,0.0074535599249993
+2016,"Neah Bay","seastar",0,0,"S",10,NA,"MEDAEQ",5,0
+2016,"Neah Bay","urchin",0.0366666666666667,0.0249443825784929,"S",10,NA,"MESFRA",5,0.0557773351022717
+2016,"Neah Bay","anenome",0.00666666666666667,0.00408248290463863,"S",10,NA,"METGIG",5,0.00912870929175277
+2016,"Neah Bay","anenome",0,0,"S",10,NA,"METSPP",5,0
+2016,"Neah Bay","crab",0,0,"S",10,NA,"MIMFOL",5,0
+2016,"Neah Bay","bivalve",0,0,"S",10,NA,"MYTCAL",5,0
+2016,"Neah Bay","gastropod",0,0,"S",10,NA,"NUCLAM",5,0
+2016,"Neah Bay","nudibranch",0,0,"S",10,NA,"NUDIBR",5,0
+2016,"Neah Bay","seastar",0.00666666666666667,0.00408248290463863,"S",10,NA,"ORTKOE",5,0.00912870929175277
+2016,"Neah Bay",NA,0,0,"S",10,NA,"PAGSPP",5,0
+2016,"Neah Bay","cucumber",0,0,"S",10,NA,"PARCAL",5,0
+2016,"Neah Bay","seastar",0,0,"S",10,NA,"PATMIN",5,0
+2016,"Neah Bay","nudibranch",0.00333333333333333,0.00333333333333333,"S",10,NA,"PELNOB",5,0.0074535599249993
+2016,"Neah Bay","seastar",0.00333333333333333,0.00333333333333333,"S",10,NA,"PISBRE",5,0.0074535599249993
+2016,"Neah Bay","seastar",0,0,"S",10,NA,"PISGIG",5,0
+2016,"Neah Bay","seastar",0,0,"S",10,NA,"PISOCH",5,0
+2016,"Neah Bay","bivalve",0,0,"S",10,NA,"PODSPP",5,0
+2016,"Neah Bay","crab",0,0,"S",10,NA,"PUGGRA",5,0
+2016,"Neah Bay","crab",0,0,"S",10,NA,"PUGPRO",5,0
+2016,"Neah Bay","seastar",0,0,"S",10,NA,"PYCHEL",5,0
+2016,"Neah Bay","bivalve",0,0,"S",10,NA,"SCALLOP",5,0
+2016,"Neah Bay","crab",0,0,"S",10,NA,"SCYDEC",5,0
+2016,"Neah Bay","seastar",0,0,"S",10,NA,"SOLSTI",5,0
+2016,"Neah Bay","seastar.small",0,0,"S",10,NA,"STARREC",5,0
+2016,"Neah Bay","urchin",0.00333333333333333,0.00333333333333333,"S",10,NA,"STRDRO",5,0.0074535599249993
+2016,"Neah Bay","urchin",0,0,"S",10,NA,"STRPUR",5,0
+2016,"Neah Bay","tunicate",0.00666666666666667,0.00408248290463863,"S",10,NA,"STYMON",5,0.00912870929175277
+2016,"Neah Bay","gastropod",0,0,"S",10,NA,"TEGSPP",5,0
+2016,"Neah Bay","nudibranch",0.00333333333333333,0.00333333333333333,"S",10,NA,"TRICAT",5,0.0074535599249993
+2016,"Neah Bay",NA,0,0,"S",10,NA,"UNIDSP",5,0
+2016,"Neah Bay","anenome",0,0,"S",10,NA,"URTCRA",5,0
+2016,"Neah Bay","anenome",0.02,0.02,"S",10,NA,"URTLOF",5,0.0447213595499958
+2016,"Neah Bay","anenome",0.00333333333333333,0.00333333333333333,"S",10,NA,"URTPIS",5,0.0074535599249993
+2016,"Neah Bay","anenome",0.00666666666666667,0.00408248290463863,"S",10,NA,"URTSPP",5,0.00912870929175277
+=======
 2016,"Destruction Island","nudibranch",0,0,"S",10,NA,"ACAHUD",2,0
 2016,"Destruction Island","nudibranch",0,0,"S",10,NA,"ACANAN",2,0
 2016,"Destruction Island","gastropod",0,0,"S",10,NA,"ACMMIT",2,0
@@ -1750,13 +2519,17 @@
 2016,"Neah Bay","anenome",0.02,0.02,"N",10,NA,"URTLOF",5,0.0447213595499958
 2016,"Neah Bay","anenome",0.00333333333333333,0.00333333333333333,"N",10,NA,"URTPIS",5,0.0074535599249993
 2016,"Neah Bay","anenome",0.00666666666666667,0.00408248290463863,"N",10,NA,"URTSPP",5,0.00912870929175277
+>>>>>>> master
 2016,"Tatoosh Island","nudibranch",0,0,"N",5,NA,"ACAHUD",5,0
 2016,"Tatoosh Island","nudibranch",0,0,"N",5,NA,"ACANAN",5,0
 2016,"Tatoosh Island","gastropod",0.00333333333333333,0.00333333333333333,"N",5,NA,"ACMMIT",5,0.0074535599249993
 2016,"Tatoosh Island","anenome",0,0,"N",5,NA,"ANTELE",5,0
 2016,"Tatoosh Island","anenome",0.0466666666666667,0.0219848432637882,"N",5,NA,"ANTXAN",5,0.0491596040125088
 2016,"Tatoosh Island",NA,0.196666666666667,0.145525866352954,"N",5,NA,"BALNUB",5,0.325405729649754
+<<<<<<< HEAD
+=======
 2016,"Tatoosh Island",NA,0,0,"N",5,NA,"CADLUT",5,0
+>>>>>>> master
 2016,"Tatoosh Island","crab",0,0,"N",5,NA,"CANORE",5,0
 2016,"Tatoosh Island","crab",0,0,"N",5,NA,"CANSPP",5,0
 2016,"Tatoosh Island","gastropod",0.0433333333333333,0.0239211668240122,"N",5,NA,"CERFOL",5,0.053489355119604
@@ -1813,7 +2586,10 @@
 2016,"Tatoosh Island","seastar.small",0,0,"N",5,NA,"STARREC",5,0
 2016,"Tatoosh Island","urchin",0.536666666666667,0.207859461068183,"N",5,NA,"STRDRO",5,0.464787884714929
 2016,"Tatoosh Island","urchin",0.373333333333333,0.146306375649032,"N",5,NA,"STRPUR",5,0.327151001492855
+<<<<<<< HEAD
+=======
 2016,"Tatoosh Island",NA,0,0,"N",5,NA,"STYFOR",5,0
+>>>>>>> master
 2016,"Tatoosh Island","tunicate",0.00666666666666667,0.00408248290463863,"N",5,NA,"STYMON",5,0.00912870929175277
 2016,"Tatoosh Island","gastropod",0,0,"N",5,NA,"TEGSPP",5,0
 2016,"Tatoosh Island","nudibranch",0,0,"N",5,NA,"TRICAT",5,0
@@ -1828,7 +2604,10 @@
 2016,"Tatoosh Island","anenome",0,0,"N",10,NA,"ANTELE",4,0
 2016,"Tatoosh Island","anenome",0,0,"N",10,NA,"ANTXAN",4,0
 2016,"Tatoosh Island",NA,0.0458333333333333,0.0356000156054897,"N",10,NA,"BALNUB",4,0.0712000312109794
+<<<<<<< HEAD
+=======
 2016,"Tatoosh Island",NA,0,0,"N",10,NA,"CADLUT",4,0
+>>>>>>> master
 2016,"Tatoosh Island","crab",0,0,"N",10,NA,"CANORE",4,0
 2016,"Tatoosh Island","crab",0,0,"N",10,NA,"CANSPP",4,0
 2016,"Tatoosh Island","gastropod",0.0333333333333333,0.0155902391115581,"N",10,NA,"CERFOL",4,0.0311804782231162
@@ -1885,7 +2664,10 @@
 2016,"Tatoosh Island","seastar.small",0,0,"N",10,NA,"STARREC",4,0
 2016,"Tatoosh Island","urchin",0.170833333333333,0.0546982462986534,"N",10,NA,"STRDRO",4,0.109396492597307
 2016,"Tatoosh Island","urchin",0.825,0.166145016978141,"N",10,NA,"STRPUR",4,0.332290033956281
+<<<<<<< HEAD
+=======
 2016,"Tatoosh Island",NA,0,0,"N",10,NA,"STYFOR",4,0
+>>>>>>> master
 2016,"Tatoosh Island","tunicate",0.00416666666666667,0.00416666666666667,"N",10,NA,"STYMON",4,0.00833333333333333
 2016,"Tatoosh Island","gastropod",0,0,"N",10,NA,"TEGSPP",4,0
 2016,"Tatoosh Island","nudibranch",0,0,"N",10,NA,"TRICAT",4,0
@@ -1900,7 +2682,10 @@
 2017,"Cape Alava","anenome",0,0,"E",5,NA,"ANTELE",4,0
 2017,"Cape Alava","anenome",0.00416666666666667,0.00416666666666667,"E",5,NA,"ANTXAN",4,0.00833333333333333
 2017,"Cape Alava",NA,0.0333333333333333,0.0280541803843391,"E",5,NA,"BALNUB",4,0.0561083607686782
+<<<<<<< HEAD
+=======
 2017,"Cape Alava",NA,0,0,"E",5,NA,"CADLUT",4,0
+>>>>>>> master
 2017,"Cape Alava","crab",0,0,"E",5,NA,"CANORE",4,0
 2017,"Cape Alava","crab",0,0,"E",5,NA,"CANSPP",4,0
 2017,"Cape Alava","gastropod",0.0125,0.00797855923130282,"E",5,NA,"CERFOL",4,0.0159571184626056
@@ -1957,7 +2742,10 @@
 2017,"Cape Alava","seastar.small",0.00833333333333333,0.00833333333333333,"E",5,NA,"STARREC",4,0.0166666666666667
 2017,"Cape Alava","urchin",0.00416666666666667,0.00416666666666667,"E",5,NA,"STRDRO",4,0.00833333333333333
 2017,"Cape Alava","urchin",0.00416666666666667,0.00416666666666667,"E",5,NA,"STRPUR",4,0.00833333333333333
+<<<<<<< HEAD
+=======
 2017,"Cape Alava",NA,0,0,"E",5,NA,"STYFOR",4,0
+>>>>>>> master
 2017,"Cape Alava","tunicate",0.0833333333333333,0.0245326690731329,"E",5,NA,"STYMON",4,0.0490653381462658
 2017,"Cape Alava","gastropod",0,0,"E",5,NA,"TEGSPP",4,0
 2017,"Cape Alava","nudibranch",0,0,"E",5,NA,"TRICAT",4,0
@@ -1972,7 +2760,10 @@
 2017,"Cape Alava","anenome",0,0,"E",10,NA,"ANTELE",3,0
 2017,"Cape Alava","anenome",0.00555555555555556,0.00555555555555556,"E",10,NA,"ANTXAN",3,0.00962250448649376
 2017,"Cape Alava",NA,0.411111111111111,0.206902493883734,"E",10,NA,"BALNUB",3,0.358365631619336
+<<<<<<< HEAD
+=======
 2017,"Cape Alava",NA,0,0,"E",10,NA,"CADLUT",3,0
+>>>>>>> master
 2017,"Cape Alava","crab",0,0,"E",10,NA,"CANORE",3,0
 2017,"Cape Alava","crab",0,0,"E",10,NA,"CANSPP",3,0
 2017,"Cape Alava","gastropod",0.0833333333333333,0.0254587538608658,"E",10,NA,"CERFOL",3,0.0440958551844098
@@ -2029,7 +2820,10 @@
 2017,"Cape Alava","seastar.small",0.0333333333333333,0.00962250448649377,"E",10,NA,"STARREC",3,0.0166666666666667
 2017,"Cape Alava","urchin",0.00555555555555556,0.00555555555555556,"E",10,NA,"STRDRO",3,0.00962250448649376
 2017,"Cape Alava","urchin",0,0,"E",10,NA,"STRPUR",3,0
+<<<<<<< HEAD
+=======
 2017,"Cape Alava",NA,0,0,"E",10,NA,"STYFOR",3,0
+>>>>>>> master
 2017,"Cape Alava","tunicate",0.222222222222222,0.056382730917179,"E",10,NA,"STYMON",3,0.0976577546180386
 2017,"Cape Alava","gastropod",0,0,"E",10,NA,"TEGSPP",3,0
 2017,"Cape Alava","nudibranch",0,0,"E",10,NA,"TRICAT",3,0
@@ -2044,7 +2838,10 @@
 2017,"Cape Alava","anenome",0,0,"W",5,NA,"ANTELE",4,0
 2017,"Cape Alava","anenome",0,0,"W",5,NA,"ANTXAN",4,0
 2017,"Cape Alava",NA,0,0,"W",5,NA,"BALNUB",4,0
+<<<<<<< HEAD
+=======
 2017,"Cape Alava",NA,0,0,"W",5,NA,"CADLUT",4,0
+>>>>>>> master
 2017,"Cape Alava","crab",0.00416666666666667,0.00416666666666667,"W",5,NA,"CANORE",4,0.00833333333333333
 2017,"Cape Alava","crab",0,0,"W",5,NA,"CANSPP",4,0
 2017,"Cape Alava","gastropod",0.0416666666666667,0.0144337567297406,"W",5,NA,"CERFOL",4,0.0288675134594813
@@ -2101,7 +2898,10 @@
 2017,"Cape Alava","seastar.small",0,0,"W",5,NA,"STARREC",4,0
 2017,"Cape Alava","urchin",0,0,"W",5,NA,"STRDRO",4,0
 2017,"Cape Alava","urchin",0.0125,0.00797855923130282,"W",5,NA,"STRPUR",4,0.0159571184626056
+<<<<<<< HEAD
+=======
 2017,"Cape Alava",NA,0,0,"W",5,NA,"STYFOR",4,0
+>>>>>>> master
 2017,"Cape Alava","tunicate",0.0791666666666667,0.0266796843226369,"W",5,NA,"STYMON",4,0.0533593686452737
 2017,"Cape Alava","gastropod",0,0,"W",5,NA,"TEGSPP",4,0
 2017,"Cape Alava","nudibranch",0.00416666666666667,0.00416666666666667,"W",5,NA,"TRICAT",4,0.00833333333333333
@@ -2110,6 +2910,8 @@
 2017,"Cape Alava","anenome",0,0,"W",5,NA,"URTLOF",4,0
 2017,"Cape Alava","anenome",0.00833333333333333,0.00833333333333333,"W",5,NA,"URTPIS",4,0.0166666666666667
 2017,"Cape Alava","anenome",0.0208333333333333,0.0125,"W",5,NA,"URTSPP",4,0.025
+<<<<<<< HEAD
+=======
 2017,"Cape Alava","nudibranch",0,0,"W",10,NA,"ACAHUD",3,0
 2017,"Cape Alava","nudibranch",0,0,"W",10,NA,"ACANAN",3,0
 2017,"Cape Alava","gastropod",0,0,"W",10,NA,"ACMMIT",3,0
@@ -2182,13 +2984,17 @@
 2017,"Cape Alava","anenome",0,0,"W",10,NA,"URTLOF",3,0
 2017,"Cape Alava","anenome",0,0,"W",10,NA,"URTPIS",3,0
 2017,"Cape Alava","anenome",0.0111111111111111,0.00555555555555556,"W",10,NA,"URTSPP",3,0.00962250448649376
+>>>>>>> master
 2017,"Cape Johnson","nudibranch",0,0,"N",5,NA,"ACAHUD",4,0
 2017,"Cape Johnson","nudibranch",0,0,"N",5,NA,"ACANAN",4,0
 2017,"Cape Johnson","gastropod",0,0,"N",5,NA,"ACMMIT",4,0
 2017,"Cape Johnson","anenome",0,0,"N",5,NA,"ANTELE",4,0
 2017,"Cape Johnson","anenome",0.0125,0.00797855923130282,"N",5,NA,"ANTXAN",4,0.0159571184626056
 2017,"Cape Johnson",NA,0,0,"N",5,NA,"BALNUB",4,0
+<<<<<<< HEAD
+=======
 2017,"Cape Johnson",NA,0,0,"N",5,NA,"CADLUT",4,0
+>>>>>>> master
 2017,"Cape Johnson","crab",0,0,"N",5,NA,"CANORE",4,0
 2017,"Cape Johnson","crab",0,0,"N",5,NA,"CANSPP",4,0
 2017,"Cape Johnson","gastropod",0.00416666666666667,0.00416666666666667,"N",5,NA,"CERFOL",4,0.00833333333333333
@@ -2245,7 +3051,10 @@
 2017,"Cape Johnson","seastar.small",0.00416666666666667,0.00416666666666667,"N",5,NA,"STARREC",4,0.00833333333333333
 2017,"Cape Johnson","urchin",0,0,"N",5,NA,"STRDRO",4,0
 2017,"Cape Johnson","urchin",0,0,"N",5,NA,"STRPUR",4,0
+<<<<<<< HEAD
+=======
 2017,"Cape Johnson",NA,0,0,"N",5,NA,"STYFOR",4,0
+>>>>>>> master
 2017,"Cape Johnson","tunicate",0.0291666666666667,0.00416666666666667,"N",5,NA,"STYMON",4,0.00833333333333333
 2017,"Cape Johnson","gastropod",0,0,"N",5,NA,"TEGSPP",4,0
 2017,"Cape Johnson","nudibranch",0,0,"N",5,NA,"TRICAT",4,0
@@ -2260,7 +3069,10 @@
 2017,"Cape Johnson","anenome",0,0,"N",10,NA,"ANTELE",3,0
 2017,"Cape Johnson","anenome",0,0,"N",10,NA,"ANTXAN",3,0
 2017,"Cape Johnson",NA,0.05,0.05,"N",10,NA,"BALNUB",3,0.0866025403784439
+<<<<<<< HEAD
+=======
 2017,"Cape Johnson",NA,0,0,"N",10,NA,"CADLUT",3,0
+>>>>>>> master
 2017,"Cape Johnson","crab",0,0,"N",10,NA,"CANORE",3,0
 2017,"Cape Johnson","crab",0,0,"N",10,NA,"CANSPP",3,0
 2017,"Cape Johnson","gastropod",0.105555555555556,0.0728604280478,"N",10,NA,"CERFOL",3,0.126197963240006
@@ -2317,7 +3129,10 @@
 2017,"Cape Johnson","seastar.small",0.0444444444444444,0.0293972367896066,"N",10,NA,"STARREC",3,0.0509175077217316
 2017,"Cape Johnson","urchin",0,0,"N",10,NA,"STRDRO",3,0
 2017,"Cape Johnson","urchin",0,0,"N",10,NA,"STRPUR",3,0
+<<<<<<< HEAD
+=======
 2017,"Cape Johnson",NA,0,0,"N",10,NA,"STYFOR",3,0
+>>>>>>> master
 2017,"Cape Johnson","tunicate",0.738888888888889,0.2341915434262,"N",10,NA,"STYMON",3,0.405631651917151
 2017,"Cape Johnson","gastropod",0,0,"N",10,NA,"TEGSPP",3,0
 2017,"Cape Johnson","nudibranch",0,0,"N",10,NA,"TRICAT",3,0
@@ -2332,7 +3147,10 @@
 2017,"Cape Johnson","anenome",0,0,"S",5,NA,"ANTELE",3,0
 2017,"Cape Johnson","anenome",0,0,"S",5,NA,"ANTXAN",3,0
 2017,"Cape Johnson",NA,0,0,"S",5,NA,"BALNUB",3,0
+<<<<<<< HEAD
+=======
 2017,"Cape Johnson",NA,0,0,"S",5,NA,"CADLUT",3,0
+>>>>>>> master
 2017,"Cape Johnson","crab",0,0,"S",5,NA,"CANORE",3,0
 2017,"Cape Johnson","crab",0,0,"S",5,NA,"CANSPP",3,0
 2017,"Cape Johnson","gastropod",0.00555555555555556,0.00555555555555556,"S",5,NA,"CERFOL",3,0.00962250448649376
@@ -2389,7 +3207,10 @@
 2017,"Cape Johnson","seastar.small",0.00555555555555556,0.00555555555555556,"S",5,NA,"STARREC",3,0.00962250448649376
 2017,"Cape Johnson","urchin",0,0,"S",5,NA,"STRDRO",3,0
 2017,"Cape Johnson","urchin",0,0,"S",5,NA,"STRPUR",3,0
+<<<<<<< HEAD
+=======
 2017,"Cape Johnson",NA,0,0,"S",5,NA,"STYFOR",3,0
+>>>>>>> master
 2017,"Cape Johnson","tunicate",0.0666666666666667,0.0254587538608658,"S",5,NA,"STYMON",3,0.0440958551844098
 2017,"Cape Johnson","gastropod",0,0,"S",5,NA,"TEGSPP",3,0
 2017,"Cape Johnson","nudibranch",0,0,"S",5,NA,"TRICAT",3,0
@@ -2404,7 +3225,10 @@
 2017,"Cape Johnson","anenome",0,0,"S",10,NA,"ANTELE",3,0
 2017,"Cape Johnson","anenome",0.0111111111111111,0.0111111111111111,"S",10,NA,"ANTXAN",3,0.0192450089729875
 2017,"Cape Johnson",NA,0.0333333333333333,0.0254587538608658,"S",10,NA,"BALNUB",3,0.0440958551844098
+<<<<<<< HEAD
+=======
 2017,"Cape Johnson",NA,0,0,"S",10,NA,"CADLUT",3,0
+>>>>>>> master
 2017,"Cape Johnson","crab",0,0,"S",10,NA,"CANORE",3,0
 2017,"Cape Johnson","crab",0,0,"S",10,NA,"CANSPP",3,0
 2017,"Cape Johnson","gastropod",0.0277777777777778,0.00555555555555556,"S",10,NA,"CERFOL",3,0.00962250448649376
@@ -2461,7 +3285,10 @@
 2017,"Cape Johnson","seastar.small",0.0444444444444444,0.0222222222222222,"S",10,NA,"STARREC",3,0.038490017945975
 2017,"Cape Johnson","urchin",0,0,"S",10,NA,"STRDRO",3,0
 2017,"Cape Johnson","urchin",0,0,"S",10,NA,"STRPUR",3,0
+<<<<<<< HEAD
+=======
 2017,"Cape Johnson",NA,0,0,"S",10,NA,"STYFOR",3,0
+>>>>>>> master
 2017,"Cape Johnson","tunicate",0.388888888888889,0.0709285851933539,"S",10,NA,"STYMON",3,0.122851913263867
 2017,"Cape Johnson","gastropod",0,0,"S",10,NA,"TEGSPP",3,0
 2017,"Cape Johnson","nudibranch",0,0,"S",10,NA,"TRICAT",3,0
@@ -2476,7 +3303,10 @@
 2017,"Destruction Island","anenome",0,0,"N",5,NA,"ANTELE",3,0
 2017,"Destruction Island","anenome",0.0666666666666667,0.0585314097380708,"N",5,NA,"ANTXAN",3,0.10137937550497
 2017,"Destruction Island",NA,0,0,"N",5,NA,"BALNUB",3,0
+<<<<<<< HEAD
+=======
 2017,"Destruction Island",NA,0,0,"N",5,NA,"CADLUT",3,0
+>>>>>>> master
 2017,"Destruction Island","crab",0,0,"N",5,NA,"CANORE",3,0
 2017,"Destruction Island","crab",0,0,"N",5,NA,"CANSPP",3,0
 2017,"Destruction Island","gastropod",0.2,0.0509175077217316,"N",5,NA,"CERFOL",3,0.0881917103688197
@@ -2533,7 +3363,10 @@
 2017,"Destruction Island","seastar.small",0,0,"N",5,NA,"STARREC",3,0
 2017,"Destruction Island","urchin",0.00555555555555556,0.00555555555555556,"N",5,NA,"STRDRO",3,0.00962250448649376
 2017,"Destruction Island","urchin",0.0444444444444444,0.0364302140239,"N",5,NA,"STRPUR",3,0.063098981620003
+<<<<<<< HEAD
+=======
 2017,"Destruction Island",NA,0,0,"N",5,NA,"STYFOR",3,0
+>>>>>>> master
 2017,"Destruction Island","tunicate",0.166666666666667,0.0838870492807861,"N",5,NA,"STYMON",3,0.145296631451356
 2017,"Destruction Island","gastropod",0,0,"N",5,NA,"TEGSPP",3,0
 2017,"Destruction Island","nudibranch",0,0,"N",5,NA,"TRICAT",3,0
@@ -2548,7 +3381,10 @@
 2017,"Destruction Island","anenome",0,0,"N",10,NA,"ANTELE",3,0
 2017,"Destruction Island","anenome",0.0111111111111111,0.00555555555555556,"N",10,NA,"ANTXAN",3,0.00962250448649376
 2017,"Destruction Island",NA,0.0666666666666667,0.038490017945975,"N",10,NA,"BALNUB",3,0.0666666666666667
+<<<<<<< HEAD
+=======
 2017,"Destruction Island",NA,0,0,"N",10,NA,"CADLUT",3,0
+>>>>>>> master
 2017,"Destruction Island","crab",0.0222222222222222,0.0222222222222222,"N",10,NA,"CANORE",3,0.038490017945975
 2017,"Destruction Island","crab",0,0,"N",10,NA,"CANSPP",3,0
 2017,"Destruction Island","gastropod",0.477777777777778,0.114799879554288,"N",10,NA,"CERFOL",3,0.198839224090814
@@ -2605,7 +3441,10 @@
 2017,"Destruction Island","seastar.small",0.183333333333333,0.158989866902824,"N",10,NA,"STARREC",3,0.275378527364305
 2017,"Destruction Island","urchin",0,0,"N",10,NA,"STRDRO",3,0
 2017,"Destruction Island","urchin",0.0166666666666667,0.00962250448649376,"N",10,NA,"STRPUR",3,0.0166666666666667
+<<<<<<< HEAD
+=======
 2017,"Destruction Island",NA,0,0,"N",10,NA,"STYFOR",3,0
+>>>>>>> master
 2017,"Destruction Island","tunicate",0.222222222222222,0.0111111111111111,"N",10,NA,"STYMON",3,0.0192450089729875
 2017,"Destruction Island","gastropod",0,0,"N",10,NA,"TEGSPP",3,0
 2017,"Destruction Island","nudibranch",0,0,"N",10,NA,"TRICAT",3,0
@@ -2620,7 +3459,10 @@
 2017,"Destruction Island","anenome",0,0,"S",5,NA,"ANTELE",3,0
 2017,"Destruction Island","anenome",0.0111111111111111,0.0111111111111111,"S",5,NA,"ANTXAN",3,0.0192450089729875
 2017,"Destruction Island",NA,0,0,"S",5,NA,"BALNUB",3,0
+<<<<<<< HEAD
+=======
 2017,"Destruction Island",NA,0,0,"S",5,NA,"CADLUT",3,0
+>>>>>>> master
 2017,"Destruction Island","crab",0,0,"S",5,NA,"CANORE",3,0
 2017,"Destruction Island","crab",0,0,"S",5,NA,"CANSPP",3,0
 2017,"Destruction Island","gastropod",0.413888888888889,0.214645127743906,"S",5,NA,"CERFOL",3,0.371776266849556
@@ -2677,7 +3519,10 @@
 2017,"Destruction Island","seastar.small",0,0,"S",5,NA,"STARREC",3,0
 2017,"Destruction Island","urchin",0.0611111111111111,0.0309320242379446,"S",5,NA,"STRDRO",3,0.053575837561072
 2017,"Destruction Island","urchin",0.0166666666666667,0.0166666666666667,"S",5,NA,"STRPUR",3,0.0288675134594813
+<<<<<<< HEAD
+=======
 2017,"Destruction Island",NA,0,0,"S",5,NA,"STYFOR",3,0
+>>>>>>> master
 2017,"Destruction Island","tunicate",0.369444444444444,0.0674147838861755,"S",5,NA,"STYMON",3,0.116765830872132
 2017,"Destruction Island","gastropod",0,0,"S",5,NA,"TEGSPP",3,0
 2017,"Destruction Island","nudibranch",0.00555555555555556,0.00555555555555556,"S",5,NA,"TRICAT",3,0.00962250448649376
@@ -2692,7 +3537,10 @@
 2017,"Destruction Island","anenome",0,0,"S",10,NA,"ANTELE",3,0
 2017,"Destruction Island","anenome",0,0,"S",10,NA,"ANTXAN",3,0
 2017,"Destruction Island",NA,0.00555555555555556,0.00555555555555556,"S",10,NA,"BALNUB",3,0.00962250448649376
+<<<<<<< HEAD
+=======
 2017,"Destruction Island",NA,0,0,"S",10,NA,"CADLUT",3,0
+>>>>>>> master
 2017,"Destruction Island","crab",0.00555555555555556,0.00555555555555556,"S",10,NA,"CANORE",3,0.00962250448649376
 2017,"Destruction Island","crab",0,0,"S",10,NA,"CANSPP",3,0
 2017,"Destruction Island","gastropod",0.188888888888889,0.0555555555555556,"S",10,NA,"CERFOL",3,0.0962250448649376
@@ -2749,7 +3597,10 @@
 2017,"Destruction Island","seastar.small",0,0,"S",10,NA,"STARREC",3,0
 2017,"Destruction Island","urchin",0,0,"S",10,NA,"STRDRO",3,0
 2017,"Destruction Island","urchin",0.00555555555555556,0.00555555555555556,"S",10,NA,"STRPUR",3,0.00962250448649376
+<<<<<<< HEAD
+=======
 2017,"Destruction Island",NA,0,0,"S",10,NA,"STYFOR",3,0
+>>>>>>> master
 2017,"Destruction Island","tunicate",0.161111111111111,0.108155124077399,"S",10,NA,"STYMON",3,0.187330170000971
 2017,"Destruction Island","gastropod",0,0,"S",10,NA,"TEGSPP",3,0
 2017,"Destruction Island","nudibranch",0,0,"S",10,NA,"TRICAT",3,0
@@ -2764,7 +3615,10 @@
 2017,"Neah Bay","anenome",0,0,"N",5,NA,"ANTELE",3,0
 2017,"Neah Bay","anenome",0,0,"N",5,NA,"ANTXAN",3,0
 2017,"Neah Bay",NA,0,0,"N",5,NA,"BALNUB",3,0
+<<<<<<< HEAD
+=======
 2017,"Neah Bay",NA,0,0,"N",5,NA,"CADLUT",3,0
+>>>>>>> master
 2017,"Neah Bay","crab",0,0,"N",5,NA,"CANORE",3,0
 2017,"Neah Bay","crab",0,0,"N",5,NA,"CANSPP",3,0
 2017,"Neah Bay","gastropod",0.0222222222222222,0.0111111111111111,"N",5,NA,"CERFOL",3,0.0192450089729875
@@ -2821,7 +3675,10 @@
 2017,"Neah Bay","seastar.small",0,0,"N",5,NA,"STARREC",3,0
 2017,"Neah Bay","urchin",0,0,"N",5,NA,"STRDRO",3,0
 2017,"Neah Bay","urchin",0.0111111111111111,0.00555555555555556,"N",5,NA,"STRPUR",3,0.00962250448649376
+<<<<<<< HEAD
+=======
 2017,"Neah Bay",NA,0,0,"N",5,NA,"STYFOR",3,0
+>>>>>>> master
 2017,"Neah Bay","tunicate",0,0,"N",5,NA,"STYMON",3,0
 2017,"Neah Bay","gastropod",0,0,"N",5,NA,"TEGSPP",3,0
 2017,"Neah Bay","nudibranch",0.00555555555555556,0.00555555555555556,"N",5,NA,"TRICAT",3,0.00962250448649376
@@ -2830,6 +3687,78 @@
 2017,"Neah Bay","anenome",0,0,"N",5,NA,"URTLOF",3,0
 2017,"Neah Bay","anenome",0.00555555555555556,0.00555555555555556,"N",5,NA,"URTPIS",3,0.00962250448649376
 2017,"Neah Bay","anenome",0.00555555555555556,0.00555555555555556,"N",5,NA,"URTSPP",3,0.00962250448649376
+<<<<<<< HEAD
+2017,"Neah Bay","nudibranch",0,0,"N",10,NA,"ACAHUD",2,0
+2017,"Neah Bay","nudibranch",0,0,"N",10,NA,"ACANAN",2,0
+2017,"Neah Bay","gastropod",0.00833333333333333,0.00833333333333333,"N",10,NA,"ACMMIT",2,0.0117851130197758
+2017,"Neah Bay","anenome",0,0,"N",10,NA,"ANTELE",2,0
+2017,"Neah Bay","anenome",0,0,"N",10,NA,"ANTXAN",2,0
+2017,"Neah Bay",NA,0.00833333333333333,0.00833333333333333,"N",10,NA,"BALNUB",2,0.0117851130197758
+2017,"Neah Bay","crab",0.00833333333333333,0.00833333333333333,"N",10,NA,"CANORE",2,0.0117851130197758
+2017,"Neah Bay","crab",0,0,"N",10,NA,"CANSPP",2,0
+2017,"Neah Bay","gastropod",0.00833333333333333,0.00833333333333333,"N",10,NA,"CERFOL",2,0.0117851130197758
+2017,"Neah Bay",NA,0.0333333333333333,0,"N",10,NA,"CHITON",2,0
+2017,"Neah Bay","bivalve",0,0,"N",10,NA,"CLAMSP",2,0
+2017,"Neah Bay","sponge",0,0,"N",10,NA,"CRAARB",2,0
+2017,"Neah Bay","bivalve",0.00833333333333333,0.00833333333333333,"N",10,NA,"CRAGIG",2,0.0117851130197758
+2017,"Neah Bay","seastar",0,0,"N",10,NA,"CROPAP",2,0
+2017,"Neah Bay","crab",0,0,"N",10,NA,"CRYDEC",2,0
+2017,"Neah Bay","crab",0,0,"N",10,NA,"CRYSIT",2,0
+2017,"Neah Bay","chiton",0,0,"N",10,NA,"CRYSTE",2,0
+2017,"Neah Bay","cucumber",0.233333333333333,0.166666666666667,"N",10,NA,"CUCMIN",2,0.235702260395516
+2017,"Neah Bay","seastar",0.025,0.00833333333333333,"N",10,NA,"DERIMB",2,0.0117851130197758
+2017,"Neah Bay","nudibranch",0,0,"N",10,NA,"DIASAN",2,0
+2017,"Neah Bay","gastropod",0.00833333333333333,0.00833333333333333,"N",10,NA,"DIOASP",2,0.0117851130197758
+2017,"Neah Bay","nudibranch",0.00833333333333333,0.00833333333333333,"N",10,NA,"DIRALB",2,0.0117851130197758
+2017,"Neah Bay","nudibranch",0,0,"N",10,NA,"DORODH",2,0
+2017,"Neah Bay","octopus",0,0,"N",10,NA,"ENTDOF",2,0
+2017,"Neah Bay","anenome",0,0,"N",10,NA,"EPIPRO",2,0
+2017,"Neah Bay","cucumber",0.025,0.025,"N",10,NA,"EUPQUI",2,0.0353553390593274
+2017,"Neah Bay","seastar",0.00833333333333333,0.00833333333333333,"N",10,NA,"EVATRO",2,0.0117851130197758
+2017,"Neah Bay","gastropod",0,0,"N",10,NA,"FUSORE",2,0
+2017,"Neah Bay","gastropod",0,0,"N",10,NA,"HALKAM",2,0
+2017,"Neah Bay","seastar",0.25,0.05,"N",10,NA,"HENLEV",2,0.0707106781186547
+2017,"Neah Bay","nudibranch",0,0,"N",10,NA,"HERCRA",2,0
+2017,"Neah Bay","nudibranch",0,0,"N",10,NA,"JANFUS",2,0
+2017,"Neah Bay","seastar.small",0,0,"N",10,NA,"LEPSPP",2,0
+2017,"Neah Bay","nudibranch",0,0,"N",10,NA,"LIMCOC",2,0
+2017,"Neah Bay","gastropod",0,0,"N",10,NA,"LIRDIR",2,0
+2017,"Neah Bay","crab",0,0,"N",10,NA,"LOPMAN",2,0
+2017,"Neah Bay","seastar",0.025,0.00833333333333333,"N",10,NA,"MEDAEQ",2,0.0117851130197758
+2017,"Neah Bay","urchin",0.233333333333333,0.0666666666666667,"N",10,NA,"MESFRA",2,0.0942809041582063
+2017,"Neah Bay","anenome",0,0,"N",10,NA,"METGIG",2,0
+2017,"Neah Bay","anenome",0,0,"N",10,NA,"METSPP",2,0
+2017,"Neah Bay","crab",0,0,"N",10,NA,"MIMFOL",2,0
+2017,"Neah Bay","bivalve",0,0,"N",10,NA,"MYTCAL",2,0
+2017,"Neah Bay","gastropod",0,0,"N",10,NA,"NUCLAM",2,0
+2017,"Neah Bay","nudibranch",0,0,"N",10,NA,"NUDIBR",2,0
+2017,"Neah Bay","seastar",0,0,"N",10,NA,"ORTKOE",2,0
+2017,"Neah Bay",NA,0.00833333333333333,0.00833333333333333,"N",10,NA,"PAGSPP",2,0.0117851130197758
+2017,"Neah Bay","cucumber",0.0166666666666667,0,"N",10,NA,"PARCAL",2,0
+2017,"Neah Bay","seastar",0,0,"N",10,NA,"PATMIN",2,0
+2017,"Neah Bay","nudibranch",0,0,"N",10,NA,"PELNOB",2,0
+2017,"Neah Bay","seastar",0,0,"N",10,NA,"PISBRE",2,0
+2017,"Neah Bay","seastar",0,0,"N",10,NA,"PISGIG",2,0
+2017,"Neah Bay","seastar",0,0,"N",10,NA,"PISOCH",2,0
+2017,"Neah Bay","bivalve",0,0,"N",10,NA,"PODSPP",2,0
+2017,"Neah Bay","crab",0,0,"N",10,NA,"PUGGRA",2,0
+2017,"Neah Bay","crab",0,0,"N",10,NA,"PUGPRO",2,0
+2017,"Neah Bay","seastar",0,0,"N",10,NA,"PYCHEL",2,0
+2017,"Neah Bay","bivalve",0,0,"N",10,NA,"SCALLOP",2,0
+2017,"Neah Bay","crab",0.108333333333333,0.0416666666666667,"N",10,NA,"SCYDEC",2,0.058925565098879
+2017,"Neah Bay","seastar",0,0,"N",10,NA,"SOLSTI",2,0
+2017,"Neah Bay","seastar.small",0,0,"N",10,NA,"STARREC",2,0
+2017,"Neah Bay","urchin",0,0,"N",10,NA,"STRDRO",2,0
+2017,"Neah Bay","urchin",0.183333333333333,0.0166666666666667,"N",10,NA,"STRPUR",2,0.0235702260395516
+2017,"Neah Bay","tunicate",0.025,0.00833333333333333,"N",10,NA,"STYMON",2,0.0117851130197758
+2017,"Neah Bay","gastropod",0,0,"N",10,NA,"TEGSPP",2,0
+2017,"Neah Bay","nudibranch",0,0,"N",10,NA,"TRICAT",2,0
+2017,"Neah Bay",NA,0,0,"N",10,NA,"UNIDSP",2,0
+2017,"Neah Bay","anenome",0,0,"N",10,NA,"URTCRA",2,0
+2017,"Neah Bay","anenome",0,0,"N",10,NA,"URTLOF",2,0
+2017,"Neah Bay","anenome",0,0,"N",10,NA,"URTPIS",2,0
+2017,"Neah Bay","anenome",0.075,0.00833333333333333,"N",10,NA,"URTSPP",2,0.0117851130197758
+=======
 2017,"Neah Bay","nudibranch",0,0,"N",10,NA,"ACAHUD",3,0
 2017,"Neah Bay","nudibranch",0,0,"N",10,NA,"ACANAN",3,0
 2017,"Neah Bay","gastropod",0.00555555555555556,0.00555555555555556,"N",10,NA,"ACMMIT",3,0.00962250448649376
@@ -2902,13 +3831,17 @@
 2017,"Neah Bay","anenome",0,0,"N",10,NA,"URTLOF",3,0
 2017,"Neah Bay","anenome",0,0,"N",10,NA,"URTPIS",3,0
 2017,"Neah Bay","anenome",0.0611111111111111,0.0146986183948033,"N",10,NA,"URTSPP",3,0.0254587538608658
+>>>>>>> master
 2017,"Neah Bay","nudibranch",0,0,"S",5,NA,"ACAHUD",3,0
 2017,"Neah Bay","nudibranch",0,0,"S",5,NA,"ACANAN",3,0
 2017,"Neah Bay","gastropod",0.0222222222222222,0.0146986183948033,"S",5,NA,"ACMMIT",3,0.0254587538608658
 2017,"Neah Bay","anenome",0,0,"S",5,NA,"ANTELE",3,0
 2017,"Neah Bay","anenome",0,0,"S",5,NA,"ANTXAN",3,0
 2017,"Neah Bay",NA,0,0,"S",5,NA,"BALNUB",3,0
+<<<<<<< HEAD
+=======
 2017,"Neah Bay",NA,0,0,"S",5,NA,"CADLUT",3,0
+>>>>>>> master
 2017,"Neah Bay","crab",0,0,"S",5,NA,"CANORE",3,0
 2017,"Neah Bay","crab",0,0,"S",5,NA,"CANSPP",3,0
 2017,"Neah Bay","gastropod",0.0277777777777778,0.0111111111111111,"S",5,NA,"CERFOL",3,0.0192450089729875
@@ -2965,7 +3898,10 @@
 2017,"Neah Bay","seastar.small",0.0111111111111111,0.00555555555555556,"S",5,NA,"STARREC",3,0.00962250448649376
 2017,"Neah Bay","urchin",0,0,"S",5,NA,"STRDRO",3,0
 2017,"Neah Bay","urchin",0.177777777777778,0.117588947158426,"S",5,NA,"STRPUR",3,0.203670030886926
+<<<<<<< HEAD
+=======
 2017,"Neah Bay",NA,0,0,"S",5,NA,"STYFOR",3,0
+>>>>>>> master
 2017,"Neah Bay","tunicate",0.00555555555555556,0.00555555555555556,"S",5,NA,"STYMON",3,0.00962250448649376
 2017,"Neah Bay","gastropod",0,0,"S",5,NA,"TEGSPP",3,0
 2017,"Neah Bay","nudibranch",0.0166666666666667,0.0166666666666667,"S",5,NA,"TRICAT",3,0.0288675134594813
@@ -2980,7 +3916,10 @@
 2017,"Neah Bay","anenome",0,0,"S",10,NA,"ANTELE",3,0
 2017,"Neah Bay","anenome",0,0,"S",10,NA,"ANTXAN",3,0
 2017,"Neah Bay",NA,0,0,"S",10,NA,"BALNUB",3,0
+<<<<<<< HEAD
+=======
 2017,"Neah Bay",NA,0,0,"S",10,NA,"CADLUT",3,0
+>>>>>>> master
 2017,"Neah Bay","crab",0.0166666666666667,0.00962250448649376,"S",10,NA,"CANORE",3,0.0166666666666667
 2017,"Neah Bay","crab",0,0,"S",10,NA,"CANSPP",3,0
 2017,"Neah Bay","gastropod",0.0388888888888889,0.00555555555555556,"S",10,NA,"CERFOL",3,0.00962250448649376
@@ -3037,7 +3976,10 @@
 2017,"Neah Bay","seastar.small",0,0,"S",10,NA,"STARREC",3,0
 2017,"Neah Bay","urchin",0.0111111111111111,0.00555555555555556,"S",10,NA,"STRDRO",3,0.00962250448649376
 2017,"Neah Bay","urchin",0.2,0.063098981620003,"S",10,NA,"STRPUR",3,0.1092906420717
+<<<<<<< HEAD
+=======
 2017,"Neah Bay",NA,0,0,"S",10,NA,"STYFOR",3,0
+>>>>>>> master
 2017,"Neah Bay","tunicate",0,0,"S",10,NA,"STYMON",3,0
 2017,"Neah Bay","gastropod",0.00555555555555556,0.00555555555555556,"S",10,NA,"TEGSPP",3,0.00962250448649376
 2017,"Neah Bay","nudibranch",0,0,"S",10,NA,"TRICAT",3,0
@@ -3052,7 +3994,10 @@
 2017,"Tatoosh Island","anenome",0,0,"N",5,NA,"ANTELE",2,0
 2017,"Tatoosh Island","anenome",0.15,0.133333333333333,"N",5,NA,"ANTXAN",2,0.188561808316413
 2017,"Tatoosh Island",NA,12.7928715075774,1.13731595202183,"N",5,NA,"BALNUB",2,1.60840764405255
+<<<<<<< HEAD
+=======
 2017,"Tatoosh Island",NA,0,0,"N",5,NA,"CADLUT",2,0
+>>>>>>> master
 2017,"Tatoosh Island","crab",0,0,"N",5,NA,"CANORE",2,0
 2017,"Tatoosh Island","crab",0.00833333333333333,0.00833333333333333,"N",5,NA,"CANSPP",2,0.0117851130197758
 2017,"Tatoosh Island","gastropod",0.175,0.075,"N",5,NA,"CERFOL",2,0.106066017177982
@@ -3109,7 +4054,10 @@
 2017,"Tatoosh Island","seastar.small",0,0,"N",5,NA,"STARREC",2,0
 2017,"Tatoosh Island","urchin",0.283333333333333,0.116666666666667,"N",5,NA,"STRDRO",2,0.164991582276861
 2017,"Tatoosh Island","urchin",0.508333333333333,0.325,"N",5,NA,"STRPUR",2,0.459619407771256
+<<<<<<< HEAD
+=======
 2017,"Tatoosh Island",NA,0,0,"N",5,NA,"STYFOR",2,0
+>>>>>>> master
 2017,"Tatoosh Island","tunicate",0.0166666666666667,0.0166666666666667,"N",5,NA,"STYMON",2,0.0235702260395516
 2017,"Tatoosh Island","gastropod",0,0,"N",5,NA,"TEGSPP",2,0
 2017,"Tatoosh Island","nudibranch",0,0,"N",5,NA,"TRICAT",2,0
@@ -3124,7 +4072,10 @@
 2017,"Tatoosh Island","anenome",0,0,"N",10,NA,"ANTELE",3,0
 2017,"Tatoosh Island","anenome",0,0,"N",10,NA,"ANTXAN",3,0
 2017,"Tatoosh Island",NA,0.55,0.279549902786869,"N",10,NA,"BALNUB",3,0.484194634877798
+<<<<<<< HEAD
+=======
 2017,"Tatoosh Island",NA,0,0,"N",10,NA,"CADLUT",3,0
+>>>>>>> master
 2017,"Tatoosh Island","crab",0,0,"N",10,NA,"CANORE",3,0
 2017,"Tatoosh Island","crab",0,0,"N",10,NA,"CANSPP",3,0
 2017,"Tatoosh Island","gastropod",0.0277777777777778,0.0146986183948033,"N",10,NA,"CERFOL",3,0.0254587538608658
@@ -3181,7 +4132,10 @@
 2017,"Tatoosh Island","seastar.small",0.0166666666666667,0.0166666666666667,"N",10,NA,"STARREC",3,0.0288675134594813
 2017,"Tatoosh Island","urchin",0.0888888888888889,0.0444444444444444,"N",10,NA,"STRDRO",3,0.0769800358919501
 2017,"Tatoosh Island","urchin",2.32777777777778,0.345652005117829,"N",10,NA,"STRPUR",3,0.598686834602137
+<<<<<<< HEAD
+=======
 2017,"Tatoosh Island",NA,0,0,"N",10,NA,"STYFOR",3,0
+>>>>>>> master
 2017,"Tatoosh Island","tunicate",0,0,"N",10,NA,"STYMON",3,0
 2017,"Tatoosh Island","gastropod",0,0,"N",10,NA,"TEGSPP",3,0
 2017,"Tatoosh Island","nudibranch",0,0,"N",10,NA,"TRICAT",3,0
@@ -3196,7 +4150,10 @@
 2017,"Tatoosh Island","anenome",0,0,"S",5,NA,"ANTELE",3,0
 2017,"Tatoosh Island","anenome",0.0277777777777778,0.0200308404192444,"S",5,NA,"ANTXAN",3,0.0346944333244355
 2017,"Tatoosh Island",NA,2.74321419321419,1.13104480705086,"S",5,NA,"BALNUB",3,1.95902707144902
+<<<<<<< HEAD
+=======
 2017,"Tatoosh Island",NA,0,0,"S",5,NA,"CADLUT",3,0
+>>>>>>> master
 2017,"Tatoosh Island","crab",0.00555555555555556,0.00555555555555556,"S",5,NA,"CANORE",3,0.00962250448649376
 2017,"Tatoosh Island","crab",0,0,"S",5,NA,"CANSPP",3,0
 2017,"Tatoosh Island","gastropod",0.0222222222222222,0.00555555555555556,"S",5,NA,"CERFOL",3,0.00962250448649376
@@ -3253,7 +4210,10 @@
 2017,"Tatoosh Island","seastar.small",0,0,"S",5,NA,"STARREC",3,0
 2017,"Tatoosh Island","urchin",2.77392599410232,0.484158763445668,"S",5,NA,"STRDRO",3,0.838587577217619
 2017,"Tatoosh Island","urchin",3.82957907333624,0.765639955729185,"S",5,NA,"STRPUR",3,1.32612730362773
+<<<<<<< HEAD
+=======
 2017,"Tatoosh Island",NA,0,0,"S",5,NA,"STYFOR",3,0
+>>>>>>> master
 2017,"Tatoosh Island","tunicate",0.0111111111111111,0.0111111111111111,"S",5,NA,"STYMON",3,0.0192450089729875
 2017,"Tatoosh Island","gastropod",0,0,"S",5,NA,"TEGSPP",3,0
 2017,"Tatoosh Island","nudibranch",0,0,"S",5,NA,"TRICAT",3,0
@@ -3268,7 +4228,10 @@
 2017,"Tatoosh Island","anenome",0,0,"S",10,NA,"ANTELE",3,0
 2017,"Tatoosh Island","anenome",0,0,"S",10,NA,"ANTXAN",3,0
 2017,"Tatoosh Island",NA,3.78888888888889,1.6073999402455,"S",10,NA,"BALNUB",3,2.78409836458838
+<<<<<<< HEAD
+=======
 2017,"Tatoosh Island",NA,0,0,"S",10,NA,"CADLUT",3,0
+>>>>>>> master
 2017,"Tatoosh Island","crab",0,0,"S",10,NA,"CANORE",3,0
 2017,"Tatoosh Island","crab",0,0,"S",10,NA,"CANSPP",3,0
 2017,"Tatoosh Island","gastropod",0.0888888888888889,0.0388888888888889,"S",10,NA,"CERFOL",3,0.0673575314054563
@@ -3325,7 +4288,10 @@
 2017,"Tatoosh Island","seastar.small",0.0277777777777778,0.0200308404192444,"S",10,NA,"STARREC",3,0.0346944333244355
 2017,"Tatoosh Island","urchin",0.566666666666667,0.251661147842358,"S",10,NA,"STRDRO",3,0.435889894354067
 2017,"Tatoosh Island","urchin",3.94348728782691,1.56505893105156,"S",10,NA,"STRPUR",3,2.71076158542074
+<<<<<<< HEAD
+=======
 2017,"Tatoosh Island",NA,0,0,"S",10,NA,"STYFOR",3,0
+>>>>>>> master
 2017,"Tatoosh Island","tunicate",0.00555555555555556,0.00555555555555556,"S",10,NA,"STYMON",3,0.00962250448649376
 2017,"Tatoosh Island","gastropod",0,0,"S",10,NA,"TEGSPP",3,0
 2017,"Tatoosh Island","nudibranch",0,0,"S",10,NA,"TRICAT",3,0
@@ -6220,7 +7186,10 @@
 2021,"Cape Alava","anenome",0,0,"E",5,NA,"ANTELE",2,0
 2021,"Cape Alava","anenome",0.0125,0.0125,"E",5,NA,"ANTXAN",2,0.0176776695296637
 2021,"Cape Alava",NA,0.00833333333333333,0.00833333333333333,"E",5,NA,"BALNUB",2,0.0117851130197758
+<<<<<<< HEAD
+=======
 2021,"Cape Alava",NA,0,0,"E",5,NA,"CADLUT",2,0
+>>>>>>> master
 2021,"Cape Alava","crab",0.00833333333333333,0.00833333333333333,"E",5,NA,"CANORE",2,0.0117851130197758
 2021,"Cape Alava","crab",0,0,"E",5,NA,"CANSPP",2,0
 2021,"Cape Alava","gastropod",0.0125,0.0125,"E",5,NA,"CERFOL",2,0.0176776695296637
@@ -6277,7 +7246,10 @@
 2021,"Cape Alava","seastar.small",0,0,"E",5,NA,"STARREC",2,0
 2021,"Cape Alava","urchin",0,0,"E",5,NA,"STRDRO",2,0
 2021,"Cape Alava","urchin",0.025,0.025,"E",5,NA,"STRPUR",2,0.0353553390593274
+<<<<<<< HEAD
+=======
 2021,"Cape Alava",NA,0,0,"E",5,NA,"STYFOR",2,0
+>>>>>>> master
 2021,"Cape Alava","tunicate",0.395833333333333,0.0291666666666667,"E",5,NA,"STYMON",2,0.0412478955692153
 2021,"Cape Alava","gastropod",0,0,"E",5,NA,"TEGSPP",2,0
 2021,"Cape Alava","nudibranch",0,0,"E",5,NA,"TRICAT",2,0
@@ -6286,6 +7258,78 @@
 2021,"Cape Alava","anenome",0,0,"E",5,NA,"URTLOF",2,0
 2021,"Cape Alava","anenome",0,0,"E",5,NA,"URTPIS",2,0
 2021,"Cape Alava","anenome",0,0,"E",5,NA,"URTSPP",2,0
+<<<<<<< HEAD
+2021,"Cape Alava","nudibranch",0,0,"E",10,NA,"ACAHUD",4,0
+2021,"Cape Alava","nudibranch",0,0,"E",10,NA,"ACANAN",4,0
+2021,"Cape Alava","gastropod",0,0,"E",10,NA,"ACMMIT",4,0
+2021,"Cape Alava","anenome",0,0,"E",10,NA,"ANTELE",4,0
+2021,"Cape Alava","anenome",0,0,"E",10,NA,"ANTXAN",4,0
+2021,"Cape Alava",NA,3.21572580645161,1.79120778183743,"E",10,NA,"BALNUB",4,3.58241556367486
+2021,"Cape Alava","crab",0,0,"E",10,NA,"CANORE",4,0
+2021,"Cape Alava","crab",0,0,"E",10,NA,"CANSPP",4,0
+2021,"Cape Alava","gastropod",0.104166666666667,0.0410369075074838,"E",10,NA,"CERFOL",4,0.0820738150149675
+2021,"Cape Alava",NA,0.0125,0.00797855923130282,"E",10,NA,"CHITON",4,0.0159571184626056
+2021,"Cape Alava","bivalve",0,0,"E",10,NA,"CLAMSP",4,0
+2021,"Cape Alava","sponge",0,0,"E",10,NA,"CRAARB",4,0
+2021,"Cape Alava","bivalve",0.0166666666666667,0.0166666666666667,"E",10,NA,"CRAGIG",4,0.0333333333333333
+2021,"Cape Alava","seastar",0,0,"E",10,NA,"CROPAP",4,0
+2021,"Cape Alava","crab",0,0,"E",10,NA,"CRYDEC",4,0
+2021,"Cape Alava","crab",0,0,"E",10,NA,"CRYSIT",4,0
+2021,"Cape Alava","chiton",0,0,"E",10,NA,"CRYSTE",4,0
+2021,"Cape Alava","cucumber",0.25,0.0915403169626893,"E",10,NA,"CUCMIN",4,0.183080633925379
+2021,"Cape Alava","seastar",0.0541666666666667,0.0196908984427192,"E",10,NA,"DERIMB",4,0.0393817968854384
+2021,"Cape Alava","nudibranch",0.00416666666666667,0.00416666666666667,"E",10,NA,"DIASAN",4,0.00833333333333333
+2021,"Cape Alava","gastropod",0.0208333333333333,0.0104858811600983,"E",10,NA,"DIOASP",4,0.0209717623201965
+2021,"Cape Alava","nudibranch",0,0,"E",10,NA,"DIRALB",4,0
+2021,"Cape Alava","nudibranch",0.00416666666666667,0.00416666666666667,"E",10,NA,"DORODH",4,0.00833333333333333
+2021,"Cape Alava","octopus",0,0,"E",10,NA,"ENTDOF",4,0
+2021,"Cape Alava","anenome",0.00416666666666667,0.00416666666666667,"E",10,NA,"EPIPRO",4,0.00833333333333333
+2021,"Cape Alava","cucumber",0.00416666666666667,0.00416666666666667,"E",10,NA,"EUPQUI",4,0.00833333333333333
+2021,"Cape Alava","seastar",0.00416666666666667,0.00416666666666667,"E",10,NA,"EVATRO",4,0.00833333333333333
+2021,"Cape Alava","gastropod",0,0,"E",10,NA,"FUSORE",4,0
+2021,"Cape Alava","gastropod",0,0,"E",10,NA,"HALKAM",4,0
+2021,"Cape Alava","seastar",0.0375,0.0125,"E",10,NA,"HENLEV",4,0.025
+2021,"Cape Alava","nudibranch",0,0,"E",10,NA,"HERCRA",4,0
+2021,"Cape Alava","nudibranch",0,0,"E",10,NA,"JANFUS",4,0
+2021,"Cape Alava","seastar.small",0.0583333333333333,0.0276385399196283,"E",10,NA,"LEPSPP",4,0.0552770798392567
+2021,"Cape Alava","nudibranch",0,0,"E",10,NA,"LIMCOC",4,0
+2021,"Cape Alava","gastropod",0,0,"E",10,NA,"LIRDIR",4,0
+2021,"Cape Alava","crab",0,0,"E",10,NA,"LOPMAN",4,0
+2021,"Cape Alava","seastar",0,0,"E",10,NA,"MEDAEQ",4,0
+2021,"Cape Alava","urchin",0,0,"E",10,NA,"MESFRA",4,0
+2021,"Cape Alava","anenome",0,0,"E",10,NA,"METGIG",4,0
+2021,"Cape Alava","anenome",0,0,"E",10,NA,"METSPP",4,0
+2021,"Cape Alava","crab",0,0,"E",10,NA,"MIMFOL",4,0
+2021,"Cape Alava","bivalve",0,0,"E",10,NA,"MYTCAL",4,0
+2021,"Cape Alava","gastropod",0.0833333333333333,0.0413879567381982,"E",10,NA,"NUCLAM",4,0.0827759134763963
+2021,"Cape Alava","nudibranch",0,0,"E",10,NA,"NUDIBR",4,0
+2021,"Cape Alava","seastar",0,0,"E",10,NA,"ORTKOE",4,0
+2021,"Cape Alava",NA,0,0,"E",10,NA,"PAGSPP",4,0
+2021,"Cape Alava","cucumber",0,0,"E",10,NA,"PARCAL",4,0
+2021,"Cape Alava","seastar",0.00833333333333333,0.00481125224324688,"E",10,NA,"PATMIN",4,0.00962250448649376
+2021,"Cape Alava","nudibranch",0.00833333333333333,0.00833333333333333,"E",10,NA,"PELNOB",4,0.0166666666666667
+2021,"Cape Alava","seastar",0,0,"E",10,NA,"PISBRE",4,0
+2021,"Cape Alava","seastar",0,0,"E",10,NA,"PISGIG",4,0
+2021,"Cape Alava","seastar",0.0875,0.0501733107449679,"E",10,NA,"PISOCH",4,0.100346621489936
+2021,"Cape Alava","bivalve",0,0,"E",10,NA,"PODSPP",4,0
+2021,"Cape Alava","crab",0,0,"E",10,NA,"PUGGRA",4,0
+2021,"Cape Alava","crab",0.00416666666666667,0.00416666666666667,"E",10,NA,"PUGPRO",4,0.00833333333333333
+2021,"Cape Alava","seastar",0,0,"E",10,NA,"PYCHEL",4,0
+2021,"Cape Alava","bivalve",0,0,"E",10,NA,"SCALLOP",4,0
+2021,"Cape Alava","crab",0,0,"E",10,NA,"SCYDEC",4,0
+2021,"Cape Alava","seastar",0,0,"E",10,NA,"SOLSTI",4,0
+2021,"Cape Alava","seastar.small",0,0,"E",10,NA,"STARREC",4,0
+2021,"Cape Alava","urchin",0,0,"E",10,NA,"STRDRO",4,0
+2021,"Cape Alava","urchin",0.00416666666666667,0.00416666666666667,"E",10,NA,"STRPUR",4,0.00833333333333333
+2021,"Cape Alava","tunicate",0.25,0.0889756521002609,"E",10,NA,"STYMON",4,0.177951304200522
+2021,"Cape Alava","gastropod",0,0,"E",10,NA,"TEGSPP",4,0
+2021,"Cape Alava","nudibranch",0,0,"E",10,NA,"TRICAT",4,0
+2021,"Cape Alava",NA,0,0,"E",10,NA,"UNIDSP",4,0
+2021,"Cape Alava","anenome",0,0,"E",10,NA,"URTCRA",4,0
+2021,"Cape Alava","anenome",0,0,"E",10,NA,"URTLOF",4,0
+2021,"Cape Alava","anenome",0,0,"E",10,NA,"URTPIS",4,0
+2021,"Cape Alava","anenome",0.00833333333333333,0.00833333333333333,"E",10,NA,"URTSPP",4,0.0166666666666667
+=======
 2021,"Cape Alava","nudibranch",0,0,"E",10,NA,"ACAHUD",3,0
 2021,"Cape Alava","nudibranch",0,0,"E",10,NA,"ACANAN",3,0
 2021,"Cape Alava","gastropod",0,0,"E",10,NA,"ACMMIT",3,0
@@ -6358,13 +7402,17 @@
 2021,"Cape Alava","anenome",0,0,"E",10,NA,"URTLOF",3,0
 2021,"Cape Alava","anenome",0,0,"E",10,NA,"URTPIS",3,0
 2021,"Cape Alava","anenome",0.0111111111111111,0.0111111111111111,"E",10,NA,"URTSPP",3,0.0192450089729875
+>>>>>>> master
 2021,"Cape Alava","nudibranch",0,0,"W",5,NA,"ACAHUD",3,0
 2021,"Cape Alava","nudibranch",0,0,"W",5,NA,"ACANAN",3,0
 2021,"Cape Alava","gastropod",0.00555555555555556,0.00555555555555556,"W",5,NA,"ACMMIT",3,0.00962250448649376
 2021,"Cape Alava","anenome",0,0,"W",5,NA,"ANTELE",3,0
 2021,"Cape Alava","anenome",0,0,"W",5,NA,"ANTXAN",3,0
 2021,"Cape Alava",NA,0.0111111111111111,0.00555555555555556,"W",5,NA,"BALNUB",3,0.00962250448649376
+<<<<<<< HEAD
+=======
 2021,"Cape Alava",NA,0,0,"W",5,NA,"CADLUT",3,0
+>>>>>>> master
 2021,"Cape Alava","crab",0.00555555555555556,0.00555555555555556,"W",5,NA,"CANORE",3,0.00962250448649376
 2021,"Cape Alava","crab",0,0,"W",5,NA,"CANSPP",3,0
 2021,"Cape Alava","gastropod",0.0166666666666667,0.00962250448649376,"W",5,NA,"CERFOL",3,0.0166666666666667
@@ -6421,7 +7469,10 @@
 2021,"Cape Alava","seastar.small",0,0,"W",5,NA,"STARREC",3,0
 2021,"Cape Alava","urchin",0,0,"W",5,NA,"STRDRO",3,0
 2021,"Cape Alava","urchin",0.0166666666666667,0.0166666666666667,"W",5,NA,"STRPUR",3,0.0288675134594813
+<<<<<<< HEAD
+=======
 2021,"Cape Alava",NA,0,0,"W",5,NA,"STYFOR",3,0
+>>>>>>> master
 2021,"Cape Alava","tunicate",0.222222222222222,0.0222222222222222,"W",5,NA,"STYMON",3,0.038490017945975
 2021,"Cape Alava","gastropod",0,0,"W",5,NA,"TEGSPP",3,0
 2021,"Cape Alava","nudibranch",0,0,"W",5,NA,"TRICAT",3,0
@@ -6430,6 +7481,78 @@
 2021,"Cape Alava","anenome",0,0,"W",5,NA,"URTLOF",3,0
 2021,"Cape Alava","anenome",0,0,"W",5,NA,"URTPIS",3,0
 2021,"Cape Alava","anenome",0.00555555555555556,0.00555555555555556,"W",5,NA,"URTSPP",3,0.00962250448649376
+<<<<<<< HEAD
+2021,"Cape Alava","nudibranch",0,0,"W",10,NA,"ACAHUD",7,0
+2021,"Cape Alava","nudibranch",0,0,"W",10,NA,"ACANAN",7,0
+2021,"Cape Alava","gastropod",0,0,"W",10,NA,"ACMMIT",7,0
+2021,"Cape Alava","anenome",0,0,"W",10,NA,"ANTELE",7,0
+2021,"Cape Alava","anenome",0,0,"W",10,NA,"ANTXAN",7,0
+2021,"Cape Alava",NA,0.980952380952381,0.873670029088724,"W",10,NA,"BALNUB",7,2.31151362489933
+2021,"Cape Alava","crab",0,0,"W",10,NA,"CANORE",7,0
+2021,"Cape Alava","crab",0,0,"W",10,NA,"CANSPP",7,0
+2021,"Cape Alava","gastropod",0.0261904761904762,0.0153689815325691,"W",10,NA,"CERFOL",7,0.0406625030395222
+2021,"Cape Alava",NA,0,0,"W",10,NA,"CHITON",7,0
+2021,"Cape Alava","bivalve",0,0,"W",10,NA,"CLAMSP",7,0
+2021,"Cape Alava","sponge",0.0261904761904762,0.0166098805844892,"W",10,NA,"CRAARB",7,0.0439456133330385
+2021,"Cape Alava","bivalve",0.019047619047619,0.00922138891954147,"W",10,NA,"CRAGIG",7,0.0243975018237133
+2021,"Cape Alava","seastar",0,0,"W",10,NA,"CROPAP",7,0
+2021,"Cape Alava","crab",0,0,"W",10,NA,"CRYDEC",7,0
+2021,"Cape Alava","crab",0,0,"W",10,NA,"CRYSIT",7,0
+2021,"Cape Alava","chiton",0,0,"W",10,NA,"CRYSTE",7,0
+2021,"Cape Alava","cucumber",0.245238095238095,0.103937957539028,"W",10,NA,"CUCMIN",7,0.274993987428258
+2021,"Cape Alava","seastar",0.0288359788359788,0.0119253202852748,"W",10,NA,"DERIMB",7,0.0315514317796308
+2021,"Cape Alava","nudibranch",0,0,"W",10,NA,"DIASAN",7,0
+2021,"Cape Alava","gastropod",0.00714285714285714,0.00495634761777651,"W",10,NA,"DIOASP",7,0.0131132632078241
+2021,"Cape Alava","nudibranch",0.00476190476190476,0.00307379630651382,"W",10,NA,"DIRALB",7,0.00813250060790444
+2021,"Cape Alava","nudibranch",0.00714285714285714,0.00495634761777651,"W",10,NA,"DORODH",7,0.0131132632078241
+2021,"Cape Alava","octopus",0,0,"W",10,NA,"ENTDOF",7,0
+2021,"Cape Alava","anenome",0,0,"W",10,NA,"EPIPRO",7,0
+2021,"Cape Alava","cucumber",0,0,"W",10,NA,"EUPQUI",7,0
+2021,"Cape Alava","seastar",0,0,"W",10,NA,"EVATRO",7,0
+2021,"Cape Alava","gastropod",0,0,"W",10,NA,"FUSORE",7,0
+2021,"Cape Alava","gastropod",0,0,"W",10,NA,"HALKAM",7,0
+2021,"Cape Alava","seastar",0.0666666666666667,0.0249337747181032,"W",10,NA,"HENLEV",7,0.0659685671502107
+2021,"Cape Alava","nudibranch",0,0,"W",10,NA,"HERCRA",7,0
+2021,"Cape Alava","nudibranch",0,0,"W",10,NA,"JANFUS",7,0
+2021,"Cape Alava","seastar.small",0.00476190476190476,0.00307379630651382,"W",10,NA,"LEPSPP",7,0.00813250060790444
+2021,"Cape Alava","nudibranch",0,0,"W",10,NA,"LIMCOC",7,0
+2021,"Cape Alava","gastropod",0,0,"W",10,NA,"LIRDIR",7,0
+2021,"Cape Alava","crab",0,0,"W",10,NA,"LOPMAN",7,0
+2021,"Cape Alava","seastar",0,0,"W",10,NA,"MEDAEQ",7,0
+2021,"Cape Alava","urchin",0,0,"W",10,NA,"MESFRA",7,0
+2021,"Cape Alava","anenome",0,0,"W",10,NA,"METGIG",7,0
+2021,"Cape Alava","anenome",0,0,"W",10,NA,"METSPP",7,0
+2021,"Cape Alava","crab",0,0,"W",10,NA,"MIMFOL",7,0
+2021,"Cape Alava","bivalve",0,0,"W",10,NA,"MYTCAL",7,0
+2021,"Cape Alava","gastropod",0.666666666666667,0.617095517976657,"W",10,NA,"NUCLAM",7,1.63268127573882
+2021,"Cape Alava","nudibranch",0,0,"W",10,NA,"NUDIBR",7,0
+2021,"Cape Alava","seastar",0,0,"W",10,NA,"ORTKOE",7,0
+2021,"Cape Alava",NA,0,0,"W",10,NA,"PAGSPP",7,0
+2021,"Cape Alava","cucumber",0,0,"W",10,NA,"PARCAL",7,0
+2021,"Cape Alava","seastar",0.00238095238095238,0.00238095238095238,"W",10,NA,"PATMIN",7,0.00629940788348712
+2021,"Cape Alava","nudibranch",0.0261904761904762,0.0135386683406603,"W",10,NA,"PELNOB",7,0.0358199495123707
+2021,"Cape Alava","seastar",0,0,"W",10,NA,"PISBRE",7,0
+2021,"Cape Alava","seastar",0,0,"W",10,NA,"PISGIG",7,0
+2021,"Cape Alava","seastar",0,0,"W",10,NA,"PISOCH",7,0
+2021,"Cape Alava","bivalve",0,0,"W",10,NA,"PODSPP",7,0
+2021,"Cape Alava","crab",0,0,"W",10,NA,"PUGGRA",7,0
+2021,"Cape Alava","crab",0,0,"W",10,NA,"PUGPRO",7,0
+2021,"Cape Alava","seastar",0,0,"W",10,NA,"PYCHEL",7,0
+2021,"Cape Alava","bivalve",0,0,"W",10,NA,"SCALLOP",7,0
+2021,"Cape Alava","crab",0,0,"W",10,NA,"SCYDEC",7,0
+2021,"Cape Alava","seastar",0,0,"W",10,NA,"SOLSTI",7,0
+2021,"Cape Alava","seastar.small",0,0,"W",10,NA,"STARREC",7,0
+2021,"Cape Alava","urchin",0,0,"W",10,NA,"STRDRO",7,0
+2021,"Cape Alava","urchin",0,0,"W",10,NA,"STRPUR",7,0
+2021,"Cape Alava","tunicate",0.202380952380952,0.0825702019278727,"W",10,NA,"STYMON",7,0.218460220005537
+2021,"Cape Alava","gastropod",0,0,"W",10,NA,"TEGSPP",7,0
+2021,"Cape Alava","nudibranch",0.00238095238095238,0.00238095238095238,"W",10,NA,"TRICAT",7,0.00629940788348712
+2021,"Cape Alava",NA,0,0,"W",10,NA,"UNIDSP",7,0
+2021,"Cape Alava","anenome",0,0,"W",10,NA,"URTCRA",7,0
+2021,"Cape Alava","anenome",0,0,"W",10,NA,"URTLOF",7,0
+2021,"Cape Alava","anenome",0,0,"W",10,NA,"URTPIS",7,0
+2021,"Cape Alava","anenome",0.00476190476190476,0.00476190476190476,"W",10,NA,"URTSPP",7,0.0125988157669742
+=======
 2021,"Cape Alava","nudibranch",0,0,"W",10,NA,"ACAHUD",4,0
 2021,"Cape Alava","nudibranch",0,0,"W",10,NA,"ACANAN",4,0
 2021,"Cape Alava","gastropod",0,0,"W",10,NA,"ACMMIT",4,0
@@ -6502,13 +7625,17 @@
 2021,"Cape Alava","anenome",0,0,"W",10,NA,"URTLOF",4,0
 2021,"Cape Alava","anenome",0,0,"W",10,NA,"URTPIS",4,0
 2021,"Cape Alava","anenome",0.00833333333333333,0.00833333333333333,"W",10,NA,"URTSPP",4,0.0166666666666667
+>>>>>>> master
 2021,"Cape Johnson","nudibranch",0,0,"N",5,NA,"ACAHUD",3,0
 2021,"Cape Johnson","nudibranch",0,0,"N",5,NA,"ACANAN",3,0
 2021,"Cape Johnson","gastropod",0,0,"N",5,NA,"ACMMIT",3,0
 2021,"Cape Johnson","anenome",0,0,"N",5,NA,"ANTELE",3,0
 2021,"Cape Johnson","anenome",0,0,"N",5,NA,"ANTXAN",3,0
 2021,"Cape Johnson",NA,0,0,"N",5,NA,"BALNUB",3,0
+<<<<<<< HEAD
+=======
 2021,"Cape Johnson",NA,0,0,"N",5,NA,"CADLUT",3,0
+>>>>>>> master
 2021,"Cape Johnson","crab",0,0,"N",5,NA,"CANORE",3,0
 2021,"Cape Johnson","crab",0,0,"N",5,NA,"CANSPP",3,0
 2021,"Cape Johnson","gastropod",0.0333333333333333,0.00962250448649377,"N",5,NA,"CERFOL",3,0.0166666666666667
@@ -6565,7 +7692,10 @@
 2021,"Cape Johnson","seastar.small",0,0,"N",5,NA,"STARREC",3,0
 2021,"Cape Johnson","urchin",0,0,"N",5,NA,"STRDRO",3,0
 2021,"Cape Johnson","urchin",0,0,"N",5,NA,"STRPUR",3,0
+<<<<<<< HEAD
+=======
 2021,"Cape Johnson",NA,0,0,"N",5,NA,"STYFOR",3,0
+>>>>>>> master
 2021,"Cape Johnson","tunicate",0.0222222222222222,0.0111111111111111,"N",5,NA,"STYMON",3,0.0192450089729875
 2021,"Cape Johnson","gastropod",0,0,"N",5,NA,"TEGSPP",3,0
 2021,"Cape Johnson","nudibranch",0,0,"N",5,NA,"TRICAT",3,0
@@ -6574,6 +7704,78 @@
 2021,"Cape Johnson","anenome",0,0,"N",5,NA,"URTLOF",3,0
 2021,"Cape Johnson","anenome",0,0,"N",5,NA,"URTPIS",3,0
 2021,"Cape Johnson","anenome",0,0,"N",5,NA,"URTSPP",3,0
+<<<<<<< HEAD
+2021,"Cape Johnson","nudibranch",0,0,"N",10,NA,"ACAHUD",5,0
+2021,"Cape Johnson","nudibranch",0,0,"N",10,NA,"ACANAN",5,0
+2021,"Cape Johnson","gastropod",0.00666666666666667,0.00408248290463863,"N",10,NA,"ACMMIT",5,0.00912870929175277
+2021,"Cape Johnson","anenome",0,0,"N",10,NA,"ANTELE",5,0
+2021,"Cape Johnson","anenome",0,0,"N",10,NA,"ANTXAN",5,0
+2021,"Cape Johnson",NA,0,0,"N",10,NA,"BALNUB",5,0
+2021,"Cape Johnson","crab",0,0,"N",10,NA,"CANORE",5,0
+2021,"Cape Johnson","crab",0,0,"N",10,NA,"CANSPP",5,0
+2021,"Cape Johnson","gastropod",0.00333333333333333,0.00333333333333333,"N",10,NA,"CERFOL",5,0.0074535599249993
+2021,"Cape Johnson",NA,0.00333333333333333,0.00333333333333333,"N",10,NA,"CHITON",5,0.0074535599249993
+2021,"Cape Johnson","bivalve",0,0,"N",10,NA,"CLAMSP",5,0
+2021,"Cape Johnson","sponge",0,0,"N",10,NA,"CRAARB",5,0
+2021,"Cape Johnson","bivalve",0.00333333333333333,0.00333333333333333,"N",10,NA,"CRAGIG",5,0.0074535599249993
+2021,"Cape Johnson","seastar",0,0,"N",10,NA,"CROPAP",5,0
+2021,"Cape Johnson","crab",0,0,"N",10,NA,"CRYDEC",5,0
+2021,"Cape Johnson","crab",0,0,"N",10,NA,"CRYSIT",5,0
+2021,"Cape Johnson","chiton",0,0,"N",10,NA,"CRYSTE",5,0
+2021,"Cape Johnson","cucumber",0.00333333333333333,0.00333333333333333,"N",10,NA,"CUCMIN",5,0.0074535599249993
+2021,"Cape Johnson","seastar",0.00333333333333333,0.00333333333333333,"N",10,NA,"DERIMB",5,0.0074535599249993
+2021,"Cape Johnson","nudibranch",0,0,"N",10,NA,"DIASAN",5,0
+2021,"Cape Johnson","gastropod",0,0,"N",10,NA,"DIOASP",5,0
+2021,"Cape Johnson","nudibranch",0.00333333333333333,0.00333333333333333,"N",10,NA,"DIRALB",5,0.0074535599249993
+2021,"Cape Johnson","nudibranch",0,0,"N",10,NA,"DORODH",5,0
+2021,"Cape Johnson","octopus",0,0,"N",10,NA,"ENTDOF",5,0
+2021,"Cape Johnson","anenome",0,0,"N",10,NA,"EPIPRO",5,0
+2021,"Cape Johnson","cucumber",0,0,"N",10,NA,"EUPQUI",5,0
+2021,"Cape Johnson","seastar",0.00333333333333333,0.00333333333333333,"N",10,NA,"EVATRO",5,0.0074535599249993
+2021,"Cape Johnson","gastropod",0,0,"N",10,NA,"FUSORE",5,0
+2021,"Cape Johnson","gastropod",0,0,"N",10,NA,"HALKAM",5,0
+2021,"Cape Johnson","seastar",0.01,0.00666666666666667,"N",10,NA,"HENLEV",5,0.0149071198499986
+2021,"Cape Johnson","nudibranch",0,0,"N",10,NA,"HERCRA",5,0
+2021,"Cape Johnson","nudibranch",0,0,"N",10,NA,"JANFUS",5,0
+2021,"Cape Johnson","seastar.small",0.00666666666666667,0.00666666666666667,"N",10,NA,"LEPSPP",5,0.0149071198499986
+2021,"Cape Johnson","nudibranch",0,0,"N",10,NA,"LIMCOC",5,0
+2021,"Cape Johnson","gastropod",0,0,"N",10,NA,"LIRDIR",5,0
+2021,"Cape Johnson","crab",0,0,"N",10,NA,"LOPMAN",5,0
+2021,"Cape Johnson","seastar",0,0,"N",10,NA,"MEDAEQ",5,0
+2021,"Cape Johnson","urchin",0,0,"N",10,NA,"MESFRA",5,0
+2021,"Cape Johnson","anenome",0,0,"N",10,NA,"METGIG",5,0
+2021,"Cape Johnson","anenome",0,0,"N",10,NA,"METSPP",5,0
+2021,"Cape Johnson","crab",0,0,"N",10,NA,"MIMFOL",5,0
+2021,"Cape Johnson","bivalve",0,0,"N",10,NA,"MYTCAL",5,0
+2021,"Cape Johnson","gastropod",0.0133333333333333,0.0133333333333333,"N",10,NA,"NUCLAM",5,0.0298142396999972
+2021,"Cape Johnson","nudibranch",0,0,"N",10,NA,"NUDIBR",5,0
+2021,"Cape Johnson","seastar",0,0,"N",10,NA,"ORTKOE",5,0
+2021,"Cape Johnson",NA,0,0,"N",10,NA,"PAGSPP",5,0
+2021,"Cape Johnson","cucumber",0,0,"N",10,NA,"PARCAL",5,0
+2021,"Cape Johnson","seastar",0,0,"N",10,NA,"PATMIN",5,0
+2021,"Cape Johnson","nudibranch",0,0,"N",10,NA,"PELNOB",5,0
+2021,"Cape Johnson","seastar",0,0,"N",10,NA,"PISBRE",5,0
+2021,"Cape Johnson","seastar",0,0,"N",10,NA,"PISGIG",5,0
+2021,"Cape Johnson","seastar",0,0,"N",10,NA,"PISOCH",5,0
+2021,"Cape Johnson","bivalve",0,0,"N",10,NA,"PODSPP",5,0
+2021,"Cape Johnson","crab",0,0,"N",10,NA,"PUGGRA",5,0
+2021,"Cape Johnson","crab",0,0,"N",10,NA,"PUGPRO",5,0
+2021,"Cape Johnson","seastar",0,0,"N",10,NA,"PYCHEL",5,0
+2021,"Cape Johnson","bivalve",0,0,"N",10,NA,"SCALLOP",5,0
+2021,"Cape Johnson","crab",0,0,"N",10,NA,"SCYDEC",5,0
+2021,"Cape Johnson","seastar",0,0,"N",10,NA,"SOLSTI",5,0
+2021,"Cape Johnson","seastar.small",0,0,"N",10,NA,"STARREC",5,0
+2021,"Cape Johnson","urchin",0,0,"N",10,NA,"STRDRO",5,0
+2021,"Cape Johnson","urchin",0,0,"N",10,NA,"STRPUR",5,0
+2021,"Cape Johnson","tunicate",0.0366666666666667,0.0161589328580544,"N",10,NA,"STYMON",5,0.0361324723144647
+2021,"Cape Johnson","gastropod",0,0,"N",10,NA,"TEGSPP",5,0
+2021,"Cape Johnson","nudibranch",0,0,"N",10,NA,"TRICAT",5,0
+2021,"Cape Johnson",NA,0,0,"N",10,NA,"UNIDSP",5,0
+2021,"Cape Johnson","anenome",0,0,"N",10,NA,"URTCRA",5,0
+2021,"Cape Johnson","anenome",0,0,"N",10,NA,"URTLOF",5,0
+2021,"Cape Johnson","anenome",0,0,"N",10,NA,"URTPIS",5,0
+2021,"Cape Johnson","anenome",0,0,"N",10,NA,"URTSPP",5,0
+=======
 2021,"Cape Johnson","nudibranch",0,0,"N",10,NA,"ACAHUD",4,0
 2021,"Cape Johnson","nudibranch",0,0,"N",10,NA,"ACANAN",4,0
 2021,"Cape Johnson","gastropod",0.00833333333333333,0.00481125224324688,"N",10,NA,"ACMMIT",4,0.00962250448649376
@@ -6646,13 +7848,17 @@
 2021,"Cape Johnson","anenome",0,0,"N",10,NA,"URTLOF",4,0
 2021,"Cape Johnson","anenome",0,0,"N",10,NA,"URTPIS",4,0
 2021,"Cape Johnson","anenome",0,0,"N",10,NA,"URTSPP",4,0
+>>>>>>> master
 2021,"Cape Johnson","nudibranch",0,0,"S",5,NA,"ACAHUD",4,0
 2021,"Cape Johnson","nudibranch",0,0,"S",5,NA,"ACANAN",4,0
 2021,"Cape Johnson","gastropod",0,0,"S",5,NA,"ACMMIT",4,0
 2021,"Cape Johnson","anenome",0,0,"S",5,NA,"ANTELE",4,0
 2021,"Cape Johnson","anenome",0.0166666666666667,0.0117851130197758,"S",5,NA,"ANTXAN",4,0.0235702260395516
 2021,"Cape Johnson",NA,0,0,"S",5,NA,"BALNUB",4,0
+<<<<<<< HEAD
+=======
 2021,"Cape Johnson",NA,0,0,"S",5,NA,"CADLUT",4,0
+>>>>>>> master
 2021,"Cape Johnson","crab",0,0,"S",5,NA,"CANORE",4,0
 2021,"Cape Johnson","crab",0,0,"S",5,NA,"CANSPP",4,0
 2021,"Cape Johnson","gastropod",0.00416666666666667,0.00416666666666667,"S",5,NA,"CERFOL",4,0.00833333333333333
@@ -6709,7 +7915,10 @@
 2021,"Cape Johnson","seastar.small",0,0,"S",5,NA,"STARREC",4,0
 2021,"Cape Johnson","urchin",0,0,"S",5,NA,"STRDRO",4,0
 2021,"Cape Johnson","urchin",0,0,"S",5,NA,"STRPUR",4,0
+<<<<<<< HEAD
+=======
 2021,"Cape Johnson",NA,0,0,"S",5,NA,"STYFOR",4,0
+>>>>>>> master
 2021,"Cape Johnson","tunicate",0.0333333333333333,0.0204124145231931,"S",5,NA,"STYMON",4,0.0408248290463863
 2021,"Cape Johnson","gastropod",0,0,"S",5,NA,"TEGSPP",4,0
 2021,"Cape Johnson","nudibranch",0.00416666666666667,0.00416666666666667,"S",5,NA,"TRICAT",4,0.00833333333333333
@@ -6718,6 +7927,148 @@
 2021,"Cape Johnson","anenome",0,0,"S",5,NA,"URTLOF",4,0
 2021,"Cape Johnson","anenome",0,0,"S",5,NA,"URTPIS",4,0
 2021,"Cape Johnson","anenome",0.0208333333333333,0.0104858811600983,"S",5,NA,"URTSPP",4,0.0209717623201965
+<<<<<<< HEAD
+2021,"Cape Johnson","nudibranch",0.00666666666666667,0.00666666666666667,"S",10,NA,"ACAHUD",5,0.0149071198499986
+2021,"Cape Johnson","nudibranch",0,0,"S",10,NA,"ACANAN",5,0
+2021,"Cape Johnson","gastropod",0.00333333333333333,0.00333333333333333,"S",10,NA,"ACMMIT",5,0.0074535599249993
+2021,"Cape Johnson","anenome",0,0,"S",10,NA,"ANTELE",5,0
+2021,"Cape Johnson","anenome",0,0,"S",10,NA,"ANTXAN",5,0
+2021,"Cape Johnson",NA,0.0166666666666667,0.0105409255338946,"S",10,NA,"BALNUB",5,0.0235702260395516
+2021,"Cape Johnson","crab",0.00333333333333333,0.00333333333333333,"S",10,NA,"CANORE",5,0.0074535599249993
+2021,"Cape Johnson","crab",0.00333333333333333,0.00333333333333333,"S",10,NA,"CANSPP",5,0.0074535599249993
+2021,"Cape Johnson","gastropod",0.02,0.0097182531580755,"S",10,NA,"CERFOL",5,0.0217306746840088
+2021,"Cape Johnson",NA,0,0,"S",10,NA,"CHITON",5,0
+2021,"Cape Johnson","bivalve",0,0,"S",10,NA,"CLAMSP",5,0
+2021,"Cape Johnson","sponge",0.00333333333333333,0.00333333333333333,"S",10,NA,"CRAARB",5,0.0074535599249993
+2021,"Cape Johnson","bivalve",0.00666666666666667,0.00408248290463863,"S",10,NA,"CRAGIG",5,0.00912870929175277
+2021,"Cape Johnson","seastar",0,0,"S",10,NA,"CROPAP",5,0
+2021,"Cape Johnson","crab",0,0,"S",10,NA,"CRYDEC",5,0
+2021,"Cape Johnson","crab",0,0,"S",10,NA,"CRYSIT",5,0
+2021,"Cape Johnson","chiton",0,0,"S",10,NA,"CRYSTE",5,0
+2021,"Cape Johnson","cucumber",0.176666666666667,0.072953562094131,"S",10,NA,"CUCMIN",5,0.163129124043229
+2021,"Cape Johnson","seastar",0,0,"S",10,NA,"DERIMB",5,0
+2021,"Cape Johnson","nudibranch",0,0,"S",10,NA,"DIASAN",5,0
+2021,"Cape Johnson","gastropod",0.01,0.00408248290463863,"S",10,NA,"DIOASP",5,0.00912870929175277
+2021,"Cape Johnson","nudibranch",0,0,"S",10,NA,"DIRALB",5,0
+2021,"Cape Johnson","nudibranch",0.0333333333333333,0.0217306746840088,"S",10,NA,"DORODH",5,0.0485912657903775
+2021,"Cape Johnson","octopus",0,0,"S",10,NA,"ENTDOF",5,0
+2021,"Cape Johnson","anenome",0.01,0.00666666666666667,"S",10,NA,"EPIPRO",5,0.0149071198499986
+2021,"Cape Johnson","cucumber",0,0,"S",10,NA,"EUPQUI",5,0
+2021,"Cape Johnson","seastar",0,0,"S",10,NA,"EVATRO",5,0
+2021,"Cape Johnson","gastropod",0,0,"S",10,NA,"FUSORE",5,0
+2021,"Cape Johnson","gastropod",0,0,"S",10,NA,"HALKAM",5,0
+2021,"Cape Johnson","seastar",0.0666666666666667,0.0404831926716371,"S",10,NA,"HENLEV",5,0.0905231707600018
+2021,"Cape Johnson","nudibranch",0,0,"S",10,NA,"HERCRA",5,0
+2021,"Cape Johnson","nudibranch",0,0,"S",10,NA,"JANFUS",5,0
+2021,"Cape Johnson","seastar.small",0.06,0.0310017920628971,"S",10,NA,"LEPSPP",5,0.0693221144769514
+2021,"Cape Johnson","nudibranch",0,0,"S",10,NA,"LIMCOC",5,0
+2021,"Cape Johnson","gastropod",0,0,"S",10,NA,"LIRDIR",5,0
+2021,"Cape Johnson","crab",0,0,"S",10,NA,"LOPMAN",5,0
+2021,"Cape Johnson","seastar",0,0,"S",10,NA,"MEDAEQ",5,0
+2021,"Cape Johnson","urchin",0,0,"S",10,NA,"MESFRA",5,0
+2021,"Cape Johnson","anenome",0,0,"S",10,NA,"METGIG",5,0
+2021,"Cape Johnson","anenome",0,0,"S",10,NA,"METSPP",5,0
+2021,"Cape Johnson","crab",0,0,"S",10,NA,"MIMFOL",5,0
+2021,"Cape Johnson","bivalve",0,0,"S",10,NA,"MYTCAL",5,0
+2021,"Cape Johnson","gastropod",0,0,"S",10,NA,"NUCLAM",5,0
+2021,"Cape Johnson","nudibranch",0,0,"S",10,NA,"NUDIBR",5,0
+2021,"Cape Johnson","seastar",0,0,"S",10,NA,"ORTKOE",5,0
+2021,"Cape Johnson",NA,0,0,"S",10,NA,"PAGSPP",5,0
+2021,"Cape Johnson","cucumber",0,0,"S",10,NA,"PARCAL",5,0
+2021,"Cape Johnson","seastar",0,0,"S",10,NA,"PATMIN",5,0
+2021,"Cape Johnson","nudibranch",0.00333333333333333,0.00333333333333333,"S",10,NA,"PELNOB",5,0.0074535599249993
+2021,"Cape Johnson","seastar",0,0,"S",10,NA,"PISBRE",5,0
+2021,"Cape Johnson","seastar",0,0,"S",10,NA,"PISGIG",5,0
+2021,"Cape Johnson","seastar",0,0,"S",10,NA,"PISOCH",5,0
+2021,"Cape Johnson","bivalve",0,0,"S",10,NA,"PODSPP",5,0
+2021,"Cape Johnson","crab",0,0,"S",10,NA,"PUGGRA",5,0
+2021,"Cape Johnson","crab",0,0,"S",10,NA,"PUGPRO",5,0
+2021,"Cape Johnson","seastar",0,0,"S",10,NA,"PYCHEL",5,0
+2021,"Cape Johnson","bivalve",0,0,"S",10,NA,"SCALLOP",5,0
+2021,"Cape Johnson","crab",0,0,"S",10,NA,"SCYDEC",5,0
+2021,"Cape Johnson","seastar",0,0,"S",10,NA,"SOLSTI",5,0
+2021,"Cape Johnson","seastar.small",0,0,"S",10,NA,"STARREC",5,0
+2021,"Cape Johnson","urchin",0,0,"S",10,NA,"STRDRO",5,0
+2021,"Cape Johnson","urchin",0,0,"S",10,NA,"STRPUR",5,0
+2021,"Cape Johnson","tunicate",0.136666666666667,0.0669576980886689,"S",10,NA,"STYMON",5,0.149721964543171
+2021,"Cape Johnson","gastropod",0,0,"S",10,NA,"TEGSPP",5,0
+2021,"Cape Johnson","nudibranch",0,0,"S",10,NA,"TRICAT",5,0
+2021,"Cape Johnson",NA,0,0,"S",10,NA,"UNIDSP",5,0
+2021,"Cape Johnson","anenome",0,0,"S",10,NA,"URTCRA",5,0
+2021,"Cape Johnson","anenome",0,0,"S",10,NA,"URTLOF",5,0
+2021,"Cape Johnson","anenome",0,0,"S",10,NA,"URTPIS",5,0
+2021,"Cape Johnson","anenome",0.0166666666666667,0.0129099444873581,"S",10,NA,"URTSPP",5,0.0288675134594813
+2021,"Destruction Island","nudibranch",0,0,"N",5,NA,"ACAHUD",5,0
+2021,"Destruction Island","nudibranch",0,0,"N",5,NA,"ACANAN",5,0
+2021,"Destruction Island","gastropod",0,0,"N",5,NA,"ACMMIT",5,0
+2021,"Destruction Island","anenome",0,0,"N",5,NA,"ANTELE",5,0
+2021,"Destruction Island","anenome",0.0633333333333333,0.03590109871423,"N",5,NA,"ANTXAN",5,0.0802772971919486
+2021,"Destruction Island",NA,0,0,"N",5,NA,"BALNUB",5,0
+2021,"Destruction Island","crab",0,0,"N",5,NA,"CANORE",5,0
+2021,"Destruction Island","crab",0,0,"N",5,NA,"CANSPP",5,0
+2021,"Destruction Island","gastropod",0.0233333333333333,0.019436506316151,"N",5,NA,"CERFOL",5,0.0434613493680177
+2021,"Destruction Island",NA,0,0,"N",5,NA,"CHITON",5,0
+2021,"Destruction Island","bivalve",0,0,"N",5,NA,"CLAMSP",5,0
+2021,"Destruction Island","sponge",0,0,"N",5,NA,"CRAARB",5,0
+2021,"Destruction Island","bivalve",0.00333333333333333,0.00333333333333333,"N",5,NA,"CRAGIG",5,0.0074535599249993
+2021,"Destruction Island","seastar",0,0,"N",5,NA,"CROPAP",5,0
+2021,"Destruction Island","crab",0,0,"N",5,NA,"CRYDEC",5,0
+2021,"Destruction Island","crab",0,0,"N",5,NA,"CRYSIT",5,0
+2021,"Destruction Island","chiton",0,0,"N",5,NA,"CRYSTE",5,0
+2021,"Destruction Island","cucumber",0.26,0.142458570975721,"N",5,NA,"CUCMIN",5,0.31854704867919
+2021,"Destruction Island","seastar",0.13,0.0646357314322177,"N",5,NA,"DERIMB",5,0.144529889257859
+2021,"Destruction Island","nudibranch",0,0,"N",5,NA,"DIASAN",5,0
+2021,"Destruction Island","gastropod",0,0,"N",5,NA,"DIOASP",5,0
+2021,"Destruction Island","nudibranch",0,0,"N",5,NA,"DIRALB",5,0
+2021,"Destruction Island","nudibranch",0,0,"N",5,NA,"DORODH",5,0
+2021,"Destruction Island","octopus",0,0,"N",5,NA,"ENTDOF",5,0
+2021,"Destruction Island","anenome",0,0,"N",5,NA,"EPIPRO",5,0
+2021,"Destruction Island","cucumber",0.00333333333333333,0.00333333333333333,"N",5,NA,"EUPQUI",5,0.0074535599249993
+2021,"Destruction Island","seastar",0.0133333333333333,0.0097182531580755,"N",5,NA,"EVATRO",5,0.0217306746840088
+2021,"Destruction Island","gastropod",0,0,"N",5,NA,"FUSORE",5,0
+2021,"Destruction Island","gastropod",0,0,"N",5,NA,"HALKAM",5,0
+2021,"Destruction Island","seastar",0.0666666666666667,0.0302765035409749,"N",5,NA,"HENLEV",5,0.067700320038633
+2021,"Destruction Island","nudibranch",0,0,"N",5,NA,"HERCRA",5,0
+2021,"Destruction Island","nudibranch",0,0,"N",5,NA,"JANFUS",5,0
+2021,"Destruction Island","seastar.small",0,0,"N",5,NA,"LEPSPP",5,0
+2021,"Destruction Island","nudibranch",0,0,"N",5,NA,"LIMCOC",5,0
+2021,"Destruction Island","gastropod",0,0,"N",5,NA,"LIRDIR",5,0
+2021,"Destruction Island","crab",0,0,"N",5,NA,"LOPMAN",5,0
+2021,"Destruction Island","seastar",0,0,"N",5,NA,"MEDAEQ",5,0
+2021,"Destruction Island","urchin",0.0366666666666667,0.0226077666104176,"N",5,NA,"MESFRA",5,0.0505525029603437
+2021,"Destruction Island","anenome",0,0,"N",5,NA,"METGIG",5,0
+2021,"Destruction Island","anenome",0,0,"N",5,NA,"METSPP",5,0
+2021,"Destruction Island","crab",0,0,"N",5,NA,"MIMFOL",5,0
+2021,"Destruction Island","bivalve",0,0,"N",5,NA,"MYTCAL",5,0
+2021,"Destruction Island","gastropod",0.02,0.02,"N",5,NA,"NUCLAM",5,0.0447213595499958
+2021,"Destruction Island","nudibranch",0,0,"N",5,NA,"NUDIBR",5,0
+2021,"Destruction Island","seastar",0,0,"N",5,NA,"ORTKOE",5,0
+2021,"Destruction Island",NA,0,0,"N",5,NA,"PAGSPP",5,0
+2021,"Destruction Island","cucumber",0,0,"N",5,NA,"PARCAL",5,0
+2021,"Destruction Island","seastar",0,0,"N",5,NA,"PATMIN",5,0
+2021,"Destruction Island","nudibranch",0.0366666666666667,0.0169967317119759,"N",5,NA,"PELNOB",5,0.0380058475033046
+2021,"Destruction Island","seastar",0,0,"N",5,NA,"PISBRE",5,0
+2021,"Destruction Island","seastar",0,0,"N",5,NA,"PISGIG",5,0
+2021,"Destruction Island","seastar",0.0333333333333333,0.022973414586817,"N",5,NA,"PISOCH",5,0.0513701166914081
+2021,"Destruction Island","bivalve",0,0,"N",5,NA,"PODSPP",5,0
+2021,"Destruction Island","crab",0,0,"N",5,NA,"PUGGRA",5,0
+2021,"Destruction Island","crab",0,0,"N",5,NA,"PUGPRO",5,0
+2021,"Destruction Island","seastar",0,0,"N",5,NA,"PYCHEL",5,0
+2021,"Destruction Island","bivalve",0,0,"N",5,NA,"SCALLOP",5,0
+2021,"Destruction Island","crab",0,0,"N",5,NA,"SCYDEC",5,0
+2021,"Destruction Island","seastar",0,0,"N",5,NA,"SOLSTI",5,0
+2021,"Destruction Island","seastar.small",0,0,"N",5,NA,"STARREC",5,0
+2021,"Destruction Island","urchin",0,0,"N",5,NA,"STRDRO",5,0
+2021,"Destruction Island","urchin",0.495116279069767,0.237895490009409,"N",5,NA,"STRPUR",5,0.531950487201661
+2021,"Destruction Island","tunicate",0.24,0.118039541397505,"N",5,NA,"STYMON",5,0.263944438597722
+2021,"Destruction Island","gastropod",0,0,"N",5,NA,"TEGSPP",5,0
+2021,"Destruction Island","nudibranch",0,0,"N",5,NA,"TRICAT",5,0
+2021,"Destruction Island",NA,0,0,"N",5,NA,"UNIDSP",5,0
+2021,"Destruction Island","anenome",0,0,"N",5,NA,"URTCRA",5,0
+2021,"Destruction Island","anenome",0,0,"N",5,NA,"URTLOF",5,0
+2021,"Destruction Island","anenome",0,0,"N",5,NA,"URTPIS",5,0
+2021,"Destruction Island","anenome",0,0,"N",5,NA,"URTSPP",5,0
+=======
 2021,"Cape Johnson","nudibranch",0.0111111111111111,0.0111111111111111,"S",10,NA,"ACAHUD",3,0.0192450089729875
 2021,"Cape Johnson","nudibranch",0,0,"S",10,NA,"ACANAN",3,0
 2021,"Cape Johnson","gastropod",0.00555555555555556,0.00555555555555556,"S",10,NA,"ACMMIT",3,0.00962250448649376
@@ -6862,13 +8213,17 @@
 2021,"Destruction Island","anenome",0,0,"N",5,NA,"URTLOF",3,0
 2021,"Destruction Island","anenome",0,0,"N",5,NA,"URTPIS",3,0
 2021,"Destruction Island","anenome",0,0,"N",5,NA,"URTSPP",3,0
+>>>>>>> master
 2021,"Destruction Island","nudibranch",0,0,"N",10,NA,"ACAHUD",3,0
 2021,"Destruction Island","nudibranch",0,0,"N",10,NA,"ACANAN",3,0
 2021,"Destruction Island","gastropod",0.00555555555555556,0.00555555555555556,"N",10,NA,"ACMMIT",3,0.00962250448649376
 2021,"Destruction Island","anenome",0,0,"N",10,NA,"ANTELE",3,0
 2021,"Destruction Island","anenome",0,0,"N",10,NA,"ANTXAN",3,0
 2021,"Destruction Island",NA,0,0,"N",10,NA,"BALNUB",3,0
+<<<<<<< HEAD
+=======
 2021,"Destruction Island",NA,0,0,"N",10,NA,"CADLUT",3,0
+>>>>>>> master
 2021,"Destruction Island","crab",0,0,"N",10,NA,"CANORE",3,0
 2021,"Destruction Island","crab",0,0,"N",10,NA,"CANSPP",3,0
 2021,"Destruction Island","gastropod",0.0666666666666667,0.0346944333244355,"N",10,NA,"CERFOL",3,0.0600925212577332
@@ -6925,7 +8280,10 @@
 2021,"Destruction Island","seastar.small",0,0,"N",10,NA,"STARREC",3,0
 2021,"Destruction Island","urchin",0,0,"N",10,NA,"STRDRO",3,0
 2021,"Destruction Island","urchin",0.0333333333333333,0.0333333333333333,"N",10,NA,"STRPUR",3,0.0577350269189626
+<<<<<<< HEAD
+=======
 2021,"Destruction Island",NA,0,0,"N",10,NA,"STYFOR",3,0
+>>>>>>> master
 2021,"Destruction Island","tunicate",0.122222222222222,0.0587944735792131,"N",10,NA,"STYMON",3,0.101835015443463
 2021,"Destruction Island","gastropod",0,0,"N",10,NA,"TEGSPP",3,0
 2021,"Destruction Island","nudibranch",0,0,"N",10,NA,"TRICAT",3,0
@@ -6940,7 +8298,10 @@
 2021,"Destruction Island","anenome",0,0,"S",5,NA,"ANTELE",3,0
 2021,"Destruction Island","anenome",0.0444444444444444,0.0444444444444444,"S",5,NA,"ANTXAN",3,0.0769800358919501
 2021,"Destruction Island",NA,0.0166666666666667,0.00962250448649376,"S",5,NA,"BALNUB",3,0.0166666666666667
+<<<<<<< HEAD
+=======
 2021,"Destruction Island",NA,0,0,"S",5,NA,"CADLUT",3,0
+>>>>>>> master
 2021,"Destruction Island","crab",0.0111111111111111,0.0111111111111111,"S",5,NA,"CANORE",3,0.0192450089729875
 2021,"Destruction Island","crab",0,0,"S",5,NA,"CANSPP",3,0
 2021,"Destruction Island","gastropod",0.0111111111111111,0.0111111111111111,"S",5,NA,"CERFOL",3,0.0192450089729875
@@ -6997,7 +8358,10 @@
 2021,"Destruction Island","seastar.small",0,0,"S",5,NA,"STARREC",3,0
 2021,"Destruction Island","urchin",0,0,"S",5,NA,"STRDRO",3,0
 2021,"Destruction Island","urchin",0.458333333333333,0.0961046882889233,"S",5,NA,"STRPUR",3,0.166458202961985
+<<<<<<< HEAD
+=======
 2021,"Destruction Island",NA,0,0,"S",5,NA,"STYFOR",3,0
+>>>>>>> master
 2021,"Destruction Island","tunicate",0.202777777777778,0.0320348960963078,"S",5,NA,"STYMON",3,0.0554860676539949
 2021,"Destruction Island","gastropod",0,0,"S",5,NA,"TEGSPP",3,0
 2021,"Destruction Island","nudibranch",0,0,"S",5,NA,"TRICAT",3,0
@@ -7012,7 +8376,10 @@
 2021,"Destruction Island","anenome",0,0,"S",10,NA,"ANTELE",2,0
 2021,"Destruction Island","anenome",0.0166666666666667,0.0166666666666667,"S",10,NA,"ANTXAN",2,0.0235702260395516
 2021,"Destruction Island",NA,0,0,"S",10,NA,"BALNUB",2,0
+<<<<<<< HEAD
+=======
 2021,"Destruction Island",NA,0,0,"S",10,NA,"CADLUT",2,0
+>>>>>>> master
 2021,"Destruction Island","crab",0.00833333333333333,0.00833333333333333,"S",10,NA,"CANORE",2,0.0117851130197758
 2021,"Destruction Island","crab",0,0,"S",10,NA,"CANSPP",2,0
 2021,"Destruction Island","gastropod",0.0166666666666667,0,"S",10,NA,"CERFOL",2,0
@@ -7069,7 +8436,10 @@
 2021,"Destruction Island","seastar.small",0,0,"S",10,NA,"STARREC",2,0
 2021,"Destruction Island","urchin",0,0,"S",10,NA,"STRDRO",2,0
 2021,"Destruction Island","urchin",0.05,0.0333333333333333,"S",10,NA,"STRPUR",2,0.0471404520791032
+<<<<<<< HEAD
+=======
 2021,"Destruction Island",NA,0,0,"S",10,NA,"STYFOR",2,0
+>>>>>>> master
 2021,"Destruction Island","tunicate",0.225,0.0916666666666666,"S",10,NA,"STYMON",2,0.129636243217534
 2021,"Destruction Island","gastropod",0,0,"S",10,NA,"TEGSPP",2,0
 2021,"Destruction Island","nudibranch",0,0,"S",10,NA,"TRICAT",2,0
@@ -7084,7 +8454,10 @@
 2021,"Neah Bay","anenome",0,0,"N",5,NA,"ANTELE",4,0
 2021,"Neah Bay","anenome",0,0,"N",5,NA,"ANTXAN",4,0
 2021,"Neah Bay",NA,0,0,"N",5,NA,"BALNUB",4,0
+<<<<<<< HEAD
+=======
 2021,"Neah Bay",NA,0,0,"N",5,NA,"CADLUT",4,0
+>>>>>>> master
 2021,"Neah Bay","crab",0,0,"N",5,NA,"CANORE",4,0
 2021,"Neah Bay","crab",0,0,"N",5,NA,"CANSPP",4,0
 2021,"Neah Bay","gastropod",0.00416666666666667,0.00416666666666667,"N",5,NA,"CERFOL",4,0.00833333333333333
@@ -7141,7 +8514,10 @@
 2021,"Neah Bay","seastar.small",0,0,"N",5,NA,"STARREC",4,0
 2021,"Neah Bay","urchin",0.00416666666666667,0.00416666666666667,"N",5,NA,"STRDRO",4,0.00833333333333333
 2021,"Neah Bay","urchin",0.0166666666666667,0.0117851130197758,"N",5,NA,"STRPUR",4,0.0235702260395516
+<<<<<<< HEAD
+=======
 2021,"Neah Bay",NA,0,0,"N",5,NA,"STYFOR",4,0
+>>>>>>> master
 2021,"Neah Bay","tunicate",0.00833333333333333,0.00481125224324688,"N",5,NA,"STYMON",4,0.00962250448649376
 2021,"Neah Bay","gastropod",0.00416666666666667,0.00416666666666667,"N",5,NA,"TEGSPP",4,0.00833333333333333
 2021,"Neah Bay","nudibranch",0,0,"N",5,NA,"TRICAT",4,0
@@ -7156,7 +8532,10 @@
 2021,"Neah Bay","anenome",0,0,"N",10,NA,"ANTELE",3,0
 2021,"Neah Bay","anenome",0,0,"N",10,NA,"ANTXAN",3,0
 2021,"Neah Bay",NA,0,0,"N",10,NA,"BALNUB",3,0
+<<<<<<< HEAD
+=======
 2021,"Neah Bay",NA,0,0,"N",10,NA,"CADLUT",3,0
+>>>>>>> master
 2021,"Neah Bay","crab",0,0,"N",10,NA,"CANORE",3,0
 2021,"Neah Bay","crab",0,0,"N",10,NA,"CANSPP",3,0
 2021,"Neah Bay","gastropod",0.0333333333333333,0.0166666666666667,"N",10,NA,"CERFOL",3,0.0288675134594813
@@ -7213,7 +8592,10 @@
 2021,"Neah Bay","seastar.small",0,0,"N",10,NA,"STARREC",3,0
 2021,"Neah Bay","urchin",0,0,"N",10,NA,"STRDRO",3,0
 2021,"Neah Bay","urchin",0.0388888888888889,0.0309320242379446,"N",10,NA,"STRPUR",3,0.053575837561072
+<<<<<<< HEAD
+=======
 2021,"Neah Bay",NA,0,0,"N",10,NA,"STYFOR",3,0
+>>>>>>> master
 2021,"Neah Bay","tunicate",0.0111111111111111,0.00555555555555556,"N",10,NA,"STYMON",3,0.00962250448649376
 2021,"Neah Bay","gastropod",0,0,"N",10,NA,"TEGSPP",3,0
 2021,"Neah Bay","nudibranch",0,0,"N",10,NA,"TRICAT",3,0
@@ -7228,7 +8610,10 @@
 2021,"Neah Bay","anenome",0,0,"S",5,NA,"ANTELE",3,0
 2021,"Neah Bay","anenome",0,0,"S",5,NA,"ANTXAN",3,0
 2021,"Neah Bay",NA,0,0,"S",5,NA,"BALNUB",3,0
+<<<<<<< HEAD
+=======
 2021,"Neah Bay",NA,0,0,"S",5,NA,"CADLUT",3,0
+>>>>>>> master
 2021,"Neah Bay","crab",0,0,"S",5,NA,"CANORE",3,0
 2021,"Neah Bay","crab",0,0,"S",5,NA,"CANSPP",3,0
 2021,"Neah Bay","gastropod",0.0166666666666667,0.00962250448649376,"S",5,NA,"CERFOL",3,0.0166666666666667
@@ -7285,7 +8670,10 @@
 2021,"Neah Bay","seastar.small",0,0,"S",5,NA,"STARREC",3,0
 2021,"Neah Bay","urchin",0,0,"S",5,NA,"STRDRO",3,0
 2021,"Neah Bay","urchin",0.0388888888888889,0.0222222222222222,"S",5,NA,"STRPUR",3,0.038490017945975
+<<<<<<< HEAD
+=======
 2021,"Neah Bay",NA,0,0,"S",5,NA,"STYFOR",3,0
+>>>>>>> master
 2021,"Neah Bay","tunicate",0,0,"S",5,NA,"STYMON",3,0
 2021,"Neah Bay","gastropod",0,0,"S",5,NA,"TEGSPP",3,0
 2021,"Neah Bay","nudibranch",0,0,"S",5,NA,"TRICAT",3,0
@@ -7300,7 +8688,10 @@
 2021,"Neah Bay","anenome",0,0,"S",10,NA,"ANTELE",3,0
 2021,"Neah Bay","anenome",0,0,"S",10,NA,"ANTXAN",3,0
 2021,"Neah Bay",NA,0,0,"S",10,NA,"BALNUB",3,0
+<<<<<<< HEAD
+=======
 2021,"Neah Bay",NA,0,0,"S",10,NA,"CADLUT",3,0
+>>>>>>> master
 2021,"Neah Bay","crab",0.0388888888888889,0.0242161052418926,"S",10,NA,"CANORE",3,0.0419435246403931
 2021,"Neah Bay","crab",0,0,"S",10,NA,"CANSPP",3,0
 2021,"Neah Bay","gastropod",0.0222222222222222,0.0111111111111111,"S",10,NA,"CERFOL",3,0.0192450089729875
@@ -7357,7 +8748,10 @@
 2021,"Neah Bay","seastar.small",0,0,"S",10,NA,"STARREC",3,0
 2021,"Neah Bay","urchin",0,0,"S",10,NA,"STRDRO",3,0
 2021,"Neah Bay","urchin",0.233333333333333,0.0787635937708768,"S",10,NA,"STRPUR",3,0.136422546197874
+<<<<<<< HEAD
+=======
 2021,"Neah Bay",NA,0,0,"S",10,NA,"STYFOR",3,0
+>>>>>>> master
 2021,"Neah Bay","tunicate",0.0111111111111111,0.00555555555555556,"S",10,NA,"STYMON",3,0.00962250448649376
 2021,"Neah Bay","gastropod",0.0111111111111111,0.00555555555555556,"S",10,NA,"TEGSPP",3,0.00962250448649376
 2021,"Neah Bay","nudibranch",0,0,"S",10,NA,"TRICAT",3,0
@@ -7372,7 +8766,10 @@
 2021,"Tatoosh Island","anenome",0,0,"N",5,NA,"ANTELE",3,0
 2021,"Tatoosh Island","anenome",0,0,"N",5,NA,"ANTXAN",3,0
 2021,"Tatoosh Island",NA,21.5384765017118,7.9890144397995,"N",5,NA,"BALNUB",3,13.8373789121341
+<<<<<<< HEAD
+=======
 2021,"Tatoosh Island",NA,0,0,"N",5,NA,"CADLUT",3,0
+>>>>>>> master
 2021,"Tatoosh Island","crab",0,0,"N",5,NA,"CANORE",3,0
 2021,"Tatoosh Island","crab",0,0,"N",5,NA,"CANSPP",3,0
 2021,"Tatoosh Island","gastropod",0.0388888888888889,0.0242161052418926,"N",5,NA,"CERFOL",3,0.0419435246403931
@@ -7429,7 +8826,10 @@
 2021,"Tatoosh Island","seastar.small",0,0,"N",5,NA,"STARREC",3,0
 2021,"Tatoosh Island","urchin",0.0222222222222222,0.0222222222222222,"N",5,NA,"STRDRO",3,0.038490017945975
 2021,"Tatoosh Island","urchin",3.04956169331748,0.925986359547954,"N",5,NA,"STRPUR",3,1.6038554218528
+<<<<<<< HEAD
+=======
 2021,"Tatoosh Island",NA,0,0,"N",5,NA,"STYFOR",3,0
+>>>>>>> master
 2021,"Tatoosh Island","tunicate",0.0222222222222222,0.00555555555555556,"N",5,NA,"STYMON",3,0.00962250448649376
 2021,"Tatoosh Island","gastropod",0,0,"N",5,NA,"TEGSPP",3,0
 2021,"Tatoosh Island","nudibranch",0,0,"N",5,NA,"TRICAT",3,0
@@ -7438,6 +8838,78 @@
 2021,"Tatoosh Island","anenome",0,0,"N",5,NA,"URTLOF",3,0
 2021,"Tatoosh Island","anenome",0,0,"N",5,NA,"URTPIS",3,0
 2021,"Tatoosh Island","anenome",0.0166666666666667,0.00962250448649376,"N",5,NA,"URTSPP",3,0.0166666666666667
+<<<<<<< HEAD
+2021,"Tatoosh Island","nudibranch",0,0,"N",10,NA,"ACAHUD",4,0
+2021,"Tatoosh Island","nudibranch",0,0,"N",10,NA,"ACANAN",4,0
+2021,"Tatoosh Island","gastropod",0,0,"N",10,NA,"ACMMIT",4,0
+2021,"Tatoosh Island","anenome",0,0,"N",10,NA,"ANTELE",4,0
+2021,"Tatoosh Island","anenome",0,0,"N",10,NA,"ANTXAN",4,0
+2021,"Tatoosh Island",NA,0.0333333333333333,0.0192450089729875,"N",10,NA,"BALNUB",4,0.038490017945975
+2021,"Tatoosh Island","crab",0,0,"N",10,NA,"CANORE",4,0
+2021,"Tatoosh Island","crab",0,0,"N",10,NA,"CANSPP",4,0
+2021,"Tatoosh Island","gastropod",0,0,"N",10,NA,"CERFOL",4,0
+2021,"Tatoosh Island",NA,0,0,"N",10,NA,"CHITON",4,0
+2021,"Tatoosh Island","bivalve",0,0,"N",10,NA,"CLAMSP",4,0
+2021,"Tatoosh Island","sponge",0,0,"N",10,NA,"CRAARB",4,0
+2021,"Tatoosh Island","bivalve",0.00833333333333333,0.00833333333333333,"N",10,NA,"CRAGIG",4,0.0166666666666667
+2021,"Tatoosh Island","seastar",0,0,"N",10,NA,"CROPAP",4,0
+2021,"Tatoosh Island","crab",0,0,"N",10,NA,"CRYDEC",4,0
+2021,"Tatoosh Island","crab",0,0,"N",10,NA,"CRYSIT",4,0
+2021,"Tatoosh Island","chiton",0.0125,0.00797855923130282,"N",10,NA,"CRYSTE",4,0.0159571184626056
+2021,"Tatoosh Island","cucumber",0.0208333333333333,0.0104858811600983,"N",10,NA,"CUCMIN",4,0.0209717623201965
+2021,"Tatoosh Island","seastar",0.0666666666666667,0.0280541803843391,"N",10,NA,"DERIMB",4,0.0561083607686782
+2021,"Tatoosh Island","nudibranch",0,0,"N",10,NA,"DIASAN",4,0
+2021,"Tatoosh Island","gastropod",0.00833333333333333,0.00481125224324688,"N",10,NA,"DIOASP",4,0.00962250448649376
+2021,"Tatoosh Island","nudibranch",0,0,"N",10,NA,"DIRALB",4,0
+2021,"Tatoosh Island","nudibranch",0.00416666666666667,0.00416666666666667,"N",10,NA,"DORODH",4,0.00833333333333333
+2021,"Tatoosh Island","octopus",0,0,"N",10,NA,"ENTDOF",4,0
+2021,"Tatoosh Island","anenome",0,0,"N",10,NA,"EPIPRO",4,0
+2021,"Tatoosh Island","cucumber",0,0,"N",10,NA,"EUPQUI",4,0
+2021,"Tatoosh Island","seastar",0,0,"N",10,NA,"EVATRO",4,0
+2021,"Tatoosh Island","gastropod",0,0,"N",10,NA,"FUSORE",4,0
+2021,"Tatoosh Island","gastropod",0,0,"N",10,NA,"HALKAM",4,0
+2021,"Tatoosh Island","seastar",0.0583333333333333,0.0240562612162344,"N",10,NA,"HENLEV",4,0.0481125224324688
+2021,"Tatoosh Island","nudibranch",0,0,"N",10,NA,"HERCRA",4,0
+2021,"Tatoosh Island","nudibranch",0,0,"N",10,NA,"JANFUS",4,0
+2021,"Tatoosh Island","seastar.small",0,0,"N",10,NA,"LEPSPP",4,0
+2021,"Tatoosh Island","nudibranch",0,0,"N",10,NA,"LIMCOC",4,0
+2021,"Tatoosh Island","gastropod",0,0,"N",10,NA,"LIRDIR",4,0
+2021,"Tatoosh Island","crab",0,0,"N",10,NA,"LOPMAN",4,0
+2021,"Tatoosh Island","seastar",0,0,"N",10,NA,"MEDAEQ",4,0
+2021,"Tatoosh Island","urchin",0.626388888888889,0.281780192988247,"N",10,NA,"MESFRA",4,0.563560385976494
+2021,"Tatoosh Island","anenome",0,0,"N",10,NA,"METGIG",4,0
+2021,"Tatoosh Island","anenome",0,0,"N",10,NA,"METSPP",4,0
+2021,"Tatoosh Island","crab",0,0,"N",10,NA,"MIMFOL",4,0
+2021,"Tatoosh Island","bivalve",0,0,"N",10,NA,"MYTCAL",4,0
+2021,"Tatoosh Island","gastropod",0.0416666666666667,0.0220479275922049,"N",10,NA,"NUCLAM",4,0.0440958551844098
+2021,"Tatoosh Island","nudibranch",0,0,"N",10,NA,"NUDIBR",4,0
+2021,"Tatoosh Island","seastar",0.0541666666666667,0.0248839900932902,"N",10,NA,"ORTKOE",4,0.0497679801865803
+2021,"Tatoosh Island",NA,0,0,"N",10,NA,"PAGSPP",4,0
+2021,"Tatoosh Island","cucumber",0,0,"N",10,NA,"PARCAL",4,0
+2021,"Tatoosh Island","seastar",0,0,"N",10,NA,"PATMIN",4,0
+2021,"Tatoosh Island","nudibranch",0,0,"N",10,NA,"PELNOB",4,0
+2021,"Tatoosh Island","seastar",0,0,"N",10,NA,"PISBRE",4,0
+2021,"Tatoosh Island","seastar",0,0,"N",10,NA,"PISGIG",4,0
+2021,"Tatoosh Island","seastar",0,0,"N",10,NA,"PISOCH",4,0
+2021,"Tatoosh Island","bivalve",0,0,"N",10,NA,"PODSPP",4,0
+2021,"Tatoosh Island","crab",0,0,"N",10,NA,"PUGGRA",4,0
+2021,"Tatoosh Island","crab",0,0,"N",10,NA,"PUGPRO",4,0
+2021,"Tatoosh Island","seastar",0,0,"N",10,NA,"PYCHEL",4,0
+2021,"Tatoosh Island","bivalve",0,0,"N",10,NA,"SCALLOP",4,0
+2021,"Tatoosh Island","crab",0,0,"N",10,NA,"SCYDEC",4,0
+2021,"Tatoosh Island","seastar",0,0,"N",10,NA,"SOLSTI",4,0
+2021,"Tatoosh Island","seastar.small",0,0,"N",10,NA,"STARREC",4,0
+2021,"Tatoosh Island","urchin",0.00416666666666667,0.00416666666666667,"N",10,NA,"STRDRO",4,0.00833333333333333
+2021,"Tatoosh Island","urchin",1.58888888888889,0.794628960701273,"N",10,NA,"STRPUR",4,1.58925792140255
+2021,"Tatoosh Island","tunicate",0,0,"N",10,NA,"STYMON",4,0
+2021,"Tatoosh Island","gastropod",0,0,"N",10,NA,"TEGSPP",4,0
+2021,"Tatoosh Island","nudibranch",0,0,"N",10,NA,"TRICAT",4,0
+2021,"Tatoosh Island",NA,0,0,"N",10,NA,"UNIDSP",4,0
+2021,"Tatoosh Island","anenome",0,0,"N",10,NA,"URTCRA",4,0
+2021,"Tatoosh Island","anenome",0,0,"N",10,NA,"URTLOF",4,0
+2021,"Tatoosh Island","anenome",0,0,"N",10,NA,"URTPIS",4,0
+2021,"Tatoosh Island","anenome",0.075,0.0284637521276656,"N",10,NA,"URTSPP",4,0.0569275042553311
+=======
 2021,"Tatoosh Island","nudibranch",0,0,"N",10,NA,"ACAHUD",3,0
 2021,"Tatoosh Island","nudibranch",0,0,"N",10,NA,"ACANAN",3,0
 2021,"Tatoosh Island","gastropod",0,0,"N",10,NA,"ACMMIT",3,0
@@ -7510,13 +8982,17 @@
 2021,"Tatoosh Island","anenome",0,0,"N",10,NA,"URTLOF",3,0
 2021,"Tatoosh Island","anenome",0,0,"N",10,NA,"URTPIS",3,0
 2021,"Tatoosh Island","anenome",0.1,0.0192450089729875,"N",10,NA,"URTSPP",3,0.0333333333333333
+>>>>>>> master
 2021,"Tatoosh Island","nudibranch",0,0,"S",5,NA,"ACAHUD",3,0
 2021,"Tatoosh Island","nudibranch",0,0,"S",5,NA,"ACANAN",3,0
 2021,"Tatoosh Island","gastropod",0.00555555555555556,0.00555555555555556,"S",5,NA,"ACMMIT",3,0.00962250448649376
 2021,"Tatoosh Island","anenome",0,0,"S",5,NA,"ANTELE",3,0
 2021,"Tatoosh Island","anenome",0.00555555555555556,0.00555555555555556,"S",5,NA,"ANTXAN",3,0.00962250448649376
 2021,"Tatoosh Island",NA,3.48809523809524,2.15149976694527,"S",5,NA,"BALNUB",3,3.7265069088218
+<<<<<<< HEAD
+=======
 2021,"Tatoosh Island",NA,0,0,"S",5,NA,"CADLUT",3,0
+>>>>>>> master
 2021,"Tatoosh Island","crab",0,0,"S",5,NA,"CANORE",3,0
 2021,"Tatoosh Island","crab",0,0,"S",5,NA,"CANSPP",3,0
 2021,"Tatoosh Island","gastropod",0.116666666666667,0.00962250448649376,"S",5,NA,"CERFOL",3,0.0166666666666667
@@ -7573,7 +9049,10 @@
 2021,"Tatoosh Island","seastar.small",0,0,"S",5,NA,"STARREC",3,0
 2021,"Tatoosh Island","urchin",0.155555555555556,0.0873124091416762,"S",5,NA,"STRDRO",3,0.151229528764624
 2021,"Tatoosh Island","urchin",5.680031406502,2.75606494356005,"S",5,NA,"STRPUR",3,4.77364451120546
+<<<<<<< HEAD
+=======
 2021,"Tatoosh Island",NA,0,0,"S",5,NA,"STYFOR",3,0
+>>>>>>> master
 2021,"Tatoosh Island","tunicate",0.0277777777777778,0.0146986183948033,"S",5,NA,"STYMON",3,0.0254587538608658
 2021,"Tatoosh Island","gastropod",0,0,"S",5,NA,"TEGSPP",3,0
 2021,"Tatoosh Island","nudibranch",0,0,"S",5,NA,"TRICAT",3,0
@@ -7582,6 +9061,78 @@
 2021,"Tatoosh Island","anenome",0,0,"S",5,NA,"URTLOF",3,0
 2021,"Tatoosh Island","anenome",0,0,"S",5,NA,"URTPIS",3,0
 2021,"Tatoosh Island","anenome",0.0111111111111111,0.00555555555555556,"S",5,NA,"URTSPP",3,0.00962250448649376
+<<<<<<< HEAD
+2021,"Tatoosh Island","nudibranch",0,0,"S",10,NA,"ACAHUD",5,0
+2021,"Tatoosh Island","nudibranch",0,0,"S",10,NA,"ACANAN",5,0
+2021,"Tatoosh Island","gastropod",0,0,"S",10,NA,"ACMMIT",5,0
+2021,"Tatoosh Island","anenome",0,0,"S",10,NA,"ANTELE",5,0
+2021,"Tatoosh Island","anenome",0.00666666666666667,0.00408248290463863,"S",10,NA,"ANTXAN",5,0.00912870929175277
+2021,"Tatoosh Island",NA,0.578492063492064,0.30958410076213,"S",10,NA,"BALNUB",5,0.692251094057266
+2021,"Tatoosh Island","crab",0,0,"S",10,NA,"CANORE",5,0
+2021,"Tatoosh Island","crab",0,0,"S",10,NA,"CANSPP",5,0
+2021,"Tatoosh Island","gastropod",0,0,"S",10,NA,"CERFOL",5,0
+2021,"Tatoosh Island",NA,0.00666666666666667,0.00666666666666667,"S",10,NA,"CHITON",5,0.0149071198499986
+2021,"Tatoosh Island","bivalve",0,0,"S",10,NA,"CLAMSP",5,0
+2021,"Tatoosh Island","sponge",0,0,"S",10,NA,"CRAARB",5,0
+2021,"Tatoosh Island","bivalve",0,0,"S",10,NA,"CRAGIG",5,0
+2021,"Tatoosh Island","seastar",0,0,"S",10,NA,"CROPAP",5,0
+2021,"Tatoosh Island","crab",0,0,"S",10,NA,"CRYDEC",5,0
+2021,"Tatoosh Island","crab",0,0,"S",10,NA,"CRYSIT",5,0
+2021,"Tatoosh Island","chiton",0.02,0.0097182531580755,"S",10,NA,"CRYSTE",5,0.0217306746840088
+2021,"Tatoosh Island","cucumber",0.01,0.01,"S",10,NA,"CUCMIN",5,0.0223606797749979
+2021,"Tatoosh Island","seastar",0.0333333333333333,0.0139443337755679,"S",10,NA,"DERIMB",5,0.0311804782231162
+2021,"Tatoosh Island","nudibranch",0,0,"S",10,NA,"DIASAN",5,0
+2021,"Tatoosh Island","gastropod",0.00666666666666667,0.00666666666666667,"S",10,NA,"DIOASP",5,0.0149071198499986
+2021,"Tatoosh Island","nudibranch",0,0,"S",10,NA,"DIRALB",5,0
+2021,"Tatoosh Island","nudibranch",0.00333333333333333,0.00333333333333333,"S",10,NA,"DORODH",5,0.0074535599249993
+2021,"Tatoosh Island","octopus",0,0,"S",10,NA,"ENTDOF",5,0
+2021,"Tatoosh Island","anenome",0,0,"S",10,NA,"EPIPRO",5,0
+2021,"Tatoosh Island","cucumber",0,0,"S",10,NA,"EUPQUI",5,0
+2021,"Tatoosh Island","seastar",0,0,"S",10,NA,"EVATRO",5,0
+2021,"Tatoosh Island","gastropod",0,0,"S",10,NA,"FUSORE",5,0
+2021,"Tatoosh Island","gastropod",0,0,"S",10,NA,"HALKAM",5,0
+2021,"Tatoosh Island","seastar",0.0166666666666667,0.0129099444873581,"S",10,NA,"HENLEV",5,0.0288675134594813
+2021,"Tatoosh Island","nudibranch",0,0,"S",10,NA,"HERCRA",5,0
+2021,"Tatoosh Island","nudibranch",0,0,"S",10,NA,"JANFUS",5,0
+2021,"Tatoosh Island","seastar.small",0,0,"S",10,NA,"LEPSPP",5,0
+2021,"Tatoosh Island","nudibranch",0,0,"S",10,NA,"LIMCOC",5,0
+2021,"Tatoosh Island","gastropod",0,0,"S",10,NA,"LIRDIR",5,0
+2021,"Tatoosh Island","crab",0,0,"S",10,NA,"LOPMAN",5,0
+2021,"Tatoosh Island","seastar",0,0,"S",10,NA,"MEDAEQ",5,0
+2021,"Tatoosh Island","urchin",0.837857142857143,0.459997658477724,"S",10,NA,"MESFRA",5,1.02858603384692
+2021,"Tatoosh Island","anenome",0,0,"S",10,NA,"METGIG",5,0
+2021,"Tatoosh Island","anenome",0.00333333333333333,0.00333333333333333,"S",10,NA,"METSPP",5,0.0074535599249993
+2021,"Tatoosh Island","crab",0,0,"S",10,NA,"MIMFOL",5,0
+2021,"Tatoosh Island","bivalve",0,0,"S",10,NA,"MYTCAL",5,0
+2021,"Tatoosh Island","gastropod",0.0433333333333333,0.0214734978778752,"S",10,NA,"NUCLAM",5,0.0480162009696264
+2021,"Tatoosh Island","nudibranch",0,0,"S",10,NA,"NUDIBR",5,0
+2021,"Tatoosh Island","seastar",0.0366666666666667,0.0290593262902712,"S",10,NA,"ORTKOE",5,0.0649786289653931
+2021,"Tatoosh Island",NA,0,0,"S",10,NA,"PAGSPP",5,0
+2021,"Tatoosh Island","cucumber",0,0,"S",10,NA,"PARCAL",5,0
+2021,"Tatoosh Island","seastar",0.00666666666666667,0.00666666666666667,"S",10,NA,"PATMIN",5,0.0149071198499986
+2021,"Tatoosh Island","nudibranch",0.0183333333333333,0.00927960727138337,"S",10,NA,"PELNOB",5,0.0207498326633146
+2021,"Tatoosh Island","seastar",0,0,"S",10,NA,"PISBRE",5,0
+2021,"Tatoosh Island","seastar",0,0,"S",10,NA,"PISGIG",5,0
+2021,"Tatoosh Island","seastar",0.01,0.01,"S",10,NA,"PISOCH",5,0.0223606797749979
+2021,"Tatoosh Island","bivalve",0,0,"S",10,NA,"PODSPP",5,0
+2021,"Tatoosh Island","crab",0,0,"S",10,NA,"PUGGRA",5,0
+2021,"Tatoosh Island","crab",0,0,"S",10,NA,"PUGPRO",5,0
+2021,"Tatoosh Island","seastar",0,0,"S",10,NA,"PYCHEL",5,0
+2021,"Tatoosh Island","bivalve",0,0,"S",10,NA,"SCALLOP",5,0
+2021,"Tatoosh Island","crab",0,0,"S",10,NA,"SCYDEC",5,0
+2021,"Tatoosh Island","seastar",0,0,"S",10,NA,"SOLSTI",5,0
+2021,"Tatoosh Island","seastar.small",0,0,"S",10,NA,"STARREC",5,0
+2021,"Tatoosh Island","urchin",0.00333333333333333,0.00333333333333333,"S",10,NA,"STRDRO",5,0.0074535599249993
+2021,"Tatoosh Island","urchin",1.79777777777778,0.989385954974718,"S",10,NA,"STRPUR",5,2.21233425130702
+2021,"Tatoosh Island","tunicate",0,0,"S",10,NA,"STYMON",5,0
+2021,"Tatoosh Island","gastropod",0,0,"S",10,NA,"TEGSPP",5,0
+2021,"Tatoosh Island","nudibranch",0,0,"S",10,NA,"TRICAT",5,0
+2021,"Tatoosh Island",NA,0,0,"S",10,NA,"UNIDSP",5,0
+2021,"Tatoosh Island","anenome",0,0,"S",10,NA,"URTCRA",5,0
+2021,"Tatoosh Island","anenome",0,0,"S",10,NA,"URTLOF",5,0
+2021,"Tatoosh Island","anenome",0,0,"S",10,NA,"URTPIS",5,0
+2021,"Tatoosh Island","anenome",0.025,0.0111803398874989,"S",10,NA,"URTSPP",5,0.025
+=======
 2021,"Tatoosh Island","nudibranch",0,0,"S",10,NA,"ACAHUD",4,0
 2021,"Tatoosh Island","nudibranch",0,0,"S",10,NA,"ACANAN",4,0
 2021,"Tatoosh Island","gastropod",0,0,"S",10,NA,"ACMMIT",4,0
@@ -10534,3 +12085,4 @@
 2023,"Tatoosh Island","anenome",0,0,"S",10,NA,"URTLOF",3,0
 2023,"Tatoosh Island","anenome",0,0,"S",10,NA,"URTPIS",3,0
 2023,"Tatoosh Island","anenome",0.0722222222222222,0.00555555555555555,"S",10,NA,"URTSPP",3,0.00962250448649376
+>>>>>>> master

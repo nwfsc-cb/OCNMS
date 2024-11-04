@@ -1,0 +1,17 @@
+Permutation test for adonis under reduced model
+Terms added sequentially (first to last)
+Permutation: free
+Number of permutations: 999
+
+adonis2(formula = df_matrix ~ zone + site + year + zone * site + zone * year + site * year, data = data.file1, permutations = nperm, by = "term")
+           Df SumOfSqs      R2       F Pr(>F)    
+zone        1   124.21 0.08265 83.6788  0.001 ***
+site        4   511.28 0.34020 86.1116  0.001 ***
+year        6    41.85 0.02785  4.6996  0.001 ***
+zone:site   4   148.31 0.09868 24.9783  0.001 ***
+zone:year   6    26.32 0.01752  2.9556  0.001 ***
+site:year  24    88.33 0.05877  2.4795  0.001 ***
+Residual  379   562.56 0.37433                   
+Total     424  1502.86 1.00000                   
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1

@@ -1,0 +1,15 @@
+species,common.name,name1,name2,functinal_group
+COSCOS,Costaria costata,Costaria,Costaria costata,understory
+CYMTRI,Cymathere triplicata,Cymathere,Cymathere triplicata,understory
+DESSPP,Desmarestia,Desmarestia,Desmarestia,understory
+EGRMEN,Egregia menziesii,Egregia,Egregia menziesii,understory
+LAMSET,Laminaria setchellii,Laminaria,Laminaria setchellii,understory
+MACPYR,Macrocystis pyrifera stipes,Macrocystis,Macrocystis pyrifera,canopy
+NERLUE,Nereocystis luetkeana stipes,Nereocystis,Nereocystis luetkeana,canopy
+PLEGAR,Pleurophycus gardneri stipes,Pleurophycus,Pleurophycus gardneri,understory
+PTECAL,Pterygophora californica stipes,Pterygophora,Pterygophora californica,understory
+SACGRO,Saccharina dentigera,S. dentigera,Saccharina dentigera,understory
+AGAFIM,Agarum fimbriatum,Agarum,Agarum fimbriatum,understory
+ALAMAR,"Alaria marginata, Alaria",Alaria,Alaria marginats,understory
+NO_ALG,No kelp stipes present in this sample,None,None,none
+SACLAT,"Saccharina latissima, ""bongo""",S. latissima,Saccharina latissima,canopy

@@ -1,4 +1,8 @@
 species,common.name
+<<<<<<< HEAD
+AUFL,Tubesnout
+=======
+>>>>>>> master
 ANOC,Wolf Eel
 APFL,Penpoint Gunnel
 ARHA,Scalyhead sculpin (Artedius harringtoni)
@@ -56,6 +60,10 @@ SECA,copper rockfish
 SEFL,Yellowtail rockfish
 SEMA,Quillback rockfish
 SEME,black rockfish
+<<<<<<< HEAD
+SEBYT,black and yellowtail rockfish YOY complex
+=======
+>>>>>>> master
 SEMI,vermilion rockfish
 SEMY,blue rockfish
 SENE,china rockfish

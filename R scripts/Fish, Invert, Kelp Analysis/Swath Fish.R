@@ -16,7 +16,9 @@ species_names <- read.csv("species_code_list.csv")
 #species_names <- species_names %>% rename("species"="PISCO.CLASSCODE")
 
 # Define codes for rockfish 
-ROCKFISH <- c(as.character(species_names$species[grep("SE",species_names$species)]),"RYOY")
+ROCKFISH <- c("SEAU", "SEBSPP", "SECA", "SEFL",
+                "SEMA","SEME", "SEMI", "SEMY", 
+                "SENE", "SEPA", "SEPI")
 
 ## size break in CM for rockfish
 size.break = 10
@@ -48,15 +50,14 @@ SP.all.common.names <- left_join(SP.all,species_names)
 
 ###############################
 ### Parse Rockfish into large and small size categories.
-non.SEB.dat <- filter(fish.dat,!grepl("SE",PISCO.Classcode)) %>% mutate(size_class=NA)
-SEB.dat     <- filter(fish.dat,grepl("SE",PISCO.Classcode)) %>%
+non.SEB.dat <- fish.dat %>% filter(!PISCO.Classcode %in% ROCKFISH) %>% mutate(size_class=NA)
+SEB.dat     <- fish.dat %>% filter(PISCO.Classcode %in% ROCKFISH) %>%
                       mutate(size_class=case_when(
                              Size.cm <= size.break~"small",
                              Size.cm > size.break ~"large",
                              TRUE ~as.character(Size.cm)))
 
 fish.dat <- data.frame(rbind(non.SEB.dat,SEB.dat))
-fish.dat$size_class[fish.dat$PISCO.Classcode =="RYOY"] <- "small"
 
 #####
 # Make a padded data frame with zeros for each species.
@@ -102,11 +103,36 @@ for( i in 1: length(SP)){
     dat.long <- rbind(dat.long, temp )
 }              
 dat.long$Count[is.na(dat.long$Count)==T] <- 0
+
+dat.long$size_class[dat.long$PISCO.Classcode =="RYOY"] <- "small"
+dat.long$size_class[dat.long$PISCO.Classcode =="SEBYT"] <- "small"
+
 dat.long$year <- 2015
 
 dat.long <- dat.long %>% 
             rename(site=Site,transect=Transect,observer=Observer,
                   common.name=Species,species=PISCO.Classcode)
+
+
+### merge in small and large classes for all rockfish 
+### to ensure the data frames are properly padded with zeros
+dat.u <- dat.long %>% distinct(year,site,transect,observer,species)
+
+sp.temp <- c( "SEAU", "SECA",
+              "SEFL", "SEMA","SEME",
+              "SEMI","SEMY",
+              "SENE","SEPA","SEPI")
+sp.size <- c("small","large")
+temp <- expand.grid(species = sp.temp,size_class=sp.size)
+temp <- bind_rows(temp,c(species="RYOY",size_class="small"))
+temp <- bind_rows(temp,c(species="SEBYT",size_class="small"))
+
+dat.u <- dat.u %>% filter(species %in% sp.temp) %>% left_join(.,temp)
+dat.long.rock <- dat.u %>% left_join(.,dat.long) 
+dat.long.rock$Count[is.na(dat.long.rock$Count)==T] <- 0
+
+# replace rockfish in the data padded with small and large
+dat.long <- dat.long %>% filter(!species %in% sp.temp) %>% bind_rows(.,dat.long.rock)
 
 
 # Fix some duplicate entries in the data so each species only shows up once per
@@ -146,7 +172,6 @@ fish.dat$size_class[fish.dat$SPECIES =="RYOY"] <- "small"
 # consolidate into large and small groups 
 fish.dat <- fish.dat %>% group_by(YEAR,SITE,AREA,TRANSECT,OBSERVER,ZONE,VIS_M,SPECIES,size_class) %>%
               summarize(Count=sum(Count))
-
 
 
 dat.long <- NULL
@@ -206,17 +231,26 @@ dat.u <- dat.long %>% distinct(year,site,area,transect,observer,zone,vis_m,speci
 
 sp.temp <- c( "SEAU", "SECA",
               "SEFL", "SEMA","SEME",
+
+              "SEMI","SEMY",
+
               "SEBYT","SEMI","SEMY",
+
               "SENE","SEPA","SEPI")
 sp.size <- c("small","large")
 temp <- expand.grid(species = sp.temp,size_class=sp.size)
 temp <- bind_rows(temp,c(species="RYOY",size_class="small"))
 
+temp <- bind_rows(temp,c(species="SEBYT",size_class="small"))
+
+
 dat.u <- dat.u %>% filter(species %in% sp.temp) %>% left_join(.,temp)
 dat.long.rock <- dat.u %>% left_join(.,dat.long) 
 dat.long.rock$Count[is.na(dat.long.rock$Count)==T] <- 0
 
+
 dat.long.rock %>% filter()
+
 
 # replace rockfish in the data padded with small and large
 dat.long <- dat.long %>% filter(!species %in% sp.temp) %>% bind_rows(.,dat.long.rock)
@@ -226,7 +260,29 @@ dat.2016.plus.fish <- dat.long
 
 # Combine all years of data into one data frame
 dat.fish <- full_join(dat.2015.fish,dat.2016.plus.fish)
-dat.fish <- dat.fish[-which(dat.fish$species=="RYOY" & dat.fish$size_class=="large"),]
+#dat.fish <- dat.fish[-which(dat.fish$species=="RYOY" & dat.fish$size_class=="large"),]
+
+##############################################################
+##### Reconcile different area designations among years ######
+##############################################################
+dat.fish$area <- as.character(dat.fish$area)
+
+dat.fish <- dat.fish %>% ungroup() %>%
+    mutate(
+      area = case_when(
+        site == "Cape Alava" & area %in% c("1","W") ~ "W",
+        site == "Cape Alava" & area %in% c("2","E") ~ "E",
+        site == "Cape Johnson"  & area %in% c(1,"S") ~ "S",
+        site == "Cape Johnson"  & area %in% c(2,"N") ~ "N",
+        site == "Destruction Island" & area %in% c(1,"S") ~ "S",
+        site == "Destruction Island" & area %in% c(2,"N") ~ "N",
+        site == "Tatoosh Island" & area %in% c(1,"N") ~ "N",
+        site == "Tatoosh Island" & area %in% c(2,"S") ~ "S",
+        site == "Neah Bay" & area %in% c(1,"N") ~ "N",
+        site == "Neah Bay" & area %in% c(2,"S") ~ "S",
+        TRUE ~ NA_character_
+      )
+    )
 
 ##############################################################
 ##### Reconcile different area designations among years ######
@@ -252,6 +308,11 @@ dat.fish <- dat.fish %>% ungroup() %>%
 
 # All samples in 2015 were collected at 5m depth
 dat.fish$zone[dat.fish$year == 2015] <- 5
+
+
+# This is a check on labeling
+dat.fish %>% ungroup() %>% dplyr::select(year, site,area,transect) %>% distinct(year,site,area) %>%
+ as.data.frame()
 
 #### combine small black and yellowtail into a single SEBYT category. 
 dat.ryoy <- dat.fish %>% filter(size_class =="small") %>% 
@@ -296,6 +357,7 @@ dat.fish %>% distinct(year,site,transect,vis_m) %>% filter(is.na(vis_m))
 dat.fish %>% ungroup() %>% dplyr::select(year, site,area,transect) %>% distinct(year,site,area) %>%
   as.data.frame()
 
+
 dat.fish$site <- factor(dat.fish$site,
                         levels = c("Destruction Island",
                                    "Teahwhit Head",
@@ -314,6 +376,23 @@ saveRDS(dat.fish,file="Fish_2015-2022.rds")
 ##############################################################
 ##############################################################
 ##############################################################
+##############################################################
+##############################################################
+##############################################################
+
+saveRDS(dat.fish,"Fish_2015-2021.rds")
+
+##############################################################
+##############################################################
+##############################################################
+
+dat.transect.summary <- dat.fish %>% filter(year>2015) %>% group_by(year,site,area,zone) %>%
+  summarise(MIN.t = min(transect),MAX.t = max(transect),N.t = length(unique(transect))) %>%
+  arrange(year,site,area,zone) %>%
+  as.data.frame()
+
+write.csv(dat.transect.summary,file="FISH ERROR CHECK.csv",row.names=F)
+
 ##############################################################
 ##############################################################
 ##############################################################

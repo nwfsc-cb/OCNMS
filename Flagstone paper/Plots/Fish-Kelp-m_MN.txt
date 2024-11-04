@@ -1,0 +1,31 @@
+Generalized linear mixed model fit by maximum likelihood (Laplace Approximation) ['glmerMod']
+ Family: binomial  ( logit )
+Formula: TOTyoy_pres ~ Nereo + Macro + (1 | year_factor) + (1 | site)
+   Data: dfx
+Weights: fish.transect.volume
+
+     AIC      BIC   logLik deviance df.resid 
+    72.5     84.5    -31.2     62.5       77 
+
+Scaled residuals: 
+     Min       1Q   Median       3Q      Max 
+-1.50822  0.00028  0.11640  0.30775  1.38813 
+
+Random effects:
+ Groups      Name        Variance Std.Dev.
+ year_factor (Intercept) 5.306    2.303   
+ site        (Intercept) 3.283    1.812   
+Number of obs: 82, groups:  year_factor, 6; site, 5
+
+Fixed effects:
+            Estimate Std. Error z value Pr(>|z|)  
+(Intercept)  -0.2721     1.4487  -0.188   0.8510  
+Nereo         2.5700     1.1742   2.189   0.0286 *
+Macro         2.5169     1.6083   1.565   0.1176  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Correlation of Fixed Effects:
+      (Intr) Nereo 
+Nereo -0.260       
+Macro -0.240  0.138
