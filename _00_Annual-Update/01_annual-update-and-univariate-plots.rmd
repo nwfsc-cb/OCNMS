@@ -1431,11 +1431,15 @@ stars_year <- ggplot() +
       scale_y_continuous(expression("Sea stars m"^-2) ) + 
                           
       # scale_color_viridis_d(option="plasma",end=0.75)+
-      scale_color_manual(values = star.col, labels = c('Blood star', 'Brooding star',
-                                    'Large star', 'Leather star',
-                                    'Medium star',
-                                    bquote(italic('Pisaster')),
-                                    bquote(italic('Pycnopodia'))))+
+      scale_color_manual(values = star.col, 
+                         labels = c(
+                           bquote(italic('Henricia')),
+                           bquote(italic('Leptasterias')),
+                                    'Large star', 
+                           bquote(italic('Dermasterias')),
+                           'Medium star',
+                           bquote(italic('Pisaster')),
+                           bquote(italic('Pycnopodia'))))+
       theme_bw()+ theme_nt  
       # theme(legend.position = c(0.7, 0.7), legend.key.size = unit(0.75,'lines')) +
       # guides(color=guide_legend(ncol=2))
@@ -1479,8 +1483,11 @@ stars_year <- ggplot() +
       scale_y_continuous(expression("Sea stars m"^-2) ) + 
                           
       # scale_color_viridis_d(option="plasma",end=0.75)+
-      scale_color_manual(values = star.col, labels = c('Blood star', 'Brooding star',
-                                    'Leather star'))+
+      scale_color_manual(values = star.col, 
+                         labels = c(
+                           bquote(italic('Henricia')),
+                           bquote(italic('Leptasterias')),
+                           bquote(italic('Dermasterias'))))+
       theme_bw()+ theme_nt + 
       theme(axis.title = element_text(size=12),
             axis.text = element_text(size=12),
@@ -1529,8 +1536,12 @@ stars_year <- ggplot() +
       scale_y_continuous(expression("Sea stars m"^-2) ) + 
               
       # scale_color_viridis_d(option="plasma",end=0.75)+
-      scale_color_manual(values = star.col, labels = c('Blood star', 'Brooding star',
-                                     'Large stars','Leather star'))+
+     scale_color_manual(values = star.col, 
+                         labels = c(
+                           bquote(italic('Henricia')),
+                           bquote(italic('Leptasterias')),
+                           "Large stars", 
+                           bquote(italic('Dermasterias'))))+
       theme_bw()+ theme_nt + 
       theme(axis.title = element_text(size=12),
             axis.text = element_text(size=12),
@@ -1578,8 +1589,12 @@ stars_year <- ggplot() +
       scale_y_continuous("Sea stars log index", trans='log10') + 
                           
       # scale_color_viridis_d(option="plasma",end=0.75)+
-      scale_color_manual(values = star.col, labels = c('Blood star', 'Brooding star',
-                                    'Large stars', 'Leather star'))+
+     scale_color_manual(values = star.col, 
+                         labels = c(
+                           bquote(italic('Henricia')),
+                           bquote(italic('Leptasterias')),
+                           "Large stars", 
+                           bquote(italic('Dermasterias'))))+
       theme_bw()+ theme_nt + 
       theme(axis.title = element_text(size=12),
             axis.text = element_text(size=12),
