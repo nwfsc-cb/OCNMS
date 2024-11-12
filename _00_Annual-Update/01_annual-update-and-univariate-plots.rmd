@@ -60,8 +60,10 @@ source("R-functions-ocnms.r")
 
 # Paths for files
 # setwd('..')
-# home_dir = getwd()
-home_dir = setwd("~/GitHub/OCNMS/_00_Annual-Update")
+
+source_dir = dirname(rstudioapi::getActiveDocumentContext()$path)
+
+home_dir = paste0(source_dir,'/')
 
 fig_dir = paste0(home_dir,"/figures/")
 # data_dir = paste0(home_dir,"/data/")
@@ -71,6 +73,7 @@ other_dir = paste0(home_dir,"/other/")
 
 # options
 knitr::opts_chunk$set(
+  root.dir = home_dir,
   fig.path = fig_dir,
   cache.path = 'cache/graphics-', 
   echo=FALSE,
