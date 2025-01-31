@@ -1,7 +1,7 @@
 ---
 title: "Black Rockfish Analysis OCNMS"
-author: "Ole Shelton"
-date: "1/17/2023"
+author: "Nick Tolimieri"
+date: " `r Sys.Date()' "
 output:
   pdf_document: default
   word_document: default
@@ -9,6 +9,9 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+
+survey_year = 2024
+
 ```
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
@@ -20,6 +23,10 @@ knitr::opts_chunk$set(echo = TRUE)
   library(mapdata)
   library(mapproj)
 
+# set directories ####
+home_dir <- '~/Github/OCNMS/'
+work_dir <- '~/Github/OCNMS/_01_Assessment-indicies-BRF-YTRF/'
+data_dir = paste0(home_dir,'Data/',survey_year,'/')
 
 # This is a padded data.frame which includes all transects
 # includes zero observations
@@ -29,11 +36,7 @@ knitr::opts_chunk$set(echo = TRUE)
 # "/GitHub/OCNMS/_Annual-UPdate/update-swath-fish.R") for all of the species. 
 # We have filtered out the just the black rockfish data for this analysis. 
 
-report_year = 2024
-home_dir <- '~/Github/OCNMS/'
-data_dir = paste0(home_dir,'Data/',report_year,'/')
-
-dat.fish <- readRDS( paste0(data_dir,"Fish_2015-", report_year,".rds") )
+dat.fish <- readRDS( paste0(data_dir,"Fish_2015-", survey_year,".rds") )
 
 # Filter to include only black rockfish or "small" size category (rockfish YOY)
 dat.bk <- dat.fish %>% filter(species %in% c("SEME")) %>%
@@ -49,10 +52,10 @@ dat.bk <- dat.bk %>% filter(vis_m >= VIS_LIM)
 dat.can <- dat.can %>% filter(vis_m >= VIS_LIM)
 
 # Read in length data from all years.
-# This data comes from the processing script:
-# source("../R scripts/2022-23 Black Rockfish Assessment/Process Length Structure.R")
+# This data comes from the processing script: 
+# source("~/Github/OCNMS/_01_Assessment-indicies-BRF-YTRF/Process Length Structure-BLYT.R")
 
-load("Black_rockfish_lengths_2015-22.Rdata")
+load( paste0(work_dir, "Black_rockfish_lengths_2015-", survey_year,".Rdata") )
 # relevant object here is "length.dat"
 
 ```
@@ -102,7 +105,7 @@ Markel RW, Shurin JB (2020) Contrasting effects of coastal upwelling on growth a
   temp2 <- project(temp,"+proj=longlat +datum=WGS84")
   shore.df[,c("lon2","lat2")] <- geom(temp2)[,c("x","y")]
   
-  loc <-  read.csv("Survey locations.csv",fileEncoding="latin1")
+  loc <-  read.csv( paste0(work_dir,"Survey locations.csv"),fileEncoding="latin1")
   loc <- loc %>% filter(type %in% c("2015 only","2015-22"))
   loc$nudge_x = 0.09
   loc$nudge_x[loc$Site =="Pt. of the Arches"] = 0.12
@@ -152,6 +155,7 @@ Markel RW, Shurin JB (2020) Contrasting effects of coastal upwelling on growth a
   		# 	bGrid +bAxis + bBack + bTics +
 
 ```
+
 ```{r echo=FALSE,warning=FALSE,fig.height = 5,fig.align='center', fig.cap ="\\label{fig:p.map} Dive survey locations along the coast of Washington state."}
 print(p.map)
 ```
