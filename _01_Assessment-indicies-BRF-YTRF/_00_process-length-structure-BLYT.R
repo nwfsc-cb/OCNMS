@@ -220,8 +220,8 @@ length.dat <- list(
 
 # Write to file.        
 
-if(spp=='SEME'){SPP = "Black_rockfish"}
-if(spp=='SEFL'){SPP = "Yellowtail_rockfish"}
+if(spp=='SEME'){SPP = "Black rockfish"}
+if(spp=='SEFL'){SPP = "Yellowtail rockfish"}
 
 save(length.dat,file=paste0(data_out,SPP, "_lengths_2015-", survey_year,".Rdata"))
 
