@@ -223,7 +223,7 @@ length.dat <- list(
 if(spp=='SEME'){SPP = "Black rockfish"}
 if(spp=='SEFL'){SPP = "Yellowtail rockfish"}
 
-save(length.dat,file=paste0(data_out,SPP, "_lengths_2015-", survey_year,".Rdata"))
+save(length.dat, file=paste0(data_out,SPP, "_lengths_2015-", survey_year,".Rdata"))
 
 dat.spp.all.2cm = dat.spp.all %>% 
                     dplyr::select(YEAR,SITE,SPECIES,COUNT,bin_min,bin_max,bin_range) %>%

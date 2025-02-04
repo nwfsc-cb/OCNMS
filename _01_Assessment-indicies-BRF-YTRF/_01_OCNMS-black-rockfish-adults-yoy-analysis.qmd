@@ -1,5 +1,5 @@
 ---
-title: "Black and yellowtail rockfish complex"
+title: "Black Rockfish Analysis OCNMS (Full: Adults and YOY)"
 author: "Nick Tolimieri & Ole Shelton"
 date: " `r Sys.Date()` "
 output:
@@ -17,29 +17,16 @@ knitr::opts_chunk$set(echo = TRUE)
 
 survey_year = 2024
 SPECIES = 'SEME'
-SPECIES = 'SEFL'
-SPECIES = c('SEFL', 'SEME')
+# spp = 'SEFL"
+if(SPECIES=='SEME'){
+  SPP = 'Black rockfish' 
+  spp='black rockfish'
+  sciname = "Sebastes melanostictus"}
 
-
-if(length(SPECIES)==1){
-  if(SPECIES=='SEME'){
-    SPP = 'Black rockfish' 
-    spp='black rockfish'
-    sciname = "Sebastes melanostictus"}
-
-  if(SPECIES=='SEFL'){
-    SPP = 'Yellowtail rockfish' 
-    spp='yellowtail rockfish'
-   sciname = "Sebastes flavidus"}
-}  
-
-if(length(SPECIES)==2){
-  if(SPECIES[1] == 'SEFL' & SPECIES[2]=='SEME'){
-  SPPx = c('Black rockfish','Yellowtail rockfish')
-  SPP = 'Black and yellowtail rockfishes' 
-  spp='black and yellowtail rockfishes'
-  sciname = "Sebastes melanostictus and S. flavidus"}
-}
+if(SPECIES=='SEFL'){
+  SPP = 'Yellowtail rockfish' 
+  spp='yellowtail rockfish'
+  sciname = "Sebastes flavidus"}
 
 ```
 
@@ -72,20 +59,28 @@ data_dir = paste0(home_dir,'Data/',survey_year,'/')
 dat.fish <- readRDS( paste0(data_dir,"Fish_2015-", survey_year,".rds") )
 
 # Filter to include only black rockfish or "small" size category (rockfish YOY)
-dat.yoy <- dat.fish %>% filter(species %in% SPECIES) %>%
+dat.bk <- dat.fish %>% filter(species %in% SPECIES) %>%
               bind_rows(.,
                 dat.fish %>% filter(size_class %in% c("small")))
-# canary and black/yellowtail complex -- look similar
+
 dat.can <- dat.fish %>% filter(species %in% c("SEPI","SEPYT"))
           
 
 # Drop transects where the visibility is less than the visibility threshold (2m):
 VIS_LIM <- 2
-dat.yoy <- dat.yoy %>% filter(vis_m >= VIS_LIM)
+dat.bk <- dat.bk %>% filter(vis_m >= VIS_LIM)
 dat.can <- dat.can %>% filter(vis_m >= VIS_LIM)
 
+# Read in length data from all years.
+# This data comes from the processing script: 
+# source("~/Github/OCNMS/_01_Assessment-indicies-BRF-YTRF/Process Length Structure-BLYT.R")
+
+load( paste0(work_dir, SPP, "_lengths_2015-", survey_year,".Rdata") )
+# relevant object here is "length.dat"
 
 ```
+
+# Young of year analysis for `r SPP`, *`r sciname`*
 
 ## Data description
 
@@ -95,17 +90,9 @@ Divers on SCUBA conducted in situ surveys to count fish at each site along benth
 
 During each fish transect, we counted and estimated the size (total length to nearest cm) of all fishes \>5 cm total length; the exception was rockfishes *Sebastes* spp., for which we estimated sizes of all individuals. Rockfishes $\leq$ 10 cm were considered young of year. Divers also estimated horizontal visibility on each transect by determining the distance at which the lead diver could distinguish their buddy's extended fingers. Transects with visibility less than 2 m were excluded from analyses.
 
-Because it is difficult to visually distinguish many rockfish species when they are small, we categorized juvenile rockfishes into five (5) groups established in the literature [@johansson2018seasonal; @markel2020contrasting]:
+Because it is difficult to visually distinguish many rockfish species when they are small, we categorized juvenile rockfishes into five (5) groups established in the literature [@johansson2018seasonal; @markel2020contrasting].
 
-\(1\) Yellowtail and black (YTB) included both yellowtail (*S. flavidus*) and black (*S. melanops*) rockfishes.
-
-\(2\) The copper/quillback/brown (CQB) group included copper (*S. caurinus*), quillback (*S. maliger*), and brown (*S. auriculatus*) rockfishes.
-
-\(3\) Canary (*S. pinniger*) and
-
-\(4\) Blue rockfish (*S. mystinus*) to species.
-
-\(5\) Unidentified individuals were categorized as juvenile rockfishes.
+\(1\) Yellowtail and black (YTB) included both yellowtail (*S. flavidus*) and black (*S. melanops*) rockfishes. (2) The copper/quillback/brown (CQB) group included copper (*S. caurinus*), quillback (*S. maliger*), and brown (*S. auriculatus*) rockfishes. We were able to identify (3) canary (*S. pinniger*) and (4) blue rockfish (*S. mystinus*) to species. (5) Unidentified individuals were categorized as juvenile rockfishes.
 
 ```{r map-prep}
 #| echo: false
@@ -197,7 +184,7 @@ Because it is difficult to visually distinguish many rockfish species when they 
 site_map
 ```
 
-As a result of our 2-m visibility requirements, there were transects that were omitted from the analyses. The following tables ([@tbl-2m-samples] & [@tbl-2m-samples]) show how the number fish transects with visibility \>2 m were distributed across sites and years. 2015 includes only surveys conducted at 5-m depth. Other years have data approximately evenly split between 5-m and 10-m depths.
+As a result of our 2-m visibility requirements, there were transects that were omitted from the analyses. The following tables ([@tbl-2m-samples] & \[@tbl-2m-samples\]) show is how the number fish transects with visibility \>2 m were distributed across sites and years. 2015 includes only surveys conducted at 5-m depth. Other years have data approximately evenly split between 5-m and 10-m depths.
 
 ```{r table-samples-prep}
 #| echo: false
@@ -208,7 +195,7 @@ library(xtable)
 
 # here are the sites ordered from S to N
 nom <- c("Destruction Island","Teahwhit Head","Cape Johnson","Rock 305","Cape Alava","Point of the Arches","Anderson Point","Tatoosh Island","Chibadehl Rocks","Neah Bay")
-N.trans <- dat.yoy %>% distinct(year,site,zone,transect,observer) %>% group_by(year,site,zone) %>%
+N.trans <- dat.bk %>% distinct(year,site,zone,transect,observer) %>% group_by(year,site,zone) %>%
               dplyr::summarise(N=length(transect))
 N.trans.site.year <- N.trans %>% group_by (year,site) %>% summarise(N=sum(N))
 
@@ -273,20 +260,119 @@ N.trans.3 = N.trans.3 %>% rename(Site = site)
 kable(N.trans.3)
 ```
 
-## Young of year abundance trends
+## Abundance trends
 
-### `r spp`
+### Large (\>10 cm total length) `r SPP` trends
 
 To calculate the average density of `r spp` in each year, we first calculate the mean density and standard error per site in each year. This approach means we are treating each transect as a i.i.d. sample of `r spp` density within each site and thus we ignore differences in abundance by depth zone.
+
+```{r }
+#| echo: false
+#| messange: false
+#| warning: false
+
+
+# GENERATE INDEXES BY SITE and AMONG SITES
+dat.bk.summary <- dat.bk %>% filter(size_class=="large")
+  
+#check to see that this only contains large rockfish (should be species "SEME")
+#dat.bk.summary %>% distinct(species,year,size_class)
+  
+# summarize using means and standard errors
+dat.bk.summary <- dat.bk.summary %>%
+                    group_by(year,site,species) %>% 
+                    summarise(Mean=mean(Count),
+                              VAR = var(Count),
+                              SD=sd(Count),
+                              N=length(Count),
+                              SE=SD/sqrt(N))
+
+# This is a simple calculation treating the means from each site as observed and iid samples of a grand Mean
+dat.bk.out.A <- dat.bk.summary %>%
+                  group_by(year)  %>%
+                  summarise(grand.mean = mean(Mean),
+                            N= length(Mean),
+                            SE = sd(Mean)/sqrt(N))
+
+      # We have a bunch of 0 observations, which preclude using weighting by the SE.
+      # I looked extensively at two stage sampling expressions 
+      # for design based estimators. 
+      # They were complicated and didn't necessarily work for our design.  
+      # Plus, they have troubles with the zero observations that we have.  
+      # So I decided to simulate to determine the uncertainty.
+
+#dim(dat.bk.summary)
+n.sim <- 100000
+
+sim <- matrix(# simulate from a centered t-distribution.
+        rt(nrow(dat.bk.summary) * n.sim,dat.bk.summary$N - 1) * dat.bk.summary$SE +
+                dat.bk.summary$Mean, # Adjust to a different location and scale.
+                nrow(dat.bk.summary), n.sim) # Put it in a matrix.
+sim[sim <0] <- 0
+sim <- as.data.frame(sim)
+colnames(sim) <- paste0("X",1:ncol(sim))
+
+sim <- bind_cols(dat.bk.summary %>% dplyr::select(year,site), sim) %>%
+          pivot_longer(.,cols=3:ncol(.),values_to="val",names_to="real")
+
+bk.trend <- sim %>% group_by(year,real) %>%
+          dplyr::summarise(mean.real = mean(val)) %>% ungroup() %>%
+          group_by(year) %>%
+          dplyr::summarise(grand.mean = mean(mean.real),
+                           SE = sd(mean.real),
+                           q025 = quantile(mean.real,probs=0.025),
+                           q05 = quantile(mean.real,probs=0.05),
+                           q25 = quantile(mean.real,probs=0.25),
+                           q75 = quantile(mean.real,probs=0.75),
+                           q95 = quantile(mean.real,probs=0.95),
+                           q975 = quantile(mean.real,probs=0.975))
+
+# Make black rockfish time-series plots
+bk.rockfish.ts <- ggplot() + 
+  geom_point(data=dat.bk.summary, aes(x=year,y=Mean),alpha=0.2) +
+  geom_errorbar(data=dat.bk.summary,
+                aes(x=year,ymin=Mean-SE,ymax=Mean+SE),
+                width=0,
+                alpha=0.2) +
+  geom_point(data=bk.trend, aes(x=year,y=grand.mean),
+             color="red",size=3)  +
+  geom_errorbar(data=bk.trend,
+                aes(x=year,ymin=q025,ymax=q975),
+                width=0,
+                color="red",size=0.5) +
+  geom_errorbar(data=bk.trend,
+                aes(x=year,ymin=q25,ymax=q75),
+                width=0,
+                color="red",size=1.2) +
+  scale_y_continuous(expression("Black rockfish density (fish 120 m"^"-3"*")")) +
+  xlab("Year") +
+   theme_bw()
+  
+```
 
 From these site-year level means, we calculated a year-specific mean density by simulation. Specifically, for each year we independently drew a mean density for each site using a t-distribution with $\mu$ (the estimated site mean), $\sigma$ (the estimated site-specific standard error) and degrees of freedom, $\tau$. So for the $i^{th}$ realization, for site $s$ in year $y$ we have a predicted density, $X_{isy}$
 
 ```{=tex}
-\begin{align}  & X_{isy} \sim T(\mu_{sy},\sigma_{sy},\tau_{sy}) \\ \end{align}
+\begin{align}
+ & X_{isy} \sim T(\mu_{sy},\sigma_{sy},\tau_{sy}) \\
+\end{align}
 ```
-and then the predicted density for a single realization in a given year is the mean among sites observed. We repeat the simulation 100,000 times to provide an estimated mean density and uncertainty for a given year ([Fig. @fig-yoy-ts]).
+and then the predicted density for a single realization in a given year is the mean among sites observed. We repeat the simulation 100,000 times to provide an estimated mean density and uncertainty for a given year ([Fig. @fig-spp-ts]).
 
-Small `r spp` (\<10 cm total length) cannot be unequivocally visually identified to species. In most cases, species can be identified to a complex of a few species. For small rockfish, black rockfish occur in a complex of two species, black rockfish and yellowtail rockfish. Nearly all small rockfish fall into the 4 to 7cm length range and all are considered to have recruited from the plankton during the calender year of the survey. Therefore, we view the density of \<10cm rockfish to be an indicator of `r spp` recruitment ([Fig. @fig-yoy-ts]).
+```{r fig-spp-ts}
+#| echo: false
+#| messange: false
+#| warning: false
+#| fig-cap: Time-series of estimated black rockfish density on the Washington coast. Black points show means and standard errors for individual sites. Red points show coastwide density estimates, interquartile range and 95\\% intervals for each year
+
+print(bk.rockfish.ts)
+```
+
+## Young of year `r spp`
+
+Unlike adult `r spp`, small (\<10 cm total length) rockfish cannot be unequivocally visually identified to species. In most cases, species can be identified to a complex of a few species. For small rockfish, black rockfish occur in a complex of two species, black rockfish and yellowtail rockfish. **Yellowtail rockfish are rare in Washington state and we consider their contribution to small rockfish size categories to be trivial.** Nearly all small rockfish fall into the 4 to 7cm length range and all are considered to have recruited from the plankton during the calender year of the survey. Therefore, we view the density of \<10cm rockfish to be an indicator of `r spp` recruitment.
+
+To derive estimates of overall young-of-year densities, we use identical methods to those described for adult rockfish densities and provide estimated densities per year for our survey area ([Fig. @fig-yoy-ts]).
 
 ```{r yoy-ts-prep}
 #| echo: false
@@ -294,16 +380,16 @@ Small `r spp` (\<10 cm total length) cannot be unequivocally visually identified
 #| warning: false
 
 # GENERATE INDEXES BY SITE and AMONG SITES
-#dat.yoy.summary <- dat.yoy %>% filter(species =="SEBYT")
-dat.yoy.summary <- dat.yoy %>% filter(species %in% c("SEBYT", 'SEME', 'SEFL'),
-                                      size_class=='small')
+dat.yoy.summary <- dat.bk %>% filter(species =="SEBYT")
 
-#dat.yoy.summary %>% distinct(species,year,size_class)
+
+#check to see that this only contains large black rockfish 
+# (should be species "SEME")
+#dat.bk.summary %>% distinct(species,year,size_class)
   
 # summarize using means and standard errors
 dat.yoy.summary <- dat.yoy.summary %>%
-                    # group_by(year,site,species) %>% 
-                    group_by(year,site) %>% 
+                    group_by(year,site,species) %>% 
                     summarise(Mean=mean(Count),
                               VAR = var(Count),
                               SD=sd(Count),
@@ -324,7 +410,7 @@ dat.yoy.out.A <- dat.yoy.summary %>%
       # Plus, they have troubles with the zero observations that we have.  
       # So I decided to simulate to determine the uncertainty.
 
-#dim(dat.yoy.summary)
+#dim(dat.bk.summary)
 n.sim <- 100000
 
 sim <- matrix(# simulate from a centered t-distribution.
@@ -339,7 +425,7 @@ sim <- bind_cols(dat.yoy.summary %>% dplyr::select(year,site), sim) %>%
           pivot_longer(.,cols=3:ncol(.),values_to="val",names_to="real")
 
 yoy.trend <- sim %>% group_by(year,real) %>%
-          dplyr::summarise(mean.real = mean(val, na.rm=T)) %>% ungroup() %>%
+          dplyr::summarise(mean.real = mean(val)) %>% ungroup() %>%
           group_by(year) %>%
           dplyr::summarise(grand.mean = mean(mean.real, na.rm=T),
                            SE = sd(mean.real, na.rm=T),
@@ -350,7 +436,7 @@ yoy.trend <- sim %>% group_by(year,real) %>%
                            q95 = quantile(mean.real,probs=0.95, na.rm=T),
                            q975 = quantile(mean.real,probs=0.975, na.rm=T))
 
-# Make yoy rockfish time-series plots
+# Make black rockfish time-series plots
 yoy.ts <- ggplot() + 
   geom_point(data=dat.yoy.summary, aes(x=year,y=Mean),alpha=0.2) +
   geom_errorbar(data=dat.yoy.summary,
@@ -377,13 +463,6 @@ yoy.ts <- ggplot() +
   #geom_hline(yintercept=0,color="red")+
   theme_bw()
   
-
-# save out ####
-
-write.csv(yoy.trend, paste(work_dir, "Estimated-YOY-trend-coast.csv"), row.names = F)
-write.csv(dat.yoy.summary, paste(work_dir, "Estimated-YOY-trend-sites.csv"), row.names = F)
-
-
 ```
 
 ```{r fig-yoy-ts}
@@ -393,6 +472,133 @@ write.csv(dat.yoy.summary, paste(work_dir, "Estimated-YOY-trend-sites.csv"), row
 #| fig-cap: "Time-series of estimated young-of-year rockfish (black-yellowtail complex) density on the Washington coast. Black points show means and standard errors for individual sites. Blue points show coastwide density estimates, interquartile range and 95\\% intervals for each year. Note y-axis is square root."
 
 yoy.ts
+```
+
+\newpage
+
+### Information on size data for `r spp` 2015-`r survey_year`
+
+In addition to abundance data, we visually estimate size (total length) for all individuals observed during the surveys. Young-of-year show remarkably limited variation in size and so we exclude them from the analysis.
+
+```{r }
+#| echo: false
+#| messange: false
+#| warning: false
+
+# This data comes from the processing script:
+# 
+
+# all black rockfish (include YOYs in 5cm bins)
+dat.spp.all.binned <- length.dat$dat.spp.all.binned  
+ # all black rockfish (include YOYs)
+dat.spp.all        <- length.dat$dat.spp.all  
+# adult black rockfish (>10cm in 5cm bins)
+dat.spp.ad.binned  <- length.dat$dat.spp.ad.binned 
+# adult black rockfish 
+dat.spp.ad         <- length.dat$dat.spp.ad 
+
+
+################3 PLOTS
+p.spp.size1 <- ggplot(dat.spp.ad) +
+                    geom_col(aes(x=SIZE,y=COUNT)) +
+                    facet_grid(SITE~YEAR) +
+                    labs(x="Length(cm)",y="Count") +
+                    theme_bw()
+#p.spp.size1
+
+p.spp.size2 <- ggplot(dat.spp.ad) +
+  geom_col(aes(x=SIZE,y=COUNT,color=SITE,fill=SITE)) +
+  facet_wrap(~YEAR,ncol=1) +
+  labs(x="Length(cm)",y="Count") +
+  theme_bw()
+#p.spp.size2
+
+p.spp.size3 <- ggplot(dat.spp.ad) +
+  geom_col(aes(x=SIZE,y=COUNT)) +
+  facet_wrap(~YEAR,ncol=1) +
+  labs(x="Length(cm)",y="Count") +
+  theme_bw()
+#p.spp.size3
+
+### BINNED (5cm bins)
+dfx = dat.spp.ad.binned 
+dfx$SITE = stringr::str_remove(dfx$SITE, " Island")
+dfx$SITE = stringr::str_remove(dfx$SITE, "Cape ")
+p.spp.size.bin1 <- ggplot(dfx) +
+  geom_col(aes(x=bin,y=COUNT)) +
+  facet_grid(SITE~YEAR) +
+  labs(x="Length (5cm bins)",y="Count") +
+  theme_bw()+
+  theme( axis.text.x = element_text(size=7),
+         strip.text.y.right = element_text(8) )
+#p.spp.size.bin1
+
+p.spp.size.bin2 <- ggplot(dat.spp.ad.binned) +
+  geom_col(aes(x=bin,y=COUNT,color=SITE,fill=SITE),width=4) +
+  facet_wrap(~YEAR,ncol=1) +
+  labs(x="Length (5 cm bins)",y="Count") +
+  theme_bw()
+#p.spp.size.bin2
+
+###
+p.spp.size.bin3 <- ggplot(dat.spp.ad.binned) +
+  geom_col(aes(x=bin,y=COUNT,color=SITE,fill=SITE),width=4) +
+  facet_wrap(~YEAR,ncol=1) +
+  labs(x="Length (5 cm bins)",y="Count") +
+  theme_bw()
+#p.spp.size.bin3
+
+
+## 3 INCLUDE YOY sizes
+
+p.spp.size.all.bin1 <- ggplot(dat.spp.all.binned) +
+  geom_col(aes(x=bin,y=COUNT)) +
+  facet_grid(SITE~YEAR) +
+  labs(x="Length (5cm bins)",y="Count") +
+  scale_y_continuous(trans="sqrt") +
+  theme_bw() 
+#p.spp.size.all.bin1
+
+
+```
+
+Plots of size distribution grouped into 5 cm bins ([Figs. @fig-spp-size-bin1] & [-@fig-size-bin2]).
+
+```{r fig-spp-size-bin1}
+#| echo: false
+#| messange: false
+#| warning: false
+#| fig-width: 6
+#| fig-cap: "YOY size distribution by 5-cm size bins."
+
+print(p.spp.size.bin1)
+
+```
+
+```{r fig-size-bin2}
+#| echo: false
+#| messange: false
+#| warning: false
+#| fig-height: 10
+#| fig-cap: "YOY size distribution by 5-cm size bins plotted by site."
+ 
+print(p.spp.size.bin2)
+
+```
+
+\newpage
+
+While nominally sizes are recorded in 1cm increments, in practice sizes in 5cm increments are recorded ([Fig. @fig-size-dist2]).
+
+```{r fig-size-dist2}
+#| echo: false
+#| messange: false
+#| warning: false
+#| fig-height: 10
+#| fig-cap: "Plots of size distribution, but without 5cm bins."
+
+print(p.spp.size2)
+
 ```
 
 \newpage
@@ -410,5 +616,5 @@ bk.rockfish.output <- list(
   bk.trend = bk.trend   # year-specific estimates of density for >10cm black rockfish.
 )
 
-save(bk.rockfish.output, file= paste0(work_dir,"OCNMS_YOY-SBYT-indices.Rdata"))
+save(bk.rockfish.output, file= paste0(work_dir,SPP,"_OCNMS_indices.Rdata"))
 ```
