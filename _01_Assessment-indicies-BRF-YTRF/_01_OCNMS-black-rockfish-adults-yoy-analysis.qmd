@@ -425,7 +425,7 @@ sim <- bind_cols(dat.yoy.summary %>% dplyr::select(year,site), sim) %>%
           pivot_longer(.,cols=3:ncol(.),values_to="val",names_to="real")
 
 yoy.trend <- sim %>% group_by(year,real) %>%
-          dplyr::summarise(mean.real = mean(val)) %>% ungroup() %>%
+          dplyr::summarise(mean.real = mean(val, na.rm=T)) %>% ungroup() %>%
           group_by(year) %>%
           dplyr::summarise(grand.mean = mean(mean.real, na.rm=T),
                            SE = sd(mean.real, na.rm=T),

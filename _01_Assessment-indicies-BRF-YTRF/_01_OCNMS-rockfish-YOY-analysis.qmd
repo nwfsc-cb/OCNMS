@@ -1,10 +1,9 @@
 ---
-title: "Black and yellowtail rockfish complex"
+title: "YOY analysis: Black and yellowtail rockfish complex"
 author: "Nick Tolimieri & Ole Shelton"
 date: " `r Sys.Date()` "
-output:
-  pdf_document: default
-  word_document: default
+format: 
+  docx: default
 bibliography: references.bib
 ---
 
@@ -13,7 +12,7 @@ bibliography: references.bib
 #| messange: false
 #| warning: false
 
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE)
 
 survey_year = 2024
 SPECIES = 'SEME'
@@ -36,8 +35,9 @@ if(length(SPECIES)==1){
 if(length(SPECIES)==2){
   if(SPECIES[1] == 'SEFL' & SPECIES[2]=='SEME'){
   SPPx = c('Black rockfish','Yellowtail rockfish')
-  SPP = 'Black and yellowtail rockfishes' 
-  spp='black and yellowtail rockfishes'
+  SPPz = c("SEBYT", "SEME","SEFL")
+  SPP =  'Black and yellowtail rockfishes' 
+  spp =  'black and yellowtail rockfishes'
   sciname = "Sebastes melanostictus and S. flavidus"}
 }
 
@@ -87,15 +87,15 @@ dat.can <- dat.can %>% filter(vis_m >= VIS_LIM)
 
 ```
 
-## Data description
+# Data description
 
-These are derived data products relevant to estimating `r spp` abundance and size stemming from NWFSC dive surveys in the Olympic Coast National Marine Sanctuary (OCNMS) conducted between 2015 and 2022. Description of survey methods and aims are detailed in [@tolimieri2023changes] We provide a brief summary of methods relevant to fish surveys here.
+These are derived data products relevant to estimating recruitment of the black rockfish and yellowtail rockfish comlex stemming from NWFSC dive surveys in the Olympic Coast National Marine Sanctuary (OCNMS) conducted between 2015 and `r survey_year`. We estimate recruitment (young-of-year abundance) for the complex because it is difficult to distinguish small recruits for these species. Description of survey methods and aims are detailed in [@tolimieri2023changes] We provide a brief summary of methods relevant to fish surveys here.
 
 Divers on SCUBA conducted in situ surveys to count fish at each site along benthic belt transects (30 m by 2 m) following slightly modified procedures described in @malone2022large. Transects were conducted within or directly adjacent to canopy kelp beds (consisting of giant *Macrocystis pyrifera* or bull *Nereocystis luetkeana* kelps). From 2016 on, we surveyed at five (5) sites ([Fig. @fig-site-map]), sampling at two (2) locations within each site separated by \>100 m, and 2 depths within each location (5 and 10 m) Our goal was to complete six (6) replicate transects at each year-site-depth combination. In 2015 surveyed at 10 sites and conducted four (4) transects per site at 5 m depth ([Fig. @fig-site-map]).
 
 During each fish transect, we counted and estimated the size (total length to nearest cm) of all fishes \>5 cm total length; the exception was rockfishes *Sebastes* spp., for which we estimated sizes of all individuals. Rockfishes $\leq$ 10 cm were considered young of year. Divers also estimated horizontal visibility on each transect by determining the distance at which the lead diver could distinguish their buddy's extended fingers. Transects with visibility less than 2 m were excluded from analyses.
 
-Because it is difficult to visually distinguish many rockfish species when they are small, we categorized juvenile rockfishes into five (5) groups established in the literature [@johansson2018seasonal; @markel2020contrasting]:
+As noted above, it is difficult to visually distinguish many rockfish species when they are small. Therefore, on our surveys, we categorized juvenile rockfishes into five (5) groups established in the literature [@johansson2018seasonal; @markel2020contrasting]:
 
 \(1\) Yellowtail and black (YTB) included both yellowtail (*S. flavidus*) and black (*S. melanops*) rockfishes.
 
@@ -106,6 +106,8 @@ Because it is difficult to visually distinguish many rockfish species when they 
 \(4\) Blue rockfish (*S. mystinus*) to species.
 
 \(5\) Unidentified individuals were categorized as juvenile rockfishes.
+
+The estimated recruitment trend for (1), the black rockfish and yellowtail rockfish complex, is presented here.
 
 ```{r map-prep}
 #| echo: false
@@ -197,7 +199,7 @@ Because it is difficult to visually distinguish many rockfish species when they 
 site_map
 ```
 
-As a result of our 2-m visibility requirements, there were transects that were omitted from the analyses. The following tables ([@tbl-2m-samples] & [@tbl-2m-samples]) show how the number fish transects with visibility \>2 m were distributed across sites and years. 2015 includes only surveys conducted at 5-m depth. Other years have data approximately evenly split between 5-m and 10-m depths.
+As a result of our 2-m visibility requirements, some transects were omitted from the analyses. The following tables ([@tbl-2m-samples-YS]) show how the number fish transects with visibility \>2 m were distributed across depth, site, and years ([@tbl-2m-samples-YSD]), as well as across sites and year ([@tbl-2m-samples-YS]). 2015 includes only surveys conducted at 5-m depth; other years have data approximately evenly split between 5-m and 10-m depths.
 
 ```{r table-samples-prep}
 #| echo: false
@@ -247,7 +249,7 @@ N.trans.3 <- N.trans.3 %>% dplyr::select(-site) %>% colSums(.) %>% data.frame() 
                 t() %>% bind_cols(site="TOTAL",.) %>% bind_rows(N.trans.3,.)
 ```
 
-```{r tbl-total-samples}
+```{r tbl-2m-samples-YSD}
 #| echo: false
 #| messange: false
 #| warning: false
@@ -261,7 +263,7 @@ kable(N.trans.1)
 
 \newpage
 
-```{r tbl-2m-samples}
+```{r tbl-2m-samples-YS}
 #| echo: false
 #| messange: false
 #| warning: false
@@ -273,11 +275,9 @@ N.trans.3 = N.trans.3 %>% rename(Site = site)
 kable(N.trans.3)
 ```
 
-## Young of year abundance trends
+## Recruitment: Young-of-year abundance trends
 
-### `r spp`
-
-To calculate the average density of `r spp` in each year, we first calculate the mean density and standard error per site in each year. This approach means we are treating each transect as a i.i.d. sample of `r spp` density within each site and thus we ignore differences in abundance by depth zone.
+To calculate the average density of black/yellowtail rockfish complex in each year, we first calculate the mean density and standard error per site in each year. This approach means we are treating each transect as a i.i.d. sample of YOY density within each site and thus we ignore differences in abundance by depth zone.
 
 From these site-year level means, we calculated a year-specific mean density by simulation. Specifically, for each year we independently drew a mean density for each site using a t-distribution with $\mu$ (the estimated site mean), $\sigma$ (the estimated site-specific standard error) and degrees of freedom, $\tau$. So for the $i^{th}$ realization, for site $s$ in year $y$ we have a predicted density, $X_{isy}$
 
@@ -286,7 +286,7 @@ From these site-year level means, we calculated a year-specific mean density by 
 ```
 and then the predicted density for a single realization in a given year is the mean among sites observed. We repeat the simulation 100,000 times to provide an estimated mean density and uncertainty for a given year ([Fig. @fig-yoy-ts]).
 
-Small `r spp` (\<10 cm total length) cannot be unequivocally visually identified to species. In most cases, species can be identified to a complex of a few species. For small rockfish, black rockfish occur in a complex of two species, black rockfish and yellowtail rockfish. Nearly all small rockfish fall into the 4 to 7cm length range and all are considered to have recruited from the plankton during the calender year of the survey. Therefore, we view the density of \<10cm rockfish to be an indicator of `r spp` recruitment ([Fig. @fig-yoy-ts]).
+Nearly all small rockfish fall into the 4 to 7 cm length range and all are considered to have recruited from the plankton during the calender year of the survey. Therefore, we view the density of \<10cm rockfish to be an indicator of recruitment for the black/yellowtail rockfish complex ([Fig. @fig-yoy-ts]).
 
 ```{r yoy-ts-prep}
 #| echo: false
@@ -295,7 +295,7 @@ Small `r spp` (\<10 cm total length) cannot be unequivocally visually identified
 
 # GENERATE INDEXES BY SITE and AMONG SITES
 #dat.yoy.summary <- dat.yoy %>% filter(species =="SEBYT")
-dat.yoy.summary <- dat.yoy %>% filter(species %in% c("SEBYT", 'SEME', 'SEFL'),
+dat.yoy.summary <- dat.yoy %>% filter(species %in% SPPz,
                                       size_class=='small')
 
 #dat.yoy.summary %>% distinct(species,year,size_class)
@@ -379,9 +379,9 @@ yoy.ts <- ggplot() +
   
 
 # save out ####
-
+dat.yoy.sites = dat.yoy.summary
 write.csv(yoy.trend, paste(work_dir, "Estimated-YOY-trend-coast.csv"), row.names = F)
-write.csv(dat.yoy.summary, paste(work_dir, "Estimated-YOY-trend-sites.csv"), row.names = F)
+write.csv(dat.yoy.sites, paste(work_dir, "Estimated-YOY-trend-sites.csv"), row.names = F)
 
 
 ```
@@ -403,7 +403,8 @@ yoy.ts
 #| echo: false
 #| messange: false
 #| warning: false
-#| 
+#| eval: false
+
 # Write output from analysis to file for ease of use 
 bk.rockfish.output <- list(
   yoy.trend = yoy.trend, # year-specific estimates of density for young of year
