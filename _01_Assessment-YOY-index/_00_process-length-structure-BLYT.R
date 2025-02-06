@@ -10,8 +10,8 @@ library(reshape2)
 library(tidyverse)
 
 # select species and max year ##################################################
-# spp = 'SEME' # black rockfish
-spp = 'SEFL' # yellowtail rockfish
+spp = 'SEME' # black rockfish
+# spp = 'SEFL' # yellowtail rockfish
 survey_year = 2024
 ################################################################################
 
@@ -232,7 +232,7 @@ dat.spp.all.2cm = dat.spp.all %>%
 write.csv(dat.spp.all.2cm,
           file=paste0(data_out, SPP, "_2015-", survey_year,"_lengths_2cm_bin_OCNMS.csv"),row.names = FALSE)
 
-
+rm(list=c(spp, SPP))
 
 
 

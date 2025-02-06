@@ -140,7 +140,9 @@ The estimated recruitment trend for (1), the black rockfish and yellowtail rockf
   shore.df[,c("lon2","lat2")] <- geom(temp2)[,c("x","y")]
   
   loc <-  read.csv( paste0(work_dir,"Survey locations.csv"),fileEncoding="latin1")
-  loc <- loc %>% filter(type %in% c("2015 only","2015-22"))
+  # update years
+  loc$type[loc$type == '2015-22'] <- paste0('2015-',survey_year)
+  loc <- loc %>% filter(type %in% c("2015 only",paste0('2015-',survey_year)))
   loc$nudge_x = 0.09
   loc$nudge_x[loc$Site =="Pt. of the Arches"] = 0.12
   loc$nudge_x[loc$Site =="Tatoosh Is."] = -0.08
@@ -173,9 +175,9 @@ The estimated recruitment trend for (1), the black rockfish and yellowtail rockf
 				#coord_cartesian(xlim = x.lim,ylim=y.lim)     +
         geom_polygon(data=shore.df[shore.df$POLYTYPE == "Land" | shore.df$POLYTYPE == "Island" ,],
                      aes(lon2,lat2,group=group),fill=grey(0.7),color=NA)+
-        geom_point(data= loc %>% filter(type %in% c("2015-22","2015 only")),aes(x=lon,y=lat,color=type)) +
+        geom_point(data= loc %>% filter(type %in% c(paste0('2015-',survey_year),"2015 only")),aes(x=lon,y=lat,color=type)) +
         scale_color_discrete("Survey")+
-            geom_text(data= loc %>% filter(type %in% c("2015-22","2015 only")),
+            geom_text(data= loc %>% filter(type %in% c(paste0('2015-',survey_year),"2015 only")),
                   aes(label=Site,x=lon,y=lat),size=2.5,
                   #check_overlap = TRUE,
                   nudge_x=loc$nudge_x,
@@ -189,6 +191,7 @@ The estimated recruitment trend for (1), the black rockfish and yellowtail rockf
   		# 	bGrid +bAxis + bBack + bTics +
 
 ```
+
 
 ```{r fig-site-map}
 #| echo: false
