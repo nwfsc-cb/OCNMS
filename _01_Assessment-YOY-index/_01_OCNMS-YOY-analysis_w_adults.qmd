@@ -5,6 +5,12 @@ date: " `r Sys.Date()` "
 format:
   pdf:
     toc: false
+    geometry:
+      - top=1in
+      - bottom=1in
+      - left=1in
+      - right=1in
+      - heightrounded
 bibliography: references.bib
 csl: "oecologia.csl"
 ---
@@ -192,7 +198,8 @@ The estimated recruitment trend for (1) the black rockfish and yellowtail rockfi
                   ) +
         xlab("Longitude") +
 			  ylab("Latitude") +
-        coord_fixed(ratio=1.3,xlim =x.lim,ylim=y.lim)
+        coord_fixed(ratio=1.3,xlim =x.lim,ylim=y.lim) +
+    theme(axis.text.x = element_text(angle=90))
 	
 	#dev.off()
   		# 	bGrid +bAxis + bBack + bTics +
@@ -504,9 +511,11 @@ bk.rockfish.ts <- ggplot() +
 print(bk.rockfish.ts)
 ```
 
-### Information on size data for black rockfish 2015-`r survey_year`
+\newpage
 
-In addition to abundance data, we visually estimate size (total length) for all individuals observed during the surveys. Young-of-year show remarkably limited variation in size and so we exclude them from the analysis. The data here are for black rockfish; yellowtail are not presented because the adults are uncommon at our sites.
+## Size structure of black rockfish 2015-`r survey_year`
+
+In addition to abundance data, we visually estimate size (total length) for all individuals observed during the surveys. Young-of-year show remarkably limited variation in size and so we exclude them from the analysis. The data here are for black rockfish; yellowtail are not presented because the adults are uncommon at our sites. Plots of size distribution grouped into 5-cm bins are shown in [Figures  @fig-spp-size-bin1] & [-@fig-size-bin2]. @fig-size-dist2 shows the size distribution 1-cm increments.
 
 ```{r }
 #| echo: false
@@ -559,7 +568,7 @@ p.spp.size.bin1 <- ggplot(dfx) +
   facet_grid(SITE~YEAR) +
   labs(x="Length (5cm bins)",y="Count") +
   theme_bw()+
-  theme( axis.text.x = element_text(size=7),
+  theme( axis.text.x = element_text(size=7, angle=90),
          strip.text.y.right = element_text(size=8) )
 #p.spp.size.bin1
 
@@ -592,27 +601,28 @@ p.spp.size.all.bin1 <- ggplot(dat.spp.all.binned) +
 
 ```
 
-Plots of size distribution grouped into 5 cm bins ([Figs. @fig-spp-size-bin1] & [-@fig-size-bin2]).
 
 ```{r fig-spp-size-bin1}
 #| echo: false
 #| messange: false
 #| warning: false
 #| fig-width: 6
-#| fig-height: 7
-#| fig-cap: "YOY size distribution by 5-cm size bins."
+#| fig-height: 5
+#| fig-cap: "Black rockcish size distributions by 5-cm size bins for years and sites."
 
 
 print(p.spp.size.bin1)
 
 ```
 
+\newpage
+
 ```{r fig-size-bin2}
 #| echo: false
 #| messange: false
 #| warning: false
-#| fig-height: 8
-#| fig-cap: "YOY size distribution by 5-cm size bins plotted by site."
+#| fig-height: 7
+#| fig-cap: "Black rockfish size distribution by 5-cm size bins plotted by site, summed across sites within each year"
  
 print(p.spp.size.bin2)
 
@@ -620,22 +630,17 @@ print(p.spp.size.bin2)
 
 \newpage
 
-While nominally sizes are recorded in 1-cm increments, in practice sizes in 5cm increments are recorded ([Fig. @fig-size-dist2]).
 
 ```{r fig-size-dist2}
 #| echo: false
 #| messange: false
 #| warning: false
-#| fig-height: 8
-#| fig-cap: "Plots of size distribution, but without 5cm bins."
+#| fig-height: 7
+#| fig-cap: "Black rockfish size distribution by 1-cm size bins plotted by site, summed across sites within each year. "
 
 print(p.spp.size2)
 
 ```
-
-\newpage
-
-## References
 
 ```{r save-out}
 #| echo: false
@@ -652,3 +657,10 @@ bk.rockfish.output <- list(
 save(bk.rockfish.output, 
      file = paste0(work_dir,"OCNMS_YOY-and-adult-indices-",Sys.Date(),".Rdata"))
 ```
+
+\newpage
+
+
+## References
+
+<div id="refs"></div>
