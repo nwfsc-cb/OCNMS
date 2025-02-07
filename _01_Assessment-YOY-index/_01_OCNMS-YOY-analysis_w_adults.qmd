@@ -1,10 +1,12 @@
 ---
 title: "OCNMS recruitment analysis: Black and yellowtail rockfish complex"
-author: "Nick Tolimieri & Ole Shelton"
+author: "Ole Shelton & Nick Tolimieri"
 date: " `r Sys.Date()` "
 format:
   pdf:
     toc: false
+    fig-pos: H
+    fig-align: center
     geometry:
       - top=1in
       - bottom=1in
@@ -210,6 +212,8 @@ The estimated recruitment trend for (1) the black rockfish and yellowtail rockfi
 #| echo: false
 #| messange: false
 #| warning: false
+#| fig-width: 5
+#| fig-height: 5
 #| fig-cap: "Dive survey locations along the coast of Washington state."
 
 site_map
@@ -291,9 +295,9 @@ N.trans.3 = N.trans.3 %>% rename(Site = site)
 kable(N.trans.3)
 ```
 
-## Abundance trends
+# Abundance trends
 
-### Recruitment: BYT young-of-year abundance trends
+## Recruitment: BYT young-of-year abundance trends
 
 To calculate the average density of BYT complex in each year, we first calculate the mean density and standard error per site in each year. This approach means we are treating each transect as a i.i.d. sample of YOY density within each site and thus we ignore differences in abundance by depth zone.
 
@@ -414,7 +418,7 @@ yoy.ts
 
 \newpage
 
-### Large (\>10 cm total length) black rockfish
+## Large (\>10 cm total length) black rockfish
 
 We used the same approach as above to calculate the average density of large black rockfish in each year ([Fig. @fig-spp-ts]). Yellowtail rockfish are not common in our dive surveys and are not considered below.
 
@@ -576,7 +580,7 @@ p.spp.size.bin2 <- ggplot(dat.spp.ad.binned) +
   geom_col(aes(x=bin,y=COUNT,color=SITE,fill=SITE),width=4) +
   facet_wrap(~YEAR,ncol=1) +
   labs(x="Length (5 cm bins)",y="Count") +
-  theme_bw()
+  theme_bw() + theme(axis.title.y = element_text(size=7))
 #p.spp.size.bin2
 
 ###
@@ -601,7 +605,6 @@ p.spp.size.all.bin1 <- ggplot(dat.spp.all.binned) +
 
 ```
 
-
 ```{r fig-spp-size-bin1}
 #| echo: false
 #| messange: false
@@ -621,7 +624,7 @@ print(p.spp.size.bin1)
 #| echo: false
 #| messange: false
 #| warning: false
-#| fig-height: 7
+#| fig-height: 8
 #| fig-cap: "Black rockfish size distribution by 5-cm size bins plotted by site, summed across sites within each year"
  
 print(p.spp.size.bin2)
@@ -635,7 +638,7 @@ print(p.spp.size.bin2)
 #| echo: false
 #| messange: false
 #| warning: false
-#| fig-height: 7
+#| fig-height: 8
 #| fig-cap: "Black rockfish size distribution by 1-cm size bins plotted by site, summed across sites within each year. "
 
 print(p.spp.size2)
@@ -660,7 +663,6 @@ save(bk.rockfish.output,
 
 \newpage
 
-
-## References
+# References
 
 <div id="refs"></div>
