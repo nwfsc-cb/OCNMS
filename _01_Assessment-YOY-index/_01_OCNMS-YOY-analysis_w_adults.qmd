@@ -22,12 +22,37 @@ csl: "oecologia.csl"
 #| messange: false
 #| warning: false
 
-knitr::opts_chunk$set(echo = TRUE)
-
 survey_year = 2024
 SPECIES = 'SEME'
 SPECIES = 'SEFL'
 SPECIES = c('SEFL', 'SEME')
+
+# set directories ####
+home_dir <- '~/Github/OCNMS/'
+work_dir <- '~/Github/OCNMS/_01_Assessment-YOY-index/'
+# nt personal computer
+# home_dir <- "C:/Users/tolim/Documents/GitHub/OCNMS/"
+# work_dir <- paste0(home_dir,'/_01_Assessment-YOY-index/')
+data_dir = paste0(home_dir,'Data/',survey_year,'/')
+fig_dir = paste0(work_dir,'/figures/')
+
+# knitr options ####
+knitr::opts_chunk$set(
+  root.dir = home_dir,
+  fig.path = fig_dir,
+  cache.path = 'cache/graphics-', 
+  echo=TRUE,
+  error=FALSE,
+  include = TRUE,
+  dev='png',
+  dpi=300,
+  warning=FALSE,
+  #out.width = '100%',
+  fig.align='center'
+  
+  )
+
+
 
 
 if(length(SPECIES)==1){
@@ -72,8 +97,8 @@ if(length(SPECIES)==2){
 home_dir <- '~/Github/OCNMS/'
 work_dir <- '~/Github/OCNMS/_01_Assessment-YOY-index/'
 # nt personal computer
-home_dir <- "C:/Users/tolim/Documents/GitHub/OCNMS/"
-work_dir <- paste0(home_dir,'/_01_Assessment-YOY-index/')
+# home_dir <- "C:/Users/tolim/Documents/GitHub/OCNMS/"
+# work_dir <- paste0(home_dir,'/_01_Assessment-YOY-index/')
 data_dir = paste0(home_dir,'Data/',survey_year,'/')
 
 # This is a padded data.frame which includes all transects
@@ -85,6 +110,8 @@ data_dir = paste0(home_dir,'Data/',survey_year,'/')
 # We have filtered out the just the black rockfish data for this analysis. 
 
 dat.fish <- readRDS( paste0(data_dir,"Fish_2015-", survey_year,".rds") )
+
+# dat.fish <- readRDS("C:/Users/Nick.Tolimieri/Documents/GitHub/OCNMS/Data/2024/Fish_2015-2024.rds")
 
 # Filter to include only black rockfish or "small" size category (rockfish YOY)
 dat.yoy <- dat.fish %>% filter(species %in% SPECIES) %>%
