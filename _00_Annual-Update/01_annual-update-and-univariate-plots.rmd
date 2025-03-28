@@ -1980,6 +1980,22 @@ canopy.kelp
 
 
 ```
+There is a discrepancy between the DNR data and kelpwatch data.  Need to check on it.
+
+```{r kelpwatch, message=FALSE, error=FALSE}
+
+kw = data.frame(read.csv("C:/Users/Nick.Tolimieri/Documents/Data/Kelp/kelp-west-coast.csv"))
+kw = kw[kw$region=="WA" & kw$quarter=="max",]
+
+
+# need canopy kelp above
+
+kelpwatch = canopy.kelp + 
+  geom_line(data=kw, aes(year, hectares), color='Red', linewidth=1, alpha=0.5)  
+
+kelpwatch
+
+```
 
 ## Short - 2015 on
 
