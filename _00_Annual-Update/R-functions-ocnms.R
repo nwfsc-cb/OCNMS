@@ -90,6 +90,8 @@ run.multivar.nt <- function(data.file, drop2015 = TRUE, spp, data.transform = NA
      colnames(CAPfile)[1] <- 'CAPid'
      
      #library(ecole)
+     # install.packages("remotes")
+     # remotes::install_github("phytomosaic/ecole")
      df_matrix <- ecole::bray0(df)
      
      assign('df_matrix', get('df_matrix'), pos=1)

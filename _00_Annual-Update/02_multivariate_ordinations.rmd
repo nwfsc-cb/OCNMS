@@ -14,6 +14,9 @@ fontsize: 11pt
 ---
 
 ```{r SETUP, include=FALSE}
+
+data_year = 2024
+
 # A bunch of initial set up junk
 
 rm(list = ls())
@@ -26,9 +29,11 @@ home_dir = getwd()
 # home_dir = "C:/Users/nick.tolimieri/Documents/GitHub/OCNMS/"
 
 fig_dir = paste0(home_dir,"/figures/")
-data_dir = paste0(home_dir,"/data/")
+# data_dir = paste0(home_dir,"/data/")
+data_dir = paste0("~/GitHub/OCNMS/Data/",data_year,"/")
 results_dir = paste0(home_dir,"/results/")
 other_dir = paste0(home_dir,"/other/")
+
 
 # tools in use 
 library(knitr)
@@ -102,9 +107,9 @@ nperm  = 999
 
 # Some csv files for naming later
 
-fish_codes = data.frame(read.csv( paste0(data_dir,"spp_codes_fish.csv") ))
-swath_codes = data.frame(read.csv( paste0(data_dir,"spp_codes_swath.csv") ))
-kelp_codes = data.frame(read.csv( paste0(data_dir,"spp_codes_kelp.csv") ))
+fish_codes = data.frame(read.csv( "spp_codes_fish.csv" ))
+swath_codes = data.frame(read.csv( "spp_codes_swath.csv"))
+kelp_codes = data.frame(read.csv( "spp_codes_kelp.csv") )
 
 ```
 
@@ -207,11 +212,11 @@ fish <-    data.frame(fish)
 
 # Unconstrained Ordinations
 
-non-metric MDS just to have a look. Kind of ugly. No aliby. Both depths.  
+non-metric MDS just to have a look. Kind of ugly. No alibi. Both depths.  
 
 ```{r nMDS-plots, fig.width=6, fig.height=6}
 
-run.nmds = FALSE
+run.nmds = TRUE
 
 if(run.nmds == TRUE){
 mds_run_plot <- function( original.file, species,title, legend.pos){
@@ -331,7 +336,6 @@ Fish transform = `r fish.transform`
 YOY transform = `r fish.transform`
 
 Note if 'log', then log(x+1) because of all the zeros.
-
 
 Separate Sites and Species plots for clarity.
 
