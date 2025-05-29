@@ -5,7 +5,7 @@ library(dplyr)
 library(ggplot2)
 library(viridis)
 library(reshape2)
-library(tidyverse)
+# library(tidyverse)
 # library(readxl)
 # library(XLConnect)
 # rm(list=ls())
@@ -22,7 +22,10 @@ dat.pre.2015 <- dat.trim %>% rename(group.name=group)
 dat.2015 <- data.frame(read.csv("~/GitHub/OCNMS/Data/2015/2015_OCNMSDataComplete_standardized_122116.csv"))
 
 # NEW DATA FILE NAME here ######################################################
-# dat.2016.on.swath <- read.csv("NWFSC_SWATH_ALLYEARS_data_2024.csv")
+# dat.2016.on.swath <- read.csv(~/GitHub/OCNMS/Data/2024/NWFSC_SWATH_ALLYEARS_data_2024.csv)
+# update this file each year ###################################################
+# done automatically in the 01_annual-update-and-univariate-plots.rmd file
+# data_year = 2024
 dat.2016.on.swath <- swathx
 ################################################################################
 species_names <- swath_codes # read.csv("species_code_list_swath.csv")

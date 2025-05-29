@@ -13,25 +13,30 @@ fontsize: 11pt
 ---
 # NOTES
 
-Prior to running this file, run:
+To update fish data to the most recent year, run:
 
-- _01_swath-fish-update.R
-- _02_swath-inverts-update.R
+- update_swath_fish.R
+- update_swath_inverts.R
 
-to update the data for the most recent year. You will also need to have:
+in the 'update-data' chunk. The update is done automatically within this RMD, but you will need to check that the trigger is turned on in the if statement in the 
+in the 'update-data' is "if(1==1)". 
+
+You will also need to have:
 
 - swath-process-pre-2017-data.R
 - R-functions-ocnms.R
 
-as helper files. 
+as helper files. These are in the repo.
 
 # DATA YEAR 
 
-Set the data year year
-
-## some prep info
+Set the data_ _year year
 
 ```{r SETUP, include=FALSE}
+
+# _01_swath-fish-update.R -- old names
+# _02_swath-inverts-update.R
+
 # A bunch of initial set up junk
 
 rm(list = ls())
@@ -40,7 +45,7 @@ data_year = 2024
 ##### knitr stuff and libraries ####
 # tools in use 
 library(knitr)
-library(tidyverse)
+library(dplyr)
 library(stringr)
 library(RColorBrewer)
 library(readxl)
@@ -49,12 +54,10 @@ library(ggplot2)
 library(stringr)
 library(lemon)
 library(ggpubr)
-# library(tidyr)
-# library(dplyr)
+library(tidyr)
 library(tinytex) # for pdf output
 
 # display.brewer.all(colorblindFriendly = TRUE)
-#vlibrary(readxl)
 
 source("R-functions-ocnms.r")
 
@@ -95,21 +98,25 @@ par(ps=10, cex=1)
 
 # Process raw data 
 
-- copy xlxm files into from google drive into the Data folder. Put in subfolder for that year.
+To process the raw data:
+
+- copy xlxm files into from google drive into the Data folder. Put in sub-folder for that year.
 - make csv and xlsx versions of the files
 
 The xlsx version of the file is used to pull the species codes: fish_codes, swath_codes, kelp_codes. 
 
 HOWEVER, at present read_xlsx incorrectly loads the data files because the SIDE/AREA column has both numbers and letters. read_xlsx turns these into NAs. This change messes up the transect area calculations and doubles the estimated densities...incorrectly of course. I haven't figured out how to fix that yet.
 
+**Needs to be updated**
+
 ## Bring in data and species codes
 
-This chunk will load the species codes and run the update files to turn the raw data files into counts by size and transect.  Once you've run it, you can turn of the data processing part and just load the species codes. Runs:
+This chunk will load the species codes and run the update files to turn the raw data files into counts by size and transect.  Once you've run it, you can turn of the data processing part and just load the species codes. The chunk runs:
 
 - update-swath-fish.r
 - update-swath-inverts.r (includes algae)
 
-```{r, message=FALSE, echo=FALSE, warning=FALSE}
+```{r update-data, message=FALSE, echo=FALSE, warning=FALSE}
 # load fish & swath codes, used below
 
 fish_codes = data.frame(read_xlsx(
@@ -120,7 +127,7 @@ swath_codes = swath_codes %>% rename(spp = species,species = CLASSCODE) %>%
   mutate(group = stringr::str_to_sentence(group))
 kelp_codes = swath_codes %>% filter(group=="Algae")
 
-if(1==2){ # update the data or not....
+if(1==1){ # update the data or not....
 # fish data ####
   print("Loading fish")
   fishx = data.frame(read.csv(
