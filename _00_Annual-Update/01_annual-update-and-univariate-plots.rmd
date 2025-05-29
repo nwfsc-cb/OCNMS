@@ -107,6 +107,8 @@ The xlsx version of the file is used to pull the species codes: fish_codes, swat
 
 HOWEVER, at present read_xlsx incorrectly loads the data files because the SIDE/AREA column has both numbers and letters. read_xlsx turns these into NAs. This change messes up the transect area calculations and doubles the estimated densities...incorrectly of course. I haven't figured out how to fix that yet.
 
+Processed data are saved to: "~/GitHub/OCNMS/Data/2024/" or whatever the current data_year is. 
+
 **Needs to be updated**
 
 ## Bring in data and species codes
@@ -1987,11 +1989,14 @@ canopy.kelp
 
 
 ```
+
+## KELP WATCH 
+
 There is a discrepancy between the DNR data and kelpwatch data.  Need to check on it.
 
 ```{r kelpwatch, message=FALSE, error=FALSE}
 
-kw = data.frame(read.csv("C:/Users/Nick.Tolimieri/Documents/Data/Kelp/kelp-west-coast.csv"))
+kw = data.frame(read.csv("~/GitHub/OCNMS/Data/Kelp/kelp-west-coast.csv"))
 kw = kw[kw$region=="WA" & kw$quarter=="max",]
 
 
