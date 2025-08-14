@@ -1,0 +1,549 @@
+---
+title: "Univariate summary plots"
+author: Nick Toimieri
+date: sys.date()
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 5
+    number_sections: true
+    fig_caption: true
+fontsize: 11pt
+---
+# NOTES
+
+To update fish data to the most recent year, run:
+
+- update_swath_fish.R
+- update_swath_inverts.R
+
+in the 'update-data' chunk. The update is done automatically within this RMD, but you will need to check that the trigger is turned on in the if statement in the 
+in the 'update-data' is "if(1==1)". 
+
+You will also need to have:
+
+- swath-process-pre-2017-data.R
+- R-functions-ocnms.R
+
+as helper files. These are in the repo.
+
+# DATA YEAR 
+
+Set the data_ _year year
+
+```{r SETUP, include=FALSE}
+
+# _01_swath-fish-update.R -- old names
+# _02_swath-inverts-update.R
+
+# A bunch of initial set up junk
+
+rm(list = ls())
+data_year = 2025
+
+##### knitr stuff and libraries ####
+# tools in use 
+library(knitr)
+library(dplyr)
+library(stringr)
+library(RColorBrewer)
+library(readxl)
+library(lubridate)
+library(ggplot2)
+library(stringr)
+library(lemon)
+library(ggpubr)
+library(tidyr)
+library(tinytex) # for pdf output
+
+# display.brewer.all(colorblindFriendly = TRUE)
+
+source("R-functions-ocnms.r")
+
+# Paths for files
+# setwd('..')
+
+source_dir = dirname(rstudioapi::getActiveDocumentContext()$path)
+
+home_dir = paste0(source_dir,'/')
+
+fig_dir = paste0(home_dir,"/figures/")
+# data_dir = paste0(home_dir,"/data/")
+data_dir = paste0("~/GitHub/OCNMS/Data/",data_year,"/")
+results_dir = paste0(home_dir,"/results/")
+other_dir = paste0(home_dir,"/other/")
+
+# options
+knitr::opts_chunk$set(
+  root.dir = home_dir,
+  fig.path = fig_dir,
+  cache.path = 'cache/graphics-', 
+  echo=FALSE,
+  error=FALSE,
+  include = TRUE,
+  dev='png',
+  dpi=300,
+  warning=FALSE,
+  #out.width = '100%',
+  fig.align='center'
+  
+  )
+
+# just to keep track of when I ran things.
+
+par(ps=10, cex=1)
+
+```
+
+# Process raw data 
+
+To process the raw data:
+
+- copy xlxm files into from google drive into the Data folder. Put in sub-folder for that year.
+- make csv and xlsx versions of the files
+
+The xlsx version of the file is used to pull the species codes: fish_codes, swath_codes, kelp_codes. 
+
+HOWEVER, at present read_xlsx incorrectly loads the data files because the SIDE/AREA column has both numbers and letters. read_xlsx turns these into NAs. This change messes up the transect area calculations and doubles the estimated densities...incorrectly of course. I haven't figured out how to fix that yet.
+
+Processed data are saved to: "~/GitHub/OCNMS/Data/2024/" or whatever the current data_year is. 
+
+**Needs to be updated**
+
+## Bring in data and species codes
+
+This chunk will load the species codes and run the update files to turn the raw data files into counts by size and transect.  Once you've run it, you can turn of the data processing part and just load the species codes. The chunk runs:
+
+- update-swath-fish.r
+- update-swath-inverts.r (includes algae)
+
+```{r update-data, message=FALSE, echo=FALSE, warning=FALSE}
+# load fish & swath codes, used below
+
+fish_codes = data.frame(read.csv("spp_codes_fish.csv", header = TRUE))
+kelp_codes = data.frame(read.csv("spp_codes_kelp.csv", header = TRUE))
+swath_codes = data.frame(read.csv("spp_codes_swath.csv", header = TRUE))
+
+
+if(1==1){ # update the data or not....
+# fish data ####
+  print("Loading fish")
+  fishx = data.frame(read.csv(
+    paste0(data_dir,"NWFSC_FISH_ALLYEARS_data_",data_year,".csv"), header=T))
+
+  print('Running fish')
+  source("update-swath-fish.R")
+  print('Finished fish')
+}
+
+
+
+  if(1==2){ #
+  # inverts and algae ####
+  print("Loading inverts & algae")
+  swathx = data.frame(read.csv(
+    paste0(data_dir,"NWFSC_SWATH_ALLYEARS_data_",data_year,".csv")))
+  swathx = swathx %>% filter(!is.na(YEAR))
+  # remove some problematic Samhouri observations
+  swathx$COUNT = ifelse(swathx$OBSERVER=="Jameal Samhouri" &
+                        swathx$SITE == "Cape Johnson" &
+                        swathx$SIDE == "N" &
+                        swathx$CLASSCODE =="MACPYR" & 
+                        swathx$YEAR == 2024 &  
+                        swathx$METERS.sampled < 10, NA, swathx$COUNT)
+  print("Running inverts & algae")
+  source("update-swath-inverts.R")
+}
+
+```
+
+# Data import
+
+Bring in the initially processed data
+
+```{r data-import}
+# fish
+fish0 = readRDS( paste0(data_dir,'Fish_2015-',data_year,'.rds' ))
+# algae and kelp
+swath0 <- readRDS( paste0(data_dir,'Swath_2015-',data_year,'.rds' ))
+
+# fish and swath codes above
+# fish_codes = data.frame(read.csv("spp_codes_fish.csv"))
+# kelp_codes = data.frame(read.csv( "spp_codes_kelp.csv" ))
+# swath_codes = data.frame(read.csv("spp_codes_swath.csv"))
+# kelp_codes = swath_codes %>% filter(group=="Algae") # 
+
+```
+
+
+# Triggers and Settings
+
+I set some common settings here. The settings.rds file ports the same info over to the multivariate rmd. It is brought in and updated here. 
+
+```{r triggers-and-settings}
+
+# provided in Univariate_workhorse, sourced above
+settings = readRDS('settings.RDS')
+settings$years = 2015:max(fish0$year)
+min.vis = settings$min.vis
+last.year = max(settings$years)
+years = 2015:last.year
+
+# update yearly to add colors/symbols for new year
+pch = c(8 , 21, 22, 23, 24, 4, 25 , 26, 27 )
+col = RColorBrewer::brewer.pal(n = 12, name = "Paired")[c(2,4,6,10,12,7,8, 3,5)]
+year.pch = data.frame(cbind(years, pch, col))
+
+sites = c("Neah Bay","Tatoosh Island","Cape Alava","Cape Johnson","Destruction Island")
+col = RColorBrewer::brewer.pal(n = 12, name = "Paired")[c(2,4,6, 10,12)]
+site.col = data.frame(cbind(sites,col))
+colnames(site.col) <- c('site', 'col')
+
+#### species depths #####
+
+kelp.depth = 5
+fish.depth = c(5,10)
+invert.depth = 5
+# set for labelling plots below
+depth.labs = c('5-m','10-m')
+names(depth.labs) = c(5,10)
+### species codes here 
+
+### combine settings and save out for multivariate file  ####
+# update based on any changes this year
+
+settings = list(min.vis = min.vis,
+                years = years,
+                pch = pch,
+                col=col,
+                sites=sites,
+                year.pch = year.pch,
+                site.col = site.col,
+                kelp.deph = kelp.depth,
+                fish.depth = fish.depth,
+                invert.depth = invert.depth,
+                fish_codes = fish_codes,
+                swath_codes = swath_codes)
+# updates the above
+saveRDS(settings, file = paste0(data_dir,'settings.RDS') )
+
+
+```
+## Set a common theme for plots
+
+```{r set-global-plotting-theme}
+ 
+theme_nt   <-   theme(legend.title=element_blank(),
+                      legend.background = element_blank(),
+                      axis.title = element_text(size=8),
+                      axis.text.x = element_text(size=8),
+                      strip.background = element_blank(),
+                      legend.text = element_text(size = 8),
+                      legend.key.size = unit(0.25,'lines')
+)
+
+saveRDS(theme_nt, file = 'theme_nt.rds') 
+
+```
+
+# Manipulate fish data prior to plotting.
+
+Raw data are fish counts by size, so there are multiple observations per species per transect. Sum up counts by transect. 
+
+```{r import-fish, include=FALSE}
+# read in rds file with combined data
+# fish0 = readRDS( paste0(data_dir,'Fish_2015-2024.rds' ))
+
+# add in yoy designator and fix some names
+
+fish0 <- fish0 %>% 
+  left_join(.,fish_codes %>% dplyr::select(species,group)) %>%
+  rename(taxa=group)
+
+# convert small size to size to yoy for taxa
+
+fish0 <- fish0 %>% mutate(taxa=case_when(is.na(size_class)==TRUE ~ as.character(taxa),
+                                         size_class=="large" ~ as.character(taxa),
+                                         size_class=="small" ~ paste0(taxa,"yoy"))) %>%
+                  mutate(taxa= ifelse(taxa=="RYOYyoy","RYOY",taxa))
+
+x = fish0 %>% filter(taxa %in% c('SEFLyoy','SEMEyoy','SEBYTyoy')) %>% group_by(taxa) %>% summarise(Tot=sum(Count))
+
+# combine YT and black or keep separate? # COMBINE!
+fish0$taxa[ fish0$taxa %in% c('SEFLyoy','SEMEyoy')] <- 'SEBYTyoy'
+
+# Aggregate the SEBYTyoy so that there are one, not three, entries for "SEBYTyoy"
+fish_yt <- fish0 %>% filter(taxa=="SEBYTyoy") %>% 
+              group_by(site, transect,observer,
+                size_class,year,area,zone,vis_m,taxa) %>%
+              summarise(Count_all=sum(Count, na.rm = TRUE)) %>% 
+              rename(Count=Count_all) %>%
+              mutate(species="SEBYT",common.name=NA)
+
+## re-add SEBYTyoy   
+# could have just used rbind; don't know why I didn't
+fish0 <- fish0 %>% filter(!taxa == "SEBYTyoy") %>% full_join(.,fish_yt)
+
+sum(fish0$Count[fish0$taxa == 'SEBYTyoy'])
+
+# subset visibility ####
+# add fake vis for 2015
+fish0$vis_m[ fish0$year == 2015 ] <- 3
+# poor vis at destruction in year 1.
+fish0$vis_m[ fish0$year == 2015 & fish0$site == "Destruction Island"] <- 1
+
+# output for multivariate ####
+fish1 = fish0 %>% filter(site %in%  sites)
+sum(fish1$Count[fish1$taxa == 'SEBYTyoy'])
+# drop low vis sites/transects and set depth
+fish1a = fish1[fish1$vis_m >= min.vis, ]
+sum(fish1a$Count[fish1a$taxa == 'SEBYTyoy'], na.rm = TRUE)
+# select depth ####
+fish1b = fish1a[fish1a$zone %in% fish.depth,]
+sum(fish1b$Count[fish1b$taxa == 'SEBYTyoy'])
+
+# calculate TOTyoy by site, transect, observer, and year
+fish1b %>% filter(size_class == "small") %>% distinct(taxa)
+# all of the small taxa are rockfish YOY.
+fish1c <- fish1b %>% filter(size_class == "small") %>% 
+                      group_by(site,year,transect,observer,zone,area) %>% 
+                      summarise(Count_all=sum(Count, na.rm = TRUE)) %>%
+                      mutate(species="TOTyoy",taxa="TOTyoy") %>%
+                      rename(Count=Count_all)
+
+fish1d <- fish1b %>% full_join(.,fish1c) 
+
+# for combining below
+
+fish_transect <- fish1d
+sum(fish_transect$Count[fish_transect$taxa == 'SEBYTyoy'])
+sum(fish_transect$Count[fish_transect$taxa == 'TOTyoy'])
+sum(fish_transect$Count[fish_transect$taxa %in% c("RYOY","SEBYTyoy", "SECAyoy","SEMAyoy","SEMYyoy","SENEyoy","SEPIyoy")], na.rm = TRUE)
+
+                    
+# Ole made this to check the aggregating in fish 2.
+fish3 <-  fish1d %>% group_by(site,year,zone,species, taxa) %>%
+              summarise(Mean=mean(Count, na.rm = TRUE),
+                        SD=sd(Count),
+                        N=length(Count),
+                        SE=SD/sqrt(N))
+
+# Check to make sure all of the site-year-zone combinations have equivalent number of transects.
+fish3 %>% group_by(site,year,zone) %>% distinct(N) %>% as.data.frame()
+
+
+### calculate means and se for species ####
+
+fish4 <-  fish1d %>% group_by(site,year,species,taxa) %>%
+              summarise(Mean=mean(Count, na.rm = TRUE),
+                        SD=sd(Count),
+                        N=length(Count),
+                        SE=SD/sqrt(N),
+                        SE_var=SE^2)
+saveRDS(fish4, paste0(data_dir,'Summarized_Data_Fish_site_year_species.rds'))
+
+fish5 <- fish4 %>% group_by(year, species, taxa) %>%
+                    summarise(grand_sum=sum(Mean, na.rm = TRUE),
+                        N=length(Mean),
+                        grand_mean= grand_sum / N,
+                        grand_sum_var =sum(SE_var, na.rm = TRUE), 
+                        grand_SE = sqrt(grand_sum_var / N^2))
+saveRDS(fish5, paste0(data_dir,'Summarized_Data_Fish_year_species.rds'))
+
+#### calculate means se for taxa #######
+# lump by taxa for some plotting analysis.
+# greenlings lumped in current plots
+
+fish_taxa_Year_site <-  fish_transect %>% group_by(site,year,taxa) %>%
+  summarise(Mean=mean(Count, na.rm = TRUE),
+            SD=sd(Count),
+            N=length(Count),
+            SE=SD/sqrt(N),
+            SE_var=SE^2)
+saveRDS(fish_taxa_Year_site, paste0(data_dir,'Summarized_Data_Fish_site_year_taxa.rds'))
+
+fish_taxa_year <-fish_taxa_Year_site %>% group_by(year,taxa) %>%
+  summarise(grand_sum=sum(Mean, na.rm = TRUE),
+            N=length(Mean),
+            grand_mean= grand_sum / N,
+            grand_sum_var =sum(SE_var, na.rm = TRUE), 
+            grand_SE = sqrt(grand_sum_var / N^2))
+saveRDS(fish_taxa_year, paste0(data_dir,'Summarized_Data_Fish_year_taxa.rds'))
+
+#### for multivariate stuff below
+
+```
+
+# Some basic information for summing and analyses below
+
+Minimum vis for fish analysis = `r min.vis`-m
+
+Kelp depths = `r kelp.depth` -m
+Fish depths = `r fish.depth` -m
+Inv  depths = `r invert.depth` -m
+
+Visibility data for 2015 are fake. DI was bad and set at 1.0 m; other sites set at 3.0 m
+
+# FISH
+
+## Rockfish YOY - coastwide
+
+Mean abundance of YOY rockfish, averaged across all sites. 
+
+```{r rockfish-yoy, fig.width=5, fig.height=3.5}
+
+x <-  fish_transect %>% group_by(site,year,taxa) %>%
+      summarise(Mean=mean(Count, na.rm = TRUE),
+                SD=sd(Count),
+                N=length(Count),
+                SE=SD/sqrt(N),
+                SE_var=SE^2)  %>%
+      group_by(year,taxa) %>%
+      summarise(grand_sum = sum(Mean, na.rm = TRUE),
+            N=length(Mean),
+            grand_mean = grand_sum / N,
+            grand_sum_var = sum(SE_var, na.rm = TRUE), 
+            grand_SE = sqrt(grand_sum_var / N^2))
+fish_taxa_year <- x
+
+# fish_taxa_year <- readRDS(paste0(data_dir,'Summarized_Data_Fish_year_taxa.rds'))
+
+fish.col = c(RColorBrewer::brewer.pal(n = 12, name = "Paired"))
+
+SP.yoy <- c("SEBYTyoy", "YTB",  'black',
+            "SECAyoy", "CQB",               fish.col[12],
+            #"SEMAyoy", "Quillback",            fish.col[10],
+            "SEMYyoy", "Blue" ,                fish.col[2],
+            #"SENEyoy", "China",                fish.col[10],
+            "SEPIyoy", "Canary",               fish.col[6],
+            "RYOY", "Unidentified",            'darkgrey') # ,
+            #"TOTyoy", "Total",                 fish.col[10])
+
+SP.yoy <- matrix(SP.yoy,ncol=3,byrow=T) %>% as.data.frame()
+colnames(SP.yoy) <- c("taxa","name",'col')
+
+SP.yoy$name <- as.character(SP.yoy$name)
+SP.yoy$name <- factor(SP.yoy$name,levels=SP.yoy$name)
+
+yoy.plot <- ggplot(fish_taxa_year %>% filter(taxa %in% SP.yoy$taxa) %>% left_join(.,SP.yoy)) +
+    geom_point(aes(x=year,y=grand_mean,color=name)) + 
+    geom_line(aes(x=year,y=grand_mean,color=name)) +
+    geom_errorbar(aes(x=year,color=name,ymin=grand_mean-grand_SE,ymax=grand_mean+grand_SE),
+                  width=0) +
+    scale_y_continuous(trans="sqrt",breaks=c(0,1,5,10,20,40,60,80),limits=c(0,NA)) +
+    scale_x_continuous(breaks=seq(2015,max(fish_taxa_year$year),2)) +
+    #scale_color_viridis_d(option="plasma", end=0.75) + 
+    scale_color_manual(values=SP.yoy$col)+
+    ylab(expression("Rockfish juveniles per 120 m"^3)) +
+    xlab("") +
+    theme_bw() + theme_nt +
+    theme(legend.position = 'inside', legend.position.inside =  c(0.7, 0.8) )
+
+yoy.plot
+
+```
+
+## Adult fish - coastwide 
+
+Species mean abundance across sites for depths listed below. 
+
+Fish depth = `r fish.depth`
+
+```{r fish, fig.width=5, fig.height=3.5}
+
+fish.col = c(RColorBrewer::brewer.pal(n = 12, name = "Paired"))
+
+fish.taxa <- c("OPEL", "Lingcod",     fish.col[10],
+               "HEXA", "Greenlings", fish.col[4],
+               "SCMA" ,"Cabazon",     fish.col[8],
+               "SECA", "Copper RF",   fish.col[12],
+               "SENE", "China RF",     fish.col[2],
+               "SEFL", "Yellowtail RF", fish.col[7],
+               "SEME", 'Black RF',    'black')
+
+fish.taxa <- matrix(fish.taxa,ncol=3,byrow=T) %>% as.data.frame()
+colnames(fish.taxa) <- c("taxa","name","col")
+
+fish.taxa$name <- as.character(fish.taxa$name)
+fish.taxa$name <- factor(fish.taxa$name,levels=fish.taxa$name)
+
+
+fish.plot <- ggplot(fish_taxa_year %>% filter(taxa %in% fish.taxa$taxa) %>% left_join(.,fish.taxa)) +
+  geom_point(aes(x=year,y=grand_mean,color=name)) + 
+  geom_line(aes(x=year,y=grand_mean,color=name)) +
+  geom_errorbar(aes(x=year,color=name,ymin=grand_mean-grand_SE,ymax=grand_mean+grand_SE),
+                width=0) +
+  scale_y_continuous(trans="sqrt",breaks=c(0,1,5,10),limits=c(0,10)) +
+  scale_x_continuous(breaks=seq(2015,max(fish_taxa_year$year),2)) +
+  #scale_color_viridis_d(option="plasma", end=0.75) + 
+  scale_color_manual(values=fish.taxa$col)+
+  ylab(expression("Number per 120 m"^3)) +
+  xlab("") +
+  theme_bw() + theme_nt + 
+  theme(legend.position = c(0.2, 0.8) )
+        
+fish.plot
+```
+
+
+## Adult Fish - site x year x depth
+
+Species mean abundance by site x year x depth
+
+```{r supplement-fish-site-year, fig.width=5, fig.height=6}
+
+fish_ys = readRDS( paste0(data_dir,'Summarized_Data_Fish_site_year_taxa.rds') ) %>% filter(taxa %in% fish.taxa[,1])
+fish_ys$site = factor(fish_ys$site , levels = c("Neah Bay","Tatoosh Island","Cape Alava","Cape Johnson","Destruction Island"))
+
+fish_ys <- fish_ys %>% left_join(.,fish.taxa)
+
+
+ggplot(fish_ys , aes(x = year, y = Mean, color = site)) +
+          geom_point() + 
+          geom_line() + 
+          geom_errorbar(aes(x=year,color=site,ymin=Mean-SE,ymax=Mean+SE),width=0) +
+          scale_x_continuous(breaks=seq(2015,max(fish_ys$year),2), 
+                             minor_breaks = seq(2015,max(fish_ys$year))) +
+          scale_color_manual(values=site.col$col)+
+          xlab("")+
+          ylab(expression("Number per 120 m"^3))+
+          # facet_grid(rows = 'taxa', scales="free_y") +
+          facet_wrap( ~ name, scales="free",nrow=4) +
+          theme_bw() + theme_nt +
+          theme(legend.position = c(0.7, 0.1))
+
+
+```
+## YOY rockfish abundance - site x year x depth
+
+Species mean abundance by site x year x depth
+
+```{r supplement-yoy-site-year, fig.width=5, fig.height=6}
+
+yoy_ys = readRDS( paste0(data_dir,'Summarized_Data_Fish_site_year_taxa.rds') ) %>% 
+         filter(taxa %in% SP.yoy[,1]) %>% 
+          left_join(.,SP.yoy)
+
+yoy_ys$site = factor(yoy_ys$site , levels = c("Neah Bay","Tatoosh Island","Cape Alava","Cape Johnson","Destruction Island"))
+
+
+ggplot(yoy_ys , aes(x = year, y = Mean, color = site)) +
+          geom_point() + 
+          geom_line() + 
+          geom_errorbar(aes(x=year,color=site,ymin=Mean-SE,ymax=Mean+SE),width=0) +
+          scale_x_continuous(breaks=seq(2015,max(yoy_ys$year),2)) +
+          scale_color_manual(values=site.col$col)+
+          xlab("")+
+          ylab(expression("Rockfish juveniles per 120 m"^3))+
+          # facet_grid(rows = 'taxa', scales="free_y") +
+          facet_wrap( ~ name, scales="free",nrow=3) +
+          theme_bw() + theme_nt + 
+          theme(  legend.position = c(0.85, 0.2) )
+                  
+            
+
+
+
+
+```

@@ -1,74 +1,72 @@
-code,group,include,Name,com_name,spp,,,spp
-ANOC,ANOC,n,Wolf Eel,wolf eel,Anarrhichthys ocellatus,,,
-APFL,PHOL,n,Penpoint Gunnel,penpoint gunnel,Apodichthys flavidus,,,
-ARHA,COTT,n,Scalyhead sculpin,scalyhead sculpin,Artedius harringtoni,,,
-AUFL,AUFL,y,Tubesnout,tubesnout,Aulorhynchus flavidus,,,
-BAITBALL,BAIT,y,bait-sardines-anchovy,bait-sardines-anchovy,bait,,,
-BATH,BATH,n,Ronquils,ronquils,Bathymasteridae,,,
-BLEN,BLEN,n,Blennies,blennies,Blenniidae,,,
-BOTH,BOTH,y,Lefteyed flounders,lefteyed flounders,Bothidae,,,
-BRFR,EMBI,y,Kelp Surfperch,kelp surfperch,Brachyistius frenatus,,,
-CHNU,CHNU,n,Mosshead warbonnet,mosshead warbonnet,Chirolophis nugator,,,
-CHPU,COTT,n,Roughback Sculpin,roughback sculpin,Chitonotus pugetensis,,,
-CISO,CITH,y,Pacific Sanddab,Pacific sanddab,Citharichthys sordidus,,,
-CIST,CITH,y,Speckled Sanddab,speckled sanddab,Citharichthys stigmaeus,,,
-CITH,CITH,y,Sanddabs,sanddabs,Citharichthys spp,,,
-CLIN,CLIN,n,Kelpfishes and Fringeheads,kelpfishes and fringeheads,Clinidae,,,
-CLUP,BAIT,y,Herring,herring,Clupeidae,,,
-COTT,COTT,n,Sculpins,sculpins,Cottidae,,,
-CYAG,EMBI,y,Shiner Surfperch,shiner surfperch,Cymatogaster aggregata ,,,
-EMBI,EMBI,y,Surfperches,surfperches,Embiotocidae,,,
-EMLA,EMBI,y,Striped Surfperch,striped surfperch,Embiotoca lateralis,,,
-ENBI,COTT,n,Buffalo Sculpin,buffalo sculpin,Enophrys bison,,,
-ENMO,BAIT,y,Northern Anchovy,northern anchovy,Engraulis mordax,,,
-GOBI,GOBI,n,Gobies,gobies,Gobiidae,,,
-GOMA,GOMA,n,Northern Clingfish,northern clingfish,Gobiesox maeandricus,,,
-HEDE,HEXA,y,Kelp Greenling,kelp greenling,Hexagrammos decagrammus,,,
-HEHE,HEXA,y,Red Irish Lord,red Irish lord,Hemilepidotus hemilepidotus,,,
-HELA,HEXA,y,Rock Greenling,rock greenling,Hexagrammos lagocephalus,,,
-HEST,HEXA,y,Whitespotted greenling,whitespotted greenling,Hexagrammos stelleri,,,
-HEXA,HEXA,y,Hexagrammos spp,greenlings,Hexagrammos spp,,,
-JOZO,COTT,n,Longfin Sculpin,longfin sculpin,Jordania zonope,,,
-LIPA,LIPA,y,Snailfish,snailfish,Liparis spp,,,
-MYPO,COTT,n,Great Sculpin,great sculpin,Myoxocephalus polyacanthocephalus,,,
-MYOPOL,COTT,n,Great Sculpin,great sculpin,Myoxocephalus polyacanthocephalus,,,
-MYPOL,COTT,n,Great Sculpin,great sculpin,Myoxocephalus polyacanthocephalus,,,
-NO_DATA,NO_DATA,y,no_transect_no_data,no_transect_no_data,no_transect_no_data,,,
-NO_ORG,NO_ORG,y,transect_no_organisims,transect_no_organisims,transect_no_organisims,,,
-OPEL,OPEL,y,Lingcod,lingcod,Ophiodon elongatus,,,
-OXPI,HEXA,y,Painted Greenling,painted greenling,Oxylebius pictus,,,
-PHOL,PHOL,n,Gunnels,gunnels,Pholididae,,,
-PLCO,PLEU,y,C-O sole,c-o sole,Pleuronichthys coenosus,,,
-PLEU,PLEU,y,Righteyed flounders,righteyed flounders,Pleuronectidae,,,
-PLST,PLEU,y,Starry Flounder,starry flounder,Platichthys stellatus,,,
-PONO,PONO,y,plainfin midshipman,plainfin midshipman,Porichthys notatus,,,
-RHBI,RHBI,y,big skate,big skate,Beringraja binoculata,,,
-RHNI,GOBI,n,Blackeye Goby,blackeye goby,Rhinogobiops nicholsii,,,
-RHRI,COTT,n,Grunt sculpin,grunt sculpin,Rhamphocottus richardsonii ,,,
-RHVA,EMBI,y,Pile perch,pile perch,Rhacochilus vacca,,,
-RIMU,RIMU,n,Kelp clingfish,kelp clingfish,Rimicola muscarum,,,
-ROJO,BATH,n,northern ronquil,northern ronquil,Ronquilus jordani,,,
-RYOY,RYOY,y,rockfish_yoy,rockfish_yoy,Sebastes_yoy,,,
-SASA,BAIT,y,pacific sardine,pacific sardine,Sardinops sagax,,,
-SCMA,SCMA,y,cabezon,cabezon,Scorpaenichthys marmoratus,,,
-SEAU,SEAU,y,brown rockfish,brown rockfish,Sebastes auriculatus,,,
-SEBSPP,SEBSPP,y,Rockfish,rockfish,Sebastes spp,,,
-SEBYT,SEBYT,y,yellowtail-black yoy,yellowtail-black yoy,Sebastes mela-flav yoy,,,
-SECA,SECA,y,copper rockfish,copper rockfish,Sebastes caurinus,,,
-SECAy,SECA,y,Copper rockfish YOY,copper rockfish YOY,Sebastes caurinus YOY,,,
-SEFL,SEFL,y,Yellowtail rockfish,yellowtail rockfish,Sebastes flavidus,,,
-SEMA,SEMA,y,Quillback rockfish,quillback rockfish,Sebastes maliger,,,
-SEMAy,SEMA,y,Quillback rockfish YOY,quillback rockfish YOY,Sebastes maliger YOY,,,
-SEME,SEME,y,black rockfish,black rockfish,Sebastes melanops,,,
-SEMEy,SEBYT,y,black rockfish YOY,black rockfish YOY,Sebastes melanops YOY,,,
-SEMI,SEMI,y,vermilion rockfish,vermilion rockfish,Sebastes miniatus,,,
-SEMY,SEMY,y,blue rockfish,blue rockfish,Sebastes mystinus,,,
-SENE,SENE,y,china rockfish,china rockfish,Sebastes nebulosus,,,
-SEPA,SEPA,y,bocaccio,bocaccio,Sebastes paucispinis,,,
-SEPI,SEPI,y,canary rockfish,canary rockfish,Sebastes pinniger,,,
-SEPIy,SEPI,y,canary rockfish YOY,canary rockfish yoy,Sebastes pinniger yoy,,,
-SQAC,SQAC,y,Spiny dogfish,spiny dogfish,Squalus acanthias,,,
-STICH,STICH,n,Pricklebacks,pricklebacks,Stichaeidae spp,,,
-SYGI,COTT,n,Manacled sculpin,manacled sculpin,Synchirus gilli,,,
-SYLE,SYLE,y,Bay pipefish,bay pipefish,Syngnathus leptorhynchus,,,
-UNID,UNID,n,Unidentified Fish,unidentified fish,fish,,,
+"species","group","include","Name","common.name","spp.name"
+"ANOC","ANOC","n","Wolf Eel","wolf eel","Anarrhichthys ocellatus"
+"APFL","PHOL","n","Penpoint Gunnel","penpoint gunnel","Apodichthys flavidus"
+"ARHA","COTT","n","Scalyhead sculpin","scalyhead sculpin","Artedius harringtoni"
+"AUFL","AUFL","y","Tubesnout","tubesnout","Aulorhynchus flavidus"
+"BAITBALL","BAIT","y","bait-sardines-anchovy","bait-sardines-anchovy","bait"
+"BATH","BATH","n","Ronquils","ronquils","Bathymasteridae"
+"BLEN","BLEN","n","Blennies","blennies","Blenniidae"
+"BOTH","BOTH","y","Lefteyed flounders","lefteyed flounders","Bothidae"
+"BRFR","EMBI","y","Kelp Surfperch","kelp surfperch","Brachyistius frenatus"
+"CHNU","CHNU","n","Mosshead warbonnet","mosshead warbonnet","ChirolophisÂ nugator"
+"CHPU","COTT","n","Roughback Sculpin","roughback sculpin","ChitonotusÂ pugetensis"
+"CISO","CITH","y","Pacific Sanddab","Pacific sanddab","CitharichthysÂ sordidus"
+"CIST","CITH","y","Speckled Sanddab","speckled sanddab","CitharichthysÂ stigmaeus"
+"CITH","CITH","y","Sanddabs","sanddabs","Citharichthys spp"
+"CLIN","CLIN","n","Kelpfishes and Fringeheads","kelpfishes and fringeheads","Clinidae"
+"CLUP","BAIT","y","Herring","herring","Clupeidae"
+"COTT","COTT","n","Sculpins","sculpins","Cottidae"
+"CYAG","EMBI","y","Shiner Surfperch","shiner surfperch","CymatogasterÂ aggregataÂ "
+"EMBI","EMBI","y","Surfperches","surfperches","Embiotocidae"
+"EMLA","EMBI","y","Striped Surfperch","striped surfperch","EmbiotocaÂ lateralis"
+"ENBI","COTT","n","Buffalo Sculpin","buffalo sculpin","EnophrysÂ bison"
+"ENMO","BAIT","y","Northern Anchovy","northern anchovy","Engraulis mordax"
+"GOBI","GOBI","n","Gobies","gobies","Gobiidae"
+"GOMA","GOMA","n","Northern Clingfish","northern clingfish","GobiesoxÂ maeandricus"
+"HEDE","HEXA","y","Kelp Greenling","kelp greenling","HexagrammosÂ decagrammus"
+"HEHE","HEXA","y","Red Irish Lord","red Irish lord","HemilepidotusÂ hemilepidotus"
+"HELA","HEXA","y","Rock Greenling","rock greenling","HexagrammosÂ lagocephalus"
+"HEST","HEXA","y","Whitespotted greenling","whitespotted greenling","HexagrammosÂ stelleri"
+"HEXA","HEXA","y","Hexagrammos spp","greenlings","Hexagrammos spp"
+"JOZO","COTT","n","Longfin Sculpin","longfin sculpin","JordaniaÂ zonope"
+"LIPA","LIPA","y","Snailfish","snailfish","Liparis spp"
+"MYPO","COTT","n","Great Sculpin","great sculpin","MyoxocephalusÂ polyacanthocephalus"
+"NO_DATA","NO_DATA","y","no_transect_no_data","no_transect_no_data","no_transect_no_data"
+"NO_ORG","NO_ORG","y","transect_no_organisims","transect_no_organisims","transect_no_organisims"
+"OPEL","OPEL","y","Lingcod","lingcod","Ophiodon elongatus"
+"OXPI","HEXA","y","Painted Greenling","painted greenling","Oxylebius pictus"
+"PHOL","PHOL","n","Gunnels","gunnels","Pholididae"
+"PLCO","PLEU","y","C-O sole","c-o sole","PleuronichthysÂ coenosus"
+"PLEU","PLEU","y","Righteyed flounders","righteyed flounders","Pleuronectidae"
+"PLST","PLEU","y","Starry Flounder","starry flounder","PlatichthysÂ stellatus"
+"PONO","PONO","y","plainfin midshipman","plainfin midshipman","PorichthysÂ notatus"
+"RHBI","RHBI","y","big skate","big skate","Beringraja binoculata"
+"RHNI","GOBI","n","Blackeye Goby","blackeye goby","RhinogobiopsÂ nicholsii"
+"RHRI","COTT","n","Grunt sculpin","grunt sculpin","RhamphocottusÂ richardsoniiÂ "
+"RHVA","EMBI","y","Pile perch","pile perch","RhacochilusÂ vacca"
+"RIMU","RIMU","n","Kelp clingfish","kelp clingfish","RimicolaÂ muscarum"
+"ROJO","BATH","n","northern ronquil","northern ronquil","RonquilusÂ jordani"
+"RYOY","RYOY","y","rockfish_yoy","rockfish_yoy","Sebastes_yoy"
+"SASA","BAIT","y","pacific sardine","pacific sardine","SardinopsÂ sagax"
+"SCMA","SCMA","y","cabezon","cabezon","Scorpaenichthys marmoratus"
+"SEAU","SEAU","y","brown rockfish","brown rockfish","Sebastes auriculatus"
+"SEBSPP","SEBSPP","y","Rockfish","rockfish","Sebastes spp"
+"SEBYT","SEBYT","y","yellowtail-black yoy","yellowtail-black yoy","Sebastes mela-flav yoy"
+"SECA","SECA","y","copper rockfish","copper rockfish","SebastesÂ caurinus"
+"SECAy","SECA","y","Copper rockfish YOY","copper rockfish YOY","Sebastes caurinus YOY"
+"SEFL","SEFL","y","Yellowtail rockfish","yellowtail rockfish","SebastesÂ flavidus"
+"SEMA","SEMA","y","Quillback rockfish","quillback rockfish","SebastesÂ maliger"
+"SEMAy","SEMA","y","Quillback rockfish YOY","quillback rockfish YOY","SebastesÂ maliger YOY"
+"SEME","SEME","y","black rockfish","black rockfish","Sebastes melanops"
+"SEMEy","SEBYT","y","black rockfish YOY","black rockfish YOY","Sebastes melanops YOY"
+"SEMI","SEMI","y","vermilion rockfish","vermilion rockfish","SebastesÂ miniatus"
+"SEMY","SEMY","y","blue rockfish","blue rockfish","Sebastes mystinus"
+"SENE","SENE","y","china rockfish","china rockfish","Sebastes nebulosus"
+"SEPA","SEPA","y","bocaccio","bocaccio","Sebastes paucispinis"
+"SEPI","SEPI","y","canary rockfish","canary rockfish","SebastesÂ pinniger"
+"SEPIy","SEPI","y","canary rockfish YOY","canary rockfish yoy","SebastesÂ pinniger yoy"
+"SQAC","SQAC","y","Spiny dogfish","spiny dogfish","Squalus acanthias"
+"STICH","STICH","n","Pricklebacks","pricklebacks","Stichaeidae spp"
+"SYGI","COTT","n","Manacled sculpin","manacled sculpin","Synchirus gilli"
+"SYLE","SYLE","y","Bay pipefish","bay pipefish","Syngnathus leptorhynchus"
+"UNID","UNID","n","Unidentified Fish","unidentified fish","fish"

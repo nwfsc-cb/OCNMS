@@ -1,15 +1,18 @@
-species,common.name,name1,name2,functional_group
-COSCOS,Costaria costata,Costaria,Costaria costata,understory
-CYMTRI,Cymathere triplicata,Cymathere,Cymathere triplicata,understory
-DESSPP,Desmarestia,Desmarestia,Desmarestia,understory
-EGRMEN,Egregia menziesii,Egregia,Egregia menziesii,understory
-LAMSET,Laminaria setchellii,Laminaria,Laminaria setchellii,understory
-MACPYR,Macrocystis pyrifera stipes,Macrocystis,Macrocystis pyrifera,canopy
-NERLUE,Nereocystis luetkeana stipes,Nereocystis,Nereocystis luetkeana,canopy
-PLEGAR,Pleurophycus gardneri stipes,Pleurophycus,Pleurophycus gardneri,understory
-PTECAL,Pterygophora californica stipes,Pterygophora,Pterygophora californica,understory
-SACGRO,Saccharina dentigera,S. dentigera,Saccharina dentigera,understory
-AGAFIM,Agarum fimbriatum,Agarum,Agarum fimbriatum,understory
-ALAMAR,"Alaria marginata, Alaria",Alaria,Alaria marginats,understory
-NO_ALG,No kelp stipes present in this sample,None,None,none
-SACLAT,"Saccharina latissima, ""bongo""",S. latissima,Saccharina latissima,canopy
+"species","common.name","group","functional_group","spp","taxa","group_1","group_2"
+"AGAFIM","Agarum fimbriatum","Algae","understory","Agarum fibriatum",NA,NA,NA
+"ALAMAR","Alaria marginata, Alaria","Algae","understory","Alaria marginata",NA,NA,NA
+"BONGO","Steve Lonhart description of later defined species","Algae","understory","Kelp",NA,NA,NA
+"COSCOS","Costaria costatum, Costaria","Algae","understory","Costaria costatum",NA,NA,NA
+"CYMTRI","Cymathere triplicata, three-ribbed kelp","Algae","understory","Cymathere tripicata",NA,NA,NA
+"dPTECAL","DEAD (grazed) Pterygophora californica, Pterygophora","Algae","understory","dead Peterophora",NA,NA,NA
+"DESSPP","Desmarestia spp.","Algae","understory","Desmerestia spp.",NA,NA,NA
+"EGRMEN","Egregia menziesii","Algae","understory","Egregia menziesii",NA,NA,NA
+"LAMSET","Laminaria setchellii, Laminaria","Algae","understory","Laminaria setchellii",NA,NA,NA
+"MACPYR","Macrocystis pyrifera, Macrocystis","Algae","canopy","Macrocystis pyrifera",NA,NA,NA
+"NERLUE","Nereocystis luetkeana, Nereocystis","Algae","canopy","Nerocystis leutkeana",NA,NA,NA
+"NO_ALG","No kelp stipes present in this sample","Algae","none","No kelp",NA,NA,NA
+"NOT_DONE","No data collected","Algae","none","no data",NA,NA,NA
+"PLEGAR","Pleurophycus gardneri, Pleurophycus","Algae","understory","Pleurophycus gardneri",NA,NA,NA
+"PTECAL","Pterygophora californica, Pterygophora","Algae","understory","Pterygophora californica",NA,NA,NA
+"SACGRO","Saccharina groenlandica, split kelp","Algae","understory","Saccharina groenlandica",NA,NA,NA
+"SACLAT","Saccharina latissima, ""bongo""","Algae","canopy","Saccharina latissima",NA,NA,NA

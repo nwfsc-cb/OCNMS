@@ -40,7 +40,7 @@ Set the data_ _year year
 # A bunch of initial set up junk
 
 rm(list = ls())
-data_year = 2024
+data_year = 2025
 
 ##### knitr stuff and libraries ####
 # tools in use 
@@ -121,13 +121,10 @@ This chunk will load the species codes and run the update files to turn the raw 
 ```{r update-data, message=FALSE, echo=FALSE, warning=FALSE}
 # load fish & swath codes, used below
 
-fish_codes = data.frame(read_xlsx(
-  paste0(data_dir,"NWFSC_FISH_ALLYEARS_data_",data_year,".xlsx"), sheet='species.codes'))
-swath_codes = data.frame(read_xlsx(
-  paste0(data_dir,"NWFSC_SWATH_ALLYEARS_data_",data_year,".xlsx"), sheet='species.codes'))
-swath_codes = swath_codes %>% rename(spp = species,species = CLASSCODE) %>%
-  mutate(group = stringr::str_to_sentence(group))
-kelp_codes = swath_codes %>% filter(group=="Algae")
+fish_codes = data.frame(read.csv("spp_codes_fish.csv", header = TRUE))
+kelp_codes = data.frame(read.csv("spp_codes_kelp.csv", header = TRUE))
+swath_codes = data.frame(read.csv("spp_codes_swath.csv", header = TRUE))
+
 
 if(1==1){ # update the data or not....
 # fish data ####
@@ -138,7 +135,11 @@ if(1==1){ # update the data or not....
   print('Running fish')
   source("update-swath-fish.R")
   print('Finished fish')
+}
 
+
+
+  if(1==2){ #
   # inverts and algae ####
   print("Loading inverts & algae")
   swathx = data.frame(read.csv(
@@ -151,10 +152,6 @@ if(1==1){ # update the data or not....
                         swathx$CLASSCODE =="MACPYR" & 
                         swathx$YEAR == 2024 &  
                         swathx$METERS.sampled < 10, NA, swathx$COUNT)
-  
-  
-  
-  
   print("Running inverts & algae")
   source("update-swath-inverts.R")
 }
@@ -550,6 +547,7 @@ ggplot(yoy_ys , aes(x = year, y = Mean, color = site)) +
 
 
 ```
+
 # ALGAE & INVERT DATA
 
 Summarize kelp and invert data to get count by transect. Raw files has more detailed observations. Data are imported above. 
