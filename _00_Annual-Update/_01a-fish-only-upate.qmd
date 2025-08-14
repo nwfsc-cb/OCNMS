@@ -364,6 +364,7 @@ Visibility data for 2015 are fake. DI was bad and set at 1.0 m; other sites set 
 
 Mean abundance of YOY rockfish, averaged across all sites. 
 
+
 ```{r rockfish-yoy, fig.width=5, fig.height=3.5}
 
 x <-  fish_transect %>% group_by(site,year,taxa) %>%
@@ -414,6 +415,22 @@ yoy.plot <- ggplot(fish_taxa_year %>% filter(taxa %in% SP.yoy$taxa) %>% left_joi
     theme(legend.position = 'inside', legend.position.inside =  c(0.7, 0.8) )
 
 yoy.plot
+
+```
+
+```{r tot_yoy, fig.width=5, fig.height=3.5}
+
+
+ggplot(fish_taxa_year %>% filter(taxa=='TOTyoy'), aes(year,grand_mean)) + 
+  geom_point() + geom_line() + 
+  geom_errorbar(aes(x=year,ymin=grand_mean-grand_SE,ymax=grand_mean+grand_SE),
+                  width=0) +
+ scale_y_continuous(trans="sqrt",breaks=c(0,1,5,10,20,40,60,80),limits=c(0,NA)) +
+    scale_x_continuous(breaks=seq(2015,max(fish_taxa_year$year),2)) +
+  ylab(expression("Rockfish juveniles per 120 m"^3)) +
+    xlab("") +
+  theme_bw() + theme_nt
+  
 
 ```
 
