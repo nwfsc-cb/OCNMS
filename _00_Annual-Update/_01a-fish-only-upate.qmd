@@ -429,7 +429,7 @@ esr_yoy$spp[esr_yoy$spp=='CQB'] <- 'copper quilback black complex'
 esr_yoy = esr_yoy[,c('year','index','SE','timeseries','metric', 'taxa', 'spp')]
 
 write.csv(esr_yoy, "GF-ocnms-rockfish-yoy.csv", row.names = F)
-write.csv(esr_yoy, "~/Github/ESR-Figures-Code/Data/GF-ocnms-rockfish-yoy_2026.csv", row.names = F )
+# write.csv(esr_yoy, "~/Github/ESR-Figures-Code/Data/GF-ocnms-rockfish-yoy_2026.csv", row.names = F )
 ```
 
 ```{r tot_yoy, fig.width=5, fig.height=3.5}
@@ -488,6 +488,20 @@ fish.plot <- ggplot(fish_taxa_year %>% filter(taxa %in% fish.taxa$taxa) %>% left
   theme(legend.position = c(0.2, 0.8) )
         
 fish.plot
+
+# ESR output ###################################################################
+esr_fish = fish_taxa_year %>%
+  rename(index = grand_mean,
+         SE = grand_SE) %>%
+  mutate(metric = "Number per 120 m^3") %>%
+  filter(taxa %in% fish.taxa$taxa)
+esr_fish = esr_fish[,c('year','taxa','index','SE','metric')]
+esr_fish$timeseries = fish.taxa$name[match(esr_fish$taxa,fish.taxa$taxa)]
+write.csv(esr_fish, "GF-ocnms-fish-adults.csv", row.names = F)
+# write.csv(esr_fish, "~/Github/ESR-Figures-Code/Data/GF-ocnms-fish-adults_2026.csv", row.names = F )
+
+
+
 ```
 
 

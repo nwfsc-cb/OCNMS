@@ -453,7 +453,7 @@ esr_recruits = esr_recruits %>% rename(index = grand_mean, SE = grand_SE) %>%
                         mutate(metric = "Number per 120 m^3") %>%
                         filter(taxa %in% fish.taxa$taxa)
 esr_recruits$timeseries = fish.taxa$name[match(esr_recruits$taxa, fish.taxa$taxa)]
-write.csv(esr_fish,"GF-ocnms-rockfish-yoy.csv")
+write.csv(esr_fish,"GF-ocnms-rockfish-yoy.csv", row.names = F)
 
 
 
@@ -527,7 +527,7 @@ esr_fish = esr_fish %>% rename(index = grand_mean, SE = grand_SE) %>%
                         mutate(metric = "Number per 120 m^3") %>%
                         filter(taxa %in% fish.taxa$taxa)
 esr_fish$timeseries = fish.taxa$name[match(esr_fish$taxa, fish.taxa$taxa)]
-write.csv(esr_fish,"GF_ocnms_fish_adults.csv")
+write.csv(esr_fish,"GF-ocnms_fish_adults.csv", row.names = F)
 
 ```
 
