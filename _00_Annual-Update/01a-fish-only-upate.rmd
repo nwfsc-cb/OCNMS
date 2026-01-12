@@ -34,6 +34,9 @@ Set the data_ _year year
 
 ```{r SETUP, include=FALSE}
 
+
+setwd("~/GitHub/OCNMS/_00_Annual-Update")
+
 # _01_swath-fish-update.R -- old names
 # _02_swath-inverts-update.R
 
@@ -64,9 +67,9 @@ source("R-functions-ocnms.r")
 # Paths for files
 # setwd('..')
 
-source_dir = dirname(rstudioapi::getActiveDocumentContext()$path)
+# source_dir = dirname(rstudioapi::getActiveDocumentContext()$path)
 
-home_dir = paste0(source_dir,'/')
+home_dir = getwd()
 
 fig_dir = paste0(home_dir,"/figures/")
 # data_dir = paste0(home_dir,"/data/")
@@ -442,6 +445,18 @@ yoy.plot <- ggplot(fish_taxa_year %>% filter(taxa %in% SP.yoy$taxa) %>% left_joi
 
 yoy.plot
 
+
+# output data for ESR 
+
+esr_recruits = fish_taxa_year[,c('year','taxa','grand_mean','grand_SE')]
+esr_recruits = esr_recruits %>% rename(index = grand_mean, SE = grand_SE) %>%
+                        mutate(metric = "Number per 120 m^3") %>%
+                        filter(taxa %in% fish.taxa$taxa)
+esr_recruits$timeseries = fish.taxa$name[match(esr_recruits$taxa, fish.taxa$taxa)]
+write.csv(esr_fish,"GF-ocnms-rockfish-yoy.csv")
+
+
+
 ```
 
 ## Adult fish - coastwide 
@@ -485,6 +500,37 @@ fish.plot <- ggplot(fish_taxa_year %>% filter(taxa %in% fish.taxa$taxa) %>% left
         
 fish.plot
 ```
+
+```{r GF-black-rockfish, height=1.5, width = 3.2}
+fish.col = c(RColorBrewer::brewer.pal(n = 12, name = "Paired"))
+
+fish.plot <- ggplot(fish_taxa_year %>% filter(taxa == 'SEME') %>% left_join(.,fish.taxa)) +
+  geom_point(aes(x=year,y=grand_mean)) + 
+  geom_line(aes(x=year,y=grand_mean)) +
+  geom_errorbar(aes(x=year,ymin=grand_mean-grand_SE,ymax=grand_mean+grand_SE),
+                width=0) +
+  scale_y_continuous(trans="sqrt",breaks=c(0,1,5,10),limits=c(0,10)) +
+  scale_x_continuous(breaks=seq(2015,max(fish_taxa_year$year),2)) +
+  #scale_color_viridis_d(option="plasma", end=0.75) + 
+  # scale_color_manual(values=fish.taxa$col)+
+  ylab(expression("Number per 120 m"^3)) +
+  xlab("") +
+  theme_bw() + theme_nt + 
+  theme(legend.position = c(0.2, 0.8) )
+        
+fish.plot
+
+# output data for ESR 
+
+esr_fish = fish_taxa_year[,c('year','taxa','grand_mean','grand_SE')]
+esr_fish = esr_fish %>% rename(index = grand_mean, SE = grand_SE) %>%
+                        mutate(metric = "Number per 120 m^3") %>%
+                        filter(taxa %in% fish.taxa$taxa)
+esr_fish$timeseries = fish.taxa$name[match(esr_fish$taxa, fish.taxa$taxa)]
+write.csv(esr_fish,"GF_ocnms_fish_adults.csv")
+
+```
+
 
 
 ## Adult Fish - site x year x depth
