@@ -62,11 +62,7 @@ library(tinytex) # for pdf output
 source("R-functions-ocnms.r")
 
 # Paths for files
-# setwd('..')
-
-source_dir = dirname(rstudioapi::getActiveDocumentContext()$path)
-
-home_dir = paste0(source_dir,'/')
+home_dir = "~/GitHub/OCNMS/_00_Annual-Update"
 
 fig_dir = paste0(home_dir,"/figures/")
 # data_dir = paste0(home_dir,"/data/")
@@ -118,6 +114,8 @@ This chunk will load the species codes and run the update files to turn the raw 
 - update-swath-fish.r
 - update-swath-inverts.r (includes algae)
 
+Errors below are likely due to a new species being added. You may need to update the codes file for fish, kelp, or swath. 
+
 ```{r update-data, message=FALSE, echo=FALSE, warning=FALSE}
 # load fish & swath codes, used below
 
@@ -139,7 +137,7 @@ if(1==1){ # update the data or not....
 
 
 
-  if(1==2){ #
+  if(1==1){ #
   # inverts and algae ####
   print("Loading inverts & algae")
   swathx = data.frame(read.csv(
@@ -986,8 +984,88 @@ pycnos = invert_transect %>%
 
 pycnos
 
+ggplot(pycnos, aes(year, no)) +
+  ylab("Total observed across five sites")+
+  scale_x_continuous(breaks=2015:data_year) +
+  geom_line() + geom_point()+theme_bw()
+
+
+p_out = pycnos %>% rename(index = no) %>%
+  mutate(timeseries="Pycnopodia", metric = "Total observed per 5 sites")
+
+write.csv(p_out, '~/GitHub/NMS-condition-reports/data/OCNMS-total-pycno.csv', row.names = F)
 
 ```
+
+```{r mean-pycnopodia}
+
+df = invert_transect %>% group_by(year, species) %>%
+  summarise(mn = mean(density),
+            vr = var(density),
+            n = n()) %>%
+  mutate(se = vr/sqrt(n))
+
+
+ggplot(df %>% filter(species=="PYCHEL"), aes(year, mn)) +
+  geom_line() + geom_point() + 
+  geom_errorbar( aes(ymin = mn-se, ymax=mn+se), width=0) +
+  xlab("") + ylab("Pycnopodia per m2") + 
+  scale_x_continuous(breaks=2015:data_year) +
+  theme_bw()
+
+df_out = df %>% filter(species=="PYCHEL") %>% 
+  rename(index = mn, SE = se, timeseries = species) %>% mutate( metric = "No per 120 m^2")
+
+write.csv(df_out, "~/GitHub/NMS-condition-reports/data/OCNMS-pynopodia.csv", row.names = F)
+
+```
+```{r mean-pycnopodia-site}
+
+df = invert_transect %>% group_by(year, species, site) %>%
+  summarise(mn = mean(density),
+            vr = var(density),
+            n = n()) %>%
+  mutate(se = vr/sqrt(n))
+
+
+ggplot(df %>% filter(species=="PYCHEL"), aes(year, mn, color=site)) +
+  geom_line() + geom_point() + 
+  geom_errorbar( aes(ymin = mn-se, ymax=mn+se), width=0) +
+  xlab("") + ylab("Pycnopodia per m2") + 
+  scale_x_continuous(breaks=2015:data_year) +
+  theme_bw()
+
+ df_out = df %>% filter(species=="PYCHEL") %>% 
+   rename(index = mn, SE = se, timeseries = species) %>% mutate( metric = "No per m2")
+
+ write.csv(df_out, "~/GitHub/NMS-condition-reports/data/OCNMS-pynopodia-site.csv", row.names = F)
+
+```
+```{r mean-pycnopodia-tatoosh}
+
+df = invert_transect %>% group_by(year, species, site) %>%
+  summarise(mn = mean(density),
+            vr = var(density),
+            n = n()) %>%
+  mutate(se = vr/sqrt(n))
+
+
+ggplot(df %>% filter(species=="PYCHEL" & site=='Tatoosh Island'), aes(year, mn)) +
+  geom_line() + geom_point() + 
+  geom_errorbar( aes(ymin = mn-se, ymax=mn+se), width=0) +
+  xlab("") + ylab("Pycnopodia per m2") + 
+  scale_x_continuous(breaks=2015:data_year) +
+  theme_bw()
+
+# df_out = df %>% filter(species=="PYCHEL") %>% 
+  # rename(index = mn, SE = se, timeseries = species) %>% mutate( metric = "No per m2")
+
+# write.csv("~/GitHub/NMS-condition-reports/data/OCNMS-pynopodia.csv", row.names = F)
+
+```
+
+
+
 ## Urchins
 
 ### Total urchin density - site x year
@@ -1410,7 +1488,6 @@ ggplot() +
 
 ### Coastwide seastars by species x site x year
 
-
 ```{r total-seastars-year-5-10m, fig.height=3, fig.width=6}
 
 x <-  invert_transect %>% filter(grp2=="STAR") %>% filter(taxa != 'sea_star_YOY') %>%
@@ -1458,6 +1535,13 @@ stars_year <- ggplot() +
 stars_year
 
 
+stars_out = star_zone %>% rename(index = grand_mean, SE = grand_SE, timeseries = taxa) %>%
+  mutate(metric = "No per m2")
+
+
+
+
+write.csv(stars_out, "~/GitHub/NMS-condition-reports/data/OCNMS-seastars.csv", row.names = F)
 
 ```
 ### Subset of seastars blood, brood, leather
@@ -1618,38 +1702,6 @@ stars_year
 
 ```
 
-### An ugly and useless figure
-
-```{r seastars-all, fig.height=10}
-
-stars_all <- invert_transect %>% filter(.,grp2 == 'STAR') %>%
-    group_by(year,site,transect,observer,zone,area,taxa) %>%
-    summarise(tot.density = sum(density, na.rm = TRUE)) %>% 
-    group_by(year,site,zone,taxa) %>%
-    summarise(mean.density=mean(tot.density, na.rm = TRUE), 
-              SD = sd(tot.density), 
-              N =length(year),
-              SE= SD/sqrt(N) )
-
-stars_plot_all <- ggplot(data=stars_all,aes(x=year, y= mean.density, col = site)) +
-                    #geom_point(data=urchin5,aes(x=year, y= mean.density, col = site) ) +
-                    #geom_line(data=urchin5, aes(x=year, y= mean.density, col = site) ) +
-                    geom_point() +
-                    geom_line()+
-                    geom_errorbar(data=urchin5,
-                                  aes(x=year,ymin=mean.density-SE,ymax=mean.density+SE,color=site),width=0) +
-                    #facet_grid(rows="taxa") + 
-                    facet_grid( taxa ~ zone, scales="free_y") +
-                    scale_color_manual(values = site.col$col) +
-                    scale_x_continuous("Year", breaks=seq(2015,last.year,2)) +
-                    scale_y_continuous(expression("Urchins m"^-2)) +
-                    theme_bw()+ theme_nt
-                   
-  
-stars_plot_all
-
-```
-
 # Output data for multivariate statistics  
 
 ## Combine kelp, fish, and inverts for capscale analysis  
@@ -1661,7 +1713,7 @@ Output data files to use for multivariate ordinations.
 
 Use these files and not raw files. Kelp and invert data have been converted to density to account for different transect lengths etc.
 
-```{r spit-out-kelp-fish-4-multivariate, include = FALSE}
+```{r spit-out-kelp-fish-4-multivariate, eval=FALSE}
 
 # comnbine fish spp into higher level taxa at the transect level
 # fish_transect calculated above
@@ -1751,7 +1803,7 @@ saveRDS(invert_kelp_wide, file=paste0(data_dir,'Data_Inverts_Kelp_transect_wide.
 ```
 
 
-```{r tables-of-samples}
+```{r tables-of-samples,  eval=FALSE}
 
 fish_wide_transect
 kelp_wide_transect
@@ -1786,7 +1838,7 @@ write.csv(samples_table, paste0(fig_dir,'Table-sampling-effort.csv'), row.names 
 *combind fish and kelp in wide format using fish COUNT data.
 *include area info for fish and kelp
 
-```{r fish-counts-kelp}
+```{r fish-counts-kelp, eval=FALSE}
 # fish
 fish_transect$area[fish_transect$year == 2015] <- "D"
 # remove a few problematic observations
@@ -1837,7 +1889,7 @@ For algae, basically only the big three have any abundance to analyze.
 
 ## Algae  
 
-```{r quick-kelp-plots, fig.width=6, fig.height=8}
+```{r quick-kelp-plots, fig.width=6, fig.height=8,eval=FALSE}
 
 kelpx <- kelp_transect %>% group_by(species,year) %>% summarise(Mean = mean(density))
                     
@@ -1854,7 +1906,7 @@ ggplot( kelpx , aes(x=year, y = Mean ) ) +
 
 Note, the y-axes are very different 
 
-```{r quick-fish-plots, fig.width=6.5, fig.height=8}
+```{r quick-fish-plots, fig.width=6.5, fig.height=8, eval=FALSE}
 
 fishx <- fish_transect_taxa %>% group_by(taxa,year) %>% summarise(Mean = mean(Count))
                     
@@ -1875,7 +1927,7 @@ yoy.spp =    c("SECAyoy", "SEPIyoy", "SEMYyoy", "SEBYTyoy","RYOY")
 
 # SOME USEFUL TABLES
 
-```{r fish-table , results='asis' }
+```{r fish-table , results='asis', eval=FALSE}
 
 fish_total <- fish_transect %>% 
   group_by(species, size_class) %>%
@@ -1913,7 +1965,7 @@ write.csv(fish_juveniles, paste0(fig_dir,"Table-Fish-Juveniles.csv"))
 
 
 
-```{r kelp-table}
+```{r kelp-table, eval=FALSE}
 
 kelp_total <- kelp_transect %>% group_by(species) %>%
                                 summarise(Density = mean(density, na.rm = TRUE),
@@ -1931,7 +1983,7 @@ write.csv(kelp_total, paste0(fig_dir,"Table-Kelp-Table.csv"))
 ```
 
 
-```{r invert-table}
+```{r invert-table, eval=FALSE}
 
 invert_total <- invert_transect %>% rename(SPP = species) %>%
                                 group_by(SPP) %>%

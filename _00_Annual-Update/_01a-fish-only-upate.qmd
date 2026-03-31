@@ -365,7 +365,7 @@ Visibility data for 2015 are fake. DI was bad and set at 1.0 m; other sites set 
 Mean abundance of YOY rockfish, averaged across all sites. 
 
 
-```{r rockfish-yoy, fig.width=5, fig.height=3.5}
+```{r rockfish-yoy, fig.width=3.2, fig.height=2}
 
 x <-  fish_transect %>% group_by(site,year,taxa) %>%
       summarise(Mean=mean(Count, na.rm = TRUE),
@@ -432,7 +432,7 @@ write.csv(esr_yoy, "GF-ocnms-rockfish-yoy.csv", row.names = F)
 # write.csv(esr_yoy, "~/Github/ESR-Figures-Code/Data/GF-ocnms-rockfish-yoy_FY2026.csv", row.names = F )
 ```
 
-```{r tot_yoy, fig.width=5, fig.height=3.5}
+```{r tot_yoy, fig.width=3.2, fig.height=2}
 
 
 ggplot(fish_taxa_year %>% filter(taxa=='TOTyoy'), aes(year,grand_mean)) + 
@@ -454,7 +454,7 @@ Species mean abundance across sites for depths listed below.
 
 Fish depth = `r fish.depth`
 
-```{r fish, fig.width=5, fig.height=3.5}
+```{r fish, fig.width=3.2, fig.height=2.5}
 
 fish.col = c(RColorBrewer::brewer.pal(n = 12, name = "Paired"))
 
