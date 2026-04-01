@@ -83,8 +83,7 @@ knitr::opts_chunk$set(
   warning=FALSE,
   #out.width = '100%',
   fig.align='center'
-  
-  )
+)
 
 # just to keep track of when I ran things.
 
@@ -440,6 +439,23 @@ yoy.plot <- ggplot(fish_taxa_year %>% filter(taxa %in% SP.yoy$taxa) %>% left_joi
 
 yoy.plot
 
+# ESR output ###################################################################
+esr_yoy = fish_taxa_year %>%
+  rename(index = grand_mean,
+         SE = grand_SE) %>%
+  mutate(metric = "Rockfish juveniles per 120 m^3") %>%
+  filter(taxa %in% c(SP.yoy$taxa, 'TOTyoy'))
+esr_yoy$timeseries = SP.yoy$name[match(esr_yoy$taxa,SP.yoy$taxa)]
+esr_yoy$spp = as.character(esr_yoy$timeseries)
+esr_yoy$spp[esr_yoy$spp=='YTB'] <- 'yellowtail & black complex'
+esr_yoy$spp[esr_yoy$spp=='CQB'] <- 'copper quilback black complex'
+esr_yoy = esr_yoy[,c('year','index','SE','timeseries','metric', 'taxa', 'spp')]
+# esr output
+write.csv(esr_yoy, "GF-ocnms-rockfish-yoy.csv", row.names = F)
+# ocnms condition report
+write.csv(esr_yoy, "~/GitHub/NMS-condition-reports/data/ocnms-dive-fish-yoy.csv", row.names = F)
+
+
 ```
 
 ## Adult fish - coastwide 
@@ -482,6 +498,21 @@ fish.plot <- ggplot(fish_taxa_year %>% filter(taxa %in% fish.taxa$taxa) %>% left
   theme(legend.position = c(0.2, 0.8) )
         
 fish.plot
+
+
+# ESR output ###################################################################
+esr_fish = fish_taxa_year %>%
+  rename(index = grand_mean,
+         SE = grand_SE) %>%
+  mutate(metric = "Number per 120 m^3") %>%
+  filter(taxa %in% fish.taxa$taxa)
+esr_fish = esr_fish[,c('year','taxa','index','SE','metric')]
+esr_fish$timeseries = fish.taxa$name[match(esr_fish$taxa,fish.taxa$taxa)]
+# for esr
+write.csv(esr_fish, "GF-ocnms-fish-adults.csv", row.names = F)
+# ocnms condition report
+write.csv(esr_fish, "~/GitHub/NMS-condition-reports/data/ocnms-dive-fish-adults.csv", row.names = F)
+
 ```
 
 
@@ -816,11 +847,20 @@ kelp_coast <- ggplot( dfx , aes(x=year, y=grand_mean, color=species)) +
                        legend.key.size = unit(0.5,'lines')) 
 
 kelp_coast
+
+df_out = dfx %>% rename(timeseries=species, index=grand_mean, SE=grand_SE) %>%
+  mutate(metric="Kelp stipes m2") %>%
+  dplyr::select(year, index, SE, timeseries, metric)
+
+# write out to OCNMS condition report
+write.csv(df_out, "~/GitHub/NMS-condition-reports/data/ocnms-dive-kelp.csv", row.names = F)
+
+
 ```
 
 ### Just 5 m
 
-Same as above but subset out for just 5 m. Mean ignroes 10-m transects. 
+Same as above but subset out for just 5 m. Mean ignores 10-m transects. 
 
 ```{r kelp-coastwide-5m, fig.height=3, fig.width=5}
 
@@ -933,6 +973,57 @@ kelp_coast
 df_kelp_coast = dfx
 ```
 
+## Understory Kelps
+
+```{r understory kelps}
+
+`%notin%` <- Negate(`%in%`)
+
+
+dfx <-  kelp_transect %>% filter(species %notin%
+                                  c("MACPYR",'NERLUE','PTECAL',"NO_ALG")) %>% group_by(site,year,species) %>%
+      summarise(Mean=mean(density, na.rm = TRUE),
+                SD=sd(density),
+                N=length(density),
+                SE=SD/sqrt(N),
+                SE_var=SE^2)  %>%
+      group_by(year,species) %>%
+      summarise(grand_sum = sum(Mean, na.rm = TRUE),
+            N=length(Mean),
+            grand_mean = grand_sum / N,
+            grand_sum_var = sum(SE_var, na.rm = TRUE), 
+            grand_SE = sqrt(grand_sum_var / N^2))
+
+kelp_coast <- ggplot( dfx , aes(x=year, y=grand_mean, color=species)) +
+                geom_point() +
+                geom_line() +
+                geom_errorbar(aes(x=year,
+                                  ymin=grand_mean-grand_SE,
+                                  ymax=grand_mean+grand_SE, color=species),width=0)+
+                # scale_color_manual(values = site.col$col)+
+                scale_x_continuous(breaks=seq(2015,last.year,2)) +
+                xlab("")+
+                scale_y_continuous(expression("Kelp stipes m"^-2)) +
+                theme_bw()+ theme_nt +
+                theme( legend.text = element_text(face = 'italic'),
+                       legend.key.size = unit(0.5,'lines')) 
+
+kelp_coast
+dfx$timeseries = kelp_codes$spp[match(dfx$species,kelp_codes$species)]
+
+
+df_out = dfx %>% rename(index=grand_mean, SE=grand_SE) %>%
+  mutate(metric="Kelp stipes m2") %>%
+  dplyr::select(year, index, SE, timeseries, metric)
+
+# write out to OCNMS condition report
+write.csv(df_out, "~/GitHub/NMS-condition-reports/data/ocnms-dive-understory-kelp.csv", row.names = F)
+```
+
+
+
+
+
 
 # INVERTEBRATES
 
@@ -993,7 +1084,7 @@ ggplot(pycnos, aes(year, no)) +
 p_out = pycnos %>% rename(index = no) %>%
   mutate(timeseries="Pycnopodia", metric = "Total observed per 5 sites")
 
-write.csv(p_out, '~/GitHub/NMS-condition-reports/data/OCNMS-total-pycno.csv', row.names = F)
+write.csv(p_out, '~/GitHub/NMS-condition-reports/data/ocnms-dive-total-pycno.csv', row.names = F)
 
 ```
 
@@ -1016,7 +1107,7 @@ ggplot(df %>% filter(species=="PYCHEL"), aes(year, mn)) +
 df_out = df %>% filter(species=="PYCHEL") %>% 
   rename(index = mn, SE = se, timeseries = species) %>% mutate( metric = "No per 120 m^2")
 
-write.csv(df_out, "~/GitHub/NMS-condition-reports/data/OCNMS-pynopodia.csv", row.names = F)
+write.csv(df_out, "~/GitHub/NMS-condition-reports/data/ocnms-dive-pynopodia.csv", row.names = F)
 
 ```
 ```{r mean-pycnopodia-site}
@@ -1038,7 +1129,7 @@ ggplot(df %>% filter(species=="PYCHEL"), aes(year, mn, color=site)) +
  df_out = df %>% filter(species=="PYCHEL") %>% 
    rename(index = mn, SE = se, timeseries = species) %>% mutate( metric = "No per m2")
 
- write.csv(df_out, "~/GitHub/NMS-condition-reports/data/OCNMS-pynopodia-site.csv", row.names = F)
+ write.csv(df_out, "~/GitHub/NMS-condition-reports/data/ocnms-dive-pynopodia-site.csv", row.names = F)
 
 ```
 ```{r mean-pycnopodia-tatoosh}
@@ -1060,7 +1151,7 @@ ggplot(df %>% filter(species=="PYCHEL" & site=='Tatoosh Island'), aes(year, mn))
 # df_out = df %>% filter(species=="PYCHEL") %>% 
   # rename(index = mn, SE = se, timeseries = species) %>% mutate( metric = "No per m2")
 
-# write.csv("~/GitHub/NMS-condition-reports/data/OCNMS-pynopodia.csv", row.names = F)
+# write.csv("~/GitHub/NMS-condition-reports/data/ocnms-dive-pynopodia.csv", row.names = F)
 
 ```
 
@@ -1541,7 +1632,7 @@ stars_out = star_zone %>% rename(index = grand_mean, SE = grand_SE, timeseries =
 
 
 
-write.csv(stars_out, "~/GitHub/NMS-condition-reports/data/OCNMS-seastars.csv", row.names = F)
+write.csv(stars_out, "~/GitHub/NMS-condition-reports/data/ocnms-dive-seastars.csv", row.names = F)
 
 ```
 ### Subset of seastars blood, brood, leather
