@@ -65,7 +65,6 @@ source("R-functions-ocnms.r")
 home_dir = "~/GitHub/OCNMS/_00_Annual-Update"
 
 fig_dir = paste0(home_dir,"/figures/")
-# data_dir = paste0(home_dir,"/data/")
 data_dir = paste0("~/GitHub/OCNMS/Data/",data_year,"/")
 results_dir = paste0(home_dir,"/results/")
 other_dir = paste0(home_dir,"/other/")
@@ -123,7 +122,7 @@ kelp_codes = data.frame(read.csv("spp_codes_kelp.csv", header = TRUE))
 swath_codes = data.frame(read.csv("spp_codes_swath.csv", header = TRUE))
 
 
-if(1==1){ # update the data or not....
+if(1==2){ # update the data or not....
 # fish data ####
   print("Loading fish")
   fishx = data.frame(read.csv(
@@ -136,7 +135,7 @@ if(1==1){ # update the data or not....
 
 
 
-  if(1==1){ #
+  if(1==2){ #
   # inverts and algae ####
   print("Loading inverts & algae")
   swathx = data.frame(read.csv(
@@ -1518,13 +1517,12 @@ urchin.plot <- ggplot(urchin_year, aes(x = year, y=grand_mean, color=taxa)) +
                 geom_line() + 
                 geom_errorbar(data=urchin_year, 
                               aes(x=year, ymin=grand_mean-grand_SE ,
-                                  ymax=grand_mean+grand_SE ,  color=taxa),width=0) +
+                                  ymax=grand_mean+grand_SE , color=taxa),width=0) +
                 scale_color_manual(values = site.col$col[c(4,3,2)]) +
                 scale_x_continuous("", breaks=seq(2015,last.year,2)) +
-                scale_y_continuous(expression("Urchins m"^-2), limits=c(0,3)) +
+                scale_y_continuous(expression("Urchins m"^-2), limits=c(0,5)) +
                 theme_bw()+ theme_nt 
-                # theme(legend.position = c(0.2, 0.8),
-                #       legend.key.size = unit(0.75,'lines'))
+                
 
 urchin.plot
 
@@ -1708,8 +1706,6 @@ x <-  invert_transect %>%
             grand_SE = sqrt(grand_sum_var / N^2))
 star_zone <- x
 
-
-
 star.col = RColorBrewer::brewer.pal(n = 12, name = "Paired")[c(2,4,6,10,12,7,8)]
 stars_year <- ggplot() +
       geom_point(data = star_zone, aes(x=year,y=grand_mean,color=taxa)) +
@@ -1875,7 +1871,10 @@ fish_wide = fish_area[,c('year','site','area','zone','Mean','taxa')] %>%
 # set to zeros?
 # right join would have NA's for zero visibilty sites. Use left join
 
-fish_kelp_wide <- fish_wide %>% left_join(kelp_wide, by=c('site'='site','year'='year','area'='area','zone'='zone'))
+kelp_wide$zone = as.numeric(kelp_wide$zone)
+fish_wide$zone = as.numeric(fish_wide$zone)
+
+fish_kelp_wide <- left_join( fish_wide, kelp_wide,                                               by=c('site'='site','year'='year','area'='area','zone'='zone'))
 
 saveRDS(fish_kelp_wide, file=paste0(data_dir,'Data_Fish_Kelp_area_wide.rds'))
 
@@ -1965,6 +1964,8 @@ dim(kelp_count_wide)
 # fish data were filtered for visibility. So left joint, since not all kelp areas have 
 # corresponding fish data 
 
+fish_count_wide$zone = as.numeric(fish_count_wide$zone)
+kelp_count_wide$zone = as.numeric(kelp_count_wide$zone)
 fish_kelp_count_wide <- left_join(fish_count_wide , kelp_count_wide)
 dim(fish_kelp_count_wide)
 
@@ -1975,8 +1976,6 @@ saveRDS(fish_kelp_count_wide , file=paste0(data_dir,"Fish-kelp-counts-wide.rds")
 
 
 # Quick view of what species to include in kelp ordinations. 
-
-For algae, basically only the big three have any abundance to analyze.
 
 ## Algae  
 
