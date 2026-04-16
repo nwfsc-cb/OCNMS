@@ -4,6 +4,7 @@ author: Nick Toimieri
 date: sys.date()
 output: 
   html_document:
+    self_contained: true
     toc: true
     toc_float: true
     toc_depth: 5
@@ -12,6 +13,10 @@ output:
 fontsize: 11pt
 ---
 # NOTES
+
+**Before starting set the working directory by:**
+
+*Session/Set Working Directory/Source File Location*
 
 To update fish data to the most recent year, run:
 
@@ -33,14 +38,40 @@ as helper files. These are in the repo.
 Set the data_ _year year
 
 ```{r SETUP, include=FALSE}
-
-# _01_swath-fish-update.R -- old names
-# _02_swath-inverts-update.R
-
 # A bunch of initial set up junk
 
 rm(list = ls())
 data_year = 2025
+
+# Paths for files
+# set wd to source loc first
+home_dir = getwd()
+fig_dir = paste0(home_dir,"/figures/")
+data_dir = paste0("~/GitHub/OCNMS/Data/",data_year,"/")
+results_dir = paste0(home_dir,"/results/")
+other_dir = paste0(home_dir,"/other/")
+
+
+# options
+knitr::opts_chunk$set(
+  root.dir = home_dir,
+  fig.path = fig_dir,
+  cache.path = 'cache/graphics-', 
+  echo=FALSE,
+  error=FALSE,
+  include = TRUE,
+  warning=FALSE,
+  message=FALSE,
+  dev='png',
+  dpi=300,
+  
+  #out.width = '100%',
+  fig.align='center'
+)
+# _01_swath-fish-update.R -- old names
+# _02_swath-inverts-update.R
+
+
 
 ##### knitr stuff and libraries ####
 # tools in use 
@@ -61,28 +92,8 @@ library(tinytex) # for pdf output
 
 source("R-functions-ocnms.r")
 
-# Paths for files
-home_dir = "~/GitHub/OCNMS/_00_Annual-Update"
 
-fig_dir = paste0(home_dir,"/figures/")
-data_dir = paste0("~/GitHub/OCNMS/Data/",data_year,"/")
-results_dir = paste0(home_dir,"/results/")
-other_dir = paste0(home_dir,"/other/")
 
-# options
-knitr::opts_chunk$set(
-  root.dir = home_dir,
-  fig.path = fig_dir,
-  cache.path = 'cache/graphics-', 
-  echo=FALSE,
-  error=FALSE,
-  include = TRUE,
-  dev='png',
-  dpi=300,
-  warning=FALSE,
-  #out.width = '100%',
-  fig.align='center'
-)
 
 # just to keep track of when I ran things.
 
@@ -132,8 +143,6 @@ if(1==2){ # update the data or not....
   source("update-swath-fish.R")
   print('Finished fish')
 }
-
-
 
   if(1==2){ #
   # inverts and algae ####
