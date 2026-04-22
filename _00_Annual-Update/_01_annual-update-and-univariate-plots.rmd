@@ -49,10 +49,10 @@ data_year = 2025
 # set wd to source loc first
 home_dir = getwd()
 fig_dir = paste0(home_dir,"/figures/")
-data_dir = paste0("~/GitHub/OCNMS/Data/",data_year,"/")
+ocnms_dir = stringr::str_remove(home_dir,'_00_Annual-Update')
+data_dir = paste0(ocnms_dir,"Data/",data_year,"/")
 results_dir = paste0(home_dir,"/results/")
 other_dir = paste0(home_dir,"/other/")
-
 
 # options
 knitr::opts_chunk$set(
@@ -93,9 +93,6 @@ library(tinytex) # for pdf output
 # display.brewer.all(colorblindFriendly = TRUE)
 
 source("R-functions-ocnms.r")
-
-
-
 
 # just to keep track of when I ran things.
 
@@ -171,9 +168,34 @@ Bring in the initially processed data
 
 ```{r data-import}
 # fish
+GW = stringr::str_detect(home_dir, "greg.williams")
+OS = stringr::str_detect(home_dir, "ole.shelton")
+
+# if(OS==TRUE){
+#   fish0 = readRDS(
+#   paste0("/Users/ole.shelton/Documents/GitHub/OCNMS/Data/2025/Fish_2015-",data_year,'.rds' ))
+#   swath0 = readRDS(
+#   paste0("/Users/ole.shelton/Documents/GitHub/OCNMS/Data/2025/Swath_2015-",data_year,'.rds' ))}
+# 
+# 
+# if(GW==TRUE){
+#   fish0 = readRDS(
+#   paste0("/Users/greg.williams/Documents/GitHub/OCNMS/Data/2025/Fish_2015-",data_year,'.rds' ))
+#   swath0 = readRDS(
+#   paste0("/Users/greg.williams/Documents/GitHub/OCNMS/Data/2025/Swath_2015-",data_year,'.rds' ))
+#   
+# }else{
+#     fish0 = readRDS( paste0(data_dir,'Fish_2015-',data_year,'.rds' ))
+#     swath0 <- readRDS( paste0(data_dir,'Swath_2015-',data_year,'.rds' ))
+# 
+# }
+
 fish0 = readRDS( paste0(data_dir,'Fish_2015-',data_year,'.rds' ))
-# algae and kelp
 swath0 <- readRDS( paste0(data_dir,'Swath_2015-',data_year,'.rds' ))
+
+
+
+# algae and kelp
 
 # fish and swath codes above
 # fish_codes = data.frame(read.csv("spp_codes_fish.csv"))
@@ -233,7 +255,7 @@ settings = list(min.vis = min.vis,
                 fish_codes = fish_codes,
                 swath_codes = swath_codes)
 # updates the above
-saveRDS(settings, file = paste0(data_dir,'settings.RDS') )
+saveRDS(settings, file = 'settings.RDS' )
 
 
 ```
@@ -463,7 +485,9 @@ esr_yoy = esr_yoy[,c('year','index','SE','timeseries','metric', 'taxa', 'spp')]
 # esr output
 write.csv(esr_yoy, "GF-ocnms-rockfish-yoy.csv", row.names = F)
 # ocnms condition report
-write.csv(esr_yoy, "~/GitHub/NMS-condition-reports/data/ocnms-dive-fish-yoy.csv", row.names = F)
+
+NT = stringr::str_detect(home_dir,'nick.tolimieri')
+if(NT == TRUE){write.csv(esr_yoy, "~/GitHub/NMS-condition-reports/data/ocnms-dive-fish-yoy.csv", row.names = F)}
 
 
 ```
@@ -521,7 +545,7 @@ esr_fish$timeseries = fish.taxa$name[match(esr_fish$taxa,fish.taxa$taxa)]
 # for esr
 write.csv(esr_fish, "GF-ocnms-fish-adults.csv", row.names = F)
 # ocnms condition report
-write.csv(esr_fish, "~/GitHub/NMS-condition-reports/data/ocnms-dive-fish-adults.csv", row.names = F)
+if(NT == TRUE){write.csv(esr_fish, "~/GitHub/NMS-condition-reports/data/ocnms-dive-fish-adults.csv", row.names = F)}
 
 ```
 
@@ -863,7 +887,7 @@ df_out = dfx %>% rename(timeseries=species, index=grand_mean, SE=grand_SE) %>%
   dplyr::select(year, index, SE, timeseries, metric)
 
 # write out to OCNMS condition report
-write.csv(df_out, "~/GitHub/NMS-condition-reports/data/ocnms-dive-kelp.csv", row.names = F)
+if(NT == TRUE){write.csv(df_out, "~/GitHub/NMS-condition-reports/data/ocnms-dive-kelp.csv", row.names = F)}
 
 
 ```
@@ -1027,7 +1051,7 @@ df_out = dfx %>% rename(index=grand_mean, SE=grand_SE) %>%
   dplyr::select(year, index, SE, timeseries, metric)
 
 # write out to OCNMS condition report
-write.csv(df_out, "~/GitHub/NMS-condition-reports/data/ocnms-dive-understory-kelp.csv", row.names = F)
+if(NT == TRUE){write.csv(df_out, "~/GitHub/NMS-condition-reports/data/ocnms-dive-understory-kelp.csv", row.names = F)}
 ```
 
 
@@ -1094,7 +1118,7 @@ ggplot(pycnos, aes(year, no)) +
 p_out = pycnos %>% rename(index = no) %>%
   mutate(timeseries="Pycnopodia", metric = "Total observed per 5 sites")
 
-write.csv(p_out, '~/GitHub/NMS-condition-reports/data/ocnms-dive-total-pycno.csv', row.names = F)
+if(NT == TRUE){write.csv(p_out, '~/GitHub/NMS-condition-reports/data/ocnms-dive-total-pycno.csv', row.names = F)}
 
 ```
 
@@ -1117,7 +1141,7 @@ ggplot(df %>% filter(species=="PYCHEL"), aes(year, mn)) +
 df_out = df %>% filter(species=="PYCHEL") %>% 
   rename(index = mn, SE = se, timeseries = species) %>% mutate( metric = "No per 120 m^2")
 
-write.csv(df_out, "~/GitHub/NMS-condition-reports/data/ocnms-dive-pynopodia.csv", row.names = F)
+if(NT == TRUE){write.csv(df_out, "~/GitHub/NMS-condition-reports/data/ocnms-dive-pynopodia.csv", row.names = F)}
 
 ```
 ```{r mean-pycnopodia-site}
@@ -1139,7 +1163,7 @@ ggplot(df %>% filter(species=="PYCHEL"), aes(year, mn, color=site)) +
  df_out = df %>% filter(species=="PYCHEL") %>% 
    rename(index = mn, SE = se, timeseries = species) %>% mutate( metric = "No per m2")
 
- write.csv(df_out, "~/GitHub/NMS-condition-reports/data/ocnms-dive-pynopodia-site.csv", row.names = F)
+ if(NT == TRUE){write.csv(df_out, "~/GitHub/NMS-condition-reports/data/ocnms-dive-pynopodia-site.csv", row.names = F)}
 
 ```
 ```{r mean-pycnopodia-tatoosh}
@@ -1634,7 +1658,7 @@ stars_out = star_zone %>%
   rename(index = grand_mean, SE = grand_SE, timeseries = species) %>%
   mutate(metric = "No per m2")
 
-write.csv(stars_out, "~/GitHub/NMS-condition-reports/data/ocnms-dive-seastars.csv", row.names = F)
+if(NT == TRUE){write.csv(stars_out, "~/GitHub/NMS-condition-reports/data/ocnms-dive-seastars.csv", row.names = F)}
 
 ```
 ### Subset of seastars blood, brood, leather
@@ -2140,7 +2164,7 @@ There is a discrepancy between the DNR data and kelpwatch data.  Need to check o
 
 ```{r kelpwatch, message=FALSE, error=FALSE}
 
-kw = data.frame(read.csv("~/GitHub/OCNMS/Data/Kelp/kelp-west-coast.csv"))
+kw = data.frame(read.csv(paste0(ocnms_dir, "/Data/Kelp/kelp-west-coast.csv")))
 kw = kw[kw$region=="WA" & kw$quarter=="max",]
 
 
