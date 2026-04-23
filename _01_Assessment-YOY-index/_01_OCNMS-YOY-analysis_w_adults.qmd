@@ -17,22 +17,21 @@ bibliography: references.bib
 csl: "oecologia.csl"
 ---
 
+**Set working directory to source file location**
+
 ```{r setup}
 #| echo: false
 #| messange: false
 #| warning: false
 
-survey_year = 2024
+survey_year = 2025
 SPECIES = 'SEME'
 SPECIES = 'SEFL'
 SPECIES = c('SEFL', 'SEME')
 
 # set directories ####
-home_dir <- '~/Github/OCNMS/'
-work_dir <- '~/Github/OCNMS/_01_Assessment-YOY-index/'
-# nt personal computer
-# home_dir <- "C:/Users/tolim/Documents/GitHub/OCNMS/"
-# work_dir <- paste0(home_dir,'/_01_Assessment-YOY-index/')
+work_dir <- getwd()
+home_dir <- stringr::str_remove(work_dir, "_01_Assessment-YOY-index")
 data_dir = paste0(home_dir,'Data/',survey_year,'/')
 fig_dir = paste0(work_dir,'/figures/')
 
@@ -49,11 +48,7 @@ knitr::opts_chunk$set(
   warning=FALSE,
   #out.width = '100%',
   fig.align='center'
-  
   )
-
-
-
 
 if(length(SPECIES)==1){
   if(SPECIES=='SEME'){
@@ -647,11 +642,10 @@ print(p.spp.size.bin1)
 
 \newpage
 
-```{r fig-size-bin2}
+```{r fig-size-bin2, fig.height=8, fig.width=6.5}
 #| echo: false
 #| messange: false
 #| warning: false
-#| fig-height: 8
 #| fig-cap: "Black rockfish size distribution by 5-cm size bins plotted by site, summed across sites within each year"
  
 print(p.spp.size.bin2)
@@ -661,11 +655,10 @@ print(p.spp.size.bin2)
 \newpage
 
 
-```{r fig-size-dist2}
+```{r fig-size-dist2, fig.height=8, fig.width=6.5}
 #| echo: false
 #| messange: false
 #| warning: false
-#| fig-height: 8
 #| fig-cap: "Black rockfish size distribution by 1-cm size bins plotted by site, summed across sites within each year. "
 
 print(p.spp.size2)
