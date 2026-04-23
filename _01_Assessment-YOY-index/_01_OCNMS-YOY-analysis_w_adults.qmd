@@ -30,7 +30,7 @@ SPECIES = 'SEFL'
 SPECIES = c('SEFL', 'SEME')
 
 # set directories ####
-work_dir <- getwd()
+work_dir <- getwd() ## Set working directory to source file location first.
 home_dir <- stringr::str_remove(work_dir, "_01_Assessment-YOY-index")
 data_dir = paste0(home_dir,'Data/',survey_year,'/')
 fig_dir = paste0(work_dir,'/figures/')
