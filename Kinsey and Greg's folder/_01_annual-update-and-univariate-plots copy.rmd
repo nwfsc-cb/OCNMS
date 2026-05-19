@@ -1,6 +1,6 @@
 ---
 title: "Univariate summary plots"
-author: Nick Toimieri
+author: Nick Tolimieri with KF and GW
 date: sys.date()
 output: 
   html_document:
