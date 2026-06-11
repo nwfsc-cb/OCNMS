@@ -203,6 +203,7 @@ saveRDS(settings, file = paste0(data_dir,'settings.RDS') )
 
 
 ```
+
 ## Set a common theme for plots
 
 ```{r set-global-plotting-theme}
@@ -504,7 +505,6 @@ write.csv(esr_fish, "GF-ocnms-fish-adults.csv", row.names = F)
 
 ```
 
-
 ## Adult Fish - site x year x depth
 
 Species mean abundance by site x year x depth
@@ -533,6 +533,7 @@ ggplot(fish_ys , aes(x = year, y = Mean, color = site)) +
 
 
 ```
+
 ## YOY rockfish abundance - site x year x depth
 
 Species mean abundance by site x year x depth
@@ -559,9 +560,4 @@ ggplot(yoy_ys , aes(x = year, y = Mean, color = site)) +
           theme_bw() + theme_nt + 
           theme(  legend.position = c(0.85, 0.2) )
                   
-            
-
-
-
-
 ```
