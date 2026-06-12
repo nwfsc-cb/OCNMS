@@ -154,7 +154,6 @@ fish0 = readRDS( paste0(data_dir,'Fish_2015-',data_year,'.rds' ))
 
 I set some common settings here. The settings.rds file ports the same info over to the multivariate rmd. These are set in the 'settings.R' file externally. 
 
-
 # Manipulate fish data prior to plotting.
 
 Raw data are fish counts by size, so there are multiple observations per species per transect. Sum up counts by transect. 
@@ -445,7 +444,6 @@ write.csv(esr_fish, "GF-ocnms-fish-adults.csv", row.names = F)
 
 ```
 
-
 ## Adult Fish - site x year x depth
 
 Species mean abundance by site x year x depth
@@ -474,6 +472,7 @@ ggplot(fish_ys , aes(x = year, y = Mean, color = site)) +
 
 
 ```
+
 ## YOY rockfish abundance - site x year x depth
 
 Species mean abundance by site x year x depth
