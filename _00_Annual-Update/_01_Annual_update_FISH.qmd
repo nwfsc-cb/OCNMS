@@ -32,9 +32,11 @@ as helper files. These are in the repo.
 Set the data_year year
 
 ```{r SETUP, include=FALSE}
-
 rm(list = ls())
-home_dir = "~/GitHub/OCNMS/_00_Annual-Update"
+library(here)
+repo_dir = here::here()
+home_dir = paste0(repo_dir,"/_00_Annual-Update/")
+setwd(home_dir) # set home dir to annual update folder
 data_year = 2025
 source("settings.r")
 source("R-functions-ocnms.r")
@@ -88,25 +90,15 @@ upc_id = year_dir$id[grep("NWFSC_UPC_ALLYEARS_data", year_dir$name)]
 
 # output file names
 fish_out = paste0(data_dir,'NWFSC_FISH_ALLYEARS_data_',data_year,'.xlsm')
-# swath_out = paste0(data_dir,'NWFSC_SWATH_ALLYEARS_data_',data_year,'.xlsm')
-# upc_out = paste0(data_dir,'NWFSC_UPC_ALLYEARS_data_',data_year,'.xlsm')
-
 # download
 drive_download( as_id(fish_id) , path = fish_out, overwrite = TRUE)
-# drive_download( as_id(swath_id) , path = swath_out , overwrite = TRUE)
-# drive_download( as_id(upc_id) , path = upc_out, overwrite = TRUE)
 
 # convert to csv
 fishxl = data.frame(read_xlsx(paste0(data_dir,'NWFSC_FISH_ALLYEARS_data_',data_year,'.xlsm'),
                    sheet = 'DATA'))
-# swathxl = data.frame(read_xlsx(paste0(data_dir,'NWFSC_SWATH_ALLYEARS_data_',data_year,'.xlsm'),
- #                              sheet = 'data'))
-# upcxl = data.frame(read_xlsx(paste0(data_dir,'NWFSC_UPC_ALLYEARS_data_',data_year,'.xlsm'),
-   #                           sheet = 'DATA'))
+fishxl = fishxl %>% dplyr::select(!Cntrl.a)
 
 write.csv(fishxl, paste0(data_dir,'NWFSC_FISH_ALLYEARS_data_',data_year,'.csv'), row.names = F)
-# write.csv(swathxl, paste0(data_dir,'NWFSC_SWATH_ALLYEARS_data_',data_year,'.csv'), row.names = F)
-# write.csv(upcxl, paste0(data_dir,'NWFSC_UPC_ALLYEARS_data_',data_year,'.csv'), row.names = F)
 
 ```
 
@@ -120,11 +112,6 @@ This chunk will load the species codes and run the update files to turn the raw 
 
 ```{r update-data, message=FALSE, echo=FALSE, warning=FALSE}
 # load fish & swath codes, used below
-
-# fish_codes = data.frame(read.csv("spp_codes_fish.csv", header = TRUE))
-# kelp_codes = data.frame(read.csv("spp_codes_kelp.csv", header = TRUE))
-# swath_codes = data.frame(read.csv("spp_codes_swath.csv", header = TRUE))
-
 
 if(1==1){ # update the data or not....
 # fish data ####
@@ -146,6 +133,9 @@ Bring in the initially processed data
 ```{r data-import}
 # fish
 fish0 = readRDS( paste0(data_dir,'Fish_2015-',data_year,'.rds' ))
+
+# does not have absolute fish sizes.  
+# NWFSC_FISH_ALLYEARS_data_20XX.xlsm has sizes
 
 ```
 
@@ -210,7 +200,11 @@ sum(fish1a$Count[fish1a$taxa == 'SEBYTyoy'], na.rm = TRUE)
 fish1b = fish1a[fish1a$zone %in% fish.depth,]
 sum(fish1b$Count[fish1b$taxa == 'SEBYTyoy'])
 
-# fish by transect #############################################################
+################################################################################
+# FISH BY TRANSECT #############################################################
+################################################################################
+# ole code...
+
 # calculate TOTyoy by site, transect, observer, and year
 fish1b %>% filter(size_class == "small") %>% distinct(taxa)
 # all of the small taxa are rockfish YOY.
@@ -219,16 +213,17 @@ fish1c <- fish1b %>% filter(size_class == "small") %>%
   summarise(Count_all=sum(Count, na.rm = TRUE)) %>%
   mutate(species="TOTyoy",taxa="TOTyoy") %>%
   rename(Count=Count_all)
-
+# recombine
 fish1d <- fish1b %>% full_join(.,fish1c) 
-
 fish_transect <- fish1d
 
-write.csv(fish_transect, paste0(data_dir,'Summarized_Data_Fish_by_Transect.rds'))
+saveRDS(fish_transect, paste0(data_dir,'Summarized_Data_Fish_by_Transect.rds'))
+write.csv(fish_transect, paste0(data_dir,'Summarized_Data_Fish_by_Transect.csv'))
+################################################################################
+################################################################################
+################################################################################
 
 # for combining below
-
-fish_transect <- fish1d
 sum(fish_transect$Count[fish_transect$taxa == 'SEBYTyoy'])
 sum(fish_transect$Count[fish_transect$taxa == 'TOTyoy'])
 sum(fish_transect$Count[fish_transect$taxa %in% c("RYOY","SEBYTyoy", "SECAyoy","SEMAyoy","SEMYyoy","SENEyoy","SEPIyoy")], na.rm = TRUE)
@@ -307,7 +302,7 @@ Mean abundance of YOY rockfish, averaged across all sites.
 
 ```{r rockfish-yoy, fig.width=3.2, fig.height=2}
 
-x <-  fish_transect %>% group_by(site,year,taxa) %>%
+fish_taxa_year <-  fish_transect %>% group_by(site,year,taxa) %>%
       summarise(Mean=mean(Count, na.rm = TRUE),
                 SD=sd(Count),
                 N=length(Count),
@@ -319,7 +314,7 @@ x <-  fish_transect %>% group_by(site,year,taxa) %>%
             grand_mean = grand_sum / N,
             grand_sum_var = sum(SE_var, na.rm = TRUE), 
             grand_SE = sqrt(grand_sum_var / N^2))
-fish_taxa_year <- x
+
 
 # fish_taxa_year <- readRDS(paste0(data_dir,'Summarized_Data_Fish_year_taxa.rds'))
 

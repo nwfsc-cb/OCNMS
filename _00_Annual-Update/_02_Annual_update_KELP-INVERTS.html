@@ -1,0 +1,1365 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.353">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Nick Toimieri">
+
+<title>Annual Update - KELP and INVERTS</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="_02_Annual_update_KELP-INVERTS_files/libs/clipboard/clipboard.min.js"></script>
+<script src="_02_Annual_update_KELP-INVERTS_files/libs/quarto-html/quarto.js"></script>
+<script src="_02_Annual_update_KELP-INVERTS_files/libs/quarto-html/popper.min.js"></script>
+<script src="_02_Annual_update_KELP-INVERTS_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="_02_Annual_update_KELP-INVERTS_files/libs/quarto-html/anchor.min.js"></script>
+<link href="_02_Annual_update_KELP-INVERTS_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="_02_Annual_update_KELP-INVERTS_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="_02_Annual_update_KELP-INVERTS_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="_02_Annual_update_KELP-INVERTS_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="_02_Annual_update_KELP-INVERTS_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Annual Update - KELP and INVERTS</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Nick Toimieri </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">Invalid Date</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="notes" class="level1">
+<h1>NOTES</h1>
+<p><strong>Before starting set the working directory by:</strong></p>
+<p>TAB/MENU ABOVE:</p>
+<p><em>Session/Set Working Directory/Source File Location</em></p>
+<p>To update the data to the most recent year, you will need:</p>
+<ul>
+<li>update_swath_inverts.R</li>
+</ul>
+<p>in the ‘update-data’ chunk. The update is done automatically within this RMD, but you will need to check that the trigger is turned on in the if statement in the in the ‘update-data’ is “if(1==1)”.</p>
+<p>You will also need to have:</p>
+<ul>
+<li>swath-process-pre-2017-data.R</li>
+<li>R-functions-ocnms.R</li>
+</ul>
+<p>as helper files. These are in the repo.</p>
+<section id="bring-in-data-and-species-codes" class="level2">
+<h2 class="anchored" data-anchor-id="bring-in-data-and-species-codes">Bring in data and species codes</h2>
+<p>This chunk will load the species codes and run the update files to turn the raw data files into counts by size and transect. Once you’ve run it, you can turn of the data processing part and just load the species codes. The chunk runs:</p>
+<ul>
+<li>update-swath-inverts.r (includes algae)</li>
+</ul>
+<p>Errors below are likely due to a new species being added. You may need to update the codes file for fish, kelp, or swath.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Loading inverts &amp; algae"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Running inverts &amp; algae"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Running pre-2015 file"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1
+[1] "ACAHUD"
+[1] 2
+[1] "ACANAN"
+[1] 3
+[1] "ACMMIT"
+[1] 4
+[1] "AGAFIM"
+[1] 5
+[1] "ALAMAR"
+[1] 6
+[1] "ANTELE"
+[1] 7
+[1] "ANTXAN"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 8
+[1] "BALNUB"
+[1] 9
+[1] "CADLUT"
+[1] 10
+[1] "CALANN"
+[1] 11
+[1] "CANORE"
+[1] 12
+[1] "CANSPP"
+[1] 13
+[1] "CERFOL"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 14
+[1] "CHITON"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 15
+[1] "CLAMSP"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 16
+[1] "COSCOS"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 17
+[1] "CRAARB"
+[1] 18
+[1] "CRAGIG"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 19
+[1] "CROPAP"
+[1] 20
+[1] "CRYDEC"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 21
+[1] "CRYSIT"
+[1] 22
+[1] "CRYSTE"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 23
+[1] "CUCMIN"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 24
+[1] "CYMTRI"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 25
+[1] "DERIMB"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 26
+[1] "DESSPP"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 27
+[1] "DIASAN"
+[1] 28
+[1] "DIOASP"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 29
+[1] "DIRALB"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 30
+[1] "DORODH"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 31
+[1] "dPTECAL"
+[1] 32
+[1] "EGRMEN"
+[1] 33
+[1] "ENTDOF"
+[1] 34
+[1] "EPIPRO"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 35
+[1] "EUPQUI"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 36
+[1] "EVATRO"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 37
+[1] "FUSORE"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 38
+[1] "HALKAM"
+[1] 39
+[1] "HENLEV"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 40
+[1] "HERCRA"
+[1] 41
+[1] "JANFUS"
+[1] 42
+[1] "LAMSET"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 43
+[1] "LEPSPP"
+[1] 44
+[1] "LIMCOC"
+[1] 45
+[1] "LIRDIR"
+[1] 46
+[1] "LOPMAN"
+[1] 47
+[1] "MACPYR"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 48
+[1] "MEDAEQ"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 49
+[1] "MESFRA"
+[1] 50
+[1] "METGIG"
+[1] 51
+[1] "METSPP"
+[1] 52
+[1] "MIMFOL"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 53
+[1] "MYTCAL"
+[1] 54
+[1] "NERLUE"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 55
+[1] "NO_ALG"
+[1] 56
+[1] "NUCLAM"
+[1] 57
+[1] "NUDIBR"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 58
+[1] "ORTKOE"
+[1] 59
+[1] "PAGSPP"
+[1] 60
+[1] "PARCAL"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 61
+[1] "PATMIN"
+[1] 62
+[1] "PELNOB"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 63
+[1] "PISBRE"
+[1] 64
+[1] "PISGIG"
+[1] 65
+[1] "PISOCH"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 66
+[1] "PLEGAR"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 67
+[1] "PODSPP"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 68
+[1] "POLSPP"
+[1] 69
+[1] "PTECAL"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 70
+[1] "PTETES"
+[1] 71
+[1] "PUGGRA"
+[1] 72
+[1] "PUGPRO"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 73
+[1] "PYCHEL"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 74
+[1] "SACGRO"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 75
+[1] "SACLAT"
+[1] 76
+[1] "SCALLOP"
+[1] 77
+[1] "SCYDEC"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 78
+[1] "SOLDAW"
+[1] 79
+[1] "SOLSTI"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 80
+[1] "STARREC"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 81
+[1] "STRDRO"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 82
+[1] "STRPUR"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 83
+[1] "STYFOR"
+[1] 84
+[1] "STYMON"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 85
+[1] "TEGSPP"
+[1] 86
+[1] "TRICAT"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 87
+[1] "UNIDSP"
+[1] 88
+[1] "URTCRA"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 89
+[1] "URTLOF"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 90
+[1] "URTPIS"
+[1] 91
+[1] "URTSPP"</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="triggers-and-settings" class="level1">
+<h1>Triggers and Settings</h1>
+<p>The ‘settings.R’ files has triggers and codes etc.</p>
+</section>
+<section id="some-basic-information-for-summing-and-analyses-below" class="level1">
+<h1>Some basic information for summing and analyses below</h1>
+<p>Minimum vis for fish analysis = 2-m</p>
+<p>Kelp depths = 5 -m Fish depths = 5, 10 -m Inv depths = 5 -m</p>
+</section>
+<section id="algae-invert-data" class="level1">
+<h1>ALGAE &amp; INVERT DATA</h1>
+<p>Summarize kelp and invert data to get count by transect. Raw files has more detailed observations. Data are imported above.</p>
+<p>Kelp depth = 5</p>
+<p>A bunch more summarizing at different scales. Also output for multivariate analyses.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has regrouped the output.
+`summarise()` has regrouped the output.
+`summarise()` has regrouped the output.
+Joining with `by = join_by(site)`
+ℹ Summaries were computed grouped by year, site, transect, species, zone, area,
+  and fun_gr.
+ℹ Output is grouped by year, site, transect, species, zone, and area.
+ℹ Use `summarise(.groups = "drop_last")` to silence this message.
+ℹ Use `summarise(.by = c(year, site, transect, species, zone, area, fun_gr))`
+  for per-operation grouping (`?dplyr::dplyr_by`) instead.</code></pre>
+</div>
+</div>
+</section>
+<section id="algae" class="level1">
+<h1>ALGAE</h1>
+<section id="nereocystis-at-tatoosh" class="level2">
+<h2 class="anchored" data-anchor-id="nereocystis-at-tatoosh">Nereocystis at Tatoosh</h2>
+<section id="by-depth" class="level3">
+<h3 class="anchored" data-anchor-id="by-depth">By depth</h3>
+<p>Not sure why I started with this, but the figure is <em>Nereocystis</em> stipe counts at Tatoosh Island.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="C-/Users/Nick.Tolimieri/Documents/GitHub/OCNMS/_00_Annual-Update//figures/nerocystis-tatoosh%20-1.png" class="img-fluid figure-img" width="1500"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="averaged-across-depths" class="level3">
+<h3 class="anchored" data-anchor-id="averaged-across-depths">Averaged across depths</h3>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has regrouped the output.
+ℹ Summaries were computed grouped by year, site, species, and fun_gr.
+ℹ Output is grouped by year, site, and species.
+ℹ Use `summarise(.groups = "drop_last")` to silence this message.
+ℹ Use `summarise(.by = c(year, site, species, fun_gr))` for per-operation
+  grouping (`?dplyr::dplyr_by`) instead.</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="C-/Users/Nick.Tolimieri/Documents/GitHub/OCNMS/_00_Annual-Update//figures/nerocystis-tatoosh-mean%20-1.png" class="img-fluid figure-img" width="1500"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="summed-nerocycstis-and-macrocystis-stipes-m2-year-x-site-x-depth" class="level2">
+<h2 class="anchored" data-anchor-id="summed-nerocycstis-and-macrocystis-stipes-m2-year-x-site-x-depth">Summed <em>Nerocycstis</em> and <em>Macrocystis</em> stipes m<sup>2</sup>: year x site x depth</h2>
+<p>Essentially total canopy kelp stipe counts at all sites. Bit odd and not used because of difference in <em>Macro</em> and <em>Nero</em> stipes.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has regrouped the output.
+`summarise()` has regrouped the output.
+ℹ Summaries were computed grouped by year, site, zone, and area.
+ℹ Output is grouped by year, site, and zone.
+ℹ Use `summarise(.groups = "drop_last")` to silence this message.
+ℹ Use `summarise(.by = c(year, site, zone, area))` for per-operation grouping
+  (`?dplyr::dplyr_by`) instead.</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="C-/Users/Nick.Tolimieri/Documents/GitHub/OCNMS/_00_Annual-Update//figures/nero-macro%20-1.png" class="img-fluid figure-img" width="1500"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="stipe-counts-for-nerocystis-macrocystis-and-pterogophora" class="level2">
+<h2 class="anchored" data-anchor-id="stipe-counts-for-nerocystis-macrocystis-and-pterogophora">Stipe counts for <em>Nerocystis</em>, <em>Macrocystis</em>, and <em>Pterogophora</em></h2>
+<section id="site-x-species-x-depth" class="level3">
+<h3 class="anchored" data-anchor-id="site-x-species-x-depth">Site x species x depth</h3>
+<p>Stipe counts across site and year for each species separatey.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="C-/Users/Nick.Tolimieri/Documents/GitHub/OCNMS/_00_Annual-Update//figures/big3-1.png" class="img-fluid figure-img" width="1800"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="at-5-m-depth" class="level3">
+<h3 class="anchored" data-anchor-id="at-5-m-depth">At 5 m depth</h3>
+<p>Just a subset of the plot above.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="C-/Users/Nick.Tolimieri/Documents/GitHub/OCNMS/_00_Annual-Update//figures/big3-5m-1.png" class="img-fluid figure-img" width="1350"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="coastwide-stipe-counts-for-nerocystis-macrocystis-and-pterogophora" class="level2">
+<h2 class="anchored" data-anchor-id="coastwide-stipe-counts-for-nerocystis-macrocystis-and-pterogophora">Coastwide Stipe counts for <em>Nerocystis</em>, <em>Macrocystis</em>, and <em>Pterogophora</em></h2>
+<section id="across-depths" class="level3">
+<h3 class="anchored" data-anchor-id="across-depths">Across depths</h3>
+<p>Mean stipe count across sites for the big three algae</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has regrouped the output.
+`summarise()` has regrouped the output.
+ℹ Summaries were computed grouped by site, year, and species.
+ℹ Output is grouped by site and year.
+ℹ Use `summarise(.groups = "drop_last")` to silence this message.
+ℹ Use `summarise(.by = c(site, year, species))` for per-operation grouping
+  (`?dplyr::dplyr_by`) instead.</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="C-/Users/Nick.Tolimieri/Documents/GitHub/OCNMS/_00_Annual-Update//figures/kelp-coastwide-1.png" class="img-fluid figure-img" width="1500"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="just-5-m" class="level3">
+<h3 class="anchored" data-anchor-id="just-5-m">Just 5 m</h3>
+<p>Same as above but subset out for just 5 m. Mean ignores 10-m transects.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has regrouped the output.
+`summarise()` has regrouped the output.
+ℹ Summaries were computed grouped by site, year, and species.
+ℹ Output is grouped by site and year.
+ℹ Use `summarise(.groups = "drop_last")` to silence this message.
+ℹ Use `summarise(.by = c(site, year, species))` for per-operation grouping
+  (`?dplyr::dplyr_by`) instead.</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="C-/Users/Nick.Tolimieri/Documents/GitHub/OCNMS/_00_Annual-Update//figures/kelp-coastwide-5m-1.png" class="img-fluid figure-img" width="1500"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="kelp-summed-coastwide-mean" class="level3">
+<h3 class="anchored" data-anchor-id="kelp-summed-coastwide-mean">Kelp summed coastwide mean</h3>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has regrouped the output.
+ℹ Summaries were computed grouped by site, year, and species.
+ℹ Output is grouped by site and year.
+ℹ Use `summarise(.groups = "drop_last")` to silence this message.
+ℹ Use `summarise(.by = c(site, year, species))` for per-operation grouping
+  (`?dplyr::dplyr_by`) instead.</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="C-/Users/Nick.Tolimieri/Documents/GitHub/OCNMS/_00_Annual-Update//figures/kelp-coastwide-total-1.png" class="img-fluid figure-img" width="1500"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="understory-kelps" class="level2">
+<h2 class="anchored" data-anchor-id="understory-kelps">Understory Kelps</h2>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has regrouped the output.
+`summarise()` has regrouped the output.
+ℹ Summaries were computed grouped by site, year, and species.
+ℹ Output is grouped by site and year.
+ℹ Use `summarise(.groups = "drop_last")` to silence this message.
+ℹ Use `summarise(.by = c(site, year, species))` for per-operation grouping
+  (`?dplyr::dplyr_by`) instead.</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="C-/Users/Nick.Tolimieri/Documents/GitHub/OCNMS/_00_Annual-Update//figures/understory%20kelps-1.png" class="img-fluid figure-img" width="2100"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="invertebrates" class="level1">
+<h1>INVERTEBRATES</h1>
+<p>Start with some data manipulations to sum up species by transect.</p>
+<section id="pycnopodia---total-on-all-transects-by-year---table" class="level2">
+<h2 class="anchored" data-anchor-id="pycnopodia---total-on-all-transects-by-year---table">Pycnopodia - total on all transects by year - table</h2>
+<p>Table is count of <em>Pycnopodia</em> by year.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has regrouped the output.
+`summarise()` has regrouped the output.
+ℹ Summaries were computed grouped by year, site, transect, observer, species,
+  zone, area, taxa, and grp2.
+ℹ Output is grouped by year, site, transect, observer, species, zone, area, and
+  taxa.
+ℹ Use `summarise(.groups = "drop_last")` to silence this message.
+ℹ Use `summarise(.by = c(year, site, transect, observer, species, zone, area,
+  taxa, grp2))` for per-operation grouping (`?dplyr::dplyr_by`) instead.</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 2
+    year    no
+   &lt;dbl&gt; &lt;dbl&gt;
+ 1  2015     0
+ 2  2016     4
+ 3  2017     0
+ 4  2018     3
+ 5  2019     1
+ 6  2021     0
+ 7  2022     0
+ 8  2023     1
+ 9  2024     0
+10  2025    12</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="C-/Users/Nick.Tolimieri/Documents/GitHub/OCNMS/_00_Annual-Update//figures/invert-data-1.png" class="img-fluid figure-img" width="2100"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has regrouped the output.
+ℹ Summaries were computed grouped by year and species.
+ℹ Output is grouped by year.
+ℹ Use `summarise(.groups = "drop_last")` to silence this message.
+ℹ Use `summarise(.by = c(year, species))` for per-operation grouping
+  (`?dplyr::dplyr_by`) instead.</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="C-/Users/Nick.Tolimieri/Documents/GitHub/OCNMS/_00_Annual-Update//figures/mean-pycnopodia-1.png" class="img-fluid figure-img" width="2100"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has regrouped the output.
+ℹ Summaries were computed grouped by year, species, and site.
+ℹ Output is grouped by year and species.
+ℹ Use `summarise(.groups = "drop_last")` to silence this message.
+ℹ Use `summarise(.by = c(year, species, site))` for per-operation grouping
+  (`?dplyr::dplyr_by`) instead.</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="C-/Users/Nick.Tolimieri/Documents/GitHub/OCNMS/_00_Annual-Update//figures/mean-pycnopodia-site-1.png" class="img-fluid figure-img" width="2100"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has regrouped the output.
+ℹ Summaries were computed grouped by year, species, and site.
+ℹ Output is grouped by year and species.
+ℹ Use `summarise(.groups = "drop_last")` to silence this message.
+ℹ Use `summarise(.by = c(year, species, site))` for per-operation grouping
+  (`?dplyr::dplyr_by`) instead.</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="C-/Users/Nick.Tolimieri/Documents/GitHub/OCNMS/_00_Annual-Update//figures/mean-pycnopodia-tatoosh-1.png" class="img-fluid figure-img" width="2100"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="urchins" class="level2">
+<h2 class="anchored" data-anchor-id="urchins">Urchins</h2>
+<section id="total-urchin-density---site-x-year" class="level3">
+<h3 class="anchored" data-anchor-id="total-urchin-density---site-x-year">Total urchin density - site x year</h3>
+<p>Total urchins by site by year. total urchins = purple + red + green</p>
+<p>Mean across depth zones</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has regrouped the output.
+`summarise()` has regrouped the output.
+`summarise()` has regrouped the output.
+`summarise()` has regrouped the output.
+ℹ Summaries were computed grouped by year, site, transect, observer, area, and
+  grp2.
+ℹ Output is grouped by year, site, transect, observer, and area.
+ℹ Use `summarise(.groups = "drop_last")` to silence this message.
+ℹ Use `summarise(.by = c(year, site, transect, observer, area, grp2))` for
+  per-operation grouping (`?dplyr::dplyr_by`) instead.</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="C-/Users/Nick.Tolimieri/Documents/GitHub/OCNMS/_00_Annual-Update//figures/total-urchins-mean-1.png" class="img-fluid figure-img" width="1800"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="total-urchins-by-site-x-year-x-depth" class="level3">
+<h3 class="anchored" data-anchor-id="total-urchins-by-site-x-year-x-depth">Total urchins by site x year x depth</h3>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has regrouped the output.
+`summarise()` has regrouped the output.
+`summarise()` has regrouped the output.
+`summarise()` has regrouped the output.
+ℹ Summaries were computed grouped by year, site, transect, observer, zone,
+  area, and grp2.
+ℹ Output is grouped by year, site, transect, observer, zone, and area.
+ℹ Use `summarise(.groups = "drop_last")` to silence this message.
+ℹ Use `summarise(.by = c(year, site, transect, observer, zone, area, grp2))`
+  for per-operation grouping (`?dplyr::dplyr_by`) instead.</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="C-/Users/Nick.Tolimieri/Documents/GitHub/OCNMS/_00_Annual-Update//figures/total-urchins-1.png" class="img-fluid figure-img" width="1500"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="coastwide-total-urchins" class="level3">
+<h3 class="anchored" data-anchor-id="coastwide-total-urchins">Coastwide total urchins</h3>
+<p>Mean urchin density across all sites. Species summed because mostly purple urchins.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has regrouped the output.
+`summarise()` has regrouped the output.
+ℹ Summaries were computed grouped by year, site, transect, observer, area, and
+  grp2.
+ℹ Output is grouped by year, site, transect, observer, and area.
+ℹ Use `summarise(.groups = "drop_last")` to silence this message.
+ℹ Use `summarise(.by = c(year, site, transect, observer, area, grp2))` for
+  per-operation grouping (`?dplyr::dplyr_by`) instead.</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="C-/Users/Nick.Tolimieri/Documents/GitHub/OCNMS/_00_Annual-Update//figures/total-urchins-coast-1.png" class="img-fluid figure-img" width="1800"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="coastwode-urchins-vs-kelp" class="level3">
+<h3 class="anchored" data-anchor-id="coastwode-urchins-vs-kelp">Coastwode Urchins vs kelp</h3>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stderr">
+<pre><code>Joining with `by = join_by(year)`</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="C-/Users/Nick.Tolimieri/Documents/GitHub/OCNMS/_00_Annual-Update//figures/urchins-vs-kelp-coastwide-1.png" class="img-fluid figure-img" width="1500"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="coastwide-urchins-vs-kelp-differenced" class="level3">
+<h3 class="anchored" data-anchor-id="coastwide-urchins-vs-kelp-differenced">Coastwide Urchins vs kelp Differenced</h3>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="C-/Users/Nick.Tolimieri/Documents/GitHub/OCNMS/_00_Annual-Update//figures/urchins-vs-kelp-coastwide-diff-1.png" class="img-fluid figure-img" width="1500"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="urchins-at-tatoosh---mean-across-depths" class="level3">
+<h3 class="anchored" data-anchor-id="urchins-at-tatoosh---mean-across-depths">Urchins at Tatoosh - mean across depths</h3>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has regrouped the output.
+`summarise()` has regrouped the output.
+`summarise()` has regrouped the output.
+`summarise()` has regrouped the output.
+ℹ Summaries were computed grouped by year, site, transect, observer, area, and
+  grp2.
+ℹ Output is grouped by year, site, transect, observer, and area.
+ℹ Use `summarise(.groups = "drop_last")` to silence this message.
+ℹ Use `summarise(.by = c(year, site, transect, observer, area, grp2))` for
+  per-operation grouping (`?dplyr::dplyr_by`) instead.</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="C-/Users/Nick.Tolimieri/Documents/GitHub/OCNMS/_00_Annual-Update//figures/total-urchins-tatoosh-1.png" class="img-fluid figure-img" width="1500"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="urchins-vs-nereocystis-at-tatoosh" class="level3">
+<h3 class="anchored" data-anchor-id="urchins-vs-nereocystis-at-tatoosh">Urchins vs Nereocystis at Tatoosh</h3>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stderr">
+<pre><code>Adding missing grouping variables: `site`, `species`
+Adding missing grouping variables: `site`
+Joining with `by = join_by(site, year)`</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="C-/Users/Nick.Tolimieri/Documents/GitHub/OCNMS/_00_Annual-Update//figures/urchins-kelp-tatoosh-1.png" class="img-fluid figure-img" width="1500"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Max total urchin density at Tatoosh</p>
+<p>5-m = 4.0503465 m^-2 10-m = 10.0752194 m^-2</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="C-/Users/Nick.Tolimieri/Documents/GitHub/OCNMS/_00_Annual-Update//figures/urchins-kelp-tatoosh-diff-1.png" class="img-fluid figure-img" width="1500"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="urchin-density-by-species-year-x-sites-x-depth" class="level3">
+<h3 class="anchored" data-anchor-id="urchin-density-by-species-year-x-sites-x-depth">Urchin density by species: year x sites x depth</h3>
+<p>Moslty at Tatoosh. Mostly purple urchins.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has regrouped the output.
+`summarise()` has regrouped the output.
+ℹ Summaries were computed grouped by year, site, transect, observer, zone,
+  area, and taxa.
+ℹ Output is grouped by year, site, transect, observer, zone, and area.
+ℹ Use `summarise(.groups = "drop_last")` to silence this message.
+ℹ Use `summarise(.by = c(year, site, transect, observer, zone, area, taxa))`
+  for per-operation grouping (`?dplyr::dplyr_by`) instead.</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="C-/Users/Nick.Tolimieri/Documents/GitHub/OCNMS/_00_Annual-Update//figures/urchins-combined-1.png" class="img-fluid figure-img" width="1950"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Max total urchin density at Tatoosh</p>
+<p>5-m = 3.7336798 m^-2 10-m = 9.5052194 m^-2</p>
+</section>
+<section id="coastwide-urchin-density-by-species" class="level3">
+<h3 class="anchored" data-anchor-id="coastwide-urchin-density-by-species">Coastwide urchin density by species</h3>
+<p>Mean density averaged across sites for a year by species.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has regrouped the output.
+`summarise()` has regrouped the output.
+ℹ Summaries were computed grouped by site, year, and taxa.
+ℹ Output is grouped by site and year.
+ℹ Use `summarise(.groups = "drop_last")` to silence this message.
+ℹ Use `summarise(.by = c(site, year, taxa))` for per-operation grouping
+  (`?dplyr::dplyr_by`) instead.</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="C-/Users/Nick.Tolimieri/Documents/GitHub/OCNMS/_00_Annual-Update//figures/urchin-spp-year-1.png" class="img-fluid figure-img" width="2100"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Purple urchin density in 2015 = 0.0116667 urchins per m^2 Purple urchin density in 2019 = 1.7667191 urchins per m^2</p>
+<p>Increase was 151.4330665 fold.</p>
+<p>Purple urchin density in 2015 = 4.0955476 urchins per m^2</p>
+<p>Density compared to 2015 was 351.0469361 fold.</p>
+</section>
+</section>
+<section id="seastars-site-x-year-x-depth" class="level2">
+<h2 class="anchored" data-anchor-id="seastars-site-x-year-x-depth">Seastars: site x year x depth</h2>
+<p>Sum of all observed seastars. Not species.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has regrouped the output.
+`summarise()` has regrouped the output.
+ℹ Summaries were computed grouped by year, site, transect, observer, area,
+  zone, and grp2.
+ℹ Output is grouped by year, site, transect, observer, area, and zone.
+ℹ Use `summarise(.groups = "drop_last")` to silence this message.
+ℹ Use `summarise(.by = c(year, site, transect, observer, area, zone, grp2))`
+  for per-operation grouping (`?dplyr::dplyr_by`) instead.</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="C-/Users/Nick.Tolimieri/Documents/GitHub/OCNMS/_00_Annual-Update//figures/total-seastars-1.png" class="img-fluid figure-img" width="2100"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="coastwide-seastars-by-species-x-site-x-year" class="level3">
+<h3 class="anchored" data-anchor-id="coastwide-seastars-by-species-x-site-x-year">Coastwide seastars by species x site x year</h3>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has regrouped the output.
+`summarise()` has regrouped the output.
+ℹ Summaries were computed grouped by site, year, and species.
+ℹ Output is grouped by site and year.
+ℹ Use `summarise(.groups = "drop_last")` to silence this message.
+ℹ Use `summarise(.by = c(site, year, species))` for per-operation grouping
+  (`?dplyr::dplyr_by`) instead.</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="C-/Users/Nick.Tolimieri/Documents/GitHub/OCNMS/_00_Annual-Update//figures/total-seastars-year-5-10m-1.png" class="img-fluid figure-img" width="1800"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="subset-of-seastars-blood-brood-leather" class="level3">
+<h3 class="anchored" data-anchor-id="subset-of-seastars-blood-brood-leather">Subset of seastars blood, brood, leather</h3>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has regrouped the output.
+`summarise()` has regrouped the output.
+ℹ Summaries were computed grouped by site, year, and taxa.
+ℹ Output is grouped by site and year.
+ℹ Use `summarise(.groups = "drop_last")` to silence this message.
+ℹ Use `summarise(.by = c(site, year, taxa))` for per-operation grouping
+  (`?dplyr::dplyr_by`) instead.</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="C-/Users/Nick.Tolimieri/Documents/GitHub/OCNMS/_00_Annual-Update//figures/total-seastars-year-subset-1.png" class="img-fluid figure-img" width="1800"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="subset-of-seastars-blood-brood-leather-large" class="level3">
+<h3 class="anchored" data-anchor-id="subset-of-seastars-blood-brood-leather-large">Subset of seastars blood, brood, leather, large</h3>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has regrouped the output.
+`summarise()` has regrouped the output.
+ℹ Summaries were computed grouped by site, year, and taxa.
+ℹ Output is grouped by site and year.
+ℹ Use `summarise(.groups = "drop_last")` to silence this message.
+ℹ Use `summarise(.by = c(site, year, taxa))` for per-operation grouping
+  (`?dplyr::dplyr_by`) instead.</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="C-/Users/Nick.Tolimieri/Documents/GitHub/OCNMS/_00_Annual-Update//figures/total-seastars-year-subset2-1.png" class="img-fluid figure-img" width="1800"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has regrouped the output.
+`summarise()` has regrouped the output.
+ℹ Summaries were computed grouped by site, year, and taxa.
+ℹ Output is grouped by site and year.
+ℹ Use `summarise(.groups = "drop_last")` to silence this message.
+ℹ Use `summarise(.by = c(site, year, taxa))` for per-operation grouping
+  (`?dplyr::dplyr_by`) instead.</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="C-/Users/Nick.Tolimieri/Documents/GitHub/OCNMS/_00_Annual-Update//figures/total-seastars-year-subset-log-1.png" class="img-fluid figure-img" width="1800"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="output-data-for-multivariate-statistics" class="level1">
+<h1>Output data for multivariate statistics</h1>
+<section id="combine-kelp-fish-and-inverts-for-capscale-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="combine-kelp-fish-and-inverts-for-capscale-analysis">Combine kelp, fish, and inverts for capscale analysis</h2>
+<p>Not yet transformed to wide format in order to retain SD &amp; SE info upon saving out. Transform in the Multiariate analysis rmd.</p>
+<p>Output data files to use for multivariate ordinations.</p>
+<p>Use these files and not raw files. Kelp and invert data have been converted to density to account for different transect lengths etc.</p>
+</section>
+<section id="combine-data" class="level2">
+<h2 class="anchored" data-anchor-id="combine-data">Combine data</h2>
+<p><em>combind fish and kelp in wide format using fish COUNT data. </em>include area info for fish and kelp</p>
+</section>
+</section>
+<section id="multivariate-ordinations" class="level1">
+<h1>MULTIVARIATE ORDINATIONS</h1>
+<section id="algae-1" class="level2">
+<h2 class="anchored" data-anchor-id="algae-1">Algae</h2>
+</section>
+<section id="fish" class="level2">
+<h2 class="anchored" data-anchor-id="fish">Fish</h2>
+<p>Note, the y-axes are very different</p>
+<section id="notes-1" class="level3">
+<h3 class="anchored" data-anchor-id="notes-1">Notes</h3>
+<p>for multivariate analysis; cut and paste to that file</p>
+<p>fish.spp = c(“OPEL”, “HEXA”, “SECA”, “SCMA” ,“SENE”, “SEME”, ‘EMBI’,‘GOBI’)</p>
+<p>yoy.spp = c(“SECAyoy”, “SEPIyoy”, “SEMYyoy”, “SEBYTyoy”,“RYOY”)</p>
+</section>
+</section>
+</section>
+<section id="some-useful-tables" class="level1">
+<h1>SOME USEFUL TABLES</h1>
+</section>
+<section id="canopy-kelp-from-dnr" class="level1">
+<h1>CANOPY KELP FROM DNR</h1>
+<p>Imports data file from other R file. Plot just kelp canopy. Add to ggarrange below.</p>
+<section id="long---2015-on" class="level2">
+<h2 class="anchored" data-anchor-id="long---2015-on">Long - 2015 on</h2>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="C-/Users/Nick.Tolimieri/Documents/GitHub/OCNMS/_00_Annual-Update//figures/kelp-canopy-long-1.png" class="img-fluid figure-img" width="2100"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="kelp-watch" class="level2">
+<h2 class="anchored" data-anchor-id="kelp-watch">KELP WATCH</h2>
+<p>There is a discrepancy between the DNR data and kelpwatch data. Need to check on it.</p>
+</section>
+<section id="short---2015-on" class="level2">
+<h2 class="anchored" data-anchor-id="short---2015-on">Short - 2015 on</h2>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stderr">
+<pre><code>Scale for x is already present.
+Adding another scale for x, which will replace the existing scale.</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="C-/Users/Nick.Tolimieri/Documents/GitHub/OCNMS/_00_Annual-Update//figures/kelp-canopy-short-1.png" class="img-fluid figure-img" width="2100"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Mean ha for 2004-2013: 700.6700019 ha +/- 43.6630069 s.e.</p>
+<p>Total canopy 2014: 337.2999981 ha</p>
+<p>Drop from previous decade: 0.4813964 % of previous cover.</p>
+<p>Mean ha for 2015-2020:659.7333332 ha +/- 33.9434596 s.e.</p>
+<p>Compared to earlier decade: 0.941575 % of previous cover.</p>
+<p>Totals 2014 for Total, Nereo, Macro = 337.2999981, 89.6000009, 247.8999973 ha Totals 2020 for Total, Nereo, Macro = 701.8, 383.4, 318.6 ha</p>
+<p>Change was 2.0806404, 4.2790178, 1.2851957 fold.</p>
+</section>
+</section>
+<section id="combined-figures-for-ms" class="level1">
+<h1>COMBINED FIGURES FOR MS</h1>
+</section>
+<section id="combined-kelp-and-temperature-figure" class="level1">
+<h1>Combined Kelp and Temperature figure</h1>
+<section id="mean-sst" class="level2">
+<h2 class="anchored" data-anchor-id="mean-sst">Mean SST</h2>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "1"  "2"  "3"  "4"  "5"  "6"  "7"  "8"  "9"  "10"</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has regrouped the output.
+Scale for x is already present. Adding another scale for x, which will replace
+the existing scale.
+ℹ Summaries were computed grouped by year and month.
+ℹ Output is grouped by year.
+ℹ Use `summarise(.groups = "drop_last")` to silence this message.
+ℹ Use `summarise(.by = c(year, month))` for per-operation grouping
+  (`?dplyr::dplyr_by`) instead.</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="C-/Users/Nick.Tolimieri/Documents/GitHub/OCNMS/_00_Annual-Update//figures/sst-1.png" class="img-fluid figure-img" width="2100"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="kelp" class="level3">
+<h3 class="anchored" data-anchor-id="kelp">Kelp</h3>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="C-/Users/Nick.Tolimieri/Documents/GitHub/OCNMS/_00_Annual-Update//figures/kelp-canopy-full-1.png" class="img-fluid figure-img" width="2100"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="kelp-and-sst-combinded-figure" class="level3">
+<h3 class="anchored" data-anchor-id="kelp-and-sst-combinded-figure">Kelp and SST combinded figure</h3>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="C-/Users/Nick.Tolimieri/Documents/GitHub/OCNMS/_00_Annual-Update//figures/sst-kelp-1.png" class="img-fluid figure-img" width="1050"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

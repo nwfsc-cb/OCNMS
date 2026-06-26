@@ -20,7 +20,6 @@ library(tidyr)
 library(tinytex) # for pdf output
 library(googledrive)
 library(googlesheets4)
-source("R-functions-ocnms.r")
 
 # spp codes ####################################################################
 
@@ -33,7 +32,7 @@ swath_codes = data.frame(read.csv("spp_codes_swath.csv", header = TRUE))
 source_dir = paste0(home_dir)
 fig_dir = paste0(home_dir,"/figures/")
 # data_dir = paste0(home_dir,"/data/")
-data_dir = paste0("~/GitHub/OCNMS/Data/",data_year,"/")
+data_dir = paste0(repo_dir, "/Data/",data_year,"/")
 results_dir = paste0(home_dir,"/results/")
 other_dir = paste0(home_dir,"/other/")
 par(ps=10, cex=1)

@@ -6,20 +6,16 @@ library(ggplot2)
 library(viridis)
 library(reshape2)
 library(tidyverse)
-# library(readxl)
-# library(XLConnect)
-# rm(list=ls())
+
 
 # Pull in pre-2015 data (Kvitek surveys)
-# base.dir <- getwd()
-# data.dir <- paste0(base.dir,"/data/")
 
 source("update-swath-process-pre-2015-data.R")
 dat.pre.2015 <- dat.trim %>% rename(group.name=group)
 
 # setwd(data.dir)
 # Import Data ##################################################################
-dat.2015 <- data.frame(read.csv("~/GitHub/OCNMS/Data/2015/2015_OCNMSDataComplete_standardized_122116.csv"))
+dat.2015 <- data.frame(read.csv(paste0(repo_dir, "/Data/2015/2015_OCNMSDataComplete_standardized_122116.csv")))
 
 # NEW DATA FILE NAME here ######################################################
 # dat.2016.on.swath <- read.csv('~/GitHub/OCNMS/Data/2024/NWFSC_SWATH_ALLYEARS_data_2025.csv')
@@ -286,7 +282,7 @@ dat.swath.base      <- dat.swath.base %>% ungroup() %>%
 max_year = max(dat.swath.base$year)
  
 saveRDS(dat.swath.base, paste0(data_dir,"Swath_2015-",max_year,".rds"))
-
+write.csv(dat.swath.base, paste0(data_dir,"Swath_2015-",max_year,".csv"), row.names = F)
 ###################################################################
 # Separate out invertebrates and algae.
 dat.invert <- dat.swath.base %>% filter(group == "Invert")

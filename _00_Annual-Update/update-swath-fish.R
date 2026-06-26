@@ -11,14 +11,13 @@ library(readxl)
 # setwd(data_dir)
 
 # load 2015 data ###############################################################
-dat.2015 <- data.frame(read.csv("~/GitHub/OCNMS/Data/2015/2015_OCNMSDataComplete_standardized_122116.csv"))
+dat.2015 <- data.frame(read.csv(paste0(repo_dir, "/Data/2015/2015_OCNMSDataComplete_standardized_122116.csv")))
+
 dat.2015$PISCO.Classcode[dat.2015$PISCO.Classcode=="MYOPOL"] <- "MYOP"
 # update this file each year ###################################################
 # done automatically in the 01_annual-update-and-univariate-plots.rmd file
-# data_year = 2024
-# fishx = data.frame(read.csv("~/GitHub/OCNMS/Data/2024/NWFSC_FISH_ALLYEARS_data_2024.csv"))
 
-dat.2016.on.fish <- fishx # or current year file....
+dat.2016.on.fish <- fishx # or current year file....loaded in annual update file
 
 # species_names <- fish_codes # read.csv("species_code_list.csv")
 x = grep("y", fish_codes$species)
@@ -167,8 +166,6 @@ dat.2015.fish <- dat.long
 base.dat.2015 <- base.dat
 
 # write out processed data so you don't have to run it again.
-
-# write.csv(base.dat.2015, "C:/Users/Nick.Tolimieri/Documents/GitHub/OCNMS/Data/2015/Fish_2015_processed.csv", row.names = F)
 
 ################################################################################
 ################ Repeat for 2016 and later #####################################
@@ -328,7 +325,7 @@ max_year = max(dat.fish$year)
 # output data for future analysis ##############################################
 
 saveRDS(dat.fish, paste0(data_dir,"Fish_2015-",max_year,".rds"))
-
+write.csv(dat.fish,paste0(data_dir,"Fish_2015-",max_year,".csv"), row.names = F)
 ################################################################################
 ################################################################################
 ################################################################################
