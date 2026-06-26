@@ -1,0 +1,1693 @@
+"","site","transect","observer","common.name","species","size_class","year","Count"
+"1","Anderson Point",1,"KA","Black rockfish","SEME","large",2015,0
+"2","Anderson Point",1,"KA","Blackeye goby","RHNI",NA,2015,0
+"3","Anderson Point",1,"KA","Buffalo sculpin","ENBI",NA,2015,0
+"4","Anderson Point",1,"KA","Cabezon","SCMA",NA,2015,0
+"5","Anderson Point",1,"KA","Copper rockfish","SECA","large",2015,0
+"6","Anderson Point",1,"KA","Great sculpin","MYOP",NA,2015,0
+"7","Anderson Point",1,"KA","Kelp greenling","HEDE",NA,2015,1
+"8","Anderson Point",1,"KA","Lingcod","OPEL",NA,2015,0
+"9","Anderson Point",1,"KA","Painted greenling","OXPI",NA,2015,0
+"10","Anderson Point",1,"KA","Quillback rockfish","SEMA","large",2015,0
+"11","Anderson Point",1,"KA","Red Irish Lord","HEHE",NA,2015,0
+"12","Anderson Point",1,"KA","Rock greenling","HELA",NA,2015,0
+"13","Anderson Point",1,"KA","Striped seaperch","EMLA",NA,2015,0
+"14","Anderson Point",1,"KA","Tubesnout","AUFL",NA,2015,0
+"15","Anderson Point",1,"KA","YOY rockfish (black dorsal spots)","RYOY","small",2015,0
+"16","Anderson Point",1,"KA","bait-sardines-anchovy","BAITBALL",NA,2015,0
+"17","Anderson Point",1,"KA","black rockfish","SEME","small",2015,0
+"18","Anderson Point",1,"KA","blue rockfish","SEMY","large",2015,0
+"19","Anderson Point",1,"KA","blue rockfish","SEMY","small",2015,0
+"20","Anderson Point",1,"KA","c-o sole","PLCO",NA,2015,0
+"21","Anderson Point",1,"KA","canary rockfish","SEPI","large",2015,0
+"22","Anderson Point",1,"KA","canary rockfish","SEPI","small",2015,0
+"23","Anderson Point",1,"KA","china rockfish","SENE","large",2015,0
+"24","Anderson Point",1,"KA","china rockfish","SENE","small",2015,0
+"25","Anderson Point",1,"KA","copper rockfish","SECA","small",2015,0
+"26","Anderson Point",1,"KA","greenlings","HEXA",NA,2015,0
+"27","Anderson Point",1,"KA","gunnels","PHOL",NA,2015,0
+"28","Anderson Point",1,"KA","herring","CLUP",NA,2015,0
+"29","Anderson Point",1,"KA","kelp clingfish","RIMU",NA,2015,0
+"30","Anderson Point",1,"KA","longfin sculpin","JOZO",NA,2015,0
+"31","Anderson Point",1,"KA","manacled sculpin","SYGI",NA,2015,0
+"32","Anderson Point",1,"KA","mosshead warbonnet","CHNU",NA,2015,0
+"33","Anderson Point",1,"KA","no_transect_no_data","NO_DATA",NA,2015,0
+"34","Anderson Point",1,"KA","pile perch","RHVA",NA,2015,0
+"35","Anderson Point",1,"KA","quillback rockfish","SEMA","small",2015,0
+"36","Anderson Point",1,"KA","rockfish","SEBSPP","large",2015,0
+"37","Anderson Point",1,"KA","rockfish","SEBSPP","small",2015,0
+"38","Anderson Point",1,"KA","sanddabs","CITH",NA,2015,0
+"39","Anderson Point",1,"KA","scalyhead sculpin","ARHA",NA,2015,0
+"40","Anderson Point",1,"KA","sculpin","COTT",NA,2015,0
+"41","Anderson Point",1,"KA","surfperch","EMBI",NA,2015,0
+"42","Anderson Point",1,"KA","unidentified fish","UNID",NA,2015,0
+"43","Anderson Point",1,"KA","whitespotted greenling","HEST",NA,2015,0
+"44","Anderson Point",1,"KA","yellowtail rockfish","SEFL","large",2015,0
+"45","Anderson Point",1,"KA","yellowtail rockfish","SEFL","small",2015,0
+"46","Anderson Point",1,"KA","yellowtail-black yoy","SEBYT","small",2015,0
+"47","Anderson Point",1,"KA",NA,"AMHE",NA,2015,0
+"48","Anderson Point",1,"NT","Black rockfish","SEME","large",2015,0
+"49","Anderson Point",1,"NT","Blackeye goby","RHNI",NA,2015,0
+"50","Anderson Point",1,"NT","Buffalo sculpin","ENBI",NA,2015,0
+"51","Anderson Point",1,"NT","Cabezon","SCMA",NA,2015,0
+"52","Anderson Point",1,"NT","Copper rockfish","SECA","large",2015,0
+"53","Anderson Point",1,"NT","Great sculpin","MYOP",NA,2015,0
+"54","Anderson Point",1,"NT","Kelp greenling","HEDE",NA,2015,0
+"55","Anderson Point",1,"NT","Lingcod","OPEL",NA,2015,0
+"56","Anderson Point",1,"NT","Painted greenling","OXPI",NA,2015,0
+"57","Anderson Point",1,"NT","Quillback rockfish","SEMA","large",2015,0
+"58","Anderson Point",1,"NT","Red Irish Lord","HEHE",NA,2015,0
+"59","Anderson Point",1,"NT","Rock greenling","HELA",NA,2015,0
+"60","Anderson Point",1,"NT","Striped seaperch","EMLA",NA,2015,0
+"61","Anderson Point",1,"NT","Tubesnout","AUFL",NA,2015,0
+"62","Anderson Point",1,"NT","YOY rockfish (black dorsal spots)","RYOY","small",2015,0
+"63","Anderson Point",1,"NT","bait-sardines-anchovy","BAITBALL",NA,2015,0
+"64","Anderson Point",1,"NT","black rockfish","SEME","small",2015,0
+"65","Anderson Point",1,"NT","blue rockfish","SEMY","large",2015,0
+"66","Anderson Point",1,"NT","blue rockfish","SEMY","small",2015,0
+"67","Anderson Point",1,"NT","c-o sole","PLCO",NA,2015,0
+"68","Anderson Point",1,"NT","canary rockfish","SEPI","large",2015,0
+"69","Anderson Point",1,"NT","canary rockfish","SEPI","small",2015,0
+"70","Anderson Point",1,"NT","china rockfish","SENE","large",2015,0
+"71","Anderson Point",1,"NT","china rockfish","SENE","small",2015,0
+"72","Anderson Point",1,"NT","copper rockfish","SECA","small",2015,0
+"73","Anderson Point",1,"NT","greenlings","HEXA",NA,2015,0
+"74","Anderson Point",1,"NT","gunnels","PHOL",NA,2015,0
+"75","Anderson Point",1,"NT","herring","CLUP",NA,2015,0
+"76","Anderson Point",1,"NT","kelp clingfish","RIMU",NA,2015,0
+"77","Anderson Point",1,"NT","longfin sculpin","JOZO",NA,2015,0
+"78","Anderson Point",1,"NT","manacled sculpin","SYGI",NA,2015,0
+"79","Anderson Point",1,"NT","mosshead warbonnet","CHNU",NA,2015,0
+"80","Anderson Point",1,"NT","no_transect_no_data","NO_DATA",NA,2015,0
+"81","Anderson Point",1,"NT","pile perch","RHVA",NA,2015,0
+"82","Anderson Point",1,"NT","quillback rockfish","SEMA","small",2015,0
+"83","Anderson Point",1,"NT","rockfish","SEBSPP","large",2015,0
+"84","Anderson Point",1,"NT","rockfish","SEBSPP","small",2015,0
+"85","Anderson Point",1,"NT","sanddabs","CITH",NA,2015,0
+"86","Anderson Point",1,"NT","scalyhead sculpin","ARHA",NA,2015,0
+"87","Anderson Point",1,"NT","sculpin","COTT",NA,2015,0
+"88","Anderson Point",1,"NT","surfperch","EMBI",NA,2015,0
+"89","Anderson Point",1,"NT","unidentified fish","UNID",NA,2015,0
+"90","Anderson Point",1,"NT","whitespotted greenling","HEST",NA,2015,0
+"91","Anderson Point",1,"NT","yellowtail rockfish","SEFL","large",2015,0
+"92","Anderson Point",1,"NT","yellowtail rockfish","SEFL","small",2015,0
+"93","Anderson Point",1,"NT","yellowtail-black yoy","SEBYT","small",2015,0
+"94","Anderson Point",1,"NT",NA,"AMHE",NA,2015,0
+"95","Anderson Point",2,"KA","Black rockfish","SEME","large",2015,0
+"96","Anderson Point",2,"KA","Blackeye goby","RHNI",NA,2015,0
+"97","Anderson Point",2,"KA","Buffalo sculpin","ENBI",NA,2015,0
+"98","Anderson Point",2,"KA","Cabezon","SCMA",NA,2015,0
+"99","Anderson Point",2,"KA","Copper rockfish","SECA","large",2015,0
+"100","Anderson Point",2,"KA","Great sculpin","MYOP",NA,2015,0
+"101","Anderson Point",2,"KA","Kelp greenling","HEDE",NA,2015,1
+"102","Anderson Point",2,"KA","Lingcod","OPEL",NA,2015,0
+"103","Anderson Point",2,"KA","Painted greenling","OXPI",NA,2015,0
+"104","Anderson Point",2,"KA","Quillback rockfish","SEMA","large",2015,0
+"105","Anderson Point",2,"KA","Red Irish Lord","HEHE",NA,2015,0
+"106","Anderson Point",2,"KA","Rock greenling","HELA",NA,2015,0
+"107","Anderson Point",2,"KA","Striped seaperch","EMLA",NA,2015,0
+"108","Anderson Point",2,"KA","Tubesnout","AUFL",NA,2015,0
+"109","Anderson Point",2,"KA","YOY rockfish (black dorsal spots)","RYOY","small",2015,0
+"110","Anderson Point",2,"KA","bait-sardines-anchovy","BAITBALL",NA,2015,0
+"111","Anderson Point",2,"KA","black rockfish","SEME","small",2015,0
+"112","Anderson Point",2,"KA","blue rockfish","SEMY","large",2015,0
+"113","Anderson Point",2,"KA","blue rockfish","SEMY","small",2015,0
+"114","Anderson Point",2,"KA","c-o sole","PLCO",NA,2015,0
+"115","Anderson Point",2,"KA","canary rockfish","SEPI","large",2015,0
+"116","Anderson Point",2,"KA","canary rockfish","SEPI","small",2015,0
+"117","Anderson Point",2,"KA","china rockfish","SENE","large",2015,0
+"118","Anderson Point",2,"KA","china rockfish","SENE","small",2015,0
+"119","Anderson Point",2,"KA","copper rockfish","SECA","small",2015,0
+"120","Anderson Point",2,"KA","greenlings","HEXA",NA,2015,0
+"121","Anderson Point",2,"KA","gunnels","PHOL",NA,2015,0
+"122","Anderson Point",2,"KA","herring","CLUP",NA,2015,0
+"123","Anderson Point",2,"KA","kelp clingfish","RIMU",NA,2015,0
+"124","Anderson Point",2,"KA","longfin sculpin","JOZO",NA,2015,0
+"125","Anderson Point",2,"KA","manacled sculpin","SYGI",NA,2015,0
+"126","Anderson Point",2,"KA","mosshead warbonnet","CHNU",NA,2015,0
+"127","Anderson Point",2,"KA","no_transect_no_data","NO_DATA",NA,2015,0
+"128","Anderson Point",2,"KA","pile perch","RHVA",NA,2015,0
+"129","Anderson Point",2,"KA","quillback rockfish","SEMA","small",2015,0
+"130","Anderson Point",2,"KA","rockfish","SEBSPP","large",2015,0
+"131","Anderson Point",2,"KA","rockfish","SEBSPP","small",2015,0
+"132","Anderson Point",2,"KA","sanddabs","CITH",NA,2015,0
+"133","Anderson Point",2,"KA","scalyhead sculpin","ARHA",NA,2015,0
+"134","Anderson Point",2,"KA","sculpin","COTT",NA,2015,0
+"135","Anderson Point",2,"KA","surfperch","EMBI",NA,2015,0
+"136","Anderson Point",2,"KA","unidentified fish","UNID",NA,2015,0
+"137","Anderson Point",2,"KA","whitespotted greenling","HEST",NA,2015,0
+"138","Anderson Point",2,"KA","yellowtail rockfish","SEFL","large",2015,0
+"139","Anderson Point",2,"KA","yellowtail rockfish","SEFL","small",2015,0
+"140","Anderson Point",2,"KA","yellowtail-black yoy","SEBYT","small",2015,0
+"141","Anderson Point",2,"KA",NA,"AMHE",NA,2015,0
+"142","Anderson Point",2,"NT","Black rockfish","SEME","large",2015,0
+"143","Anderson Point",2,"NT","Blackeye goby","RHNI",NA,2015,0
+"144","Anderson Point",2,"NT","Buffalo sculpin","ENBI",NA,2015,0
+"145","Anderson Point",2,"NT","Cabezon","SCMA",NA,2015,0
+"146","Anderson Point",2,"NT","Copper rockfish","SECA","large",2015,0
+"147","Anderson Point",2,"NT","Great sculpin","MYOP",NA,2015,0
+"148","Anderson Point",2,"NT","Kelp greenling","HEDE",NA,2015,1
+"149","Anderson Point",2,"NT","Lingcod","OPEL",NA,2015,0
+"150","Anderson Point",2,"NT","Painted greenling","OXPI",NA,2015,0
+"151","Anderson Point",2,"NT","Quillback rockfish","SEMA","large",2015,0
+"152","Anderson Point",2,"NT","Red Irish Lord","HEHE",NA,2015,0
+"153","Anderson Point",2,"NT","Rock greenling","HELA",NA,2015,0
+"154","Anderson Point",2,"NT","Striped seaperch","EMLA",NA,2015,0
+"155","Anderson Point",2,"NT","Tubesnout","AUFL",NA,2015,0
+"156","Anderson Point",2,"NT","YOY rockfish (black dorsal spots)","RYOY","small",2015,0
+"157","Anderson Point",2,"NT","bait-sardines-anchovy","BAITBALL",NA,2015,0
+"158","Anderson Point",2,"NT","black rockfish","SEME","small",2015,0
+"159","Anderson Point",2,"NT","blue rockfish","SEMY","large",2015,0
+"160","Anderson Point",2,"NT","blue rockfish","SEMY","small",2015,0
+"161","Anderson Point",2,"NT","c-o sole","PLCO",NA,2015,0
+"162","Anderson Point",2,"NT","canary rockfish","SEPI","large",2015,0
+"163","Anderson Point",2,"NT","canary rockfish","SEPI","small",2015,0
+"164","Anderson Point",2,"NT","china rockfish","SENE","large",2015,0
+"165","Anderson Point",2,"NT","china rockfish","SENE","small",2015,0
+"166","Anderson Point",2,"NT","copper rockfish","SECA","small",2015,0
+"167","Anderson Point",2,"NT","greenlings","HEXA",NA,2015,0
+"168","Anderson Point",2,"NT","gunnels","PHOL",NA,2015,0
+"169","Anderson Point",2,"NT","herring","CLUP",NA,2015,0
+"170","Anderson Point",2,"NT","kelp clingfish","RIMU",NA,2015,0
+"171","Anderson Point",2,"NT","longfin sculpin","JOZO",NA,2015,0
+"172","Anderson Point",2,"NT","manacled sculpin","SYGI",NA,2015,0
+"173","Anderson Point",2,"NT","mosshead warbonnet","CHNU",NA,2015,0
+"174","Anderson Point",2,"NT","no_transect_no_data","NO_DATA",NA,2015,0
+"175","Anderson Point",2,"NT","pile perch","RHVA",NA,2015,0
+"176","Anderson Point",2,"NT","quillback rockfish","SEMA","small",2015,0
+"177","Anderson Point",2,"NT","rockfish","SEBSPP","large",2015,0
+"178","Anderson Point",2,"NT","rockfish","SEBSPP","small",2015,0
+"179","Anderson Point",2,"NT","sanddabs","CITH",NA,2015,0
+"180","Anderson Point",2,"NT","scalyhead sculpin","ARHA",NA,2015,0
+"181","Anderson Point",2,"NT","sculpin","COTT",NA,2015,0
+"182","Anderson Point",2,"NT","surfperch","EMBI",NA,2015,0
+"183","Anderson Point",2,"NT","unidentified fish","UNID",NA,2015,0
+"184","Anderson Point",2,"NT","whitespotted greenling","HEST",NA,2015,0
+"185","Anderson Point",2,"NT","yellowtail rockfish","SEFL","large",2015,0
+"186","Anderson Point",2,"NT","yellowtail rockfish","SEFL","small",2015,0
+"187","Anderson Point",2,"NT","yellowtail-black yoy","SEBYT","small",2015,0
+"188","Anderson Point",2,"NT",NA,"AMHE",NA,2015,0
+"189","Cape Alava",1,"JS","Black rockfish","SEME","large",2015,1
+"190","Cape Alava",1,"JS","Blackeye goby","RHNI",NA,2015,0
+"191","Cape Alava",1,"JS","Buffalo sculpin","ENBI",NA,2015,0
+"192","Cape Alava",1,"JS","Cabezon","SCMA",NA,2015,0
+"193","Cape Alava",1,"JS","Copper rockfish","SECA","large",2015,0
+"194","Cape Alava",1,"JS","Great sculpin","MYOP",NA,2015,0
+"195","Cape Alava",1,"JS","Kelp greenling","HEDE",NA,2015,1
+"196","Cape Alava",1,"JS","Lingcod","OPEL",NA,2015,0
+"197","Cape Alava",1,"JS","Painted greenling","OXPI",NA,2015,0
+"198","Cape Alava",1,"JS","Quillback rockfish","SEMA","large",2015,0
+"199","Cape Alava",1,"JS","Red Irish Lord","HEHE",NA,2015,0
+"200","Cape Alava",1,"JS","Rock greenling","HELA",NA,2015,1
+"201","Cape Alava",1,"JS","Striped seaperch","EMLA",NA,2015,0
+"202","Cape Alava",1,"JS","Tubesnout","AUFL",NA,2015,0
+"203","Cape Alava",1,"JS","YOY rockfish (black dorsal spots)","RYOY","small",2015,0
+"204","Cape Alava",1,"JS","bait-sardines-anchovy","BAITBALL",NA,2015,0
+"205","Cape Alava",1,"JS","black rockfish","SEME","small",2015,0
+"206","Cape Alava",1,"JS","blue rockfish","SEMY","large",2015,0
+"207","Cape Alava",1,"JS","blue rockfish","SEMY","small",2015,0
+"208","Cape Alava",1,"JS","c-o sole","PLCO",NA,2015,0
+"209","Cape Alava",1,"JS","canary rockfish","SEPI","large",2015,0
+"210","Cape Alava",1,"JS","canary rockfish","SEPI","small",2015,0
+"211","Cape Alava",1,"JS","china rockfish","SENE","large",2015,0
+"212","Cape Alava",1,"JS","china rockfish","SENE","small",2015,0
+"213","Cape Alava",1,"JS","copper rockfish","SECA","small",2015,0
+"214","Cape Alava",1,"JS","greenlings","HEXA",NA,2015,0
+"215","Cape Alava",1,"JS","gunnels","PHOL",NA,2015,0
+"216","Cape Alava",1,"JS","herring","CLUP",NA,2015,0
+"217","Cape Alava",1,"JS","kelp clingfish","RIMU",NA,2015,0
+"218","Cape Alava",1,"JS","longfin sculpin","JOZO",NA,2015,0
+"219","Cape Alava",1,"JS","manacled sculpin","SYGI",NA,2015,0
+"220","Cape Alava",1,"JS","mosshead warbonnet","CHNU",NA,2015,0
+"221","Cape Alava",1,"JS","no_transect_no_data","NO_DATA",NA,2015,0
+"222","Cape Alava",1,"JS","pile perch","RHVA",NA,2015,0
+"223","Cape Alava",1,"JS","quillback rockfish","SEMA","small",2015,0
+"224","Cape Alava",1,"JS","rockfish","SEBSPP","large",2015,0
+"225","Cape Alava",1,"JS","rockfish","SEBSPP","small",2015,0
+"226","Cape Alava",1,"JS","sanddabs","CITH",NA,2015,0
+"227","Cape Alava",1,"JS","scalyhead sculpin","ARHA",NA,2015,0
+"228","Cape Alava",1,"JS","sculpin","COTT",NA,2015,0
+"229","Cape Alava",1,"JS","surfperch","EMBI",NA,2015,1
+"230","Cape Alava",1,"JS","unidentified fish","UNID",NA,2015,0
+"231","Cape Alava",1,"JS","whitespotted greenling","HEST",NA,2015,0
+"232","Cape Alava",1,"JS","yellowtail rockfish","SEFL","large",2015,0
+"233","Cape Alava",1,"JS","yellowtail rockfish","SEFL","small",2015,0
+"234","Cape Alava",1,"JS","yellowtail-black yoy","SEBYT","small",2015,0
+"235","Cape Alava",1,"JS",NA,"AMHE",NA,2015,0
+"236","Cape Alava",1,"KF","Black rockfish","SEME","large",2015,0
+"237","Cape Alava",1,"KF","Blackeye goby","RHNI",NA,2015,0
+"238","Cape Alava",1,"KF","Buffalo sculpin","ENBI",NA,2015,0
+"239","Cape Alava",1,"KF","Cabezon","SCMA",NA,2015,0
+"240","Cape Alava",1,"KF","Copper rockfish","SECA","large",2015,0
+"241","Cape Alava",1,"KF","Great sculpin","MYOP",NA,2015,0
+"242","Cape Alava",1,"KF","Kelp greenling","HEDE",NA,2015,1
+"243","Cape Alava",1,"KF","Lingcod","OPEL",NA,2015,0
+"244","Cape Alava",1,"KF","Painted greenling","OXPI",NA,2015,0
+"245","Cape Alava",1,"KF","Quillback rockfish","SEMA","large",2015,0
+"246","Cape Alava",1,"KF","Red Irish Lord","HEHE",NA,2015,1
+"247","Cape Alava",1,"KF","Rock greenling","HELA",NA,2015,0
+"248","Cape Alava",1,"KF","Striped seaperch","EMLA",NA,2015,0
+"249","Cape Alava",1,"KF","Tubesnout","AUFL",NA,2015,0
+"250","Cape Alava",1,"KF","YOY rockfish (black dorsal spots)","RYOY","small",2015,0
+"251","Cape Alava",1,"KF","bait-sardines-anchovy","BAITBALL",NA,2015,0
+"252","Cape Alava",1,"KF","black rockfish","SEME","small",2015,0
+"253","Cape Alava",1,"KF","blue rockfish","SEMY","large",2015,0
+"254","Cape Alava",1,"KF","blue rockfish","SEMY","small",2015,0
+"255","Cape Alava",1,"KF","c-o sole","PLCO",NA,2015,0
+"256","Cape Alava",1,"KF","canary rockfish","SEPI","large",2015,0
+"257","Cape Alava",1,"KF","canary rockfish","SEPI","small",2015,0
+"258","Cape Alava",1,"KF","china rockfish","SENE","large",2015,0
+"259","Cape Alava",1,"KF","china rockfish","SENE","small",2015,0
+"260","Cape Alava",1,"KF","copper rockfish","SECA","small",2015,0
+"261","Cape Alava",1,"KF","greenlings","HEXA",NA,2015,0
+"262","Cape Alava",1,"KF","gunnels","PHOL",NA,2015,0
+"263","Cape Alava",1,"KF","herring","CLUP",NA,2015,0
+"264","Cape Alava",1,"KF","kelp clingfish","RIMU",NA,2015,0
+"265","Cape Alava",1,"KF","longfin sculpin","JOZO",NA,2015,0
+"266","Cape Alava",1,"KF","manacled sculpin","SYGI",NA,2015,0
+"267","Cape Alava",1,"KF","mosshead warbonnet","CHNU",NA,2015,0
+"268","Cape Alava",1,"KF","no_transect_no_data","NO_DATA",NA,2015,0
+"269","Cape Alava",1,"KF","pile perch","RHVA",NA,2015,0
+"270","Cape Alava",1,"KF","quillback rockfish","SEMA","small",2015,0
+"271","Cape Alava",1,"KF","rockfish","SEBSPP","large",2015,0
+"272","Cape Alava",1,"KF","rockfish","SEBSPP","small",2015,0
+"273","Cape Alava",1,"KF","sanddabs","CITH",NA,2015,0
+"274","Cape Alava",1,"KF","scalyhead sculpin","ARHA",NA,2015,0
+"275","Cape Alava",1,"KF","sculpin","COTT",NA,2015,0
+"276","Cape Alava",1,"KF","surfperch","EMBI",NA,2015,0
+"277","Cape Alava",1,"KF","unidentified fish","UNID",NA,2015,0
+"278","Cape Alava",1,"KF","whitespotted greenling","HEST",NA,2015,0
+"279","Cape Alava",1,"KF","yellowtail rockfish","SEFL","large",2015,0
+"280","Cape Alava",1,"KF","yellowtail rockfish","SEFL","small",2015,0
+"281","Cape Alava",1,"KF","yellowtail-black yoy","SEBYT","small",2015,0
+"282","Cape Alava",1,"KF",NA,"AMHE",NA,2015,0
+"283","Cape Alava",2,"JS","Black rockfish","SEME","large",2015,4
+"284","Cape Alava",2,"JS","Blackeye goby","RHNI",NA,2015,0
+"285","Cape Alava",2,"JS","Buffalo sculpin","ENBI",NA,2015,0
+"286","Cape Alava",2,"JS","Cabezon","SCMA",NA,2015,0
+"287","Cape Alava",2,"JS","Copper rockfish","SECA","large",2015,0
+"288","Cape Alava",2,"JS","Great sculpin","MYOP",NA,2015,0
+"289","Cape Alava",2,"JS","Kelp greenling","HEDE",NA,2015,0
+"290","Cape Alava",2,"JS","Lingcod","OPEL",NA,2015,0
+"291","Cape Alava",2,"JS","Painted greenling","OXPI",NA,2015,0
+"292","Cape Alava",2,"JS","Quillback rockfish","SEMA","large",2015,0
+"293","Cape Alava",2,"JS","Red Irish Lord","HEHE",NA,2015,0
+"294","Cape Alava",2,"JS","Rock greenling","HELA",NA,2015,0
+"295","Cape Alava",2,"JS","Striped seaperch","EMLA",NA,2015,0
+"296","Cape Alava",2,"JS","Tubesnout","AUFL",NA,2015,0
+"297","Cape Alava",2,"JS","YOY rockfish (black dorsal spots)","RYOY","small",2015,0
+"298","Cape Alava",2,"JS","bait-sardines-anchovy","BAITBALL",NA,2015,0
+"299","Cape Alava",2,"JS","black rockfish","SEME","small",2015,0
+"300","Cape Alava",2,"JS","blue rockfish","SEMY","large",2015,0
+"301","Cape Alava",2,"JS","blue rockfish","SEMY","small",2015,0
+"302","Cape Alava",2,"JS","c-o sole","PLCO",NA,2015,0
+"303","Cape Alava",2,"JS","canary rockfish","SEPI","large",2015,0
+"304","Cape Alava",2,"JS","canary rockfish","SEPI","small",2015,0
+"305","Cape Alava",2,"JS","china rockfish","SENE","large",2015,0
+"306","Cape Alava",2,"JS","china rockfish","SENE","small",2015,0
+"307","Cape Alava",2,"JS","copper rockfish","SECA","small",2015,0
+"308","Cape Alava",2,"JS","greenlings","HEXA",NA,2015,0
+"309","Cape Alava",2,"JS","gunnels","PHOL",NA,2015,0
+"310","Cape Alava",2,"JS","herring","CLUP",NA,2015,0
+"311","Cape Alava",2,"JS","kelp clingfish","RIMU",NA,2015,0
+"312","Cape Alava",2,"JS","longfin sculpin","JOZO",NA,2015,0
+"313","Cape Alava",2,"JS","manacled sculpin","SYGI",NA,2015,0
+"314","Cape Alava",2,"JS","mosshead warbonnet","CHNU",NA,2015,0
+"315","Cape Alava",2,"JS","no_transect_no_data","NO_DATA",NA,2015,0
+"316","Cape Alava",2,"JS","pile perch","RHVA",NA,2015,0
+"317","Cape Alava",2,"JS","quillback rockfish","SEMA","small",2015,0
+"318","Cape Alava",2,"JS","rockfish","SEBSPP","large",2015,0
+"319","Cape Alava",2,"JS","rockfish","SEBSPP","small",2015,0
+"320","Cape Alava",2,"JS","sanddabs","CITH",NA,2015,0
+"321","Cape Alava",2,"JS","scalyhead sculpin","ARHA",NA,2015,0
+"322","Cape Alava",2,"JS","sculpin","COTT",NA,2015,0
+"323","Cape Alava",2,"JS","surfperch","EMBI",NA,2015,0
+"324","Cape Alava",2,"JS","unidentified fish","UNID",NA,2015,0
+"325","Cape Alava",2,"JS","whitespotted greenling","HEST",NA,2015,0
+"326","Cape Alava",2,"JS","yellowtail rockfish","SEFL","large",2015,0
+"327","Cape Alava",2,"JS","yellowtail rockfish","SEFL","small",2015,0
+"328","Cape Alava",2,"JS","yellowtail-black yoy","SEBYT","small",2015,0
+"329","Cape Alava",2,"JS",NA,"AMHE",NA,2015,0
+"330","Cape Alava",2,"NT","Black rockfish","SEME","large",2015,30
+"331","Cape Alava",2,"NT","Blackeye goby","RHNI",NA,2015,0
+"332","Cape Alava",2,"NT","Buffalo sculpin","ENBI",NA,2015,0
+"333","Cape Alava",2,"NT","Cabezon","SCMA",NA,2015,0
+"334","Cape Alava",2,"NT","Copper rockfish","SECA","large",2015,0
+"335","Cape Alava",2,"NT","Great sculpin","MYOP",NA,2015,0
+"336","Cape Alava",2,"NT","Kelp greenling","HEDE",NA,2015,1
+"337","Cape Alava",2,"NT","Lingcod","OPEL",NA,2015,0
+"338","Cape Alava",2,"NT","Painted greenling","OXPI",NA,2015,0
+"339","Cape Alava",2,"NT","Quillback rockfish","SEMA","large",2015,0
+"340","Cape Alava",2,"NT","Red Irish Lord","HEHE",NA,2015,1
+"341","Cape Alava",2,"NT","Rock greenling","HELA",NA,2015,0
+"342","Cape Alava",2,"NT","Striped seaperch","EMLA",NA,2015,0
+"343","Cape Alava",2,"NT","Tubesnout","AUFL",NA,2015,0
+"344","Cape Alava",2,"NT","YOY rockfish (black dorsal spots)","RYOY","small",2015,0
+"345","Cape Alava",2,"NT","bait-sardines-anchovy","BAITBALL",NA,2015,0
+"346","Cape Alava",2,"NT","black rockfish","SEME","small",2015,0
+"347","Cape Alava",2,"NT","blue rockfish","SEMY","large",2015,0
+"348","Cape Alava",2,"NT","blue rockfish","SEMY","small",2015,0
+"349","Cape Alava",2,"NT","c-o sole","PLCO",NA,2015,0
+"350","Cape Alava",2,"NT","canary rockfish","SEPI","large",2015,0
+"351","Cape Alava",2,"NT","canary rockfish","SEPI","small",2015,0
+"352","Cape Alava",2,"NT","china rockfish","SENE","large",2015,0
+"353","Cape Alava",2,"NT","china rockfish","SENE","small",2015,0
+"354","Cape Alava",2,"NT","copper rockfish","SECA","small",2015,0
+"355","Cape Alava",2,"NT","greenlings","HEXA",NA,2015,0
+"356","Cape Alava",2,"NT","gunnels","PHOL",NA,2015,0
+"357","Cape Alava",2,"NT","herring","CLUP",NA,2015,0
+"358","Cape Alava",2,"NT","kelp clingfish","RIMU",NA,2015,0
+"359","Cape Alava",2,"NT","longfin sculpin","JOZO",NA,2015,0
+"360","Cape Alava",2,"NT","manacled sculpin","SYGI",NA,2015,0
+"361","Cape Alava",2,"NT","mosshead warbonnet","CHNU",NA,2015,0
+"362","Cape Alava",2,"NT","no_transect_no_data","NO_DATA",NA,2015,0
+"363","Cape Alava",2,"NT","pile perch","RHVA",NA,2015,0
+"364","Cape Alava",2,"NT","quillback rockfish","SEMA","small",2015,0
+"365","Cape Alava",2,"NT","rockfish","SEBSPP","large",2015,0
+"366","Cape Alava",2,"NT","rockfish","SEBSPP","small",2015,0
+"367","Cape Alava",2,"NT","sanddabs","CITH",NA,2015,0
+"368","Cape Alava",2,"NT","scalyhead sculpin","ARHA",NA,2015,0
+"369","Cape Alava",2,"NT","sculpin","COTT",NA,2015,0
+"370","Cape Alava",2,"NT","surfperch","EMBI",NA,2015,2
+"371","Cape Alava",2,"NT","unidentified fish","UNID",NA,2015,0
+"372","Cape Alava",2,"NT","whitespotted greenling","HEST",NA,2015,0
+"373","Cape Alava",2,"NT","yellowtail rockfish","SEFL","large",2015,0
+"374","Cape Alava",2,"NT","yellowtail rockfish","SEFL","small",2015,0
+"375","Cape Alava",2,"NT","yellowtail-black yoy","SEBYT","small",2015,0
+"376","Cape Alava",2,"NT",NA,"AMHE",NA,2015,0
+"377","Cape Johnson",1,"JS","Black rockfish","SEME","large",2015,0
+"378","Cape Johnson",1,"JS","Blackeye goby","RHNI",NA,2015,0
+"379","Cape Johnson",1,"JS","Buffalo sculpin","ENBI",NA,2015,0
+"380","Cape Johnson",1,"JS","Cabezon","SCMA",NA,2015,0
+"381","Cape Johnson",1,"JS","Copper rockfish","SECA","large",2015,0
+"382","Cape Johnson",1,"JS","Great sculpin","MYOP",NA,2015,0
+"383","Cape Johnson",1,"JS","Kelp greenling","HEDE",NA,2015,0
+"384","Cape Johnson",1,"JS","Lingcod","OPEL",NA,2015,0
+"385","Cape Johnson",1,"JS","Painted greenling","OXPI",NA,2015,0
+"386","Cape Johnson",1,"JS","Quillback rockfish","SEMA","large",2015,0
+"387","Cape Johnson",1,"JS","Red Irish Lord","HEHE",NA,2015,0
+"388","Cape Johnson",1,"JS","Rock greenling","HELA",NA,2015,0
+"389","Cape Johnson",1,"JS","Striped seaperch","EMLA",NA,2015,0
+"390","Cape Johnson",1,"JS","Tubesnout","AUFL",NA,2015,0
+"391","Cape Johnson",1,"JS","YOY rockfish (black dorsal spots)","RYOY","small",2015,0
+"392","Cape Johnson",1,"JS","bait-sardines-anchovy","BAITBALL",NA,2015,0
+"393","Cape Johnson",1,"JS","black rockfish","SEME","small",2015,0
+"394","Cape Johnson",1,"JS","blue rockfish","SEMY","large",2015,0
+"395","Cape Johnson",1,"JS","blue rockfish","SEMY","small",2015,0
+"396","Cape Johnson",1,"JS","c-o sole","PLCO",NA,2015,0
+"397","Cape Johnson",1,"JS","canary rockfish","SEPI","large",2015,0
+"398","Cape Johnson",1,"JS","canary rockfish","SEPI","small",2015,0
+"399","Cape Johnson",1,"JS","china rockfish","SENE","large",2015,0
+"400","Cape Johnson",1,"JS","china rockfish","SENE","small",2015,0
+"401","Cape Johnson",1,"JS","copper rockfish","SECA","small",2015,0
+"402","Cape Johnson",1,"JS","greenlings","HEXA",NA,2015,0
+"403","Cape Johnson",1,"JS","gunnels","PHOL",NA,2015,0
+"404","Cape Johnson",1,"JS","herring","CLUP",NA,2015,0
+"405","Cape Johnson",1,"JS","kelp clingfish","RIMU",NA,2015,0
+"406","Cape Johnson",1,"JS","longfin sculpin","JOZO",NA,2015,0
+"407","Cape Johnson",1,"JS","manacled sculpin","SYGI",NA,2015,0
+"408","Cape Johnson",1,"JS","mosshead warbonnet","CHNU",NA,2015,0
+"409","Cape Johnson",1,"JS","no_transect_no_data","NO_DATA",NA,2015,0
+"410","Cape Johnson",1,"JS","pile perch","RHVA",NA,2015,0
+"411","Cape Johnson",1,"JS","quillback rockfish","SEMA","small",2015,0
+"412","Cape Johnson",1,"JS","rockfish","SEBSPP","large",2015,0
+"413","Cape Johnson",1,"JS","rockfish","SEBSPP","small",2015,0
+"414","Cape Johnson",1,"JS","sanddabs","CITH",NA,2015,0
+"415","Cape Johnson",1,"JS","scalyhead sculpin","ARHA",NA,2015,0
+"416","Cape Johnson",1,"JS","sculpin","COTT",NA,2015,0
+"417","Cape Johnson",1,"JS","surfperch","EMBI",NA,2015,0
+"418","Cape Johnson",1,"JS","unidentified fish","UNID",NA,2015,0
+"419","Cape Johnson",1,"JS","whitespotted greenling","HEST",NA,2015,0
+"420","Cape Johnson",1,"JS","yellowtail rockfish","SEFL","large",2015,0
+"421","Cape Johnson",1,"JS","yellowtail rockfish","SEFL","small",2015,0
+"422","Cape Johnson",1,"JS","yellowtail-black yoy","SEBYT","small",2015,0
+"423","Cape Johnson",1,"JS",NA,"AMHE",NA,2015,0
+"424","Cape Johnson",1,"NT","Black rockfish","SEME","large",2015,0
+"425","Cape Johnson",1,"NT","Blackeye goby","RHNI",NA,2015,0
+"426","Cape Johnson",1,"NT","Buffalo sculpin","ENBI",NA,2015,0
+"427","Cape Johnson",1,"NT","Cabezon","SCMA",NA,2015,0
+"428","Cape Johnson",1,"NT","Copper rockfish","SECA","large",2015,0
+"429","Cape Johnson",1,"NT","Great sculpin","MYOP",NA,2015,0
+"430","Cape Johnson",1,"NT","Kelp greenling","HEDE",NA,2015,0
+"431","Cape Johnson",1,"NT","Lingcod","OPEL",NA,2015,0
+"432","Cape Johnson",1,"NT","Painted greenling","OXPI",NA,2015,0
+"433","Cape Johnson",1,"NT","Quillback rockfish","SEMA","large",2015,0
+"434","Cape Johnson",1,"NT","Red Irish Lord","HEHE",NA,2015,0
+"435","Cape Johnson",1,"NT","Rock greenling","HELA",NA,2015,0
+"436","Cape Johnson",1,"NT","Striped seaperch","EMLA",NA,2015,0
+"437","Cape Johnson",1,"NT","Tubesnout","AUFL",NA,2015,0
+"438","Cape Johnson",1,"NT","YOY rockfish (black dorsal spots)","RYOY","small",2015,0
+"439","Cape Johnson",1,"NT","bait-sardines-anchovy","BAITBALL",NA,2015,0
+"440","Cape Johnson",1,"NT","black rockfish","SEME","small",2015,0
+"441","Cape Johnson",1,"NT","blue rockfish","SEMY","large",2015,0
+"442","Cape Johnson",1,"NT","blue rockfish","SEMY","small",2015,0
+"443","Cape Johnson",1,"NT","c-o sole","PLCO",NA,2015,0
+"444","Cape Johnson",1,"NT","canary rockfish","SEPI","large",2015,0
+"445","Cape Johnson",1,"NT","canary rockfish","SEPI","small",2015,0
+"446","Cape Johnson",1,"NT","china rockfish","SENE","large",2015,0
+"447","Cape Johnson",1,"NT","china rockfish","SENE","small",2015,0
+"448","Cape Johnson",1,"NT","copper rockfish","SECA","small",2015,0
+"449","Cape Johnson",1,"NT","greenlings","HEXA",NA,2015,0
+"450","Cape Johnson",1,"NT","gunnels","PHOL",NA,2015,0
+"451","Cape Johnson",1,"NT","herring","CLUP",NA,2015,0
+"452","Cape Johnson",1,"NT","kelp clingfish","RIMU",NA,2015,0
+"453","Cape Johnson",1,"NT","longfin sculpin","JOZO",NA,2015,0
+"454","Cape Johnson",1,"NT","manacled sculpin","SYGI",NA,2015,0
+"455","Cape Johnson",1,"NT","mosshead warbonnet","CHNU",NA,2015,0
+"456","Cape Johnson",1,"NT","no_transect_no_data","NO_DATA",NA,2015,0
+"457","Cape Johnson",1,"NT","pile perch","RHVA",NA,2015,0
+"458","Cape Johnson",1,"NT","quillback rockfish","SEMA","small",2015,0
+"459","Cape Johnson",1,"NT","rockfish","SEBSPP","large",2015,0
+"460","Cape Johnson",1,"NT","rockfish","SEBSPP","small",2015,0
+"461","Cape Johnson",1,"NT","sanddabs","CITH",NA,2015,0
+"462","Cape Johnson",1,"NT","scalyhead sculpin","ARHA",NA,2015,0
+"463","Cape Johnson",1,"NT","sculpin","COTT",NA,2015,0
+"464","Cape Johnson",1,"NT","surfperch","EMBI",NA,2015,0
+"465","Cape Johnson",1,"NT","unidentified fish","UNID",NA,2015,0
+"466","Cape Johnson",1,"NT","whitespotted greenling","HEST",NA,2015,0
+"467","Cape Johnson",1,"NT","yellowtail rockfish","SEFL","large",2015,0
+"468","Cape Johnson",1,"NT","yellowtail rockfish","SEFL","small",2015,0
+"469","Cape Johnson",1,"NT","yellowtail-black yoy","SEBYT","small",2015,0
+"470","Cape Johnson",1,"NT",NA,"AMHE",NA,2015,0
+"471","Cape Johnson",2,"JS","Black rockfish","SEME","large",2015,0
+"472","Cape Johnson",2,"JS","Blackeye goby","RHNI",NA,2015,0
+"473","Cape Johnson",2,"JS","Buffalo sculpin","ENBI",NA,2015,0
+"474","Cape Johnson",2,"JS","Cabezon","SCMA",NA,2015,0
+"475","Cape Johnson",2,"JS","Copper rockfish","SECA","large",2015,0
+"476","Cape Johnson",2,"JS","Great sculpin","MYOP",NA,2015,0
+"477","Cape Johnson",2,"JS","Kelp greenling","HEDE",NA,2015,0
+"478","Cape Johnson",2,"JS","Lingcod","OPEL",NA,2015,0
+"479","Cape Johnson",2,"JS","Painted greenling","OXPI",NA,2015,0
+"480","Cape Johnson",2,"JS","Quillback rockfish","SEMA","large",2015,0
+"481","Cape Johnson",2,"JS","Red Irish Lord","HEHE",NA,2015,0
+"482","Cape Johnson",2,"JS","Rock greenling","HELA",NA,2015,0
+"483","Cape Johnson",2,"JS","Striped seaperch","EMLA",NA,2015,0
+"484","Cape Johnson",2,"JS","Tubesnout","AUFL",NA,2015,0
+"485","Cape Johnson",2,"JS","YOY rockfish (black dorsal spots)","RYOY","small",2015,0
+"486","Cape Johnson",2,"JS","bait-sardines-anchovy","BAITBALL",NA,2015,0
+"487","Cape Johnson",2,"JS","black rockfish","SEME","small",2015,0
+"488","Cape Johnson",2,"JS","blue rockfish","SEMY","large",2015,0
+"489","Cape Johnson",2,"JS","blue rockfish","SEMY","small",2015,0
+"490","Cape Johnson",2,"JS","c-o sole","PLCO",NA,2015,0
+"491","Cape Johnson",2,"JS","canary rockfish","SEPI","large",2015,0
+"492","Cape Johnson",2,"JS","canary rockfish","SEPI","small",2015,0
+"493","Cape Johnson",2,"JS","china rockfish","SENE","large",2015,0
+"494","Cape Johnson",2,"JS","china rockfish","SENE","small",2015,0
+"495","Cape Johnson",2,"JS","copper rockfish","SECA","small",2015,0
+"496","Cape Johnson",2,"JS","greenlings","HEXA",NA,2015,0
+"497","Cape Johnson",2,"JS","gunnels","PHOL",NA,2015,0
+"498","Cape Johnson",2,"JS","herring","CLUP",NA,2015,0
+"499","Cape Johnson",2,"JS","kelp clingfish","RIMU",NA,2015,0
+"500","Cape Johnson",2,"JS","longfin sculpin","JOZO",NA,2015,0
+"501","Cape Johnson",2,"JS","manacled sculpin","SYGI",NA,2015,0
+"502","Cape Johnson",2,"JS","mosshead warbonnet","CHNU",NA,2015,0
+"503","Cape Johnson",2,"JS","no_transect_no_data","NO_DATA",NA,2015,0
+"504","Cape Johnson",2,"JS","pile perch","RHVA",NA,2015,0
+"505","Cape Johnson",2,"JS","quillback rockfish","SEMA","small",2015,0
+"506","Cape Johnson",2,"JS","rockfish","SEBSPP","large",2015,0
+"507","Cape Johnson",2,"JS","rockfish","SEBSPP","small",2015,0
+"508","Cape Johnson",2,"JS","sanddabs","CITH",NA,2015,0
+"509","Cape Johnson",2,"JS","scalyhead sculpin","ARHA",NA,2015,0
+"510","Cape Johnson",2,"JS","sculpin","COTT",NA,2015,0
+"511","Cape Johnson",2,"JS","surfperch","EMBI",NA,2015,0
+"512","Cape Johnson",2,"JS","unidentified fish","UNID",NA,2015,0
+"513","Cape Johnson",2,"JS","whitespotted greenling","HEST",NA,2015,0
+"514","Cape Johnson",2,"JS","yellowtail rockfish","SEFL","large",2015,0
+"515","Cape Johnson",2,"JS","yellowtail rockfish","SEFL","small",2015,0
+"516","Cape Johnson",2,"JS","yellowtail-black yoy","SEBYT","small",2015,0
+"517","Cape Johnson",2,"JS",NA,"AMHE",NA,2015,0
+"518","Cape Johnson",2,"NT","Black rockfish","SEME","large",2015,0
+"519","Cape Johnson",2,"NT","Blackeye goby","RHNI",NA,2015,0
+"520","Cape Johnson",2,"NT","Buffalo sculpin","ENBI",NA,2015,0
+"521","Cape Johnson",2,"NT","Cabezon","SCMA",NA,2015,0
+"522","Cape Johnson",2,"NT","Copper rockfish","SECA","large",2015,0
+"523","Cape Johnson",2,"NT","Great sculpin","MYOP",NA,2015,0
+"524","Cape Johnson",2,"NT","Kelp greenling","HEDE",NA,2015,0
+"525","Cape Johnson",2,"NT","Lingcod","OPEL",NA,2015,0
+"526","Cape Johnson",2,"NT","Painted greenling","OXPI",NA,2015,0
+"527","Cape Johnson",2,"NT","Quillback rockfish","SEMA","large",2015,0
+"528","Cape Johnson",2,"NT","Red Irish Lord","HEHE",NA,2015,0
+"529","Cape Johnson",2,"NT","Rock greenling","HELA",NA,2015,0
+"530","Cape Johnson",2,"NT","Striped seaperch","EMLA",NA,2015,0
+"531","Cape Johnson",2,"NT","Tubesnout","AUFL",NA,2015,0
+"532","Cape Johnson",2,"NT","YOY rockfish (black dorsal spots)","RYOY","small",2015,0
+"533","Cape Johnson",2,"NT","bait-sardines-anchovy","BAITBALL",NA,2015,0
+"534","Cape Johnson",2,"NT","black rockfish","SEME","small",2015,0
+"535","Cape Johnson",2,"NT","blue rockfish","SEMY","large",2015,0
+"536","Cape Johnson",2,"NT","blue rockfish","SEMY","small",2015,0
+"537","Cape Johnson",2,"NT","c-o sole","PLCO",NA,2015,0
+"538","Cape Johnson",2,"NT","canary rockfish","SEPI","large",2015,0
+"539","Cape Johnson",2,"NT","canary rockfish","SEPI","small",2015,0
+"540","Cape Johnson",2,"NT","china rockfish","SENE","large",2015,0
+"541","Cape Johnson",2,"NT","china rockfish","SENE","small",2015,0
+"542","Cape Johnson",2,"NT","copper rockfish","SECA","small",2015,0
+"543","Cape Johnson",2,"NT","greenlings","HEXA",NA,2015,0
+"544","Cape Johnson",2,"NT","gunnels","PHOL",NA,2015,0
+"545","Cape Johnson",2,"NT","herring","CLUP",NA,2015,0
+"546","Cape Johnson",2,"NT","kelp clingfish","RIMU",NA,2015,0
+"547","Cape Johnson",2,"NT","longfin sculpin","JOZO",NA,2015,0
+"548","Cape Johnson",2,"NT","manacled sculpin","SYGI",NA,2015,0
+"549","Cape Johnson",2,"NT","mosshead warbonnet","CHNU",NA,2015,0
+"550","Cape Johnson",2,"NT","no_transect_no_data","NO_DATA",NA,2015,0
+"551","Cape Johnson",2,"NT","pile perch","RHVA",NA,2015,0
+"552","Cape Johnson",2,"NT","quillback rockfish","SEMA","small",2015,0
+"553","Cape Johnson",2,"NT","rockfish","SEBSPP","large",2015,0
+"554","Cape Johnson",2,"NT","rockfish","SEBSPP","small",2015,0
+"555","Cape Johnson",2,"NT","sanddabs","CITH",NA,2015,0
+"556","Cape Johnson",2,"NT","scalyhead sculpin","ARHA",NA,2015,0
+"557","Cape Johnson",2,"NT","sculpin","COTT",NA,2015,0
+"558","Cape Johnson",2,"NT","surfperch","EMBI",NA,2015,0
+"559","Cape Johnson",2,"NT","unidentified fish","UNID",NA,2015,0
+"560","Cape Johnson",2,"NT","whitespotted greenling","HEST",NA,2015,0
+"561","Cape Johnson",2,"NT","yellowtail rockfish","SEFL","large",2015,0
+"562","Cape Johnson",2,"NT","yellowtail rockfish","SEFL","small",2015,0
+"563","Cape Johnson",2,"NT","yellowtail-black yoy","SEBYT","small",2015,0
+"564","Cape Johnson",2,"NT",NA,"AMHE",NA,2015,0
+"565","Chibadehl Rocks",1,"KA","Black rockfish","SEME","large",2015,0
+"566","Chibadehl Rocks",1,"KA","Blackeye goby","RHNI",NA,2015,0
+"567","Chibadehl Rocks",1,"KA","Buffalo sculpin","ENBI",NA,2015,0
+"568","Chibadehl Rocks",1,"KA","Cabezon","SCMA",NA,2015,0
+"569","Chibadehl Rocks",1,"KA","Copper rockfish","SECA","large",2015,0
+"570","Chibadehl Rocks",1,"KA","Great sculpin","MYOP",NA,2015,0
+"571","Chibadehl Rocks",1,"KA","Kelp greenling","HEDE",NA,2015,0
+"572","Chibadehl Rocks",1,"KA","Lingcod","OPEL",NA,2015,0
+"573","Chibadehl Rocks",1,"KA","Painted greenling","OXPI",NA,2015,0
+"574","Chibadehl Rocks",1,"KA","Quillback rockfish","SEMA","large",2015,0
+"575","Chibadehl Rocks",1,"KA","Red Irish Lord","HEHE",NA,2015,0
+"576","Chibadehl Rocks",1,"KA","Rock greenling","HELA",NA,2015,0
+"577","Chibadehl Rocks",1,"KA","Striped seaperch","EMLA",NA,2015,3
+"578","Chibadehl Rocks",1,"KA","Tubesnout","AUFL",NA,2015,0
+"579","Chibadehl Rocks",1,"KA","YOY rockfish (black dorsal spots)","RYOY","small",2015,0
+"580","Chibadehl Rocks",1,"KA","bait-sardines-anchovy","BAITBALL",NA,2015,0
+"581","Chibadehl Rocks",1,"KA","black rockfish","SEME","small",2015,0
+"582","Chibadehl Rocks",1,"KA","blue rockfish","SEMY","large",2015,0
+"583","Chibadehl Rocks",1,"KA","blue rockfish","SEMY","small",2015,0
+"584","Chibadehl Rocks",1,"KA","c-o sole","PLCO",NA,2015,0
+"585","Chibadehl Rocks",1,"KA","canary rockfish","SEPI","large",2015,0
+"586","Chibadehl Rocks",1,"KA","canary rockfish","SEPI","small",2015,0
+"587","Chibadehl Rocks",1,"KA","china rockfish","SENE","large",2015,0
+"588","Chibadehl Rocks",1,"KA","china rockfish","SENE","small",2015,0
+"589","Chibadehl Rocks",1,"KA","copper rockfish","SECA","small",2015,0
+"590","Chibadehl Rocks",1,"KA","greenlings","HEXA",NA,2015,0
+"591","Chibadehl Rocks",1,"KA","gunnels","PHOL",NA,2015,0
+"592","Chibadehl Rocks",1,"KA","herring","CLUP",NA,2015,0
+"593","Chibadehl Rocks",1,"KA","kelp clingfish","RIMU",NA,2015,0
+"594","Chibadehl Rocks",1,"KA","longfin sculpin","JOZO",NA,2015,0
+"595","Chibadehl Rocks",1,"KA","manacled sculpin","SYGI",NA,2015,0
+"596","Chibadehl Rocks",1,"KA","mosshead warbonnet","CHNU",NA,2015,0
+"597","Chibadehl Rocks",1,"KA","no_transect_no_data","NO_DATA",NA,2015,0
+"598","Chibadehl Rocks",1,"KA","pile perch","RHVA",NA,2015,0
+"599","Chibadehl Rocks",1,"KA","quillback rockfish","SEMA","small",2015,0
+"600","Chibadehl Rocks",1,"KA","rockfish","SEBSPP","large",2015,0
+"601","Chibadehl Rocks",1,"KA","rockfish","SEBSPP","small",2015,0
+"602","Chibadehl Rocks",1,"KA","sanddabs","CITH",NA,2015,0
+"603","Chibadehl Rocks",1,"KA","scalyhead sculpin","ARHA",NA,2015,0
+"604","Chibadehl Rocks",1,"KA","sculpin","COTT",NA,2015,0
+"605","Chibadehl Rocks",1,"KA","surfperch","EMBI",NA,2015,0
+"606","Chibadehl Rocks",1,"KA","unidentified fish","UNID",NA,2015,0
+"607","Chibadehl Rocks",1,"KA","whitespotted greenling","HEST",NA,2015,0
+"608","Chibadehl Rocks",1,"KA","yellowtail rockfish","SEFL","large",2015,0
+"609","Chibadehl Rocks",1,"KA","yellowtail rockfish","SEFL","small",2015,0
+"610","Chibadehl Rocks",1,"KA","yellowtail-black yoy","SEBYT","small",2015,0
+"611","Chibadehl Rocks",1,"KA",NA,"AMHE",NA,2015,0
+"612","Chibadehl Rocks",1,"NT","Black rockfish","SEME","large",2015,2
+"613","Chibadehl Rocks",1,"NT","Blackeye goby","RHNI",NA,2015,0
+"614","Chibadehl Rocks",1,"NT","Buffalo sculpin","ENBI",NA,2015,0
+"615","Chibadehl Rocks",1,"NT","Cabezon","SCMA",NA,2015,0
+"616","Chibadehl Rocks",1,"NT","Copper rockfish","SECA","large",2015,0
+"617","Chibadehl Rocks",1,"NT","Great sculpin","MYOP",NA,2015,0
+"618","Chibadehl Rocks",1,"NT","Kelp greenling","HEDE",NA,2015,0
+"619","Chibadehl Rocks",1,"NT","Lingcod","OPEL",NA,2015,0
+"620","Chibadehl Rocks",1,"NT","Painted greenling","OXPI",NA,2015,0
+"621","Chibadehl Rocks",1,"NT","Quillback rockfish","SEMA","large",2015,0
+"622","Chibadehl Rocks",1,"NT","Red Irish Lord","HEHE",NA,2015,0
+"623","Chibadehl Rocks",1,"NT","Rock greenling","HELA",NA,2015,0
+"624","Chibadehl Rocks",1,"NT","Striped seaperch","EMLA",NA,2015,0
+"625","Chibadehl Rocks",1,"NT","Tubesnout","AUFL",NA,2015,0
+"626","Chibadehl Rocks",1,"NT","YOY rockfish (black dorsal spots)","RYOY","small",2015,0
+"627","Chibadehl Rocks",1,"NT","bait-sardines-anchovy","BAITBALL",NA,2015,0
+"628","Chibadehl Rocks",1,"NT","black rockfish","SEME","small",2015,0
+"629","Chibadehl Rocks",1,"NT","blue rockfish","SEMY","large",2015,0
+"630","Chibadehl Rocks",1,"NT","blue rockfish","SEMY","small",2015,0
+"631","Chibadehl Rocks",1,"NT","c-o sole","PLCO",NA,2015,0
+"632","Chibadehl Rocks",1,"NT","canary rockfish","SEPI","large",2015,0
+"633","Chibadehl Rocks",1,"NT","canary rockfish","SEPI","small",2015,0
+"634","Chibadehl Rocks",1,"NT","china rockfish","SENE","large",2015,0
+"635","Chibadehl Rocks",1,"NT","china rockfish","SENE","small",2015,0
+"636","Chibadehl Rocks",1,"NT","copper rockfish","SECA","small",2015,0
+"637","Chibadehl Rocks",1,"NT","greenlings","HEXA",NA,2015,0
+"638","Chibadehl Rocks",1,"NT","gunnels","PHOL",NA,2015,0
+"639","Chibadehl Rocks",1,"NT","herring","CLUP",NA,2015,0
+"640","Chibadehl Rocks",1,"NT","kelp clingfish","RIMU",NA,2015,0
+"641","Chibadehl Rocks",1,"NT","longfin sculpin","JOZO",NA,2015,0
+"642","Chibadehl Rocks",1,"NT","manacled sculpin","SYGI",NA,2015,0
+"643","Chibadehl Rocks",1,"NT","mosshead warbonnet","CHNU",NA,2015,0
+"644","Chibadehl Rocks",1,"NT","no_transect_no_data","NO_DATA",NA,2015,0
+"645","Chibadehl Rocks",1,"NT","pile perch","RHVA",NA,2015,0
+"646","Chibadehl Rocks",1,"NT","quillback rockfish","SEMA","small",2015,0
+"647","Chibadehl Rocks",1,"NT","rockfish","SEBSPP","large",2015,0
+"648","Chibadehl Rocks",1,"NT","rockfish","SEBSPP","small",2015,0
+"649","Chibadehl Rocks",1,"NT","sanddabs","CITH",NA,2015,0
+"650","Chibadehl Rocks",1,"NT","scalyhead sculpin","ARHA",NA,2015,0
+"651","Chibadehl Rocks",1,"NT","sculpin","COTT",NA,2015,0
+"652","Chibadehl Rocks",1,"NT","surfperch","EMBI",NA,2015,2
+"653","Chibadehl Rocks",1,"NT","unidentified fish","UNID",NA,2015,0
+"654","Chibadehl Rocks",1,"NT","whitespotted greenling","HEST",NA,2015,0
+"655","Chibadehl Rocks",1,"NT","yellowtail rockfish","SEFL","large",2015,0
+"656","Chibadehl Rocks",1,"NT","yellowtail rockfish","SEFL","small",2015,0
+"657","Chibadehl Rocks",1,"NT","yellowtail-black yoy","SEBYT","small",2015,0
+"658","Chibadehl Rocks",1,"NT",NA,"AMHE",NA,2015,0
+"659","Chibadehl Rocks",2,"KA","Black rockfish","SEME","large",2015,0
+"660","Chibadehl Rocks",2,"KA","Blackeye goby","RHNI",NA,2015,0
+"661","Chibadehl Rocks",2,"KA","Buffalo sculpin","ENBI",NA,2015,0
+"662","Chibadehl Rocks",2,"KA","Cabezon","SCMA",NA,2015,0
+"663","Chibadehl Rocks",2,"KA","Copper rockfish","SECA","large",2015,0
+"664","Chibadehl Rocks",2,"KA","Great sculpin","MYOP",NA,2015,0
+"665","Chibadehl Rocks",2,"KA","Kelp greenling","HEDE",NA,2015,0
+"666","Chibadehl Rocks",2,"KA","Lingcod","OPEL",NA,2015,0
+"667","Chibadehl Rocks",2,"KA","Painted greenling","OXPI",NA,2015,0
+"668","Chibadehl Rocks",2,"KA","Quillback rockfish","SEMA","large",2015,0
+"669","Chibadehl Rocks",2,"KA","Red Irish Lord","HEHE",NA,2015,0
+"670","Chibadehl Rocks",2,"KA","Rock greenling","HELA",NA,2015,0
+"671","Chibadehl Rocks",2,"KA","Striped seaperch","EMLA",NA,2015,0
+"672","Chibadehl Rocks",2,"KA","Tubesnout","AUFL",NA,2015,0
+"673","Chibadehl Rocks",2,"KA","YOY rockfish (black dorsal spots)","RYOY","small",2015,0
+"674","Chibadehl Rocks",2,"KA","bait-sardines-anchovy","BAITBALL",NA,2015,0
+"675","Chibadehl Rocks",2,"KA","black rockfish","SEME","small",2015,0
+"676","Chibadehl Rocks",2,"KA","blue rockfish","SEMY","large",2015,0
+"677","Chibadehl Rocks",2,"KA","blue rockfish","SEMY","small",2015,0
+"678","Chibadehl Rocks",2,"KA","c-o sole","PLCO",NA,2015,0
+"679","Chibadehl Rocks",2,"KA","canary rockfish","SEPI","large",2015,0
+"680","Chibadehl Rocks",2,"KA","canary rockfish","SEPI","small",2015,0
+"681","Chibadehl Rocks",2,"KA","china rockfish","SENE","large",2015,0
+"682","Chibadehl Rocks",2,"KA","china rockfish","SENE","small",2015,0
+"683","Chibadehl Rocks",2,"KA","copper rockfish","SECA","small",2015,0
+"684","Chibadehl Rocks",2,"KA","greenlings","HEXA",NA,2015,0
+"685","Chibadehl Rocks",2,"KA","gunnels","PHOL",NA,2015,0
+"686","Chibadehl Rocks",2,"KA","herring","CLUP",NA,2015,0
+"687","Chibadehl Rocks",2,"KA","kelp clingfish","RIMU",NA,2015,0
+"688","Chibadehl Rocks",2,"KA","longfin sculpin","JOZO",NA,2015,0
+"689","Chibadehl Rocks",2,"KA","manacled sculpin","SYGI",NA,2015,0
+"690","Chibadehl Rocks",2,"KA","mosshead warbonnet","CHNU",NA,2015,0
+"691","Chibadehl Rocks",2,"KA","no_transect_no_data","NO_DATA",NA,2015,0
+"692","Chibadehl Rocks",2,"KA","pile perch","RHVA",NA,2015,0
+"693","Chibadehl Rocks",2,"KA","quillback rockfish","SEMA","small",2015,0
+"694","Chibadehl Rocks",2,"KA","rockfish","SEBSPP","large",2015,0
+"695","Chibadehl Rocks",2,"KA","rockfish","SEBSPP","small",2015,0
+"696","Chibadehl Rocks",2,"KA","sanddabs","CITH",NA,2015,0
+"697","Chibadehl Rocks",2,"KA","scalyhead sculpin","ARHA",NA,2015,0
+"698","Chibadehl Rocks",2,"KA","sculpin","COTT",NA,2015,0
+"699","Chibadehl Rocks",2,"KA","surfperch","EMBI",NA,2015,0
+"700","Chibadehl Rocks",2,"KA","unidentified fish","UNID",NA,2015,0
+"701","Chibadehl Rocks",2,"KA","whitespotted greenling","HEST",NA,2015,0
+"702","Chibadehl Rocks",2,"KA","yellowtail rockfish","SEFL","large",2015,0
+"703","Chibadehl Rocks",2,"KA","yellowtail rockfish","SEFL","small",2015,0
+"704","Chibadehl Rocks",2,"KA","yellowtail-black yoy","SEBYT","small",2015,0
+"705","Chibadehl Rocks",2,"KA",NA,"AMHE",NA,2015,0
+"706","Chibadehl Rocks",2,"NT","Black rockfish","SEME","large",2015,0
+"707","Chibadehl Rocks",2,"NT","Blackeye goby","RHNI",NA,2015,0
+"708","Chibadehl Rocks",2,"NT","Buffalo sculpin","ENBI",NA,2015,0
+"709","Chibadehl Rocks",2,"NT","Cabezon","SCMA",NA,2015,0
+"710","Chibadehl Rocks",2,"NT","Copper rockfish","SECA","large",2015,0
+"711","Chibadehl Rocks",2,"NT","Great sculpin","MYOP",NA,2015,0
+"712","Chibadehl Rocks",2,"NT","Kelp greenling","HEDE",NA,2015,0
+"713","Chibadehl Rocks",2,"NT","Lingcod","OPEL",NA,2015,0
+"714","Chibadehl Rocks",2,"NT","Painted greenling","OXPI",NA,2015,0
+"715","Chibadehl Rocks",2,"NT","Quillback rockfish","SEMA","large",2015,0
+"716","Chibadehl Rocks",2,"NT","Red Irish Lord","HEHE",NA,2015,0
+"717","Chibadehl Rocks",2,"NT","Rock greenling","HELA",NA,2015,0
+"718","Chibadehl Rocks",2,"NT","Striped seaperch","EMLA",NA,2015,0
+"719","Chibadehl Rocks",2,"NT","Tubesnout","AUFL",NA,2015,0
+"720","Chibadehl Rocks",2,"NT","YOY rockfish (black dorsal spots)","RYOY","small",2015,0
+"721","Chibadehl Rocks",2,"NT","bait-sardines-anchovy","BAITBALL",NA,2015,0
+"722","Chibadehl Rocks",2,"NT","black rockfish","SEME","small",2015,0
+"723","Chibadehl Rocks",2,"NT","blue rockfish","SEMY","large",2015,0
+"724","Chibadehl Rocks",2,"NT","blue rockfish","SEMY","small",2015,0
+"725","Chibadehl Rocks",2,"NT","c-o sole","PLCO",NA,2015,0
+"726","Chibadehl Rocks",2,"NT","canary rockfish","SEPI","large",2015,0
+"727","Chibadehl Rocks",2,"NT","canary rockfish","SEPI","small",2015,0
+"728","Chibadehl Rocks",2,"NT","china rockfish","SENE","large",2015,0
+"729","Chibadehl Rocks",2,"NT","china rockfish","SENE","small",2015,0
+"730","Chibadehl Rocks",2,"NT","copper rockfish","SECA","small",2015,0
+"731","Chibadehl Rocks",2,"NT","greenlings","HEXA",NA,2015,0
+"732","Chibadehl Rocks",2,"NT","gunnels","PHOL",NA,2015,0
+"733","Chibadehl Rocks",2,"NT","herring","CLUP",NA,2015,0
+"734","Chibadehl Rocks",2,"NT","kelp clingfish","RIMU",NA,2015,0
+"735","Chibadehl Rocks",2,"NT","longfin sculpin","JOZO",NA,2015,0
+"736","Chibadehl Rocks",2,"NT","manacled sculpin","SYGI",NA,2015,0
+"737","Chibadehl Rocks",2,"NT","mosshead warbonnet","CHNU",NA,2015,0
+"738","Chibadehl Rocks",2,"NT","no_transect_no_data","NO_DATA",NA,2015,0
+"739","Chibadehl Rocks",2,"NT","pile perch","RHVA",NA,2015,0
+"740","Chibadehl Rocks",2,"NT","quillback rockfish","SEMA","small",2015,0
+"741","Chibadehl Rocks",2,"NT","rockfish","SEBSPP","large",2015,0
+"742","Chibadehl Rocks",2,"NT","rockfish","SEBSPP","small",2015,0
+"743","Chibadehl Rocks",2,"NT","sanddabs","CITH",NA,2015,0
+"744","Chibadehl Rocks",2,"NT","scalyhead sculpin","ARHA",NA,2015,0
+"745","Chibadehl Rocks",2,"NT","sculpin","COTT",NA,2015,0
+"746","Chibadehl Rocks",2,"NT","surfperch","EMBI",NA,2015,0
+"747","Chibadehl Rocks",2,"NT","unidentified fish","UNID",NA,2015,0
+"748","Chibadehl Rocks",2,"NT","whitespotted greenling","HEST",NA,2015,0
+"749","Chibadehl Rocks",2,"NT","yellowtail rockfish","SEFL","large",2015,0
+"750","Chibadehl Rocks",2,"NT","yellowtail rockfish","SEFL","small",2015,0
+"751","Chibadehl Rocks",2,"NT","yellowtail-black yoy","SEBYT","small",2015,0
+"752","Chibadehl Rocks",2,"NT",NA,"AMHE",NA,2015,0
+"753","Neah Bay",1,"GW","Black rockfish","SEME","large",2015,7
+"754","Neah Bay",1,"GW","Blackeye goby","RHNI",NA,2015,0
+"755","Neah Bay",1,"GW","Buffalo sculpin","ENBI",NA,2015,0
+"756","Neah Bay",1,"GW","Cabezon","SCMA",NA,2015,0
+"757","Neah Bay",1,"GW","Copper rockfish","SECA","large",2015,0
+"758","Neah Bay",1,"GW","Great sculpin","MYOP",NA,2015,0
+"759","Neah Bay",1,"GW","Kelp greenling","HEDE",NA,2015,2
+"760","Neah Bay",1,"GW","Lingcod","OPEL",NA,2015,0
+"761","Neah Bay",1,"GW","Painted greenling","OXPI",NA,2015,0
+"762","Neah Bay",1,"GW","Quillback rockfish","SEMA","large",2015,0
+"763","Neah Bay",1,"GW","Red Irish Lord","HEHE",NA,2015,0
+"764","Neah Bay",1,"GW","Rock greenling","HELA",NA,2015,0
+"765","Neah Bay",1,"GW","Striped seaperch","EMLA",NA,2015,2
+"766","Neah Bay",1,"GW","Tubesnout","AUFL",NA,2015,25
+"767","Neah Bay",1,"GW","YOY rockfish (black dorsal spots)","RYOY","small",2015,0
+"768","Neah Bay",1,"GW","bait-sardines-anchovy","BAITBALL",NA,2015,0
+"769","Neah Bay",1,"GW","black rockfish","SEME","small",2015,0
+"770","Neah Bay",1,"GW","blue rockfish","SEMY","large",2015,0
+"771","Neah Bay",1,"GW","blue rockfish","SEMY","small",2015,0
+"772","Neah Bay",1,"GW","c-o sole","PLCO",NA,2015,0
+"773","Neah Bay",1,"GW","canary rockfish","SEPI","large",2015,0
+"774","Neah Bay",1,"GW","canary rockfish","SEPI","small",2015,0
+"775","Neah Bay",1,"GW","china rockfish","SENE","large",2015,0
+"776","Neah Bay",1,"GW","china rockfish","SENE","small",2015,0
+"777","Neah Bay",1,"GW","copper rockfish","SECA","small",2015,0
+"778","Neah Bay",1,"GW","greenlings","HEXA",NA,2015,0
+"779","Neah Bay",1,"GW","gunnels","PHOL",NA,2015,0
+"780","Neah Bay",1,"GW","herring","CLUP",NA,2015,0
+"781","Neah Bay",1,"GW","kelp clingfish","RIMU",NA,2015,0
+"782","Neah Bay",1,"GW","longfin sculpin","JOZO",NA,2015,0
+"783","Neah Bay",1,"GW","manacled sculpin","SYGI",NA,2015,0
+"784","Neah Bay",1,"GW","mosshead warbonnet","CHNU",NA,2015,0
+"785","Neah Bay",1,"GW","no_transect_no_data","NO_DATA",NA,2015,0
+"786","Neah Bay",1,"GW","pile perch","RHVA",NA,2015,0
+"787","Neah Bay",1,"GW","quillback rockfish","SEMA","small",2015,0
+"788","Neah Bay",1,"GW","rockfish","SEBSPP","large",2015,0
+"789","Neah Bay",1,"GW","rockfish","SEBSPP","small",2015,0
+"790","Neah Bay",1,"GW","sanddabs","CITH",NA,2015,0
+"791","Neah Bay",1,"GW","scalyhead sculpin","ARHA",NA,2015,0
+"792","Neah Bay",1,"GW","sculpin","COTT",NA,2015,0
+"793","Neah Bay",1,"GW","surfperch","EMBI",NA,2015,0
+"794","Neah Bay",1,"GW","unidentified fish","UNID",NA,2015,0
+"795","Neah Bay",1,"GW","whitespotted greenling","HEST",NA,2015,0
+"796","Neah Bay",1,"GW","yellowtail rockfish","SEFL","large",2015,0
+"797","Neah Bay",1,"GW","yellowtail rockfish","SEFL","small",2015,0
+"798","Neah Bay",1,"GW","yellowtail-black yoy","SEBYT","small",2015,0
+"799","Neah Bay",1,"GW",NA,"AMHE",NA,2015,0
+"800","Neah Bay",1,"KA","Black rockfish","SEME","large",2015,0
+"801","Neah Bay",1,"KA","Blackeye goby","RHNI",NA,2015,2
+"802","Neah Bay",1,"KA","Buffalo sculpin","ENBI",NA,2015,0
+"803","Neah Bay",1,"KA","Cabezon","SCMA",NA,2015,0
+"804","Neah Bay",1,"KA","Copper rockfish","SECA","large",2015,0
+"805","Neah Bay",1,"KA","Great sculpin","MYOP",NA,2015,0
+"806","Neah Bay",1,"KA","Kelp greenling","HEDE",NA,2015,2
+"807","Neah Bay",1,"KA","Lingcod","OPEL",NA,2015,0
+"808","Neah Bay",1,"KA","Painted greenling","OXPI",NA,2015,1
+"809","Neah Bay",1,"KA","Quillback rockfish","SEMA","large",2015,13
+"810","Neah Bay",1,"KA","Red Irish Lord","HEHE",NA,2015,0
+"811","Neah Bay",1,"KA","Rock greenling","HELA",NA,2015,0
+"812","Neah Bay",1,"KA","Striped seaperch","EMLA",NA,2015,0
+"813","Neah Bay",1,"KA","Tubesnout","AUFL",NA,2015,1
+"814","Neah Bay",1,"KA","YOY rockfish (black dorsal spots)","RYOY","small",2015,0
+"815","Neah Bay",1,"KA","bait-sardines-anchovy","BAITBALL",NA,2015,0
+"816","Neah Bay",1,"KA","black rockfish","SEME","small",2015,0
+"817","Neah Bay",1,"KA","blue rockfish","SEMY","large",2015,0
+"818","Neah Bay",1,"KA","blue rockfish","SEMY","small",2015,0
+"819","Neah Bay",1,"KA","c-o sole","PLCO",NA,2015,0
+"820","Neah Bay",1,"KA","canary rockfish","SEPI","large",2015,0
+"821","Neah Bay",1,"KA","canary rockfish","SEPI","small",2015,0
+"822","Neah Bay",1,"KA","china rockfish","SENE","large",2015,0
+"823","Neah Bay",1,"KA","china rockfish","SENE","small",2015,0
+"824","Neah Bay",1,"KA","copper rockfish","SECA","small",2015,0
+"825","Neah Bay",1,"KA","greenlings","HEXA",NA,2015,0
+"826","Neah Bay",1,"KA","gunnels","PHOL",NA,2015,0
+"827","Neah Bay",1,"KA","herring","CLUP",NA,2015,0
+"828","Neah Bay",1,"KA","kelp clingfish","RIMU",NA,2015,0
+"829","Neah Bay",1,"KA","longfin sculpin","JOZO",NA,2015,0
+"830","Neah Bay",1,"KA","manacled sculpin","SYGI",NA,2015,0
+"831","Neah Bay",1,"KA","mosshead warbonnet","CHNU",NA,2015,0
+"832","Neah Bay",1,"KA","no_transect_no_data","NO_DATA",NA,2015,0
+"833","Neah Bay",1,"KA","pile perch","RHVA",NA,2015,0
+"834","Neah Bay",1,"KA","quillback rockfish","SEMA","small",2015,0
+"835","Neah Bay",1,"KA","rockfish","SEBSPP","large",2015,0
+"836","Neah Bay",1,"KA","rockfish","SEBSPP","small",2015,0
+"837","Neah Bay",1,"KA","sanddabs","CITH",NA,2015,0
+"838","Neah Bay",1,"KA","scalyhead sculpin","ARHA",NA,2015,0
+"839","Neah Bay",1,"KA","sculpin","COTT",NA,2015,0
+"840","Neah Bay",1,"KA","surfperch","EMBI",NA,2015,0
+"841","Neah Bay",1,"KA","unidentified fish","UNID",NA,2015,0
+"842","Neah Bay",1,"KA","whitespotted greenling","HEST",NA,2015,0
+"843","Neah Bay",1,"KA","yellowtail rockfish","SEFL","large",2015,0
+"844","Neah Bay",1,"KA","yellowtail rockfish","SEFL","small",2015,0
+"845","Neah Bay",1,"KA","yellowtail-black yoy","SEBYT","small",2015,0
+"846","Neah Bay",1,"KA",NA,"AMHE",NA,2015,0
+"847","Neah Bay",2,"GW","Black rockfish","SEME","large",2015,0
+"848","Neah Bay",2,"GW","Blackeye goby","RHNI",NA,2015,0
+"849","Neah Bay",2,"GW","Buffalo sculpin","ENBI",NA,2015,0
+"850","Neah Bay",2,"GW","Cabezon","SCMA",NA,2015,0
+"851","Neah Bay",2,"GW","Copper rockfish","SECA","large",2015,0
+"852","Neah Bay",2,"GW","Great sculpin","MYOP",NA,2015,0
+"853","Neah Bay",2,"GW","Kelp greenling","HEDE",NA,2015,1
+"854","Neah Bay",2,"GW","Lingcod","OPEL",NA,2015,0
+"855","Neah Bay",2,"GW","Painted greenling","OXPI",NA,2015,0
+"856","Neah Bay",2,"GW","Quillback rockfish","SEMA","large",2015,0
+"857","Neah Bay",2,"GW","Red Irish Lord","HEHE",NA,2015,0
+"858","Neah Bay",2,"GW","Rock greenling","HELA",NA,2015,0
+"859","Neah Bay",2,"GW","Striped seaperch","EMLA",NA,2015,0
+"860","Neah Bay",2,"GW","Tubesnout","AUFL",NA,2015,0
+"861","Neah Bay",2,"GW","YOY rockfish (black dorsal spots)","RYOY","small",2015,0
+"862","Neah Bay",2,"GW","bait-sardines-anchovy","BAITBALL",NA,2015,0
+"863","Neah Bay",2,"GW","black rockfish","SEME","small",2015,0
+"864","Neah Bay",2,"GW","blue rockfish","SEMY","large",2015,0
+"865","Neah Bay",2,"GW","blue rockfish","SEMY","small",2015,0
+"866","Neah Bay",2,"GW","c-o sole","PLCO",NA,2015,0
+"867","Neah Bay",2,"GW","canary rockfish","SEPI","large",2015,0
+"868","Neah Bay",2,"GW","canary rockfish","SEPI","small",2015,0
+"869","Neah Bay",2,"GW","china rockfish","SENE","large",2015,0
+"870","Neah Bay",2,"GW","china rockfish","SENE","small",2015,0
+"871","Neah Bay",2,"GW","copper rockfish","SECA","small",2015,0
+"872","Neah Bay",2,"GW","greenlings","HEXA",NA,2015,0
+"873","Neah Bay",2,"GW","gunnels","PHOL",NA,2015,0
+"874","Neah Bay",2,"GW","herring","CLUP",NA,2015,0
+"875","Neah Bay",2,"GW","kelp clingfish","RIMU",NA,2015,0
+"876","Neah Bay",2,"GW","longfin sculpin","JOZO",NA,2015,0
+"877","Neah Bay",2,"GW","manacled sculpin","SYGI",NA,2015,0
+"878","Neah Bay",2,"GW","mosshead warbonnet","CHNU",NA,2015,0
+"879","Neah Bay",2,"GW","no_transect_no_data","NO_DATA",NA,2015,0
+"880","Neah Bay",2,"GW","pile perch","RHVA",NA,2015,0
+"881","Neah Bay",2,"GW","quillback rockfish","SEMA","small",2015,0
+"882","Neah Bay",2,"GW","rockfish","SEBSPP","large",2015,0
+"883","Neah Bay",2,"GW","rockfish","SEBSPP","small",2015,0
+"884","Neah Bay",2,"GW","sanddabs","CITH",NA,2015,0
+"885","Neah Bay",2,"GW","scalyhead sculpin","ARHA",NA,2015,0
+"886","Neah Bay",2,"GW","sculpin","COTT",NA,2015,0
+"887","Neah Bay",2,"GW","surfperch","EMBI",NA,2015,0
+"888","Neah Bay",2,"GW","unidentified fish","UNID",NA,2015,0
+"889","Neah Bay",2,"GW","whitespotted greenling","HEST",NA,2015,0
+"890","Neah Bay",2,"GW","yellowtail rockfish","SEFL","large",2015,0
+"891","Neah Bay",2,"GW","yellowtail rockfish","SEFL","small",2015,0
+"892","Neah Bay",2,"GW","yellowtail-black yoy","SEBYT","small",2015,0
+"893","Neah Bay",2,"GW",NA,"AMHE",NA,2015,0
+"894","Neah Bay",2,"KA","Black rockfish","SEME","large",2015,0
+"895","Neah Bay",2,"KA","Blackeye goby","RHNI",NA,2015,1
+"896","Neah Bay",2,"KA","Buffalo sculpin","ENBI",NA,2015,0
+"897","Neah Bay",2,"KA","Cabezon","SCMA",NA,2015,0
+"898","Neah Bay",2,"KA","Copper rockfish","SECA","large",2015,1
+"899","Neah Bay",2,"KA","Great sculpin","MYOP",NA,2015,0
+"900","Neah Bay",2,"KA","Kelp greenling","HEDE",NA,2015,0
+"901","Neah Bay",2,"KA","Lingcod","OPEL",NA,2015,1
+"902","Neah Bay",2,"KA","Painted greenling","OXPI",NA,2015,0
+"903","Neah Bay",2,"KA","Quillback rockfish","SEMA","large",2015,4
+"904","Neah Bay",2,"KA","Red Irish Lord","HEHE",NA,2015,0
+"905","Neah Bay",2,"KA","Rock greenling","HELA",NA,2015,0
+"906","Neah Bay",2,"KA","Striped seaperch","EMLA",NA,2015,5
+"907","Neah Bay",2,"KA","Tubesnout","AUFL",NA,2015,0
+"908","Neah Bay",2,"KA","YOY rockfish (black dorsal spots)","RYOY","small",2015,0
+"909","Neah Bay",2,"KA","bait-sardines-anchovy","BAITBALL",NA,2015,0
+"910","Neah Bay",2,"KA","black rockfish","SEME","small",2015,0
+"911","Neah Bay",2,"KA","blue rockfish","SEMY","large",2015,0
+"912","Neah Bay",2,"KA","blue rockfish","SEMY","small",2015,0
+"913","Neah Bay",2,"KA","c-o sole","PLCO",NA,2015,0
+"914","Neah Bay",2,"KA","canary rockfish","SEPI","large",2015,0
+"915","Neah Bay",2,"KA","canary rockfish","SEPI","small",2015,0
+"916","Neah Bay",2,"KA","china rockfish","SENE","large",2015,0
+"917","Neah Bay",2,"KA","china rockfish","SENE","small",2015,0
+"918","Neah Bay",2,"KA","copper rockfish","SECA","small",2015,0
+"919","Neah Bay",2,"KA","greenlings","HEXA",NA,2015,0
+"920","Neah Bay",2,"KA","gunnels","PHOL",NA,2015,0
+"921","Neah Bay",2,"KA","herring","CLUP",NA,2015,0
+"922","Neah Bay",2,"KA","kelp clingfish","RIMU",NA,2015,0
+"923","Neah Bay",2,"KA","longfin sculpin","JOZO",NA,2015,0
+"924","Neah Bay",2,"KA","manacled sculpin","SYGI",NA,2015,0
+"925","Neah Bay",2,"KA","mosshead warbonnet","CHNU",NA,2015,0
+"926","Neah Bay",2,"KA","no_transect_no_data","NO_DATA",NA,2015,0
+"927","Neah Bay",2,"KA","pile perch","RHVA",NA,2015,0
+"928","Neah Bay",2,"KA","quillback rockfish","SEMA","small",2015,0
+"929","Neah Bay",2,"KA","rockfish","SEBSPP","large",2015,0
+"930","Neah Bay",2,"KA","rockfish","SEBSPP","small",2015,0
+"931","Neah Bay",2,"KA","sanddabs","CITH",NA,2015,0
+"932","Neah Bay",2,"KA","scalyhead sculpin","ARHA",NA,2015,0
+"933","Neah Bay",2,"KA","sculpin","COTT",NA,2015,0
+"934","Neah Bay",2,"KA","surfperch","EMBI",NA,2015,0
+"935","Neah Bay",2,"KA","unidentified fish","UNID",NA,2015,0
+"936","Neah Bay",2,"KA","whitespotted greenling","HEST",NA,2015,0
+"937","Neah Bay",2,"KA","yellowtail rockfish","SEFL","large",2015,0
+"938","Neah Bay",2,"KA","yellowtail rockfish","SEFL","small",2015,0
+"939","Neah Bay",2,"KA","yellowtail-black yoy","SEBYT","small",2015,0
+"940","Neah Bay",2,"KA",NA,"AMHE",NA,2015,0
+"941","Point of the Arches",1,"JS","Black rockfish","SEME","large",2015,1
+"942","Point of the Arches",1,"JS","Blackeye goby","RHNI",NA,2015,0
+"943","Point of the Arches",1,"JS","Buffalo sculpin","ENBI",NA,2015,0
+"944","Point of the Arches",1,"JS","Cabezon","SCMA",NA,2015,0
+"945","Point of the Arches",1,"JS","Copper rockfish","SECA","large",2015,0
+"946","Point of the Arches",1,"JS","Great sculpin","MYOP",NA,2015,0
+"947","Point of the Arches",1,"JS","Kelp greenling","HEDE",NA,2015,1
+"948","Point of the Arches",1,"JS","Lingcod","OPEL",NA,2015,0
+"949","Point of the Arches",1,"JS","Painted greenling","OXPI",NA,2015,0
+"950","Point of the Arches",1,"JS","Quillback rockfish","SEMA","large",2015,0
+"951","Point of the Arches",1,"JS","Red Irish Lord","HEHE",NA,2015,0
+"952","Point of the Arches",1,"JS","Rock greenling","HELA",NA,2015,0
+"953","Point of the Arches",1,"JS","Striped seaperch","EMLA",NA,2015,6
+"954","Point of the Arches",1,"JS","Tubesnout","AUFL",NA,2015,12
+"955","Point of the Arches",1,"JS","YOY rockfish (black dorsal spots)","RYOY","small",2015,1
+"956","Point of the Arches",1,"JS","bait-sardines-anchovy","BAITBALL",NA,2015,0
+"957","Point of the Arches",1,"JS","black rockfish","SEME","small",2015,0
+"958","Point of the Arches",1,"JS","blue rockfish","SEMY","large",2015,0
+"959","Point of the Arches",1,"JS","blue rockfish","SEMY","small",2015,0
+"960","Point of the Arches",1,"JS","c-o sole","PLCO",NA,2015,0
+"961","Point of the Arches",1,"JS","canary rockfish","SEPI","large",2015,0
+"962","Point of the Arches",1,"JS","canary rockfish","SEPI","small",2015,0
+"963","Point of the Arches",1,"JS","china rockfish","SENE","large",2015,0
+"964","Point of the Arches",1,"JS","china rockfish","SENE","small",2015,0
+"965","Point of the Arches",1,"JS","copper rockfish","SECA","small",2015,0
+"966","Point of the Arches",1,"JS","greenlings","HEXA",NA,2015,0
+"967","Point of the Arches",1,"JS","gunnels","PHOL",NA,2015,0
+"968","Point of the Arches",1,"JS","herring","CLUP",NA,2015,0
+"969","Point of the Arches",1,"JS","kelp clingfish","RIMU",NA,2015,0
+"970","Point of the Arches",1,"JS","longfin sculpin","JOZO",NA,2015,0
+"971","Point of the Arches",1,"JS","manacled sculpin","SYGI",NA,2015,0
+"972","Point of the Arches",1,"JS","mosshead warbonnet","CHNU",NA,2015,0
+"973","Point of the Arches",1,"JS","no_transect_no_data","NO_DATA",NA,2015,0
+"974","Point of the Arches",1,"JS","pile perch","RHVA",NA,2015,0
+"975","Point of the Arches",1,"JS","quillback rockfish","SEMA","small",2015,0
+"976","Point of the Arches",1,"JS","rockfish","SEBSPP","large",2015,0
+"977","Point of the Arches",1,"JS","rockfish","SEBSPP","small",2015,0
+"978","Point of the Arches",1,"JS","sanddabs","CITH",NA,2015,0
+"979","Point of the Arches",1,"JS","scalyhead sculpin","ARHA",NA,2015,0
+"980","Point of the Arches",1,"JS","sculpin","COTT",NA,2015,0
+"981","Point of the Arches",1,"JS","surfperch","EMBI",NA,2015,0
+"982","Point of the Arches",1,"JS","unidentified fish","UNID",NA,2015,0
+"983","Point of the Arches",1,"JS","whitespotted greenling","HEST",NA,2015,0
+"984","Point of the Arches",1,"JS","yellowtail rockfish","SEFL","large",2015,0
+"985","Point of the Arches",1,"JS","yellowtail rockfish","SEFL","small",2015,0
+"986","Point of the Arches",1,"JS","yellowtail-black yoy","SEBYT","small",2015,0
+"987","Point of the Arches",1,"JS",NA,"AMHE",NA,2015,0
+"988","Point of the Arches",1,"NT","Black rockfish","SEME","large",2015,0
+"989","Point of the Arches",1,"NT","Blackeye goby","RHNI",NA,2015,0
+"990","Point of the Arches",1,"NT","Buffalo sculpin","ENBI",NA,2015,0
+"991","Point of the Arches",1,"NT","Cabezon","SCMA",NA,2015,0
+"992","Point of the Arches",1,"NT","Copper rockfish","SECA","large",2015,0
+"993","Point of the Arches",1,"NT","Great sculpin","MYOP",NA,2015,0
+"994","Point of the Arches",1,"NT","Kelp greenling","HEDE",NA,2015,0
+"995","Point of the Arches",1,"NT","Lingcod","OPEL",NA,2015,0
+"996","Point of the Arches",1,"NT","Painted greenling","OXPI",NA,2015,0
+"997","Point of the Arches",1,"NT","Quillback rockfish","SEMA","large",2015,0
+"998","Point of the Arches",1,"NT","Red Irish Lord","HEHE",NA,2015,0
+"999","Point of the Arches",1,"NT","Rock greenling","HELA",NA,2015,0
+"1000","Point of the Arches",1,"NT","Striped seaperch","EMLA",NA,2015,0
+"1001","Point of the Arches",1,"NT","Tubesnout","AUFL",NA,2015,0
+"1002","Point of the Arches",1,"NT","YOY rockfish (black dorsal spots)","RYOY","small",2015,0
+"1003","Point of the Arches",1,"NT","bait-sardines-anchovy","BAITBALL",NA,2015,0
+"1004","Point of the Arches",1,"NT","black rockfish","SEME","small",2015,0
+"1005","Point of the Arches",1,"NT","blue rockfish","SEMY","large",2015,0
+"1006","Point of the Arches",1,"NT","blue rockfish","SEMY","small",2015,0
+"1007","Point of the Arches",1,"NT","c-o sole","PLCO",NA,2015,0
+"1008","Point of the Arches",1,"NT","canary rockfish","SEPI","large",2015,0
+"1009","Point of the Arches",1,"NT","canary rockfish","SEPI","small",2015,0
+"1010","Point of the Arches",1,"NT","china rockfish","SENE","large",2015,0
+"1011","Point of the Arches",1,"NT","china rockfish","SENE","small",2015,0
+"1012","Point of the Arches",1,"NT","copper rockfish","SECA","small",2015,0
+"1013","Point of the Arches",1,"NT","greenlings","HEXA",NA,2015,0
+"1014","Point of the Arches",1,"NT","gunnels","PHOL",NA,2015,0
+"1015","Point of the Arches",1,"NT","herring","CLUP",NA,2015,0
+"1016","Point of the Arches",1,"NT","kelp clingfish","RIMU",NA,2015,0
+"1017","Point of the Arches",1,"NT","longfin sculpin","JOZO",NA,2015,0
+"1018","Point of the Arches",1,"NT","manacled sculpin","SYGI",NA,2015,0
+"1019","Point of the Arches",1,"NT","mosshead warbonnet","CHNU",NA,2015,0
+"1020","Point of the Arches",1,"NT","no_transect_no_data","NO_DATA",NA,2015,0
+"1021","Point of the Arches",1,"NT","pile perch","RHVA",NA,2015,0
+"1022","Point of the Arches",1,"NT","quillback rockfish","SEMA","small",2015,0
+"1023","Point of the Arches",1,"NT","rockfish","SEBSPP","large",2015,0
+"1024","Point of the Arches",1,"NT","rockfish","SEBSPP","small",2015,0
+"1025","Point of the Arches",1,"NT","sanddabs","CITH",NA,2015,0
+"1026","Point of the Arches",1,"NT","scalyhead sculpin","ARHA",NA,2015,0
+"1027","Point of the Arches",1,"NT","sculpin","COTT",NA,2015,0
+"1028","Point of the Arches",1,"NT","surfperch","EMBI",NA,2015,0
+"1029","Point of the Arches",1,"NT","unidentified fish","UNID",NA,2015,0
+"1030","Point of the Arches",1,"NT","whitespotted greenling","HEST",NA,2015,0
+"1031","Point of the Arches",1,"NT","yellowtail rockfish","SEFL","large",2015,0
+"1032","Point of the Arches",1,"NT","yellowtail rockfish","SEFL","small",2015,0
+"1033","Point of the Arches",1,"NT","yellowtail-black yoy","SEBYT","small",2015,0
+"1034","Point of the Arches",1,"NT",NA,"AMHE",NA,2015,0
+"1035","Point of the Arches",2,"JS","Black rockfish","SEME","large",2015,0
+"1036","Point of the Arches",2,"JS","Blackeye goby","RHNI",NA,2015,0
+"1037","Point of the Arches",2,"JS","Buffalo sculpin","ENBI",NA,2015,0
+"1038","Point of the Arches",2,"JS","Cabezon","SCMA",NA,2015,0
+"1039","Point of the Arches",2,"JS","Copper rockfish","SECA","large",2015,0
+"1040","Point of the Arches",2,"JS","Great sculpin","MYOP",NA,2015,0
+"1041","Point of the Arches",2,"JS","Kelp greenling","HEDE",NA,2015,1
+"1042","Point of the Arches",2,"JS","Lingcod","OPEL",NA,2015,0
+"1043","Point of the Arches",2,"JS","Painted greenling","OXPI",NA,2015,0
+"1044","Point of the Arches",2,"JS","Quillback rockfish","SEMA","large",2015,0
+"1045","Point of the Arches",2,"JS","Red Irish Lord","HEHE",NA,2015,0
+"1046","Point of the Arches",2,"JS","Rock greenling","HELA",NA,2015,0
+"1047","Point of the Arches",2,"JS","Striped seaperch","EMLA",NA,2015,5
+"1048","Point of the Arches",2,"JS","Tubesnout","AUFL",NA,2015,0
+"1049","Point of the Arches",2,"JS","YOY rockfish (black dorsal spots)","RYOY","small",2015,1
+"1050","Point of the Arches",2,"JS","bait-sardines-anchovy","BAITBALL",NA,2015,0
+"1051","Point of the Arches",2,"JS","black rockfish","SEME","small",2015,0
+"1052","Point of the Arches",2,"JS","blue rockfish","SEMY","large",2015,0
+"1053","Point of the Arches",2,"JS","blue rockfish","SEMY","small",2015,0
+"1054","Point of the Arches",2,"JS","c-o sole","PLCO",NA,2015,0
+"1055","Point of the Arches",2,"JS","canary rockfish","SEPI","large",2015,0
+"1056","Point of the Arches",2,"JS","canary rockfish","SEPI","small",2015,0
+"1057","Point of the Arches",2,"JS","china rockfish","SENE","large",2015,0
+"1058","Point of the Arches",2,"JS","china rockfish","SENE","small",2015,0
+"1059","Point of the Arches",2,"JS","copper rockfish","SECA","small",2015,0
+"1060","Point of the Arches",2,"JS","greenlings","HEXA",NA,2015,0
+"1061","Point of the Arches",2,"JS","gunnels","PHOL",NA,2015,0
+"1062","Point of the Arches",2,"JS","herring","CLUP",NA,2015,0
+"1063","Point of the Arches",2,"JS","kelp clingfish","RIMU",NA,2015,0
+"1064","Point of the Arches",2,"JS","longfin sculpin","JOZO",NA,2015,0
+"1065","Point of the Arches",2,"JS","manacled sculpin","SYGI",NA,2015,0
+"1066","Point of the Arches",2,"JS","mosshead warbonnet","CHNU",NA,2015,0
+"1067","Point of the Arches",2,"JS","no_transect_no_data","NO_DATA",NA,2015,0
+"1068","Point of the Arches",2,"JS","pile perch","RHVA",NA,2015,0
+"1069","Point of the Arches",2,"JS","quillback rockfish","SEMA","small",2015,0
+"1070","Point of the Arches",2,"JS","rockfish","SEBSPP","large",2015,0
+"1071","Point of the Arches",2,"JS","rockfish","SEBSPP","small",2015,0
+"1072","Point of the Arches",2,"JS","sanddabs","CITH",NA,2015,0
+"1073","Point of the Arches",2,"JS","scalyhead sculpin","ARHA",NA,2015,0
+"1074","Point of the Arches",2,"JS","sculpin","COTT",NA,2015,0
+"1075","Point of the Arches",2,"JS","surfperch","EMBI",NA,2015,0
+"1076","Point of the Arches",2,"JS","unidentified fish","UNID",NA,2015,0
+"1077","Point of the Arches",2,"JS","whitespotted greenling","HEST",NA,2015,0
+"1078","Point of the Arches",2,"JS","yellowtail rockfish","SEFL","large",2015,0
+"1079","Point of the Arches",2,"JS","yellowtail rockfish","SEFL","small",2015,0
+"1080","Point of the Arches",2,"JS","yellowtail-black yoy","SEBYT","small",2015,0
+"1081","Point of the Arches",2,"JS",NA,"AMHE",NA,2015,0
+"1082","Point of the Arches",2,"NT","Black rockfish","SEME","large",2015,0
+"1083","Point of the Arches",2,"NT","Blackeye goby","RHNI",NA,2015,0
+"1084","Point of the Arches",2,"NT","Buffalo sculpin","ENBI",NA,2015,0
+"1085","Point of the Arches",2,"NT","Cabezon","SCMA",NA,2015,0
+"1086","Point of the Arches",2,"NT","Copper rockfish","SECA","large",2015,0
+"1087","Point of the Arches",2,"NT","Great sculpin","MYOP",NA,2015,0
+"1088","Point of the Arches",2,"NT","Kelp greenling","HEDE",NA,2015,0
+"1089","Point of the Arches",2,"NT","Lingcod","OPEL",NA,2015,0
+"1090","Point of the Arches",2,"NT","Painted greenling","OXPI",NA,2015,0
+"1091","Point of the Arches",2,"NT","Quillback rockfish","SEMA","large",2015,0
+"1092","Point of the Arches",2,"NT","Red Irish Lord","HEHE",NA,2015,0
+"1093","Point of the Arches",2,"NT","Rock greenling","HELA",NA,2015,0
+"1094","Point of the Arches",2,"NT","Striped seaperch","EMLA",NA,2015,0
+"1095","Point of the Arches",2,"NT","Tubesnout","AUFL",NA,2015,5
+"1096","Point of the Arches",2,"NT","YOY rockfish (black dorsal spots)","RYOY","small",2015,0
+"1097","Point of the Arches",2,"NT","bait-sardines-anchovy","BAITBALL",NA,2015,0
+"1098","Point of the Arches",2,"NT","black rockfish","SEME","small",2015,0
+"1099","Point of the Arches",2,"NT","blue rockfish","SEMY","large",2015,0
+"1100","Point of the Arches",2,"NT","blue rockfish","SEMY","small",2015,0
+"1101","Point of the Arches",2,"NT","c-o sole","PLCO",NA,2015,0
+"1102","Point of the Arches",2,"NT","canary rockfish","SEPI","large",2015,0
+"1103","Point of the Arches",2,"NT","canary rockfish","SEPI","small",2015,0
+"1104","Point of the Arches",2,"NT","china rockfish","SENE","large",2015,0
+"1105","Point of the Arches",2,"NT","china rockfish","SENE","small",2015,0
+"1106","Point of the Arches",2,"NT","copper rockfish","SECA","small",2015,0
+"1107","Point of the Arches",2,"NT","greenlings","HEXA",NA,2015,0
+"1108","Point of the Arches",2,"NT","gunnels","PHOL",NA,2015,0
+"1109","Point of the Arches",2,"NT","herring","CLUP",NA,2015,0
+"1110","Point of the Arches",2,"NT","kelp clingfish","RIMU",NA,2015,0
+"1111","Point of the Arches",2,"NT","longfin sculpin","JOZO",NA,2015,0
+"1112","Point of the Arches",2,"NT","manacled sculpin","SYGI",NA,2015,0
+"1113","Point of the Arches",2,"NT","mosshead warbonnet","CHNU",NA,2015,0
+"1114","Point of the Arches",2,"NT","no_transect_no_data","NO_DATA",NA,2015,0
+"1115","Point of the Arches",2,"NT","pile perch","RHVA",NA,2015,0
+"1116","Point of the Arches",2,"NT","quillback rockfish","SEMA","small",2015,0
+"1117","Point of the Arches",2,"NT","rockfish","SEBSPP","large",2015,0
+"1118","Point of the Arches",2,"NT","rockfish","SEBSPP","small",2015,0
+"1119","Point of the Arches",2,"NT","sanddabs","CITH",NA,2015,0
+"1120","Point of the Arches",2,"NT","scalyhead sculpin","ARHA",NA,2015,0
+"1121","Point of the Arches",2,"NT","sculpin","COTT",NA,2015,0
+"1122","Point of the Arches",2,"NT","surfperch","EMBI",NA,2015,4
+"1123","Point of the Arches",2,"NT","unidentified fish","UNID",NA,2015,0
+"1124","Point of the Arches",2,"NT","whitespotted greenling","HEST",NA,2015,0
+"1125","Point of the Arches",2,"NT","yellowtail rockfish","SEFL","large",2015,0
+"1126","Point of the Arches",2,"NT","yellowtail rockfish","SEFL","small",2015,0
+"1127","Point of the Arches",2,"NT","yellowtail-black yoy","SEBYT","small",2015,0
+"1128","Point of the Arches",2,"NT",NA,"AMHE",NA,2015,0
+"1129","Rock 305",1,"GW","Black rockfish","SEME","large",2015,0
+"1130","Rock 305",1,"GW","Blackeye goby","RHNI",NA,2015,0
+"1131","Rock 305",1,"GW","Buffalo sculpin","ENBI",NA,2015,0
+"1132","Rock 305",1,"GW","Cabezon","SCMA",NA,2015,1
+"1133","Rock 305",1,"GW","Copper rockfish","SECA","large",2015,0
+"1134","Rock 305",1,"GW","Great sculpin","MYOP",NA,2015,0
+"1135","Rock 305",1,"GW","Kelp greenling","HEDE",NA,2015,0
+"1136","Rock 305",1,"GW","Lingcod","OPEL",NA,2015,0
+"1137","Rock 305",1,"GW","Painted greenling","OXPI",NA,2015,0
+"1138","Rock 305",1,"GW","Quillback rockfish","SEMA","large",2015,0
+"1139","Rock 305",1,"GW","Red Irish Lord","HEHE",NA,2015,0
+"1140","Rock 305",1,"GW","Rock greenling","HELA",NA,2015,0
+"1141","Rock 305",1,"GW","Striped seaperch","EMLA",NA,2015,0
+"1142","Rock 305",1,"GW","Tubesnout","AUFL",NA,2015,0
+"1143","Rock 305",1,"GW","YOY rockfish (black dorsal spots)","RYOY","small",2015,0
+"1144","Rock 305",1,"GW","bait-sardines-anchovy","BAITBALL",NA,2015,0
+"1145","Rock 305",1,"GW","black rockfish","SEME","small",2015,0
+"1146","Rock 305",1,"GW","blue rockfish","SEMY","large",2015,0
+"1147","Rock 305",1,"GW","blue rockfish","SEMY","small",2015,0
+"1148","Rock 305",1,"GW","c-o sole","PLCO",NA,2015,0
+"1149","Rock 305",1,"GW","canary rockfish","SEPI","large",2015,0
+"1150","Rock 305",1,"GW","canary rockfish","SEPI","small",2015,0
+"1151","Rock 305",1,"GW","china rockfish","SENE","large",2015,0
+"1152","Rock 305",1,"GW","china rockfish","SENE","small",2015,0
+"1153","Rock 305",1,"GW","copper rockfish","SECA","small",2015,0
+"1154","Rock 305",1,"GW","greenlings","HEXA",NA,2015,0
+"1155","Rock 305",1,"GW","gunnels","PHOL",NA,2015,0
+"1156","Rock 305",1,"GW","herring","CLUP",NA,2015,0
+"1157","Rock 305",1,"GW","kelp clingfish","RIMU",NA,2015,0
+"1158","Rock 305",1,"GW","longfin sculpin","JOZO",NA,2015,0
+"1159","Rock 305",1,"GW","manacled sculpin","SYGI",NA,2015,0
+"1160","Rock 305",1,"GW","mosshead warbonnet","CHNU",NA,2015,0
+"1161","Rock 305",1,"GW","no_transect_no_data","NO_DATA",NA,2015,0
+"1162","Rock 305",1,"GW","pile perch","RHVA",NA,2015,0
+"1163","Rock 305",1,"GW","quillback rockfish","SEMA","small",2015,0
+"1164","Rock 305",1,"GW","rockfish","SEBSPP","large",2015,0
+"1165","Rock 305",1,"GW","rockfish","SEBSPP","small",2015,0
+"1166","Rock 305",1,"GW","sanddabs","CITH",NA,2015,0
+"1167","Rock 305",1,"GW","scalyhead sculpin","ARHA",NA,2015,0
+"1168","Rock 305",1,"GW","sculpin","COTT",NA,2015,0
+"1169","Rock 305",1,"GW","surfperch","EMBI",NA,2015,0
+"1170","Rock 305",1,"GW","unidentified fish","UNID",NA,2015,0
+"1171","Rock 305",1,"GW","whitespotted greenling","HEST",NA,2015,0
+"1172","Rock 305",1,"GW","yellowtail rockfish","SEFL","large",2015,0
+"1173","Rock 305",1,"GW","yellowtail rockfish","SEFL","small",2015,0
+"1174","Rock 305",1,"GW","yellowtail-black yoy","SEBYT","small",2015,0
+"1175","Rock 305",1,"GW",NA,"AMHE",NA,2015,0
+"1176","Rock 305",1,"NT","Black rockfish","SEME","large",2015,0
+"1177","Rock 305",1,"NT","Blackeye goby","RHNI",NA,2015,0
+"1178","Rock 305",1,"NT","Buffalo sculpin","ENBI",NA,2015,0
+"1179","Rock 305",1,"NT","Cabezon","SCMA",NA,2015,0
+"1180","Rock 305",1,"NT","Copper rockfish","SECA","large",2015,0
+"1181","Rock 305",1,"NT","Great sculpin","MYOP",NA,2015,0
+"1182","Rock 305",1,"NT","Kelp greenling","HEDE",NA,2015,0
+"1183","Rock 305",1,"NT","Lingcod","OPEL",NA,2015,0
+"1184","Rock 305",1,"NT","Painted greenling","OXPI",NA,2015,0
+"1185","Rock 305",1,"NT","Quillback rockfish","SEMA","large",2015,0
+"1186","Rock 305",1,"NT","Red Irish Lord","HEHE",NA,2015,0
+"1187","Rock 305",1,"NT","Rock greenling","HELA",NA,2015,0
+"1188","Rock 305",1,"NT","Striped seaperch","EMLA",NA,2015,0
+"1189","Rock 305",1,"NT","Tubesnout","AUFL",NA,2015,0
+"1190","Rock 305",1,"NT","YOY rockfish (black dorsal spots)","RYOY","small",2015,0
+"1191","Rock 305",1,"NT","bait-sardines-anchovy","BAITBALL",NA,2015,0
+"1192","Rock 305",1,"NT","black rockfish","SEME","small",2015,0
+"1193","Rock 305",1,"NT","blue rockfish","SEMY","large",2015,0
+"1194","Rock 305",1,"NT","blue rockfish","SEMY","small",2015,0
+"1195","Rock 305",1,"NT","c-o sole","PLCO",NA,2015,0
+"1196","Rock 305",1,"NT","canary rockfish","SEPI","large",2015,0
+"1197","Rock 305",1,"NT","canary rockfish","SEPI","small",2015,0
+"1198","Rock 305",1,"NT","china rockfish","SENE","large",2015,0
+"1199","Rock 305",1,"NT","china rockfish","SENE","small",2015,0
+"1200","Rock 305",1,"NT","copper rockfish","SECA","small",2015,0
+"1201","Rock 305",1,"NT","greenlings","HEXA",NA,2015,0
+"1202","Rock 305",1,"NT","gunnels","PHOL",NA,2015,0
+"1203","Rock 305",1,"NT","herring","CLUP",NA,2015,0
+"1204","Rock 305",1,"NT","kelp clingfish","RIMU",NA,2015,0
+"1205","Rock 305",1,"NT","longfin sculpin","JOZO",NA,2015,0
+"1206","Rock 305",1,"NT","manacled sculpin","SYGI",NA,2015,0
+"1207","Rock 305",1,"NT","mosshead warbonnet","CHNU",NA,2015,0
+"1208","Rock 305",1,"NT","no_transect_no_data","NO_DATA",NA,2015,0
+"1209","Rock 305",1,"NT","pile perch","RHVA",NA,2015,0
+"1210","Rock 305",1,"NT","quillback rockfish","SEMA","small",2015,0
+"1211","Rock 305",1,"NT","rockfish","SEBSPP","large",2015,0
+"1212","Rock 305",1,"NT","rockfish","SEBSPP","small",2015,0
+"1213","Rock 305",1,"NT","sanddabs","CITH",NA,2015,0
+"1214","Rock 305",1,"NT","scalyhead sculpin","ARHA",NA,2015,0
+"1215","Rock 305",1,"NT","sculpin","COTT",NA,2015,0
+"1216","Rock 305",1,"NT","surfperch","EMBI",NA,2015,0
+"1217","Rock 305",1,"NT","unidentified fish","UNID",NA,2015,0
+"1218","Rock 305",1,"NT","whitespotted greenling","HEST",NA,2015,0
+"1219","Rock 305",1,"NT","yellowtail rockfish","SEFL","large",2015,0
+"1220","Rock 305",1,"NT","yellowtail rockfish","SEFL","small",2015,0
+"1221","Rock 305",1,"NT","yellowtail-black yoy","SEBYT","small",2015,0
+"1222","Rock 305",1,"NT",NA,"AMHE",NA,2015,0
+"1223","Rock 305",2,"GW","Black rockfish","SEME","large",2015,0
+"1224","Rock 305",2,"GW","Blackeye goby","RHNI",NA,2015,0
+"1225","Rock 305",2,"GW","Buffalo sculpin","ENBI",NA,2015,0
+"1226","Rock 305",2,"GW","Cabezon","SCMA",NA,2015,0
+"1227","Rock 305",2,"GW","Copper rockfish","SECA","large",2015,0
+"1228","Rock 305",2,"GW","Great sculpin","MYOP",NA,2015,0
+"1229","Rock 305",2,"GW","Kelp greenling","HEDE",NA,2015,0
+"1230","Rock 305",2,"GW","Lingcod","OPEL",NA,2015,0
+"1231","Rock 305",2,"GW","Painted greenling","OXPI",NA,2015,0
+"1232","Rock 305",2,"GW","Quillback rockfish","SEMA","large",2015,0
+"1233","Rock 305",2,"GW","Red Irish Lord","HEHE",NA,2015,0
+"1234","Rock 305",2,"GW","Rock greenling","HELA",NA,2015,0
+"1235","Rock 305",2,"GW","Striped seaperch","EMLA",NA,2015,0
+"1236","Rock 305",2,"GW","Tubesnout","AUFL",NA,2015,0
+"1237","Rock 305",2,"GW","YOY rockfish (black dorsal spots)","RYOY","small",2015,0
+"1238","Rock 305",2,"GW","bait-sardines-anchovy","BAITBALL",NA,2015,0
+"1239","Rock 305",2,"GW","black rockfish","SEME","small",2015,0
+"1240","Rock 305",2,"GW","blue rockfish","SEMY","large",2015,0
+"1241","Rock 305",2,"GW","blue rockfish","SEMY","small",2015,0
+"1242","Rock 305",2,"GW","c-o sole","PLCO",NA,2015,0
+"1243","Rock 305",2,"GW","canary rockfish","SEPI","large",2015,0
+"1244","Rock 305",2,"GW","canary rockfish","SEPI","small",2015,0
+"1245","Rock 305",2,"GW","china rockfish","SENE","large",2015,0
+"1246","Rock 305",2,"GW","china rockfish","SENE","small",2015,0
+"1247","Rock 305",2,"GW","copper rockfish","SECA","small",2015,0
+"1248","Rock 305",2,"GW","greenlings","HEXA",NA,2015,0
+"1249","Rock 305",2,"GW","gunnels","PHOL",NA,2015,0
+"1250","Rock 305",2,"GW","herring","CLUP",NA,2015,0
+"1251","Rock 305",2,"GW","kelp clingfish","RIMU",NA,2015,0
+"1252","Rock 305",2,"GW","longfin sculpin","JOZO",NA,2015,0
+"1253","Rock 305",2,"GW","manacled sculpin","SYGI",NA,2015,0
+"1254","Rock 305",2,"GW","mosshead warbonnet","CHNU",NA,2015,0
+"1255","Rock 305",2,"GW","no_transect_no_data","NO_DATA",NA,2015,0
+"1256","Rock 305",2,"GW","pile perch","RHVA",NA,2015,0
+"1257","Rock 305",2,"GW","quillback rockfish","SEMA","small",2015,0
+"1258","Rock 305",2,"GW","rockfish","SEBSPP","large",2015,0
+"1259","Rock 305",2,"GW","rockfish","SEBSPP","small",2015,0
+"1260","Rock 305",2,"GW","sanddabs","CITH",NA,2015,0
+"1261","Rock 305",2,"GW","scalyhead sculpin","ARHA",NA,2015,0
+"1262","Rock 305",2,"GW","sculpin","COTT",NA,2015,0
+"1263","Rock 305",2,"GW","surfperch","EMBI",NA,2015,0
+"1264","Rock 305",2,"GW","unidentified fish","UNID",NA,2015,0
+"1265","Rock 305",2,"GW","whitespotted greenling","HEST",NA,2015,0
+"1266","Rock 305",2,"GW","yellowtail rockfish","SEFL","large",2015,0
+"1267","Rock 305",2,"GW","yellowtail rockfish","SEFL","small",2015,0
+"1268","Rock 305",2,"GW","yellowtail-black yoy","SEBYT","small",2015,0
+"1269","Rock 305",2,"GW",NA,"AMHE",NA,2015,0
+"1270","Rock 305",2,"NT","Black rockfish","SEME","large",2015,0
+"1271","Rock 305",2,"NT","Blackeye goby","RHNI",NA,2015,0
+"1272","Rock 305",2,"NT","Buffalo sculpin","ENBI",NA,2015,0
+"1273","Rock 305",2,"NT","Cabezon","SCMA",NA,2015,0
+"1274","Rock 305",2,"NT","Copper rockfish","SECA","large",2015,0
+"1275","Rock 305",2,"NT","Great sculpin","MYOP",NA,2015,0
+"1276","Rock 305",2,"NT","Kelp greenling","HEDE",NA,2015,0
+"1277","Rock 305",2,"NT","Lingcod","OPEL",NA,2015,0
+"1278","Rock 305",2,"NT","Painted greenling","OXPI",NA,2015,0
+"1279","Rock 305",2,"NT","Quillback rockfish","SEMA","large",2015,0
+"1280","Rock 305",2,"NT","Red Irish Lord","HEHE",NA,2015,0
+"1281","Rock 305",2,"NT","Rock greenling","HELA",NA,2015,0
+"1282","Rock 305",2,"NT","Striped seaperch","EMLA",NA,2015,0
+"1283","Rock 305",2,"NT","Tubesnout","AUFL",NA,2015,0
+"1284","Rock 305",2,"NT","YOY rockfish (black dorsal spots)","RYOY","small",2015,0
+"1285","Rock 305",2,"NT","bait-sardines-anchovy","BAITBALL",NA,2015,0
+"1286","Rock 305",2,"NT","black rockfish","SEME","small",2015,0
+"1287","Rock 305",2,"NT","blue rockfish","SEMY","large",2015,0
+"1288","Rock 305",2,"NT","blue rockfish","SEMY","small",2015,0
+"1289","Rock 305",2,"NT","c-o sole","PLCO",NA,2015,0
+"1290","Rock 305",2,"NT","canary rockfish","SEPI","large",2015,0
+"1291","Rock 305",2,"NT","canary rockfish","SEPI","small",2015,0
+"1292","Rock 305",2,"NT","china rockfish","SENE","large",2015,0
+"1293","Rock 305",2,"NT","china rockfish","SENE","small",2015,0
+"1294","Rock 305",2,"NT","copper rockfish","SECA","small",2015,0
+"1295","Rock 305",2,"NT","greenlings","HEXA",NA,2015,0
+"1296","Rock 305",2,"NT","gunnels","PHOL",NA,2015,0
+"1297","Rock 305",2,"NT","herring","CLUP",NA,2015,0
+"1298","Rock 305",2,"NT","kelp clingfish","RIMU",NA,2015,0
+"1299","Rock 305",2,"NT","longfin sculpin","JOZO",NA,2015,0
+"1300","Rock 305",2,"NT","manacled sculpin","SYGI",NA,2015,0
+"1301","Rock 305",2,"NT","mosshead warbonnet","CHNU",NA,2015,0
+"1302","Rock 305",2,"NT","no_transect_no_data","NO_DATA",NA,2015,0
+"1303","Rock 305",2,"NT","pile perch","RHVA",NA,2015,0
+"1304","Rock 305",2,"NT","quillback rockfish","SEMA","small",2015,0
+"1305","Rock 305",2,"NT","rockfish","SEBSPP","large",2015,0
+"1306","Rock 305",2,"NT","rockfish","SEBSPP","small",2015,0
+"1307","Rock 305",2,"NT","sanddabs","CITH",NA,2015,0
+"1308","Rock 305",2,"NT","scalyhead sculpin","ARHA",NA,2015,0
+"1309","Rock 305",2,"NT","sculpin","COTT",NA,2015,0
+"1310","Rock 305",2,"NT","surfperch","EMBI",NA,2015,0
+"1311","Rock 305",2,"NT","unidentified fish","UNID",NA,2015,0
+"1312","Rock 305",2,"NT","whitespotted greenling","HEST",NA,2015,0
+"1313","Rock 305",2,"NT","yellowtail rockfish","SEFL","large",2015,0
+"1314","Rock 305",2,"NT","yellowtail rockfish","SEFL","small",2015,0
+"1315","Rock 305",2,"NT","yellowtail-black yoy","SEBYT","small",2015,0
+"1316","Rock 305",2,"NT",NA,"AMHE",NA,2015,0
+"1317","Tatoosh Island",1,"KA","Black rockfish","SEME","large",2015,1
+"1318","Tatoosh Island",1,"KA","Blackeye goby","RHNI",NA,2015,0
+"1319","Tatoosh Island",1,"KA","Buffalo sculpin","ENBI",NA,2015,0
+"1320","Tatoosh Island",1,"KA","Cabezon","SCMA",NA,2015,0
+"1321","Tatoosh Island",1,"KA","Copper rockfish","SECA","large",2015,0
+"1322","Tatoosh Island",1,"KA","Great sculpin","MYOP",NA,2015,0
+"1323","Tatoosh Island",1,"KA","Kelp greenling","HEDE",NA,2015,1
+"1324","Tatoosh Island",1,"KA","Lingcod","OPEL",NA,2015,0
+"1325","Tatoosh Island",1,"KA","Painted greenling","OXPI",NA,2015,0
+"1326","Tatoosh Island",1,"KA","Quillback rockfish","SEMA","large",2015,0
+"1327","Tatoosh Island",1,"KA","Red Irish Lord","HEHE",NA,2015,0
+"1328","Tatoosh Island",1,"KA","Rock greenling","HELA",NA,2015,0
+"1329","Tatoosh Island",1,"KA","Striped seaperch","EMLA",NA,2015,0
+"1330","Tatoosh Island",1,"KA","Tubesnout","AUFL",NA,2015,0
+"1331","Tatoosh Island",1,"KA","YOY rockfish (black dorsal spots)","RYOY","small",2015,0
+"1332","Tatoosh Island",1,"KA","bait-sardines-anchovy","BAITBALL",NA,2015,0
+"1333","Tatoosh Island",1,"KA","black rockfish","SEME","small",2015,0
+"1334","Tatoosh Island",1,"KA","blue rockfish","SEMY","large",2015,0
+"1335","Tatoosh Island",1,"KA","blue rockfish","SEMY","small",2015,0
+"1336","Tatoosh Island",1,"KA","c-o sole","PLCO",NA,2015,0
+"1337","Tatoosh Island",1,"KA","canary rockfish","SEPI","large",2015,0
+"1338","Tatoosh Island",1,"KA","canary rockfish","SEPI","small",2015,0
+"1339","Tatoosh Island",1,"KA","china rockfish","SENE","large",2015,0
+"1340","Tatoosh Island",1,"KA","china rockfish","SENE","small",2015,0
+"1341","Tatoosh Island",1,"KA","copper rockfish","SECA","small",2015,0
+"1342","Tatoosh Island",1,"KA","greenlings","HEXA",NA,2015,0
+"1343","Tatoosh Island",1,"KA","gunnels","PHOL",NA,2015,0
+"1344","Tatoosh Island",1,"KA","herring","CLUP",NA,2015,0
+"1345","Tatoosh Island",1,"KA","kelp clingfish","RIMU",NA,2015,0
+"1346","Tatoosh Island",1,"KA","longfin sculpin","JOZO",NA,2015,0
+"1347","Tatoosh Island",1,"KA","manacled sculpin","SYGI",NA,2015,0
+"1348","Tatoosh Island",1,"KA","mosshead warbonnet","CHNU",NA,2015,0
+"1349","Tatoosh Island",1,"KA","no_transect_no_data","NO_DATA",NA,2015,0
+"1350","Tatoosh Island",1,"KA","pile perch","RHVA",NA,2015,0
+"1351","Tatoosh Island",1,"KA","quillback rockfish","SEMA","small",2015,0
+"1352","Tatoosh Island",1,"KA","rockfish","SEBSPP","large",2015,0
+"1353","Tatoosh Island",1,"KA","rockfish","SEBSPP","small",2015,0
+"1354","Tatoosh Island",1,"KA","sanddabs","CITH",NA,2015,0
+"1355","Tatoosh Island",1,"KA","scalyhead sculpin","ARHA",NA,2015,0
+"1356","Tatoosh Island",1,"KA","sculpin","COTT",NA,2015,0
+"1357","Tatoosh Island",1,"KA","surfperch","EMBI",NA,2015,0
+"1358","Tatoosh Island",1,"KA","unidentified fish","UNID",NA,2015,0
+"1359","Tatoosh Island",1,"KA","whitespotted greenling","HEST",NA,2015,0
+"1360","Tatoosh Island",1,"KA","yellowtail rockfish","SEFL","large",2015,0
+"1361","Tatoosh Island",1,"KA","yellowtail rockfish","SEFL","small",2015,0
+"1362","Tatoosh Island",1,"KA","yellowtail-black yoy","SEBYT","small",2015,0
+"1363","Tatoosh Island",1,"KA",NA,"AMHE",NA,2015,0
+"1364","Tatoosh Island",1,"NT","Black rockfish","SEME","large",2015,0
+"1365","Tatoosh Island",1,"NT","Blackeye goby","RHNI",NA,2015,0
+"1366","Tatoosh Island",1,"NT","Buffalo sculpin","ENBI",NA,2015,0
+"1367","Tatoosh Island",1,"NT","Cabezon","SCMA",NA,2015,0
+"1368","Tatoosh Island",1,"NT","Copper rockfish","SECA","large",2015,0
+"1369","Tatoosh Island",1,"NT","Great sculpin","MYOP",NA,2015,0
+"1370","Tatoosh Island",1,"NT","Kelp greenling","HEDE",NA,2015,1
+"1371","Tatoosh Island",1,"NT","Lingcod","OPEL",NA,2015,1
+"1372","Tatoosh Island",1,"NT","Painted greenling","OXPI",NA,2015,0
+"1373","Tatoosh Island",1,"NT","Quillback rockfish","SEMA","large",2015,0
+"1374","Tatoosh Island",1,"NT","Red Irish Lord","HEHE",NA,2015,0
+"1375","Tatoosh Island",1,"NT","Rock greenling","HELA",NA,2015,0
+"1376","Tatoosh Island",1,"NT","Striped seaperch","EMLA",NA,2015,0
+"1377","Tatoosh Island",1,"NT","Tubesnout","AUFL",NA,2015,0
+"1378","Tatoosh Island",1,"NT","YOY rockfish (black dorsal spots)","RYOY","small",2015,0
+"1379","Tatoosh Island",1,"NT","bait-sardines-anchovy","BAITBALL",NA,2015,0
+"1380","Tatoosh Island",1,"NT","black rockfish","SEME","small",2015,0
+"1381","Tatoosh Island",1,"NT","blue rockfish","SEMY","large",2015,0
+"1382","Tatoosh Island",1,"NT","blue rockfish","SEMY","small",2015,0
+"1383","Tatoosh Island",1,"NT","c-o sole","PLCO",NA,2015,0
+"1384","Tatoosh Island",1,"NT","canary rockfish","SEPI","large",2015,0
+"1385","Tatoosh Island",1,"NT","canary rockfish","SEPI","small",2015,0
+"1386","Tatoosh Island",1,"NT","china rockfish","SENE","large",2015,0
+"1387","Tatoosh Island",1,"NT","china rockfish","SENE","small",2015,0
+"1388","Tatoosh Island",1,"NT","copper rockfish","SECA","small",2015,0
+"1389","Tatoosh Island",1,"NT","greenlings","HEXA",NA,2015,0
+"1390","Tatoosh Island",1,"NT","gunnels","PHOL",NA,2015,0
+"1391","Tatoosh Island",1,"NT","herring","CLUP",NA,2015,0
+"1392","Tatoosh Island",1,"NT","kelp clingfish","RIMU",NA,2015,0
+"1393","Tatoosh Island",1,"NT","longfin sculpin","JOZO",NA,2015,0
+"1394","Tatoosh Island",1,"NT","manacled sculpin","SYGI",NA,2015,0
+"1395","Tatoosh Island",1,"NT","mosshead warbonnet","CHNU",NA,2015,0
+"1396","Tatoosh Island",1,"NT","no_transect_no_data","NO_DATA",NA,2015,0
+"1397","Tatoosh Island",1,"NT","pile perch","RHVA",NA,2015,0
+"1398","Tatoosh Island",1,"NT","quillback rockfish","SEMA","small",2015,0
+"1399","Tatoosh Island",1,"NT","rockfish","SEBSPP","large",2015,0
+"1400","Tatoosh Island",1,"NT","rockfish","SEBSPP","small",2015,0
+"1401","Tatoosh Island",1,"NT","sanddabs","CITH",NA,2015,0
+"1402","Tatoosh Island",1,"NT","scalyhead sculpin","ARHA",NA,2015,0
+"1403","Tatoosh Island",1,"NT","sculpin","COTT",NA,2015,0
+"1404","Tatoosh Island",1,"NT","surfperch","EMBI",NA,2015,0
+"1405","Tatoosh Island",1,"NT","unidentified fish","UNID",NA,2015,0
+"1406","Tatoosh Island",1,"NT","whitespotted greenling","HEST",NA,2015,0
+"1407","Tatoosh Island",1,"NT","yellowtail rockfish","SEFL","large",2015,0
+"1408","Tatoosh Island",1,"NT","yellowtail rockfish","SEFL","small",2015,0
+"1409","Tatoosh Island",1,"NT","yellowtail-black yoy","SEBYT","small",2015,0
+"1410","Tatoosh Island",1,"NT",NA,"AMHE",NA,2015,0
+"1411","Tatoosh Island",2,"KA","Black rockfish","SEME","large",2015,0
+"1412","Tatoosh Island",2,"KA","Blackeye goby","RHNI",NA,2015,0
+"1413","Tatoosh Island",2,"KA","Buffalo sculpin","ENBI",NA,2015,0
+"1414","Tatoosh Island",2,"KA","Cabezon","SCMA",NA,2015,0
+"1415","Tatoosh Island",2,"KA","Copper rockfish","SECA","large",2015,0
+"1416","Tatoosh Island",2,"KA","Great sculpin","MYOP",NA,2015,0
+"1417","Tatoosh Island",2,"KA","Kelp greenling","HEDE",NA,2015,0
+"1418","Tatoosh Island",2,"KA","Lingcod","OPEL",NA,2015,0
+"1419","Tatoosh Island",2,"KA","Painted greenling","OXPI",NA,2015,0
+"1420","Tatoosh Island",2,"KA","Quillback rockfish","SEMA","large",2015,0
+"1421","Tatoosh Island",2,"KA","Red Irish Lord","HEHE",NA,2015,0
+"1422","Tatoosh Island",2,"KA","Rock greenling","HELA",NA,2015,0
+"1423","Tatoosh Island",2,"KA","Striped seaperch","EMLA",NA,2015,0
+"1424","Tatoosh Island",2,"KA","Tubesnout","AUFL",NA,2015,0
+"1425","Tatoosh Island",2,"KA","YOY rockfish (black dorsal spots)","RYOY","small",2015,0
+"1426","Tatoosh Island",2,"KA","bait-sardines-anchovy","BAITBALL",NA,2015,0
+"1427","Tatoosh Island",2,"KA","black rockfish","SEME","small",2015,0
+"1428","Tatoosh Island",2,"KA","blue rockfish","SEMY","large",2015,0
+"1429","Tatoosh Island",2,"KA","blue rockfish","SEMY","small",2015,0
+"1430","Tatoosh Island",2,"KA","c-o sole","PLCO",NA,2015,0
+"1431","Tatoosh Island",2,"KA","canary rockfish","SEPI","large",2015,0
+"1432","Tatoosh Island",2,"KA","canary rockfish","SEPI","small",2015,0
+"1433","Tatoosh Island",2,"KA","china rockfish","SENE","large",2015,0
+"1434","Tatoosh Island",2,"KA","china rockfish","SENE","small",2015,0
+"1435","Tatoosh Island",2,"KA","copper rockfish","SECA","small",2015,0
+"1436","Tatoosh Island",2,"KA","greenlings","HEXA",NA,2015,0
+"1437","Tatoosh Island",2,"KA","gunnels","PHOL",NA,2015,0
+"1438","Tatoosh Island",2,"KA","herring","CLUP",NA,2015,0
+"1439","Tatoosh Island",2,"KA","kelp clingfish","RIMU",NA,2015,0
+"1440","Tatoosh Island",2,"KA","longfin sculpin","JOZO",NA,2015,0
+"1441","Tatoosh Island",2,"KA","manacled sculpin","SYGI",NA,2015,0
+"1442","Tatoosh Island",2,"KA","mosshead warbonnet","CHNU",NA,2015,0
+"1443","Tatoosh Island",2,"KA","no_transect_no_data","NO_DATA",NA,2015,0
+"1444","Tatoosh Island",2,"KA","pile perch","RHVA",NA,2015,0
+"1445","Tatoosh Island",2,"KA","quillback rockfish","SEMA","small",2015,0
+"1446","Tatoosh Island",2,"KA","rockfish","SEBSPP","large",2015,0
+"1447","Tatoosh Island",2,"KA","rockfish","SEBSPP","small",2015,0
+"1448","Tatoosh Island",2,"KA","sanddabs","CITH",NA,2015,0
+"1449","Tatoosh Island",2,"KA","scalyhead sculpin","ARHA",NA,2015,0
+"1450","Tatoosh Island",2,"KA","sculpin","COTT",NA,2015,0
+"1451","Tatoosh Island",2,"KA","surfperch","EMBI",NA,2015,0
+"1452","Tatoosh Island",2,"KA","unidentified fish","UNID",NA,2015,0
+"1453","Tatoosh Island",2,"KA","whitespotted greenling","HEST",NA,2015,0
+"1454","Tatoosh Island",2,"KA","yellowtail rockfish","SEFL","large",2015,0
+"1455","Tatoosh Island",2,"KA","yellowtail rockfish","SEFL","small",2015,0
+"1456","Tatoosh Island",2,"KA","yellowtail-black yoy","SEBYT","small",2015,0
+"1457","Tatoosh Island",2,"KA",NA,"AMHE",NA,2015,0
+"1458","Tatoosh Island",2,"NT","Black rockfish","SEME","large",2015,0
+"1459","Tatoosh Island",2,"NT","Blackeye goby","RHNI",NA,2015,0
+"1460","Tatoosh Island",2,"NT","Buffalo sculpin","ENBI",NA,2015,0
+"1461","Tatoosh Island",2,"NT","Cabezon","SCMA",NA,2015,0
+"1462","Tatoosh Island",2,"NT","Copper rockfish","SECA","large",2015,0
+"1463","Tatoosh Island",2,"NT","Great sculpin","MYOP",NA,2015,0
+"1464","Tatoosh Island",2,"NT","Kelp greenling","HEDE",NA,2015,0
+"1465","Tatoosh Island",2,"NT","Lingcod","OPEL",NA,2015,0
+"1466","Tatoosh Island",2,"NT","Painted greenling","OXPI",NA,2015,0
+"1467","Tatoosh Island",2,"NT","Quillback rockfish","SEMA","large",2015,0
+"1468","Tatoosh Island",2,"NT","Red Irish Lord","HEHE",NA,2015,0
+"1469","Tatoosh Island",2,"NT","Rock greenling","HELA",NA,2015,1
+"1470","Tatoosh Island",2,"NT","Striped seaperch","EMLA",NA,2015,0
+"1471","Tatoosh Island",2,"NT","Tubesnout","AUFL",NA,2015,0
+"1472","Tatoosh Island",2,"NT","YOY rockfish (black dorsal spots)","RYOY","small",2015,0
+"1473","Tatoosh Island",2,"NT","bait-sardines-anchovy","BAITBALL",NA,2015,0
+"1474","Tatoosh Island",2,"NT","black rockfish","SEME","small",2015,0
+"1475","Tatoosh Island",2,"NT","blue rockfish","SEMY","large",2015,0
+"1476","Tatoosh Island",2,"NT","blue rockfish","SEMY","small",2015,0
+"1477","Tatoosh Island",2,"NT","c-o sole","PLCO",NA,2015,0
+"1478","Tatoosh Island",2,"NT","canary rockfish","SEPI","large",2015,0
+"1479","Tatoosh Island",2,"NT","canary rockfish","SEPI","small",2015,0
+"1480","Tatoosh Island",2,"NT","china rockfish","SENE","large",2015,0
+"1481","Tatoosh Island",2,"NT","china rockfish","SENE","small",2015,0
+"1482","Tatoosh Island",2,"NT","copper rockfish","SECA","small",2015,0
+"1483","Tatoosh Island",2,"NT","greenlings","HEXA",NA,2015,0
+"1484","Tatoosh Island",2,"NT","gunnels","PHOL",NA,2015,0
+"1485","Tatoosh Island",2,"NT","herring","CLUP",NA,2015,0
+"1486","Tatoosh Island",2,"NT","kelp clingfish","RIMU",NA,2015,0
+"1487","Tatoosh Island",2,"NT","longfin sculpin","JOZO",NA,2015,0
+"1488","Tatoosh Island",2,"NT","manacled sculpin","SYGI",NA,2015,0
+"1489","Tatoosh Island",2,"NT","mosshead warbonnet","CHNU",NA,2015,0
+"1490","Tatoosh Island",2,"NT","no_transect_no_data","NO_DATA",NA,2015,0
+"1491","Tatoosh Island",2,"NT","pile perch","RHVA",NA,2015,0
+"1492","Tatoosh Island",2,"NT","quillback rockfish","SEMA","small",2015,0
+"1493","Tatoosh Island",2,"NT","rockfish","SEBSPP","large",2015,0
+"1494","Tatoosh Island",2,"NT","rockfish","SEBSPP","small",2015,0
+"1495","Tatoosh Island",2,"NT","sanddabs","CITH",NA,2015,0
+"1496","Tatoosh Island",2,"NT","scalyhead sculpin","ARHA",NA,2015,0
+"1497","Tatoosh Island",2,"NT","sculpin","COTT",NA,2015,0
+"1498","Tatoosh Island",2,"NT","surfperch","EMBI",NA,2015,0
+"1499","Tatoosh Island",2,"NT","unidentified fish","UNID",NA,2015,0
+"1500","Tatoosh Island",2,"NT","whitespotted greenling","HEST",NA,2015,0
+"1501","Tatoosh Island",2,"NT","yellowtail rockfish","SEFL","large",2015,0
+"1502","Tatoosh Island",2,"NT","yellowtail rockfish","SEFL","small",2015,0
+"1503","Tatoosh Island",2,"NT","yellowtail-black yoy","SEBYT","small",2015,0
+"1504","Tatoosh Island",2,"NT",NA,"AMHE",NA,2015,0
+"1505","Teahwhit Head",1,"GW","Black rockfish","SEME","large",2015,0
+"1506","Teahwhit Head",1,"GW","Blackeye goby","RHNI",NA,2015,0
+"1507","Teahwhit Head",1,"GW","Buffalo sculpin","ENBI",NA,2015,0
+"1508","Teahwhit Head",1,"GW","Cabezon","SCMA",NA,2015,0
+"1509","Teahwhit Head",1,"GW","Copper rockfish","SECA","large",2015,0
+"1510","Teahwhit Head",1,"GW","Great sculpin","MYOP",NA,2015,0
+"1511","Teahwhit Head",1,"GW","Kelp greenling","HEDE",NA,2015,0
+"1512","Teahwhit Head",1,"GW","Lingcod","OPEL",NA,2015,0
+"1513","Teahwhit Head",1,"GW","Painted greenling","OXPI",NA,2015,0
+"1514","Teahwhit Head",1,"GW","Quillback rockfish","SEMA","large",2015,0
+"1515","Teahwhit Head",1,"GW","Red Irish Lord","HEHE",NA,2015,0
+"1516","Teahwhit Head",1,"GW","Rock greenling","HELA",NA,2015,1
+"1517","Teahwhit Head",1,"GW","Striped seaperch","EMLA",NA,2015,0
+"1518","Teahwhit Head",1,"GW","Tubesnout","AUFL",NA,2015,0
+"1519","Teahwhit Head",1,"GW","YOY rockfish (black dorsal spots)","RYOY","small",2015,1
+"1520","Teahwhit Head",1,"GW","bait-sardines-anchovy","BAITBALL",NA,2015,0
+"1521","Teahwhit Head",1,"GW","black rockfish","SEME","small",2015,0
+"1522","Teahwhit Head",1,"GW","blue rockfish","SEMY","large",2015,0
+"1523","Teahwhit Head",1,"GW","blue rockfish","SEMY","small",2015,0
+"1524","Teahwhit Head",1,"GW","c-o sole","PLCO",NA,2015,0
+"1525","Teahwhit Head",1,"GW","canary rockfish","SEPI","large",2015,0
+"1526","Teahwhit Head",1,"GW","canary rockfish","SEPI","small",2015,0
+"1527","Teahwhit Head",1,"GW","china rockfish","SENE","large",2015,0
+"1528","Teahwhit Head",1,"GW","china rockfish","SENE","small",2015,0
+"1529","Teahwhit Head",1,"GW","copper rockfish","SECA","small",2015,0
+"1530","Teahwhit Head",1,"GW","greenlings","HEXA",NA,2015,0
+"1531","Teahwhit Head",1,"GW","gunnels","PHOL",NA,2015,0
+"1532","Teahwhit Head",1,"GW","herring","CLUP",NA,2015,0
+"1533","Teahwhit Head",1,"GW","kelp clingfish","RIMU",NA,2015,0
+"1534","Teahwhit Head",1,"GW","longfin sculpin","JOZO",NA,2015,0
+"1535","Teahwhit Head",1,"GW","manacled sculpin","SYGI",NA,2015,0
+"1536","Teahwhit Head",1,"GW","mosshead warbonnet","CHNU",NA,2015,0
+"1537","Teahwhit Head",1,"GW","no_transect_no_data","NO_DATA",NA,2015,0
+"1538","Teahwhit Head",1,"GW","pile perch","RHVA",NA,2015,0
+"1539","Teahwhit Head",1,"GW","quillback rockfish","SEMA","small",2015,0
+"1540","Teahwhit Head",1,"GW","rockfish","SEBSPP","large",2015,0
+"1541","Teahwhit Head",1,"GW","rockfish","SEBSPP","small",2015,0
+"1542","Teahwhit Head",1,"GW","sanddabs","CITH",NA,2015,0
+"1543","Teahwhit Head",1,"GW","scalyhead sculpin","ARHA",NA,2015,0
+"1544","Teahwhit Head",1,"GW","sculpin","COTT",NA,2015,2
+"1545","Teahwhit Head",1,"GW","surfperch","EMBI",NA,2015,0
+"1546","Teahwhit Head",1,"GW","unidentified fish","UNID",NA,2015,0
+"1547","Teahwhit Head",1,"GW","whitespotted greenling","HEST",NA,2015,0
+"1548","Teahwhit Head",1,"GW","yellowtail rockfish","SEFL","large",2015,0
+"1549","Teahwhit Head",1,"GW","yellowtail rockfish","SEFL","small",2015,0
+"1550","Teahwhit Head",1,"GW","yellowtail-black yoy","SEBYT","small",2015,0
+"1551","Teahwhit Head",1,"GW",NA,"AMHE",NA,2015,0
+"1552","Teahwhit Head",1,"KF","Black rockfish","SEME","large",2015,0
+"1553","Teahwhit Head",1,"KF","Blackeye goby","RHNI",NA,2015,0
+"1554","Teahwhit Head",1,"KF","Buffalo sculpin","ENBI",NA,2015,0
+"1555","Teahwhit Head",1,"KF","Cabezon","SCMA",NA,2015,0
+"1556","Teahwhit Head",1,"KF","Copper rockfish","SECA","large",2015,0
+"1557","Teahwhit Head",1,"KF","Great sculpin","MYOP",NA,2015,1
+"1558","Teahwhit Head",1,"KF","Kelp greenling","HEDE",NA,2015,0
+"1559","Teahwhit Head",1,"KF","Lingcod","OPEL",NA,2015,0
+"1560","Teahwhit Head",1,"KF","Painted greenling","OXPI",NA,2015,0
+"1561","Teahwhit Head",1,"KF","Quillback rockfish","SEMA","large",2015,0
+"1562","Teahwhit Head",1,"KF","Red Irish Lord","HEHE",NA,2015,0
+"1563","Teahwhit Head",1,"KF","Rock greenling","HELA",NA,2015,0
+"1564","Teahwhit Head",1,"KF","Striped seaperch","EMLA",NA,2015,0
+"1565","Teahwhit Head",1,"KF","Tubesnout","AUFL",NA,2015,0
+"1566","Teahwhit Head",1,"KF","YOY rockfish (black dorsal spots)","RYOY","small",2015,0
+"1567","Teahwhit Head",1,"KF","bait-sardines-anchovy","BAITBALL",NA,2015,0
+"1568","Teahwhit Head",1,"KF","black rockfish","SEME","small",2015,0
+"1569","Teahwhit Head",1,"KF","blue rockfish","SEMY","large",2015,0
+"1570","Teahwhit Head",1,"KF","blue rockfish","SEMY","small",2015,0
+"1571","Teahwhit Head",1,"KF","c-o sole","PLCO",NA,2015,0
+"1572","Teahwhit Head",1,"KF","canary rockfish","SEPI","large",2015,0
+"1573","Teahwhit Head",1,"KF","canary rockfish","SEPI","small",2015,0
+"1574","Teahwhit Head",1,"KF","china rockfish","SENE","large",2015,0
+"1575","Teahwhit Head",1,"KF","china rockfish","SENE","small",2015,0
+"1576","Teahwhit Head",1,"KF","copper rockfish","SECA","small",2015,0
+"1577","Teahwhit Head",1,"KF","greenlings","HEXA",NA,2015,0
+"1578","Teahwhit Head",1,"KF","gunnels","PHOL",NA,2015,0
+"1579","Teahwhit Head",1,"KF","herring","CLUP",NA,2015,0
+"1580","Teahwhit Head",1,"KF","kelp clingfish","RIMU",NA,2015,0
+"1581","Teahwhit Head",1,"KF","longfin sculpin","JOZO",NA,2015,0
+"1582","Teahwhit Head",1,"KF","manacled sculpin","SYGI",NA,2015,0
+"1583","Teahwhit Head",1,"KF","mosshead warbonnet","CHNU",NA,2015,0
+"1584","Teahwhit Head",1,"KF","no_transect_no_data","NO_DATA",NA,2015,0
+"1585","Teahwhit Head",1,"KF","pile perch","RHVA",NA,2015,0
+"1586","Teahwhit Head",1,"KF","quillback rockfish","SEMA","small",2015,0
+"1587","Teahwhit Head",1,"KF","rockfish","SEBSPP","large",2015,0
+"1588","Teahwhit Head",1,"KF","rockfish","SEBSPP","small",2015,0
+"1589","Teahwhit Head",1,"KF","sanddabs","CITH",NA,2015,0
+"1590","Teahwhit Head",1,"KF","scalyhead sculpin","ARHA",NA,2015,0
+"1591","Teahwhit Head",1,"KF","sculpin","COTT",NA,2015,0
+"1592","Teahwhit Head",1,"KF","surfperch","EMBI",NA,2015,0
+"1593","Teahwhit Head",1,"KF","unidentified fish","UNID",NA,2015,0
+"1594","Teahwhit Head",1,"KF","whitespotted greenling","HEST",NA,2015,0
+"1595","Teahwhit Head",1,"KF","yellowtail rockfish","SEFL","large",2015,0
+"1596","Teahwhit Head",1,"KF","yellowtail rockfish","SEFL","small",2015,0
+"1597","Teahwhit Head",1,"KF","yellowtail-black yoy","SEBYT","small",2015,0
+"1598","Teahwhit Head",1,"KF",NA,"AMHE",NA,2015,0
+"1599","Teahwhit Head",1,"NT","Black rockfish","SEME","large",2015,0
+"1600","Teahwhit Head",1,"NT","Blackeye goby","RHNI",NA,2015,0
+"1601","Teahwhit Head",1,"NT","Buffalo sculpin","ENBI",NA,2015,0
+"1602","Teahwhit Head",1,"NT","Cabezon","SCMA",NA,2015,0
+"1603","Teahwhit Head",1,"NT","Copper rockfish","SECA","large",2015,0
+"1604","Teahwhit Head",1,"NT","Great sculpin","MYOP",NA,2015,0
+"1605","Teahwhit Head",1,"NT","Kelp greenling","HEDE",NA,2015,1
+"1606","Teahwhit Head",1,"NT","Lingcod","OPEL",NA,2015,0
+"1607","Teahwhit Head",1,"NT","Painted greenling","OXPI",NA,2015,0
+"1608","Teahwhit Head",1,"NT","Quillback rockfish","SEMA","large",2015,0
+"1609","Teahwhit Head",1,"NT","Red Irish Lord","HEHE",NA,2015,0
+"1610","Teahwhit Head",1,"NT","Rock greenling","HELA",NA,2015,0
+"1611","Teahwhit Head",1,"NT","Striped seaperch","EMLA",NA,2015,0
+"1612","Teahwhit Head",1,"NT","Tubesnout","AUFL",NA,2015,0
+"1613","Teahwhit Head",1,"NT","YOY rockfish (black dorsal spots)","RYOY","small",2015,0
+"1614","Teahwhit Head",1,"NT","bait-sardines-anchovy","BAITBALL",NA,2015,0
+"1615","Teahwhit Head",1,"NT","black rockfish","SEME","small",2015,0
+"1616","Teahwhit Head",1,"NT","blue rockfish","SEMY","large",2015,0
+"1617","Teahwhit Head",1,"NT","blue rockfish","SEMY","small",2015,0
+"1618","Teahwhit Head",1,"NT","c-o sole","PLCO",NA,2015,0
+"1619","Teahwhit Head",1,"NT","canary rockfish","SEPI","large",2015,0
+"1620","Teahwhit Head",1,"NT","canary rockfish","SEPI","small",2015,0
+"1621","Teahwhit Head",1,"NT","china rockfish","SENE","large",2015,0
+"1622","Teahwhit Head",1,"NT","china rockfish","SENE","small",2015,0
+"1623","Teahwhit Head",1,"NT","copper rockfish","SECA","small",2015,0
+"1624","Teahwhit Head",1,"NT","greenlings","HEXA",NA,2015,0
+"1625","Teahwhit Head",1,"NT","gunnels","PHOL",NA,2015,0
+"1626","Teahwhit Head",1,"NT","herring","CLUP",NA,2015,0
+"1627","Teahwhit Head",1,"NT","kelp clingfish","RIMU",NA,2015,0
+"1628","Teahwhit Head",1,"NT","longfin sculpin","JOZO",NA,2015,0
+"1629","Teahwhit Head",1,"NT","manacled sculpin","SYGI",NA,2015,0
+"1630","Teahwhit Head",1,"NT","mosshead warbonnet","CHNU",NA,2015,0
+"1631","Teahwhit Head",1,"NT","no_transect_no_data","NO_DATA",NA,2015,0
+"1632","Teahwhit Head",1,"NT","pile perch","RHVA",NA,2015,0
+"1633","Teahwhit Head",1,"NT","quillback rockfish","SEMA","small",2015,0
+"1634","Teahwhit Head",1,"NT","rockfish","SEBSPP","large",2015,0
+"1635","Teahwhit Head",1,"NT","rockfish","SEBSPP","small",2015,0
+"1636","Teahwhit Head",1,"NT","sanddabs","CITH",NA,2015,0
+"1637","Teahwhit Head",1,"NT","scalyhead sculpin","ARHA",NA,2015,0
+"1638","Teahwhit Head",1,"NT","sculpin","COTT",NA,2015,0
+"1639","Teahwhit Head",1,"NT","surfperch","EMBI",NA,2015,0
+"1640","Teahwhit Head",1,"NT","unidentified fish","UNID",NA,2015,0
+"1641","Teahwhit Head",1,"NT","whitespotted greenling","HEST",NA,2015,0
+"1642","Teahwhit Head",1,"NT","yellowtail rockfish","SEFL","large",2015,0
+"1643","Teahwhit Head",1,"NT","yellowtail rockfish","SEFL","small",2015,0
+"1644","Teahwhit Head",1,"NT","yellowtail-black yoy","SEBYT","small",2015,0
+"1645","Teahwhit Head",1,"NT",NA,"AMHE",NA,2015,0
+"1646","Teahwhit Head",2,"GW","Black rockfish","SEME","large",2015,0
+"1647","Teahwhit Head",2,"GW","Blackeye goby","RHNI",NA,2015,0
+"1648","Teahwhit Head",2,"GW","Buffalo sculpin","ENBI",NA,2015,1
+"1649","Teahwhit Head",2,"GW","Cabezon","SCMA",NA,2015,0
+"1650","Teahwhit Head",2,"GW","Copper rockfish","SECA","large",2015,0
+"1651","Teahwhit Head",2,"GW","Great sculpin","MYOP",NA,2015,0
+"1652","Teahwhit Head",2,"GW","Kelp greenling","HEDE",NA,2015,0
+"1653","Teahwhit Head",2,"GW","Lingcod","OPEL",NA,2015,0
+"1654","Teahwhit Head",2,"GW","Painted greenling","OXPI",NA,2015,0
+"1655","Teahwhit Head",2,"GW","Quillback rockfish","SEMA","large",2015,0
+"1656","Teahwhit Head",2,"GW","Red Irish Lord","HEHE",NA,2015,0
+"1657","Teahwhit Head",2,"GW","Rock greenling","HELA",NA,2015,0
+"1658","Teahwhit Head",2,"GW","Striped seaperch","EMLA",NA,2015,0
+"1659","Teahwhit Head",2,"GW","Tubesnout","AUFL",NA,2015,0
+"1660","Teahwhit Head",2,"GW","YOY rockfish (black dorsal spots)","RYOY","small",2015,3
+"1661","Teahwhit Head",2,"GW","bait-sardines-anchovy","BAITBALL",NA,2015,0
+"1662","Teahwhit Head",2,"GW","black rockfish","SEME","small",2015,0
+"1663","Teahwhit Head",2,"GW","blue rockfish","SEMY","large",2015,0
+"1664","Teahwhit Head",2,"GW","blue rockfish","SEMY","small",2015,0
+"1665","Teahwhit Head",2,"GW","c-o sole","PLCO",NA,2015,0
+"1666","Teahwhit Head",2,"GW","canary rockfish","SEPI","large",2015,0
+"1667","Teahwhit Head",2,"GW","canary rockfish","SEPI","small",2015,0
+"1668","Teahwhit Head",2,"GW","china rockfish","SENE","large",2015,0
+"1669","Teahwhit Head",2,"GW","china rockfish","SENE","small",2015,0
+"1670","Teahwhit Head",2,"GW","copper rockfish","SECA","small",2015,0
+"1671","Teahwhit Head",2,"GW","greenlings","HEXA",NA,2015,0
+"1672","Teahwhit Head",2,"GW","gunnels","PHOL",NA,2015,0
+"1673","Teahwhit Head",2,"GW","herring","CLUP",NA,2015,0
+"1674","Teahwhit Head",2,"GW","kelp clingfish","RIMU",NA,2015,0
+"1675","Teahwhit Head",2,"GW","longfin sculpin","JOZO",NA,2015,0
+"1676","Teahwhit Head",2,"GW","manacled sculpin","SYGI",NA,2015,0
+"1677","Teahwhit Head",2,"GW","mosshead warbonnet","CHNU",NA,2015,0
+"1678","Teahwhit Head",2,"GW","no_transect_no_data","NO_DATA",NA,2015,0
+"1679","Teahwhit Head",2,"GW","pile perch","RHVA",NA,2015,0
+"1680","Teahwhit Head",2,"GW","quillback rockfish","SEMA","small",2015,0
+"1681","Teahwhit Head",2,"GW","rockfish","SEBSPP","large",2015,0
+"1682","Teahwhit Head",2,"GW","rockfish","SEBSPP","small",2015,0
+"1683","Teahwhit Head",2,"GW","sanddabs","CITH",NA,2015,0
+"1684","Teahwhit Head",2,"GW","scalyhead sculpin","ARHA",NA,2015,0
+"1685","Teahwhit Head",2,"GW","sculpin","COTT",NA,2015,1
+"1686","Teahwhit Head",2,"GW","surfperch","EMBI",NA,2015,0
+"1687","Teahwhit Head",2,"GW","unidentified fish","UNID",NA,2015,0
+"1688","Teahwhit Head",2,"GW","whitespotted greenling","HEST",NA,2015,0
+"1689","Teahwhit Head",2,"GW","yellowtail rockfish","SEFL","large",2015,0
+"1690","Teahwhit Head",2,"GW","yellowtail rockfish","SEFL","small",2015,0
+"1691","Teahwhit Head",2,"GW","yellowtail-black yoy","SEBYT","small",2015,0
+"1692","Teahwhit Head",2,"GW",NA,"AMHE",NA,2015,0
