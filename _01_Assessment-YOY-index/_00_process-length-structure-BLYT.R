@@ -8,23 +8,20 @@ library(ggplot2)
 library(viridis)
 library(reshape2)
 library(tidyverse)
-
+library(here)
 # select species and max year ##################################################
 spp = 'SEME' # black rockfish
 # spp = 'SEFL' # yellowtail rockfish
-survey_year = 2024
+survey_year = 2025
 ################################################################################
 
-home_dir<- "~/GitHub/OCNMS/"
-setwd(home_dir)
-data_out = paste0(home_dir,"/_01_Assessment-indicies-BRF-YTRF/")
-
-dat.2015 <- read.csv("~/Github/OCNMS/Data/CSV_2015_on/2015_OCNMSDataComplete_standardized_122116.csv")
+home_dir<-here::here()
+dat.2015 <- read.csv(paste0(home_dir,"/Data/CSV_2015_on/2015_OCNMSDataComplete_standardized_122116.csv"))
 
 dat.2016.on.fish <- read.csv(
-    paste0(home_dir,"Data/", survey_year, "/NWFSC_FISH_ALLYEARS_data_",survey_year,".csv"))
+    paste0(home_dir,"/Data/", survey_year, "/NWFSC_FISH_ALLYEARS_data_",survey_year,".csv"))
 
-species_names <- read.csv("~/Github/OCNMS/_00_Annual-Update/spp_codes_fish.csv")
+species_names <- read.csv(paste0(home_dir,"/_00_Annual-Update/spp_codes_fish.csv"))
 
 # trim data to include only swath dat
 dat.fish <- dat.2015 %>% filter(data.type=="swath",PISCO.datatype=="fish")
@@ -223,14 +220,14 @@ length.dat <- list(
 if(spp=='SEME'){SPP = "Black rockfish"}
 if(spp=='SEFL'){SPP = "Yellowtail rockfish"}
 
-save(length.dat, file=paste0(data_out,SPP, "_lengths_2015-", survey_year,".Rdata"))
+save(length.dat, file=paste0(SPP, "_lengths_2015-", survey_year,".Rdata"))
 
 dat.spp.all.2cm = dat.spp.all %>% 
                     dplyr::select(YEAR,SITE,SPECIES,COUNT,bin_min,bin_max,bin_range) %>%
                     filter(bin_min >=10)                    
 
 write.csv(dat.spp.all.2cm,
-          file=paste0(data_out, SPP, "_2015-", survey_year,"_lengths_2cm_bin_OCNMS.csv"),row.names = FALSE)
+          file=paste0( SPP, "_2015-", survey_year,"_lengths_2cm_bin_OCNMS.csv"),row.names = FALSE)
 
 rm(list=c(spp, SPP))
 
