@@ -1,0 +1,112 @@
+---
+title: "Annual update - UPC"
+author: Nick Toimieri
+date: sys.date()
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 5
+    number_sections: true
+    fig_caption: true
+fontsize: 11pt
+---
+# NOTES
+
+To update fish data to the most recent year, you will need: 
+
+- update_swath_fish.R
+
+in the 'update-data' chunk. The update is done automatically within this RMD, but you will need to check that the trigger is turned on in the if statement in the 
+in the 'update-data' is "if(1==1)". 
+
+You will also need to have:
+
+- swath-process-pre-2017-data.R
+- R-functions-ocnms.R  (lots of functions)
+
+as helper files. These are in the repo.
+
+# DATA YEAR 
+
+Set the data_year year
+
+```{r SETUP, include=FALSE}
+rm(list = ls())
+library(here)
+repo_dir = here::here()
+home_dir = paste0(repo_dir,"/_00_Annual-Update/")
+setwd(home_dir) # set home dir to annual update folder
+data_year = 2025
+source("settings.r")
+source("R-functions-ocnms.r")
+
+################################################################################
+
+knitr::opts_chunk$set(
+  root.dir = home_dir,
+  fig.path = fig_dir,
+  cache.path = 'cache/graphics-', 
+  echo=FALSE,
+  error=FALSE,
+  include = TRUE,
+  dev='png',
+  dpi=300,
+  warning=FALSE,
+  #out.width = '100%',
+  fig.align='center'
+)
+
+```
+
+# Bring in data
+
+```{r upc-import}
+
+upc = data.frame(read.csv( paste0(data_dir,'NWFSC_UPC_ALLYEARS_data_2025.csv'), header=T))
+
+upc = upc %>% 
+  mutate(depth_m = `DEPTH..FT.` / 3.281) %>%
+  dplyr::select(-c(entry.order, Cntrl.a, notes, problems, `DEPTH..FT.`, `DEPTH..M.`) )
+  
+upc_transect = upc %>% group_by(YEAR, SITE, SIDE, ZONE, TRANSECT, CATEGORY, CLASSCODE) %>%
+  summarize(count = sum(COUNT))
+
+upc_cover = upc_transect %>% filter(CATEGORY == 'COVER')
+upc_relief = upc_transect %>% filter(CATEGORY == 'RELIEF')
+upc_subs = upc_transect %>% filter(CATEGORY == 'SUBSTRATE')
+
+write.csv(upc_transect, paste0(data_dir,"Summarized_Data_UPC_by_Transect.csv"), row.names = F)
+
+
+```
+
+
+```{r}
+# check counts by transect
+x_relief = upc_relief %>%
+ group_by(YEAR, SITE, SIDE, ZONE, TRANSECT) %>% 
+  summarize(SUM = sum(count))
+
+# quick plot
+
+upc_relief$CLASSCODE[upc_relief$CLASSCODE==">2M"] = ">2m"
+upc_relief$CLASSCODE[upc_relief$CLASSCODE=="<2M"] = "1m-2m"
+upc_relief$CLASSCODE[upc_relief$CLASSCODE=="0-10m"] = "0-10cm"
+
+upc_relief$CLASSCODE = factor(upc_relief$CLASSCODE, 
+                                 levels = c("0-10cm", "10cm-1m","1m-2m", ">2m"))
+levels(upc_relief$CLASSCODE)
+
+relief = upc_relief %>%
+  group_by(YEAR, SITE, CLASSCODE) %>%
+  summarize(avg_count = mean(count))
+relief$prop = relief$avg_count/30
+relief$perc = 100*relief$avg_count/30
+
+```
+
+
+
+
+

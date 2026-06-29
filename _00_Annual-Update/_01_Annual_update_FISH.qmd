@@ -74,31 +74,31 @@ Processed data are saved to: "~/GitHub/OCNMS/Data/2024/" or whatever the current
 
 ```{r download-data-from-google-drive, eval=FALSE, warning=FALSE}
 
-# Pull data from google drive ##################################################
-# main google drive
-gDrive_loc = '0B19J8gHIuD3vc3BGWXh1UGkxVHc'
-# list of folders by year
-year_folders = drive_ls(path = as_id(gDrive_loc) )
-year_name = paste0(data_year, " Data")
-# get this year's file id
-year_id = year_folders$id[match(year_name,year_folders$name)]
-year_dir = drive_ls(path = as_id(year_id) ) 
-# get file ids
-fish_id = year_dir$id[grep("NWFSC_FISH_ALLYEARS_data", year_dir$name)]
-swath_id = year_dir$id[grep("NWFSC_SWATH_ALLYEARS_data", year_dir$name)]
-upc_id = year_dir$id[grep("NWFSC_UPC_ALLYEARS_data", year_dir$name)]
-
-# output file names
-fish_out = paste0(data_dir,'NWFSC_FISH_ALLYEARS_data_',data_year,'.xlsm')
-# download
-drive_download( as_id(fish_id) , path = fish_out, overwrite = TRUE)
-
-# convert to csv
-fishxl = data.frame(read_xlsx(paste0(data_dir,'NWFSC_FISH_ALLYEARS_data_',data_year,'.xlsm'),
-                   sheet = 'DATA'))
-fishxl = fishxl %>% dplyr::select(!Cntrl.a)
-
-write.csv(fishxl, paste0(data_dir,'NWFSC_FISH_ALLYEARS_data_',data_year,'.csv'), row.names = F)
+# # Pull data from google drive ##################################################
+# # main google drive
+# gDrive_loc = '0B19J8gHIuD3vc3BGWXh1UGkxVHc'
+# # list of folders by year
+# year_folders = drive_ls(path = as_id(gDrive_loc) )
+# year_name = paste0(data_year, " Data")
+# # get this year's file id
+# year_id = year_folders$id[match(year_name,year_folders$name)]
+# year_dir = drive_ls(path = as_id(year_id) ) 
+# # get file ids
+# fish_id = year_dir$id[grep("NWFSC_FISH_ALLYEARS_data", year_dir$name)]
+# swath_id = year_dir$id[grep("NWFSC_SWATH_ALLYEARS_data", year_dir$name)]
+# upc_id = year_dir$id[grep("NWFSC_UPC_ALLYEARS_data", year_dir$name)]
+# 
+# # output file names
+# fish_out = paste0(data_dir,'NWFSC_FISH_ALLYEARS_data_',data_year,'.xlsm')
+# # download
+# drive_download( as_id(fish_id) , path = fish_out, overwrite = TRUE)
+# 
+# # convert to csv
+# fishxl = data.frame(read_xlsx(paste0(data_dir,'NWFSC_FISH_ALLYEARS_data_',data_year,'.xlsm'),
+#                    sheet = 'DATA'))
+# fishxl = fishxl %>% dplyr::select(!Cntrl.a)
+# 
+# write.csv(fishxl, paste0(data_dir,'NWFSC_FISH_ALLYEARS_data_',data_year,'.csv'), row.names = F)
 
 ```
 
