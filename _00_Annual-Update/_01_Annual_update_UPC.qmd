@@ -22,6 +22,7 @@ Set the data_year year
 ```{r SETUP, include=FALSE}
 rm(list = ls())
 library(here)
+library(flextable)
 repo_dir = here::here()
 home_dir = paste0(repo_dir,"/_00_Annual-Update/")
 setwd(home_dir) # set home dir to annual update folder
@@ -56,21 +57,37 @@ upc = data.frame(read.csv( paste0(data_dir,'NWFSC_UPC_ALLYEARS_data_2025.csv'), 
 upc = upc %>% 
   mutate(depth_m = `DEPTH..FT.` / 3.281) %>%
   dplyr::select(-c(entry.order, Cntrl.a, notes, problems, `DEPTH..FT.`, `DEPTH..M.`) )
-  
+
+upc$CLASSCODE[upc$CLASSCODE=="sand"] <- "SAND"
+upc$CLASSCODE[upc$CLASSCODE=="cob"] <- "COB"
+upc$CLASSCODE[upc$CLASSCODE=="ptero"] <- "PTERO"
+upc$CLASSCODE[upc$CLASSCODE=="shell"] <- "SHELL"
+
+upc$CLASSCODE[upc$CLASSCODE==">2M"] = ">2m"
+upc$CLASSCODE[upc$CLASSCODE=="<2M"] = "1m-2m"
+upc$CLASSCODE[upc$CLASSCODE=="<2m"] = "1m-2m"
+upc$CLASSCODE[upc$CLASSCODE=="0-10m"] = "0-10cm"
+
 upc_transect = upc %>% group_by(YEAR, SITE, SIDE, ZONE, TRANSECT, CATEGORY, CLASSCODE) %>%
   summarize(count = sum(COUNT)) %>%
   mutate(transect_id = paste(YEAR,SITE,SIDE,ZONE,TRANSECT,sep="_"))
 
-upc_cover = upc_transect %>% filter(CATEGORY == 'COVER')
 upc_relief = upc_transect %>% filter(CATEGORY == 'RELIEF')
 upc_subs = upc_transect %>% filter(CATEGORY == 'SUBSTRATE')
+upc_cover = upc_transect %>% filter(CATEGORY == 'COVER')
+
+# error check
+unique(upc_subs$CLASSCODE)
+unique(upc_relief$CLASSCODE)
+unique(upc_cover$CLASSCODE)
 
 write.csv(upc_transect, paste0(data_dir,"Summarized_Data_UPC_by_Transect.csv"), row.names = F)
 
 
 ```
 
-
+## Relief bar chart
+ 
 ```{r relief-prep}
 # total points by transect to convert to proportions
 x_relief = upc_relief %>%
@@ -79,10 +96,6 @@ x_relief = upc_relief %>%
 x_relief
 
 # fix some class codes
-upc_relief$CLASSCODE[upc_relief$CLASSCODE==">2M"] = ">2m"
-upc_relief$CLASSCODE[upc_relief$CLASSCODE=="<2M"] = "1m-2m"
-upc_relief$CLASSCODE[upc_relief$CLASSCODE=="0-10m"] = "0-10cm"
-
 # order them for plotting
 upc_relief$CLASSCODE = factor(upc_relief$CLASSCODE, 
                                  levels = c("0-10cm", "10cm-1m","1m-2m", ">2m"))
@@ -111,8 +124,8 @@ relief_year_site$site = factor(relief_year_site$SITE,
 relief.plot <- ggplot(relief_year_site,aes(x=year)) +
         geom_bar(aes(y=mean_prop, fill= CLASSCODE), 
                  position="fill", stat="identity",width = 0.75, colour="black")+
-        scale_fill_manual(values = site.col$col,
-                          labels = c('0-0.1 m','0.1-1 m', '1-2 m', '> 2 m')) +  
+        # scale_fill_manual(values = site.col$col,
+        #                   labels = c('0-0.1 m','0.1-1 m', '1-2 m', '> 2 m')) +  
         theme(legend.position = "left", aspect.ratio = 3/1)  +
         theme_bw()+
         ylab("Proportion") +
@@ -123,7 +136,7 @@ relief.plot <- ggplot(relief_year_site,aes(x=year)) +
         theme(legend.title = element_blank(),
               legend.key.size = unit(0.3, "cm"),
               legend.text = element_text(size=8 ),
-              axis.text.x = element_text(size=8, angle=90), 
+              axis.text.x = element_text(size=8, angle=90, vjust=0.4), 
               strip.text.x = element_text(size = 8),
               legend.position = 'inside',
               legend.position.inside = c(0.7,0.1))
@@ -132,8 +145,11 @@ relief.plot
 
 ```
 
+## Substratum bar chart
+
 ```{r substratum-prep}
 # check counts by transect
+
 x_subs = upc_subs %>%
  group_by(YEAR, SITE, SIDE, ZONE, TRANSECT) %>% 
   summarize(SUM = sum(count)) %>%
@@ -142,9 +158,171 @@ x_subs = upc_subs %>%
 # quick plot
 
 subs_year_site = upc_subs %>%
-  group_by(YEAR, SITE, SIDE, CLASSCODE) %>%
+  group_by(YEAR, SITE, CLASSCODE) %>%
   summarize(avg_count = mean(count)) %>%
-   mutate(transect_id = paste0(YEAR,SIDE,ZONE,TRANSECT)) %>%
   mutate(mean_prop = avg_count/30,
          percent = 100*avg_count/30)
+```
+
+```{r plot-substrate, fig.width=3.5,fig.height=5}
+subs_year_site$year = as.factor(subs_year_site$YEAR)
+subs_year_site$site = factor(subs_year_site$SITE,
+                               levels =c("Tatoosh Island","Neah Bay",
+                                          "Cape Alava", "Cape Johnson",
+                                          "Destruction Island"))
+
+subs_col = RColorBrewer::brewer.pal(12,'Paired')[c(2,4,6,8,10)]
+  
+subs.plot <- ggplot(subs_year_site,aes(x=year)) +
+        geom_bar(aes(y=mean_prop, fill= CLASSCODE), 
+                 position="fill", stat="identity",width = 0.75, colour="black")+
+        # scale_fill_manual(values = subs_col,
+        #                   labels = c('0-0.1 m','0.1-1 m', '1-2 m', '> 2 m')) +  
+        theme(legend.position = "left", aspect.ratio = 3/1)  +
+        theme_bw()+
+        ylab("Proportion") +
+        xlab("") +
+        # scale_x_discrete(expand = c(0,0), labels=c("DI","CJ","CA","TI","NB"))+
+        # scale_y_continuous(expand = c(0,0)) +
+        facet_wrap(facets = 'site', ncol=2) +
+        theme(legend.title = element_blank(),
+              legend.key.size = unit(0.3, "cm"),
+              legend.text = element_text(size=8 ),
+              axis.text.x = element_text(size=8, angle=90, vjust=0.4), 
+              strip.text.x = element_text(size = 8),
+              legend.position = 'inside',
+              legend.position.inside = c(0.7,0.1))
+
+subs.plot
+
+```
+
+
+## Cover Bar chart
+
+```{r cover-prep}
+
+
+x_cover = upc_cover %>%
+ group_by(YEAR, SITE, SIDE, ZONE, TRANSECT) %>% 
+  summarize(SUM = sum(count)) %>%
+  mutate(transect_id = paste0(YEAR,SIDE,ZONE,TRANSECT))
+# x_subs
+# quick plot
+
+cover_year_site = upc_cover %>%
+  group_by(YEAR, SITE, CLASSCODE) %>%
+  summarize(avg_count = mean(count)) %>%
+  mutate(mean_prop = avg_count/30,
+         percent = 100*avg_count/30) %>%
+  filter(CLASSCODE != 'NOT_DONE')
+
+
+
+```
+### All cover types.  Not filtered. Just to see.
+
+```{r plot-cover}
+
+cover_year_site$year = as.factor(cover_year_site$YEAR)
+cover_year_site$site = factor(cover_year_site$SITE,
+                               levels =c("Tatoosh Island","Neah Bay",
+                                          "Cape Alava", "Cape Johnson",
+                                          "Destruction Island"))
+
+subs_col = RColorBrewer::brewer.pal(12,'Paired')[c(2,4,6,8,10)]
+  
+subs.plot <- ggplot(cover_year_site,aes(x=year)) +
+        geom_bar(aes(y=mean_prop, fill= CLASSCODE), 
+                 position="fill", stat="identity",width = 0.75, colour="black")+
+        #
+        theme(legend.position = "left", aspect.ratio = 3/1)  +
+        theme_bw()+
+        ylab("Proportion") +
+        xlab("") +
+        # scale_x_discrete(expand = c(0,0), labels=c("DI","CJ","CA","TI","NB"))+
+        # scale_y_continuous(expand = c(0,0)) +
+        facet_wrap(facets = 'site', ncol=2) +
+        theme(legend.title = element_blank(),
+              legend.key.size = unit(0.3, "cm"),
+              legend.text = element_text(size=8 ),
+              axis.text.x = element_text(size=8, angle=90, vjust=0.4), 
+              strip.text.x = element_text(size = 8),
+              legend.position = 'inside',
+              legend.position.inside = c(0.7,0.1))
+
+subs.plot
+
+```
+
+```{r table-subs-site}
+
+df_table = cover_year_site[, c('CLASSCODE', 'year','site','percent')]
+df_table = df_table %>% pivot_wider(names_from = year, values_from = percent, values_fill = 0)
+df_table = df_table[ order(df_table$CLASSCODE), ]
+
+flextable(df_table) %>% autofit() %>% 
+  fontsize( size = 8, part='all') %>%
+  colformat_double( digits = 1) %>%
+  set_table_properties(layout = "autofit")
+
+
+```
+
+```{r}
+
+df_table2 = cover_year_site[, c('CLASSCODE', 'year','site','percent')]
+df_table2 = df_table2 %>% group_by(CLASSCODE,year) %>% summarise(percent = mean(percent))
+# df_table2$year = factor(df_table2$year, levels=2015:2025)
+
+df_table2 = df_table2 %>% pivot_wider(names_from = year, values_from = percent, values_fill = 0)
+
+
+flextable(df_table2) %>% autofit() %>% 
+  fontsize( size = 8, part='all') %>%
+  colformat_double( digits = 1) %>%
+  set_table_properties(layout = "autofit")
+
+```
+
+```{r}
+
+df_table3 = cover_year_site[, c('CLASSCODE', 'year','site','percent')]
+df_table3 = df_table3 %>% group_by(CLASSCODE) %>% summarise(percent = mean(percent))
+df_table3 = df_table3[ order(df_table3$percent, decreasing = T),]
+
+flextable(df_table3) %>% autofit() %>% 
+  fontsize( size = 8, part='all') %>%
+  colformat_double( digits = 1) %>%
+  set_table_properties(layout = "autofit")
+
+
+cats = df_table3$CLASSCODE[1:11]
+```
+
+```{r}
+cover_short = cover_year_site %>% filter(CLASSCODE %in% cats)
+
+
+subs.plot2 <- ggplot(cover_short,aes(x=year)) +
+        geom_bar(aes(y=mean_prop, fill= CLASSCODE), 
+                 position="fill", stat="identity",width = 0.75, colour="black")+
+        #
+        theme(legend.position = "left", aspect.ratio = 3/1)  +
+        theme_bw()+
+        ylab("Proportion") +
+        xlab("") +
+        # scale_x_discrete(expand = c(0,0), labels=c("DI","CJ","CA","TI","NB"))+
+        # scale_y_continuous(expand = c(0,0)) +
+        facet_wrap(facets = 'site', ncol=2) +
+        theme(legend.title = element_blank(),
+              legend.key.size = unit(0.3, "cm"),
+              legend.text = element_text(size=8 ),
+              axis.text.x = element_text(size=8, angle=90, vjust=0.4), 
+              strip.text.x = element_text(size = 8),
+              legend.position = 'inside',
+              legend.position.inside = c(0.7,0.1))
+
+subs.plot2
+
 ```

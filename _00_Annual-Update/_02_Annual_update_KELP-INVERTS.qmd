@@ -75,10 +75,10 @@ Errors below are likely due to a new species being added. You may need to update
 swath_id = year_dir$id[grep("NWFSC_SWATH_ALLYEARS_data", year_dir$name)]
 
 # output file names
-swath_out = paste0(data_dir,'NWFSC_SWATH_ALLYEARS_data_',data_year,'.xlsm')
+# swath_out = paste0(data_dir,'NWFSC_SWATH_ALLYEARS_data_',data_year,'.xlsm')
 
 # download
-drive_download( as_id(swath_id) , path = swath_out , overwrite = TRUE)
+# drive_download( as_id(swath_id) , path = swath_out , overwrite = TRUE)
 
 # convert to csv by hand. the xlsx has loading problems ########################
 # size column goes to T/F for some reason
@@ -99,7 +99,6 @@ swathxl = data.frame(read.csv(paste0(data_dir,'NWFSC_SWATH_ALLYEARS_data_',data_
                         swathx$METERS.sampled < 10, NA, swathx$COUNT)
   print("Running inverts & algae")
   source("update-swath-inverts.R")
-
 
 ```
 
@@ -123,7 +122,8 @@ Kelp depth = `r kelp.depth`
 
 ```{r swath-data-import}
 swath0 <- readRDS( paste0(data_dir,'Swath_2015-',data_year,'.rds' ))
-sites["Destruction Island SW"] <- "Destruction Island"
+# sites[sites="Destruction Island SW"] <- "Destruction Island"
+sites = c("Neah Bay","Tatoosh Island","Cape Alava","Cape Johnson","Destruction Island")
 swath1 <- swath0 %>% filter(site %in% sites)
 
 swath1$site <- factor(swath1$site,levels=sites)
@@ -147,7 +147,7 @@ A bunch more summarizing at different scales. Also output for multivariate analy
 ################################################################################
 # KELP STIPES BY TRANSECT ######################################################
 ################################################################################
-algae1 <- dat.algae %>% group_by(year,site,transect,species,zone,area,fun_gr) %>%
+algae1 <- dat.algae %>% group_by(year,site,transect,zone,area,fun_gr,species) %>%
             summarise(total.count=sum(Count, na.rm = TRUE),
                       total.area=sum(Transect.area, na.rm = TRUE)) %>% 
             mutate(density = total.count / total.area )
@@ -311,6 +311,8 @@ Stipe counts across site and year for each species separatey.
     theme_bw()+ theme_nt + 
     theme(strip.text.y = element_text(face='italic'))
 
+ kelp1
+ 
 # kelp1 + rotate_x_text(angle = 45)
 
 ```
@@ -343,7 +345,7 @@ Just a subset of the plot above.
     theme(strip.text.y = element_text(face='italic'))+
     theme_nt
 
-
+kelp1
 
 ```
 
@@ -1090,10 +1092,6 @@ ggplot() +
       scale_color_manual(values = site.col$col)+
       theme_bw()+ theme_nt + xlab("")
        
-
-
-
-
 ```
 
 ### Coastwide seastars by species x site x year
@@ -1245,11 +1243,7 @@ stars_year <- ggplot() +
             legend.text = element_text(size = 12),
             legend.key.size = unit(0.5,'lines'))
       
-
 stars_year
-
-
-
 ```
 
 
@@ -1851,6 +1845,7 @@ canopy.kelp.long
 # plot5 + theme_bw()+theme_nt
 
 ```
+
 ### Kelp and SST combinded figure
 
 ```{r sst-kelp, fig.width=3.5 , fig.height=5}

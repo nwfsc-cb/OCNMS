@@ -135,7 +135,8 @@ Bring in the initially processed data
 fish0 = readRDS( paste0(data_dir,'Fish_2015-',data_year,'.rds' ))
 
 # does not have absolute fish sizes.  
-# NWFSC_FISH_ALLYEARS_data_20XX.xlsm has sizes
+# zeros HAVE been filled in
+# NWFSC_FISH_ALLYEARS_data_20XX.csv has sizes
 
 ```
 
@@ -145,7 +146,7 @@ I set some common settings here. The settings.rds file ports the same info over 
 
 # Manipulate fish data prior to plotting.
 
-Raw data are fish counts by size, so there are multiple observations per species per transect. Sum up counts by transect. 
+Mostly combine YOY into defined groups.
 
 ```{r import-fish, include=FALSE}
 # read in rds file with combined data
@@ -433,8 +434,6 @@ esr_fish = esr_fish[,c('year','taxa','index','SE','metric')]
 esr_fish$timeseries = fish.taxa$name[match(esr_fish$taxa,fish.taxa$taxa)]
 write.csv(esr_fish, "GF-ocnms-fish-adults.csv", row.names = F)
 # write.csv(esr_fish, "~/Github/ESR-Figures-Code/Data/GF-ocnms-fish-adults_FY2026.csv", row.names = F )
-
-
 
 ```
 

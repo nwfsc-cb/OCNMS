@@ -9,7 +9,7 @@ library(tidyverse)
 
 # Pull in pre-2015 data (Kvitek surveys)
 
-source("update-swath-process-pre-2015-data.R")
+source( paste0(home_dir, "update-swath-process-pre-2015-data.R"))
 dat.pre.2015 <- dat.trim %>% rename(group.name=group)
 
 # setwd(data.dir)
@@ -87,8 +87,8 @@ SP <- SP.all[SP.all != "NO_ORG" & SP.all != "NOT_DONE" &
 SP = SP[order(SP)]
 
   for( i in 1:length(SP)){
-    print(i)
-    print(SP[i])
+    #print(i)
+    #print(SP[i])
     if(nrow(swath.dat %>% filter(PISCO.Classcode == SP[i])) >0){
       temp  <-  left_join(base.dat %>% 
                   filter(group == species_names$group[species_names$species==SP[i]]) , 
