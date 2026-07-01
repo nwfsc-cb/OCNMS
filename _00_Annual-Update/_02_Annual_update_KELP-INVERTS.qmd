@@ -123,6 +123,7 @@ Kelp depth = `r kelp.depth`
 
 ```{r swath-data-import}
 swath0 <- readRDS( paste0(data_dir,'Swath_2015-',data_year,'.rds' ))
+sites["Destruction Island SW"] <- "Destruction Island"
 swath1 <- swath0 %>% filter(site %in% sites)
 
 swath1$site <- factor(swath1$site,levels=sites)
@@ -310,7 +311,7 @@ Stipe counts across site and year for each species separatey.
     theme_bw()+ theme_nt + 
     theme(strip.text.y = element_text(face='italic'))
 
-kelp1 + rotate_x_text(angle = 45)
+# kelp1 + rotate_x_text(angle = 45)
 
 ```
 
@@ -342,7 +343,7 @@ Just a subset of the plot above.
     theme(strip.text.y = element_text(face='italic'))+
     theme_nt
 
-kelp1 + rotate_x_text(angle = 45)
+
 
 ```
 
@@ -987,7 +988,7 @@ urchin_plot_all <- ggplot(data=urchins_all,aes(x=year, y= mean.density, col = si
                     
                     scale_y_continuous(expression("Urchins m"^-2)) +
                     theme_bw()+ theme_nt
-urchin_plot_all + rotate_x_text(angle = 45)
+
 
 
 tat_purpleurchins2019 = urchins_all[urchins_all$year==2019 & 

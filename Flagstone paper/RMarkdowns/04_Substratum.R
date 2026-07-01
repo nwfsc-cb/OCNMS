@@ -141,7 +141,7 @@ substrate_site$SITE = factor(substrate_site$SITE, levels=c(  rev(c("Neah Bay",
 substrate.plot <- ggplot(substrate_site,aes(x=SITE)) +
         geom_bar(aes(y=mean_prop, fill= subs), 
                  position="fill", stat="identity",width = 0.75, colour="black")+
-        scale_fill_manual(values = site_col$col,
+        scale_fill_manual(values = site.col$col,
                           labels = c('Sand','Cobble','Boulder','Bedrock')) +  
         theme(legend.position = "left", aspect.ratio = 3/1)  +
         theme_bw()+

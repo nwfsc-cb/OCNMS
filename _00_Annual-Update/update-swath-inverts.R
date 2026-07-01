@@ -7,7 +7,6 @@ library(viridis)
 library(reshape2)
 library(tidyverse)
 
-
 # Pull in pre-2015 data (Kvitek surveys)
 
 source("update-swath-process-pre-2015-data.R")

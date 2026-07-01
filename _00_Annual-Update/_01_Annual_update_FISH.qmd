@@ -139,7 +139,6 @@ fish0 = readRDS( paste0(data_dir,'Fish_2015-',data_year,'.rds' ))
 
 ```
 
-
 # Triggers and Settings
 
 I set some common settings here. The settings.rds file ports the same info over to the multivariate rmd. These are set in the 'settings.R' file externally. 

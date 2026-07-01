@@ -13,19 +13,7 @@ fontsize: 11pt
 ---
 # NOTES
 
-To update fish data to the most recent year, you will need: 
-
-- update_swath_fish.R
-
-in the 'update-data' chunk. The update is done automatically within this RMD, but you will need to check that the trigger is turned on in the if statement in the 
-in the 'update-data' is "if(1==1)". 
-
-You will also need to have:
-
-- swath-process-pre-2017-data.R
-- R-functions-ocnms.R  (lots of functions)
-
-as helper files. These are in the repo.
+Annual replotting of UPC data
 
 # DATA YEAR 
 
@@ -70,7 +58,8 @@ upc = upc %>%
   dplyr::select(-c(entry.order, Cntrl.a, notes, problems, `DEPTH..FT.`, `DEPTH..M.`) )
   
 upc_transect = upc %>% group_by(YEAR, SITE, SIDE, ZONE, TRANSECT, CATEGORY, CLASSCODE) %>%
-  summarize(count = sum(COUNT))
+  summarize(count = sum(COUNT)) %>%
+  mutate(transect_id = paste(YEAR,SITE,SIDE,ZONE,TRANSECT,sep="_"))
 
 upc_cover = upc_transect %>% filter(CATEGORY == 'COVER')
 upc_relief = upc_transect %>% filter(CATEGORY == 'RELIEF')
@@ -82,31 +71,80 @@ write.csv(upc_transect, paste0(data_dir,"Summarized_Data_UPC_by_Transect.csv"), 
 ```
 
 
-```{r}
-# check counts by transect
+```{r relief-prep}
+# total points by transect to convert to proportions
 x_relief = upc_relief %>%
- group_by(YEAR, SITE, SIDE, ZONE, TRANSECT) %>% 
-  summarize(SUM = sum(count))
+ group_by(YEAR, SITE, ZONE, transect_id) %>% 
+  summarize(SUM = sum(count)) 
+x_relief
 
-# quick plot
-
+# fix some class codes
 upc_relief$CLASSCODE[upc_relief$CLASSCODE==">2M"] = ">2m"
 upc_relief$CLASSCODE[upc_relief$CLASSCODE=="<2M"] = "1m-2m"
 upc_relief$CLASSCODE[upc_relief$CLASSCODE=="0-10m"] = "0-10cm"
 
+# order them for plotting
 upc_relief$CLASSCODE = factor(upc_relief$CLASSCODE, 
                                  levels = c("0-10cm", "10cm-1m","1m-2m", ">2m"))
-levels(upc_relief$CLASSCODE)
+unique(upc_relief$CLASSCODE)
 
-relief = upc_relief %>%
-  group_by(YEAR, SITE, CLASSCODE) %>%
-  summarize(avg_count = mean(count))
-relief$prop = relief$avg_count/30
-relief$perc = 100*relief$avg_count/30
+# combine files and calculate mean proportion for each classcode/row
+upc_relief$total = x_relief$SUM[ match(upc_relief$transect_id,x_relief$transect_id )]
+upc_relief$prop = upc_relief$count/upc_relief$total
+
+# convert to year by site means
+
+relief_year_site = upc_relief %>%
+  group_by(YEAR, SITE,CLASSCODE) %>%
+  summarize(mean_prop = mean(prop))
 
 ```
 
+```{r plot-relief, fig.width=3.5,fig.height=5}
 
+relief_year_site$year = as.factor(relief_year_site$YEAR)
+relief_year_site$site = factor(relief_year_site$SITE,
+                               levels =c("Tatoosh Island","Neah Bay",
+                                          "Cape Alava", "Cape Johnson",
+                                          "Destruction Island"))
 
+relief.plot <- ggplot(relief_year_site,aes(x=year)) +
+        geom_bar(aes(y=mean_prop, fill= CLASSCODE), 
+                 position="fill", stat="identity",width = 0.75, colour="black")+
+        scale_fill_manual(values = site.col$col,
+                          labels = c('0-0.1 m','0.1-1 m', '1-2 m', '> 2 m')) +  
+        theme(legend.position = "left", aspect.ratio = 3/1)  +
+        theme_bw()+
+        ylab("Proportion") +
+        xlab("") +
+        # scale_x_discrete(expand = c(0,0), labels=c("DI","CJ","CA","TI","NB"))+
+        # scale_y_continuous(expand = c(0,0)) +
+        facet_wrap(facets = 'site', ncol=2) +
+        theme(legend.title = element_blank(),
+              legend.key.size = unit(0.3, "cm"),
+              legend.text = element_text(size=8 ),
+              axis.text.x = element_text(size=8, angle=90), 
+              strip.text.x = element_text(size = 8),
+              legend.position = 'inside',
+              legend.position.inside = c(0.7,0.1))
 
+relief.plot
 
+```
+
+```{r substratum-prep}
+# check counts by transect
+x_subs = upc_subs %>%
+ group_by(YEAR, SITE, SIDE, ZONE, TRANSECT) %>% 
+  summarize(SUM = sum(count)) %>%
+  mutate(transect_id = paste0(YEAR,SIDE,ZONE,TRANSECT))
+# x_subs
+# quick plot
+
+subs_year_site = upc_subs %>%
+  group_by(YEAR, SITE, SIDE, CLASSCODE) %>%
+  summarize(avg_count = mean(count)) %>%
+   mutate(transect_id = paste0(YEAR,SIDE,ZONE,TRANSECT)) %>%
+  mutate(mean_prop = avg_count/30,
+         percent = 100*avg_count/30)
+```
