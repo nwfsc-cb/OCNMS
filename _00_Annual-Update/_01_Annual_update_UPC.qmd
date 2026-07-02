@@ -23,9 +23,10 @@ Set the data_year year
 rm(list = ls())
 library(here)
 library(flextable)
-repo_dir = here::here()
+# repo_dir = "~/GitHub/OCMS/"
+repo_dir = here::here() # for MAC users
 home_dir = paste0(repo_dir,"/_00_Annual-Update/")
-setwd(home_dir) # set home dir to annual update folder
+# setwd(home_dir) # set home dir to annual update folder
 data_year = 2025
 source("settings.r")
 source("R-functions-ocnms.r")
@@ -297,17 +298,18 @@ flextable(df_table3) %>% autofit() %>%
   set_table_properties(layout = "autofit")
 
 
-cats = df_table3$CLASSCODE[1:11]
+cats = df_table3$CLASSCODE[1:12]
+
 ```
 
 ```{r}
 cover_short = cover_year_site %>% filter(CLASSCODE %in% cats)
-
+subs_color = RColorBrewer::brewer.pal(12,"Paired")
 
 subs.plot2 <- ggplot(cover_short,aes(x=year)) +
         geom_bar(aes(y=mean_prop, fill= CLASSCODE), 
                  position="fill", stat="identity",width = 0.75, colour="black")+
-        #
+        scale_fill_manual(values = subs_color) +  
         theme(legend.position = "left", aspect.ratio = 3/1)  +
         theme_bw()+
         ylab("Proportion") +
@@ -326,3 +328,33 @@ subs.plot2 <- ggplot(cover_short,aes(x=year)) +
 subs.plot2
 
 ```
+
+```{r nmds-upc}
+library(vegan)
+df_cover = cover_short[,c('year','site','CLASSCODE','percent')]
+df_cover = df_cover %>% pivot_wider(names_from = CLASSCODE, values_from = percent, values_fill = 0)
+
+df_mds = df_cover %>% dplyr::select(-c(year,site))
+
+nmds1 <- metaMDS(df_mds, distance = "bray", k = 3, trymax = 100, trace = FALSE)
+nmds1
+
+# plot(nmds1, type = "t", main = paste("NMDS Stress:", round(nmds1$stress, 2)))
+# ordiplot(nmds_mod, type = "none", main = "NMDS Colored by Management Type")
+
+site_scores <- as.data.frame(scores(nmds1, display = "sites"))
+
+# Combine the coordinates with your environmental metadata
+site_scores$site <- df_cover$site
+
+# Build the ggplot
+ggplot(site_scores, aes(x = NMDS1, y = NMDS2, color = site)) +
+  geom_point(size = 3) +
+  theme_minimal() +
+  labs(title = "NMDS via ggplot2",
+       subtitle = paste("Stress:", round(nmds1$stress, 2)))
+```
+
+
+
+
