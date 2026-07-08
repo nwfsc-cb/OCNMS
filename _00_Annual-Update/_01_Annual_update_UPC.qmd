@@ -23,8 +23,9 @@ Set the data_year year
 rm(list = ls())
 library(here)
 library(flextable)
-# repo_dir = "~/GitHub/OCMS/"
-repo_dir = here::here() # for MAC users
+library(tidyverse)
+repo_dir = "~/GitHub/OCNMS"
+# repo_dir = here::here() # for MAC users
 home_dir = paste0(repo_dir,"/_00_Annual-Update/")
 # setwd(home_dir) # set home dir to annual update folder
 data_year = 2025
@@ -51,7 +52,7 @@ knitr::opts_chunk$set(
 
 # Bring in data
 
-```{r upc-import}
+```{r load-data}
 
 upc = data.frame(read.csv( paste0(data_dir,'NWFSC_UPC_ALLYEARS_data_2025.csv'), header=T))
 
@@ -109,7 +110,7 @@ upc_relief$prop = upc_relief$count/upc_relief$total
 # convert to year by site means
 
 relief_year_site = upc_relief %>%
-  group_by(YEAR, SITE,CLASSCODE) %>%
+  group_by(YEAR, SITE, CLASSCODE) %>%
   summarize(mean_prop = mean(prop))
 
 ```
@@ -152,17 +153,18 @@ relief.plot
 # check counts by transect
 
 x_subs = upc_subs %>%
- group_by(YEAR, SITE, SIDE, ZONE, TRANSECT) %>% 
-  summarize(SUM = sum(count)) %>%
-  mutate(transect_id = paste0(YEAR,SIDE,ZONE,TRANSECT))
+ group_by(YEAR, SITE, ZONE, transect_id) %>% 
+  summarize(SUM = sum(count)) 
 # x_subs
 # quick plot
 
+# combine files and calculate mean proportion for each classcode/row
+upc_subs$total = x_subs$SUM[ match(upc_subs$transect_id, x_subs$transect_id )]
+upc_subs$prop = upc_subs$count/upc_subs$total
+
 subs_year_site = upc_subs %>%
   group_by(YEAR, SITE, CLASSCODE) %>%
-  summarize(avg_count = mean(count)) %>%
-  mutate(mean_prop = avg_count/30,
-         percent = 100*avg_count/30)
+  summarize(percent = mean(prop)*100) 
 ```
 
 ```{r plot-substrate, fig.width=3.5,fig.height=5}
@@ -173,9 +175,12 @@ subs_year_site$site = factor(subs_year_site$SITE,
                                           "Destruction Island"))
 
 subs_col = RColorBrewer::brewer.pal(12,'Paired')[c(2,4,6,8,10)]
+subs_year_site$CLASSCODE = factor(subs_year_site$CLASSCODE,
+                                  levels=rev(c("NOT_DONE","SAND","BEDRK", "COB", 'BOULD' )))
+
   
 subs.plot <- ggplot(subs_year_site,aes(x=year)) +
-        geom_bar(aes(y=mean_prop, fill= CLASSCODE), 
+        geom_bar(aes(y=percent, fill= CLASSCODE), 
                  position="fill", stat="identity",width = 0.75, colour="black")+
         # scale_fill_manual(values = subs_col,
         #                   labels = c('0-0.1 m','0.1-1 m', '1-2 m', '> 2 m')) +  
@@ -203,22 +208,18 @@ subs.plot
 
 ```{r cover-prep}
 
-
 x_cover = upc_cover %>%
- group_by(YEAR, SITE, SIDE, ZONE, TRANSECT) %>% 
-  summarize(SUM = sum(count)) %>%
-  mutate(transect_id = paste0(YEAR,SIDE,ZONE,TRANSECT))
-# x_subs
+ group_by(YEAR, SITE, ZONE, transect_id) %>% 
+  summarize(SUM = sum(count)) 
+
 # quick plot
+
+upc_cover$total = x_cover$SUM[ match(upc_cover$transect_id, x_cover$transect_id )]
+upc_cover$percent = upc_cover$count/upc_cover$total*100
 
 cover_year_site = upc_cover %>%
   group_by(YEAR, SITE, CLASSCODE) %>%
-  summarize(avg_count = mean(count)) %>%
-  mutate(mean_prop = avg_count/30,
-         percent = 100*avg_count/30) %>%
-  filter(CLASSCODE != 'NOT_DONE')
-
-
+  summarize(percent = mean(percent)) 
 
 ```
 ### All cover types.  Not filtered. Just to see.
@@ -234,7 +235,7 @@ cover_year_site$site = factor(cover_year_site$SITE,
 subs_col = RColorBrewer::brewer.pal(12,'Paired')[c(2,4,6,8,10)]
   
 subs.plot <- ggplot(cover_year_site,aes(x=year)) +
-        geom_bar(aes(y=mean_prop, fill= CLASSCODE), 
+        geom_bar(aes(y=percent, fill= CLASSCODE), 
                  position="fill", stat="identity",width = 0.75, colour="black")+
         #
         theme(legend.position = "left", aspect.ratio = 3/1)  +
@@ -307,7 +308,7 @@ cover_short = cover_year_site %>% filter(CLASSCODE %in% cats)
 subs_color = RColorBrewer::brewer.pal(12,"Paired")
 
 subs.plot2 <- ggplot(cover_short,aes(x=year)) +
-        geom_bar(aes(y=mean_prop, fill= CLASSCODE), 
+        geom_bar(aes(y=percent, fill= CLASSCODE), 
                  position="fill", stat="identity",width = 0.75, colour="black")+
         scale_fill_manual(values = subs_color) +  
         theme(legend.position = "left", aspect.ratio = 3/1)  +
