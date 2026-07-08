@@ -60,15 +60,20 @@ upc = upc %>%
   mutate(depth_m = `DEPTH..FT.` / 3.281) %>%
   dplyr::select(-c(entry.order, Cntrl.a, notes, problems, `DEPTH..FT.`, `DEPTH..M.`) )
 
-upc$CLASSCODE[upc$CLASSCODE=="sand"] <- "SAND"
-upc$CLASSCODE[upc$CLASSCODE=="cob"] <- "COB"
-upc$CLASSCODE[upc$CLASSCODE=="ptero"] <- "PTERO"
-upc$CLASSCODE[upc$CLASSCODE=="shell"] <- "SHELL"
-
+# check and fix classcode discrepancies ####
+unique(upc$CLASSCODE[upc$CATEGORY == 'RELIEF'])
 upc$CLASSCODE[upc$CLASSCODE==">2M"] = ">2m"
 upc$CLASSCODE[upc$CLASSCODE=="<2M"] = "1m-2m"
 upc$CLASSCODE[upc$CLASSCODE=="<2m"] = "1m-2m"
 upc$CLASSCODE[upc$CLASSCODE=="0-10m"] = "0-10cm"
+
+unique(upc$CLASSCODE[upc$CATEGORY == 'SUBSTRATE'])
+upc$CLASSCODE[upc$CLASSCODE=="sand"] <- "SAND"
+upc$CLASSCODE[upc$CLASSCODE=="cob"] <- "COB"
+
+unique(upc$CLASSCODE[upc$CATEGORY == 'COVER'])
+upc$CLASSCODE[upc$CLASSCODE=="ptero"] <- "PTERO"
+upc$CLASSCODE[upc$CLASSCODE=="shell"] <- "SHELL"
 
 upc_transect = upc %>% group_by(YEAR, SITE, SIDE, ZONE, TRANSECT, CATEGORY, CLASSCODE) %>%
   summarize(count = sum(COUNT)) %>%
@@ -85,7 +90,6 @@ unique(upc_cover$CLASSCODE)
 
 write.csv(upc_transect, paste0(data_dir,"Summarized_Data_UPC_by_Transect.csv"), row.names = F)
 
-
 ```
 
 ## Relief bar chart
@@ -95,7 +99,7 @@ write.csv(upc_transect, paste0(data_dir,"Summarized_Data_UPC_by_Transect.csv"), 
 x_relief = upc_relief %>%
  group_by(YEAR, SITE, ZONE, transect_id) %>% 
   summarize(SUM = sum(count)) 
-x_relief
+view(x_relief)
 
 # fix some class codes
 # order them for plotting
@@ -155,7 +159,7 @@ relief.plot
 x_subs = upc_subs %>%
  group_by(YEAR, SITE, ZONE, transect_id) %>% 
   summarize(SUM = sum(count)) 
-# x_subs
+view(x_subs)
 # quick plot
 
 # combine files and calculate mean proportion for each classcode/row
@@ -211,7 +215,7 @@ subs.plot
 x_cover = upc_cover %>%
  group_by(YEAR, SITE, ZONE, transect_id) %>% 
   summarize(SUM = sum(count)) 
-
+view(x_cover)
 # quick plot
 
 upc_cover$total = x_cover$SUM[ match(upc_cover$transect_id, x_cover$transect_id )]
