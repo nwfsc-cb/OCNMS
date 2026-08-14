@@ -25,16 +25,14 @@ csl: "oecologia.csl"
 #| warning: false
 
 survey_year = 2025
-# SPECIES = 'SEME'
-# SPECIES = 'SEFL'
-SPECIES = c('SEFL', 'SEME')
+
 
 # set directories ####
 (home_dir <- here::here() )
 
 work_dir <- paste0(home_dir, "/_01_Assessment-YOY-index/")
 data_dir =  paste0(home_dir,'/Data/',survey_year,'/')
-fig_dir =   paste0(work_dir,'/figures/')
+fig_dir =   paste0(work_dir,'figures/')
 
 # knitr options ####
 knitr::opts_chunk$set(
@@ -50,27 +48,6 @@ knitr::opts_chunk$set(
   #out.width = '100%',
   fig.align='center'
   )
-
-if(length(SPECIES)==1){
-  if(SPECIES=='SEME'){
-    SPP = 'Black rockfish' 
-    spp='black rockfish'
-    sciname = "Sebastes melanostictus"}
-
-  if(SPECIES=='SEFL'){
-    SPP = 'Yellowtail rockfish' 
-    spp='yellowtail rockfish'
-   sciname = "Sebastes flavidus"}
-}  
-
-if(length(SPECIES)==2){
-  if(SPECIES[1] == 'SEFL' & SPECIES[2]=='SEME'){
-  SPPx = c('Black rockfish','Yellowtail rockfish')
-  SPPz = c("SEBYT", "SEME","SEFL")
-  SPP =  'Black and yellowtail rockfishes' 
-  spp =  'black and yellowtail rockfishes'
-  sciname = "Sebastes melanostictus and S. flavidus"}
-}
 
 # tinytex::reinstall_tinytex(repository = "illinois")
 ```
@@ -99,26 +76,28 @@ if(length(SPECIES)==2){
 
 dat.fish <- readRDS( paste0(data_dir,"Fish_2015-", survey_year,".rds") )
 
-# output file to esr 
-# write.csv(dat.fish, paste0("~/GitHub/ESR-rockfish-yoy/data/Fish_2015-", survey_year,".rds"))
-
-# Filter to include only black rockfish or "small" size category (rockfish YOY)
+# get just small rockfish
+SPECIES = c("SEBYT", "SEME","SEFL", "SECA","SEMA",'RYOY','SEMY','SEPI','SENE', 'SEBSPP')
 dat.yoy <- dat.fish %>% filter(species %in% SPECIES) %>%
               bind_rows(.,
                 dat.fish %>% filter(size_class %in% c("small")))
-# canary and black/yellowtail complex -- look similar
-dat.can <- dat.fish %>% filter(species %in% c("SEPI","SEPYT"))
-          
+# make complexes
+dat.yoy$complex = NA
+dat.yoy$complex[dat.yoy$species %in% c("SEBYT","SEME", "SEFL" )] <- 'YTB'
+dat.yoy$complex[dat.yoy$species %in% c("SECA","SEMA")] <- 'CQB'
+dat.yoy$complex[dat.yoy$species %in% c("SEPI")] <- 'SEPI' # canary
+dat.yoy$complex[dat.yoy$species %in% c("SEMY")] <- 'SEMY' # blue or deacon
+dat.yoy$complex[dat.yoy$species %in% c("SENE")] <- 'SENE' # china
+dat.yoy$complex[dat.yoy$species %in% c("RYOY","SEBSPP")] <- 'RYOY' # unid
+unique(dat.yoy$complex)
 
 # Drop transects where the visibility is less than the visibility threshold (2m):
 VIS_LIM <- 2
 dat.yoy <- dat.yoy %>% filter(vis_m >= VIS_LIM)
-dat.can <- dat.can %>% filter(vis_m >= VIS_LIM)
-
 
 ```
 
-These are derived data products relevant to estimating recruitment (young-of-year abundance) of the black rockfish (*Sebastes melanops*) and yellowtail rockfish (*S. flavidus*) complex (BYT); the data source is the NWFSC dive survey in Olympic Coast National Marine Sanctuary (OCNMS) conducted between 2015 and `r survey_year`. We estimate recruitment for the BYT complex because it is difficult to distinguish small recruits for these species. Description of survey methods and aims are detailed in [@tolimieri2023changes]. We also estimate an abundance index for large (\>10 cm total length) black rockfishes and provide a size class analysis. We do not include large yellowtail rockfish because they are rarely seen on our dive surveys in this area.
+
 
 # Data description
 
@@ -315,7 +294,7 @@ kable(N.trans.3)
 
 ## Recruitment: BYT young-of-year abundance trends
 
-To calculate the average density of BYT complex in each year, we first calculate the mean density and standard error per site in each year. This approach means we are treating each transect as a i.i.d. sample of YOY density within each site and thus we ignore differences in abundance by depth zone.
+To calculate the average density of each rockfish complex in each year, we first calculate the mean density and standard error per site in each year. This approach means we are treating each transect as a i.i.d. sample of YOY density within each site and thus we ignore differences in abundance by depth zone.
 
 From these site-year level means, we calculated a year-specific mean density by simulation. Specifically, for each year we independently drew a mean density for each site using a t-distribution with $\mu$ (the estimated site mean), $\sigma$ (the estimated site-specific standard error) and degrees of freedom, $\tau$. So for the $i^{th}$ realization, for site $s$ in year $y$ we have a predicted density, $X_{isy}$
 
@@ -325,22 +304,22 @@ and then the predicted density for a single realization in a given year is the m
 
 Nearly all small rockfish fall into the 4 to 7 cm length range and all are considered to have recruited from the plankton during the calender year of the survey. Therefore, we view the density of \<10cm rockfish to be an indicator of recruitment for the black/yellowtail rockfish complex ([Fig. @fig-yoy-ts]).
 
-```{r yoy-ts-prep}
+```{r yoy-ts, width=3.5, height=7}
 #| echo: false
 #| messange: false
 #| warning: false
+#| fig-cap: "Time-series of estimated young-of-year rockfish density on the Washington coast. Black points show means and standard errors for individual sites. Blue points show coastwide density estimates, interquartile range and 95\\% intervals for each year. Note y-axis is square root."
 
+SPPz = unique(dat.yoy$complex)
+SPPz
 # GENERATE INDEXES BY SITE and AMONG SITES
-#dat.yoy.summary <- dat.yoy %>% filter(species =="SEBYT")
-dat.yoy.summary <- dat.yoy %>% filter(species %in% SPPz,
-                                      size_class=='small')
+dat.yoy.summary0 <- dat.yoy %>% filter(size_class=='small')
 
-#dat.yoy.summary %>% distinct(species,year,size_class)
+# dat.yoy.summary %>% distinct(species,year,size_class)
   
 # summarize using means and standard errors
-dat.yoy.summary <- dat.yoy.summary %>%
-                    # group_by(year,site,species) %>% 
-                    group_by(year,site) %>% 
+dat.yoy.summary <- dat.yoy.summary0 %>%
+                    group_by(year,site, complex) %>% 
                     summarise(Mean=mean(Count),
                               VAR = var(Count),
                               SD=sd(Count),
@@ -349,7 +328,7 @@ dat.yoy.summary <- dat.yoy.summary %>%
 
 # This is a simple calculation treating the means from each site as observed and iid samples of a grand Mean
 dat.yoy.out.A <- dat.yoy.summary %>%
-                  group_by(year)  %>%
+                  group_by(year, complex)  %>%
                   summarise(grand.mean = mean(Mean),
                             N= length(Mean),
                             SE = sd(Mean)/sqrt(N))
@@ -364,18 +343,22 @@ dat.yoy.out.A <- dat.yoy.summary %>%
 #dim(dat.yoy.summary)
 n.sim <- 100000
 
-sim <- matrix(# simulate from a centered t-distribution.
-        rt(nrow(dat.yoy.summary) * n.sim,dat.yoy.summary$N - 1) * dat.yoy.summary$SE +
-                dat.yoy.summary$Mean, # Adjust to a different location and scale.
-                nrow(dat.yoy.summary), n.sim) # Put it in a matrix.
-sim[sim <0] <- 0
-sim <- as.data.frame(sim)
-colnames(sim) <- paste0("X",1:ncol(sim))
+# loop for each spp group
+for(i in 1:length(SPPz)){
+  print(SPPz[i])
+  dfx = dat.yoy.summary[dat.yoy.summary$complex == SPPz[i],]
+  sim <- matrix(# simulate from a centered t-distribution.
+        rt(nrow(dfx) * n.sim,dfx$N - 1) * dfx$SE +
+                dfx$Mean, # Adjust to a different location and scale.
+                nrow(dfx), n.sim) # Put it in a matrix.
+  sim[sim <0] <- 0
+  sim <- as.data.frame(sim)
+  colnames(sim) <- paste0("X",1:ncol(sim))
 
-sim <- bind_cols(dat.yoy.summary %>% dplyr::select(year,site), sim) %>%
+  sim <- bind_cols(dfx %>% dplyr::select(year,site), sim) %>%
           pivot_longer(.,cols=3:ncol(.),values_to="val",names_to="real")
 
-yoy.trend <- sim %>% group_by(year,real) %>%
+  yoy.trend <- sim %>% group_by(year,real) %>%
           dplyr::summarise(mean.real = mean(val, na.rm=T)) %>% ungroup() %>%
           group_by(year) %>%
           dplyr::summarise(grand.mean = mean(mean.real, na.rm=T),
@@ -386,50 +369,65 @@ yoy.trend <- sim %>% group_by(year,real) %>%
                            q75 = quantile(mean.real,probs=0.75, na.rm=T),
                            q95 = quantile(mean.real,probs=0.95, na.rm=T),
                            q975 = quantile(mean.real,probs=0.975, na.rm=T))
-
-# Make yoy rockfish time-series plots
-yoy.ts <- ggplot() + 
-  geom_point(data=dat.yoy.summary, aes(x=year,y=Mean),alpha=0.2) +
-  geom_errorbar(data=dat.yoy.summary,
-                aes(x=year,ymin=Mean-SE,ymax=Mean+SE),
-                width=0,
-                alpha=0.2) +
-  geom_point(data=yoy.trend, aes(x=year,y=grand.mean),
-             color="blue",size=3)  +
-  geom_errorbar(data=yoy.trend,
-                aes(x=year,ymin=q025,ymax=q975),
-                width=0,
-                color="blue",size=0.5) +
-  geom_errorbar(data=yoy.trend,
-                aes(x=year,ymin=q25,ymax=q75),
-                width=0,
-                color="blue",size=1.2) +
-  scale_y_sqrt(expression("Young-of-Year Density (fish 120 m"^"-3"*")"),
-                  #trans="sqrt",
-                  limits=c(0,NA),
-                  expand=c(0,NA),
-                  breaks=c(0,1,5,10,25,50,100),
-                  labels=c("0","1","5","10","25","50","100")) +
-  xlab("Year") +
-  #geom_hline(yintercept=0,color="red")+
-  theme_bw()
   
+  yoy.trend$complex = SPPz[i]
+  if(i==1){df_yoy = yoy.trend}else{df_yoy = rbind(df_yoy,yoy.trend)}  
+}  
 
-# save out ####
+# save out 
+
+
+df_yoy$complex = factor(df_yoy$complex, levels = c('YTB','SEPI','SEMY','CQB','SENE','RYOY')) 
+dat.yoy.summary$complex = factor(dat.yoy.summary$complex, levels = c('YTB','SEPI','SEMY','CQB','SENE','RYOY')) 
+
+## Make yoy rockfish time-series plots
+ yoy.ts <- ggplot() + 
+   geom_point(data=dat.yoy.summary, aes(x=year,y=Mean),alpha=0.2,size=1) +
+   geom_errorbar(data=dat.yoy.summary,
+                 aes(x=year,ymin=Mean-SE,ymax=Mean+SE),
+                 width=0,
+                 alpha=0.2) +
+   geom_point(data=df_yoy, aes(x=year,y=grand.mean),
+              color="blue",size=1)  +
+   geom_line(data=df_yoy, aes(x=year,y=grand.mean),
+              color="blue")  +
+   # geom_errorbar(data=df_yoy,
+   #               aes(x=year,ymin=q025,ymax=q975),
+   #               width=0,
+   #               color="blue",size=0.5) +
+   # geom_errorbar(data=df_yoy,
+   #               aes(x=year,ymin=q25,ymax=q75),
+   #               width=0,
+   #               color="blue",size=1.2) +
+   geom_ribbon(data=df_yoy, aes(year, ymin=q025, ymax=q975), fill='blue',alpha=0.1) +
+   
+   scale_y_sqrt(expression("Young-of-Year Density (fish 120 m"^"-3"*")"),
+                   #trans="sqrt",
+                   limits=c(0,NA),
+                   expand=c(0,NA),
+                   breaks=c(0,1,5,10,25,50,100),
+                   labels=c("0","1","5","10","25","50","100")) +
+   xlab("Year") +
+   facet_wrap(facets="complex", scale='free_y', ncol=1) + 
+   #geom_hline(yintercept=0,color="red")+
+   theme_bw()
+ yoy.ts
+
+ggsave( paste0(fig_dir, "ocnms-rockfish-yoy-modeled.png"), units='in',
+        width = 3.5, height = 7)
+ggsave( "~/GitHub/ESR-rockfish-yoy/figures/ocnms-rockfish-yoy-modeled.png", units='in',
+        width = 3.5, height = 7) 
+  
+# # save out ####
 dat.yoy.sites = dat.yoy.summary
-write.csv(yoy.trend, paste0(work_dir, "Estimated-YOY-trend-coast-", Sys.Date(),".csv"), row.names = F)
-write.csv(dat.yoy.sites, paste0(work_dir, "Estimated-YOY-trend-sites-", Sys.Date(),".csv"), row.names = F)
+
+write.csv(df_yoy, "~/GitHub/ESR-rockfish-yoy/data/ocnms-rockfish-yoy.r")
+write.csv(df_yoy, paste0(work_dir, "Estimated-YOY-trend-coast-", 
+                            Sys.Date(),".csv"), row.names = F)
+write.csv(dat.yoy.sites, paste0(work_dir, "Estimated-YOY-trend-sites-",
+                                Sys.Date(),".csv"), row.names = F)
 
 
-```
-
-```{r fig-yoy-ts}
-#| echo: false
-#| messange: false
-#| warning: false
-#| fig-cap: "Time-series of estimated young-of-year rockfish (black-yellowtail complex) density on the Washington coast. Black points show means and standard errors for individual sites. Blue points show coastwide density estimates, interquartile range and 95\\% intervals for each year. Note y-axis is square root."
-
-yoy.ts
 ```
 
 \newpage

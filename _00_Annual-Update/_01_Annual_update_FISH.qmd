@@ -160,9 +160,7 @@ fish0 <- fish0 %>%
 
 # convert small size to size to yoy for taxa
 
-fish0 <- fish0 %>% mutate(taxa=case_when(is.na(size_class)==TRUE ~ as.character(taxa),
-                                         size_class=="large" ~ as.character(taxa),
-                                         size_class=="small" ~ paste0(taxa,"yoy"))) %>%
+fish0 <- fish0 %>% mutate(taxa=case_when(is.na(size_class)==TRUE ~ as.character(taxa), size_class=="large" ~ as.character(taxa), size_class=="small" ~ paste0(taxa,"yoy"))) %>%
                   mutate(taxa= ifelse(taxa=="RYOYyoy","RYOY",taxa))
 
 x = fish0 %>% filter(taxa %in% c('SEFLyoy','SEMEyoy','SEBYTyoy')) %>% group_by(taxa) %>% summarise(Tot=sum(Count))
