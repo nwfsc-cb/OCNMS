@@ -24,7 +24,7 @@ csl: "oecologia.csl"
 #| messange: false
 #| warning: false
 
-survey_year = 2025
+survey_year = 2026
 
 
 # set directories ####
@@ -304,7 +304,7 @@ and then the predicted density for a single realization in a given year is the m
 
 Nearly all small rockfish fall into the 4 to 7 cm length range and all are considered to have recruited from the plankton during the calender year of the survey. Therefore, we view the density of \<10cm rockfish to be an indicator of recruitment for the black/yellowtail rockfish complex ([Fig. @fig-yoy-ts]).
 
-```{r yoy-ts, width=3.5, height=7}
+```{r calc-yoy-ts, width=3.5, height=7}
 #| echo: false
 #| messange: false
 #| warning: false
@@ -377,6 +377,12 @@ for(i in 1:length(SPPz)){
 # save out 
 
 
+
+ 
+```
+
+```{r plot-yoy-ts, width=3.5, height=7}
+ 
 df_yoy$complex = factor(df_yoy$complex, levels = c('YTB','SEPI','SEMY','CQB','SENE','RYOY')) 
 dat.yoy.summary$complex = factor(dat.yoy.summary$complex, levels = c('YTB','SEPI','SEMY','CQB','SENE','RYOY')) 
 
@@ -391,16 +397,8 @@ dat.yoy.summary$complex = factor(dat.yoy.summary$complex, levels = c('YTB','SEPI
               color="blue",size=1)  +
    geom_line(data=df_yoy, aes(x=year,y=grand.mean),
               color="blue")  +
-   # geom_errorbar(data=df_yoy,
-   #               aes(x=year,ymin=q025,ymax=q975),
-   #               width=0,
-   #               color="blue",size=0.5) +
-   # geom_errorbar(data=df_yoy,
-   #               aes(x=year,ymin=q25,ymax=q75),
-   #               width=0,
-   #               color="blue",size=1.2) +
-   geom_ribbon(data=df_yoy, aes(year, ymin=q025, ymax=q975), fill='blue',alpha=0.1) +
-   
+   geom_ribbon(data=df_yoy, aes(year, ymin=q025, ymax=q975), 
+               fill='blue',alpha=0.1) +
    scale_y_sqrt(expression("Young-of-Year Density (fish 120 m"^"-3"*")"),
                    #trans="sqrt",
                    limits=c(0,NA),
@@ -411,12 +409,13 @@ dat.yoy.summary$complex = factor(dat.yoy.summary$complex, levels = c('YTB','SEPI
    facet_wrap(facets="complex", scale='free_y', ncol=1) + 
    #geom_hline(yintercept=0,color="red")+
    theme_bw()
- yoy.ts
+
+yoy.ts
 
 ggsave( paste0(fig_dir, "ocnms-rockfish-yoy-modeled.png"), units='in',
         width = 3.5, height = 7)
-ggsave( "~/GitHub/ESR-rockfish-yoy/figures/ocnms-rockfish-yoy-modeled.png", units='in',
-        width = 3.5, height = 7) 
+ggsave( "~/GitHub/ESR-rockfish-yoy/figures/ocnms-rockfish-yoy-modeled.png",
+        units='in', width = 3.5, height = 7) 
   
 # # save out ####
 dat.yoy.sites = dat.yoy.summary

@@ -37,7 +37,7 @@ library(here)
 repo_dir = here::here()
 home_dir = paste0(repo_dir,"/_00_Annual-Update/")
 setwd(home_dir) # set home dir to annual update folder
-data_year = 2025
+data_year = 2026
 source("settings.r")
 source("R-functions-ocnms.r")
 

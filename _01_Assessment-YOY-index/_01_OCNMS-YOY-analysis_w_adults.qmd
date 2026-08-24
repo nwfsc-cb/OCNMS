@@ -24,7 +24,7 @@ csl: "oecologia.csl"
 #| messange: false
 #| warning: false
 
-survey_year = 2025
+survey_year = 2026
 # SPECIES = 'SEME'
 # SPECIES = 'SEFL'
 SPECIES = c('SEFL', 'SEME')
@@ -423,13 +423,14 @@ write.csv(dat.yoy.sites, paste0(work_dir, "Estimated-YOY-trend-sites-", Sys.Date
 
 ```
 
-```{r fig-yoy-ts}
+```{r fig-yoy-ts, fig.width=5, fig.height=3}
 #| echo: false
 #| messange: false
 #| warning: false
 #| fig-cap: "Time-series of estimated young-of-year rockfish (black-yellowtail complex) density on the Washington coast. Black points show means and standard errors for individual sites. Blue points show coastwide density estimates, interquartile range and 95\\% intervals for each year. Note y-axis is square root."
 
 yoy.ts
+
 ```
 
 \newpage
