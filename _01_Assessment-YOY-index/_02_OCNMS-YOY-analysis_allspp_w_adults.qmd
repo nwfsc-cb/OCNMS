@@ -382,9 +382,26 @@ for(i in 1:length(SPPz)){
 ```
 
 ```{r plot-yoy-ts, width=3.5, height=7}
+dfa = df_yoy
+dfb = dat.yoy.summary
  
-df_yoy$complex = factor(df_yoy$complex, levels = c('YTB','SEPI','SEMY','CQB','SENE','RYOY')) 
-dat.yoy.summary$complex = factor(dat.yoy.summary$complex, levels = c('YTB','SEPI','SEMY','CQB','SENE','RYOY')) 
+df_yoy$complex[df_yoy$complex=='YTB'] <- "Yellowtail & Black RF"
+df_yoy$complex[df_yoy$complex=='SEPI'] <- "Canary RF"
+df_yoy$complex[df_yoy$complex=='SEMY'] <- "Deacon RF"
+df_yoy$complex[df_yoy$complex=='SENE'] <- "China RF"
+df_yoy$complex[df_yoy$complex=='RYOY'] <- "Rockfish spp"
+df_yoy$complex[df_yoy$complex=='CQB'] <- "Copper & Quillback RF"
+
+dat.yoy.summary$complex[dat.yoy.summary$complex=='YTB'] <- "Yellowtail & Black RF"
+dat.yoy.summary$complex[dat.yoy.summary$complex=='SEPI'] <- "Canary RF"
+dat.yoy.summary$complex[dat.yoy.summary$complex=='SEMY'] <- "Deacon RF"
+dat.yoy.summary$complex[dat.yoy.summary$complex=='SENE'] <- "China RF"
+dat.yoy.summary$complex[dat.yoy.summary$complex=='RYOY'] <- "Rockfish spp"
+dat.yoy.summary$complex[dat.yoy.summary$complex=='CQB'] <- "Copper & Quillback RF"
+
+df_yoy$complex = factor(df_yoy$complex, levels = c('Yellowtail & Black RF','Canary RF','Deacon RF','Copper & Quillback RF','China RF','Rockfish spp')) 
+
+dat.yoy.summary$complex = factor(dat.yoy.summary$complex, levels = c('Yellowtail & Black RF','Canary RF','Deacon RF','Copper & Quillback RF','China RF','Rockfish spp')) 
 
 ## Make yoy rockfish time-series plots
  yoy.ts <- ggplot() + 
