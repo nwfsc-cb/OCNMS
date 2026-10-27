@@ -29,7 +29,7 @@ survey_year = 2026
 # set directories ####
 (home_dir <- here::here() )
 
-work_dir <- paste0(home_dir, "/_01_Assessment-YOY-index/")
+work_dir <- paste0(home_dir, "/_01_Assessment-indices/")
 data_dir =  paste0(home_dir,'/Data/',survey_year,'/')
 fig_dir =   paste0(work_dir,'figures/')
 
@@ -373,11 +373,6 @@ for(i in 1:length(SPPz)){
   if(i==1){df_yoy = yoy.trend}else{df_yoy = rbind(df_yoy,yoy.trend)}  
 }  
 
-# save out 
-
-
-
- 
 ```
 
 ```{r plot-yoy-ts, width=3.5, height=8}
@@ -565,175 +560,38 @@ write.csv(df_lingcod, paste0(work_dir, "Estimated-lingcod-trend-",
               color="blue")  +
    geom_ribbon(data=df_adults, aes(year, ymin=q025, ymax=q975), 
                fill='blue',alpha=0.1) +
-   scale_y_sqrt(expression("Young-of-Year Density (fish 120 m"^"-3"*")"),
-                   #trans="sqrt",
-                   limits=c(0,NA),
-                   expand=c(0,NA),
-                   breaks=c(0,1,5,10,25,50,100),
-                   labels=c("0","1","5","10","25","50","100")) +
-   xlab("Year") +
+   xlab("Year") + ylab(expression("Adult density (fish 120 m"^"-3"*")"))+
    facet_wrap(facets="species", scale='free_y', ncol=2) + 
-   #geom_hline(yintercept=0,color="red")+
    theme_bw()
 
 ts_adults
 
-ggsave( paste0(fig_dir, "ocnms-rockfish-adults-modeled.png"), units='in',
+ggsave( paste0(fig_dir, "ocnms-adults-modeled.png"), units='in',
         width = 6, height = 8)
-ggsave( "~/GitHub/ESR-rockfish-yoy/figures/ocnms-rockfish-adults-modeled.png",
+ggsave( "~/GitHub/ESR-rockfish-yoy/figures/ocnms-adults-modeled.png",
         units='in', width = 6, height = 8) 
 
 
-
-
-
 ```
 
+### Output size file for Brian L
+
+```{r lingcod-size}
+
+df1 <- data.frame(read.csv(paste0(data_dir,"NWFSC_FISH_ALLYEARS_data_", survey_year,".csv"), header=TRUE ))
+
+df_ling_size = df1 %>% filter(SPECIES=="OPEL")
+df_ling_size = df_ling_size %>% mutate(SIZE = (SIZE..MIN. + SIZE..MIN.)/2)
+df_ling_size = df_ling_size %>% 
+  select(YEAR, MONTH, DAY, SITE, OBSERVER, SIDE, ZONE, TRANSECT, DEPTH_FT, 
+          VIS_M, SPECIES, QUANTITY, SIZE)
+df_ling_size$common_name = "lingcod"
+df_ling_size$SPECIES = "Ophiodon elongatus"
+
+write.csv(df_ling_size, paste0(work_dir,"Lingod_size_data.csv"), row.names = F)
 
 
 
-\newpage
-
-## Size structure of black rockfish 2015-`r survey_year`
-
-In addition to abundance data, we visually estimate size (total length) for all individuals observed during the surveys. Young-of-year show remarkably limited variation in size and so we exclude them from the analysis. The data here are for black rockfish; yellowtail are not presented because the adults are uncommon at our sites. Plots of size distribution grouped into 5-cm bins are shown in [Figures  @fig-spp-size-bin1] & [-@fig-size-bin2]. @fig-size-dist2 shows the size distribution 1-cm increments.
-
-```{r }
-#| echo: false
-#| messange: false
-#| warning: false
-
-# This data comes from the processing script:
-# source("_00_process-length-structure-BLYT.R")
-
-load("Black rockfish_lengths_2015-2024.Rdata")
-
-# all black rockfish (include YOYs in 5cm bins)
-dat.spp.all.binned <- length.dat$dat.spp.all.binned  
- # all black rockfish (include YOYs)
-dat.spp.all        <- length.dat$dat.spp.all  
-# adult black rockfish (>10cm in 5cm bins)
-dat.spp.ad.binned  <- length.dat$dat.spp.ad.binned 
-# adult black rockfish 
-dat.spp.ad         <- length.dat$dat.spp.ad 
-
-
-################3 PLOTS
-p.spp.size1 <- ggplot(dat.spp.ad) +
-                    geom_col(aes(x=SIZE,y=COUNT)) +
-                    facet_grid(SITE~YEAR) +
-                    labs(x="Length(cm)",y="Count") +
-                    theme_bw()
-#p.spp.size1
-
-p.spp.size2 <- ggplot(dat.spp.ad) +
-  geom_col(aes(x=SIZE,y=COUNT,color=SITE,fill=SITE)) +
-  facet_wrap(~YEAR,ncol=1) +
-  labs(x="Length(cm)",y="Count") +
-  theme_bw()
-#p.spp.size2
-
-p.spp.size3 <- ggplot(dat.spp.ad) +
-  geom_col(aes(x=SIZE,y=COUNT)) +
-  facet_wrap(~YEAR,ncol=1) +
-  labs(x="Length(cm)",y="Count") +
-  theme_bw()
-#p.spp.size3
-
-### BINNED (5cm bins)
-dfx = dat.spp.ad.binned 
-dfx$SITE = stringr::str_remove(dfx$SITE, " Island")
-dfx$SITE = stringr::str_remove(dfx$SITE, "Cape ")
-p.spp.size.bin1 <- ggplot(dfx) +
-  geom_col(aes(x=bin,y=COUNT)) +
-  facet_grid(SITE~YEAR) +
-  labs(x="Length (5cm bins)",y="Count") +
-  theme_bw()+
-  theme( axis.text.x = element_text(size=7, angle=90),
-         strip.text.y.right = element_text(size=8) )
-#p.spp.size.bin1
-
-p.spp.size.bin2 <- ggplot(dat.spp.ad.binned) +
-  geom_col(aes(x=bin,y=COUNT,color=SITE,fill=SITE),width=4) +
-  facet_wrap(~YEAR,ncol=1) +
-  labs(x="Length (5 cm bins)",y="Count") +
-  theme_bw() + theme(axis.title.y = element_text(size=7))
-#p.spp.size.bin2
-
-###
-p.spp.size.bin3 <- ggplot(dat.spp.ad.binned) +
-  geom_col(aes(x=bin,y=COUNT,color=SITE,fill=SITE),width=4) +
-  facet_wrap(~YEAR,ncol=1) +
-  labs(x="Length (5 cm bins)",y="Count") +
-  theme_bw()
-#p.spp.size.bin3
-
-
-## 3 INCLUDE YOY sizes
-
-p.spp.size.all.bin1 <- ggplot(dat.spp.all.binned) +
-  geom_col(aes(x=bin,y=COUNT)) +
-  facet_grid(SITE~YEAR) +
-  labs(x="Length (5cm bins)",y="Count") +
-  scale_y_continuous(trans="sqrt") +
-  theme_bw() 
-#p.spp.size.all.bin1
-
-
-```
-
-```{r fig-spp-size-bin1}
-#| echo: false
-#| messange: false
-#| warning: false
-#| fig-width: 6
-#| fig-height: 5
-#| fig-cap: "Black rockcish size distributions by 5-cm size bins for years and sites."
-
-
-print(p.spp.size.bin1)
-
-```
-
-\newpage
-
-```{r fig-size-bin2, fig.height=8, fig.width=6.5}
-#| echo: false
-#| messange: false
-#| warning: false
-#| fig-cap: "Black rockfish size distribution by 5-cm size bins plotted by site, summed across sites within each year"
- 
-print(p.spp.size.bin2)
-
-```
-
-\newpage
-
-
-```{r fig-size-dist2, fig.height=8, fig.width=6.5}
-#| echo: false
-#| messange: false
-#| warning: false
-#| fig-cap: "Black rockfish size distribution by 1-cm size bins plotted by site, summed across sites within each year. "
-
-print(p.spp.size2)
-
-```
-
-```{r save-out}
-#| echo: false
-#| messange: false
-#| warning: false
-
-# Write output from analysis to file for ease of use 
-bk.rockfish.output <- list(
-  yoy.trend = yoy.trend, # year-specific estimates of density for young-of-year
-  dat.yoy.sites, # yoy trend by site
-  bk.trend = bk.trend   # year-specific estimates of density for >10cm black rockfish.
-)
-
-save(bk.rockfish.output, 
-     file = paste0(work_dir,"OCNMS_YOY-and-adult-indices-",Sys.Date(),".Rdata"))
 ```
 
 \newpage
