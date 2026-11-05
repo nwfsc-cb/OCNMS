@@ -51,12 +51,20 @@ knitr::opts_chunk$set(
 ```{r import-data}
 
 fish = readRDS( paste0(data_dir,'Fish_2015-',data_year,'.rds' ))
+fish$size_class[is.na(fish$size_class)] <- 'not_classified' # for subsetting below
 swath = readRDS( paste0(data_dir,'Swath_2015-',data_year,'.rds' ))
 # upc = readRDS( paste0(data_dir,'UPC_2015-',data_year,'.rds' ))
 
 algae = swath[swath$group=='Algae',]
 invert = swath[swath$group=='Invert',]
 
+fish_codes = data.frame(read.csv("spp_codes_fish.csv", header = TRUE))
+kelp_codes = data.frame(read.csv("spp_codes_kelp.csv", header = TRUE))
+swath_codes = data.frame(read.csv("spp_codes_swath.csv", header = TRUE))
+
+theme_nt = readRDS('theme_nt.rds')
+
+plot_colors = c(RColorBrewer::brewer.pal(n = 12, name = "Paired"))
 ```
 
 ```{r data-sum1}
@@ -201,7 +209,35 @@ flextable(nspp) %>% autofit() %>% fontsize(size = 10, part = "all")
  
 ```
 
+Need to update to common name here
+```{r fig-fish-year, fig.width=5, fig.height=2.5}
 
+plot_taxa_fish <- data.frame(
+  spp = c('OPEL','HEXA','SCMA','SECA','SENE','SEFL','SEME'),
+  common_name = c('Lingcod','Greenlings','Cabazon','Copper RF',
+                 'China RF','Yellowtail RF','Black RF'),
+  spp_color = c(plot_colors[c(10,4,8,12,2,7)],'black')
+  )
+
+# means site x year
+df_fish_site = fish %>% filter(year > 2015, size_class!="small") %>%
+  group_by(year, site, species) %>% 
+  summarise(mn = mean(Count),
+            stdev = sd(Count),
+            se = var(Count),sqrt(n())) %>%
+  filter(species %in% plot_taxa_fish$spp)
+# means year
+df_fish_year = df_fish_site %>% group_by(year,species) %>%
+  summarise(mn = mean(mn),
+            stdev = sd(mn),
+            se = var(mn),sqrt(n()))
+
+ggplot(df_fish_year, aes(year, mn, colour = species)) + 
+  geom_line(size=0.7) + xlab("Year") + ylab("Number per 120 m^3") +
+  scale_x_continuous(breaks=seq(2015,data_year,2), minor_breaks = seq(2015,data_year,1)) + 
+  theme_bw()
+
+```
 
 
 
