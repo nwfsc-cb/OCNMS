@@ -8,7 +8,6 @@ library(reshape2)
 library(tidyverse)
 
 # Pull in pre-2015 data (Kvitek surveys)
-
 source( paste0(home_dir, "update-swath-process-pre-2015-data.R"))
 dat.pre.2015 <- dat.trim %>% rename(group.name=group)
 
@@ -23,6 +22,7 @@ dat.2015 <- data.frame(read.csv(paste0(repo_dir, "/Data/2015/2015_OCNMSDataCompl
 # data_year = 2025
 dat.2016.on.swath <- swathx
 ################################################################################
+# might need to update annually
 species_names <- swath_codes # read.csv("species_code_list_swath.csv")
 #
 
@@ -87,8 +87,8 @@ SP <- SP.all[SP.all != "NO_ORG" & SP.all != "NOT_DONE" &
 SP = SP[order(SP)]
 
   for( i in 1:length(SP)){
-    #print(i)
-    #print(SP[i])
+    print(i)
+    print(SP[i])
     if(nrow(swath.dat %>% filter(PISCO.Classcode == SP[i])) >0){
       temp  <-  left_join(base.dat %>% 
                   filter(group == species_names$group[species_names$species==SP[i]]) , 
@@ -98,9 +98,9 @@ SP = SP[order(SP)]
     }
     if(nrow(swath.dat %>% filter(PISCO.Classcode == SP[i])) ==0){
        temp  <-  data.frame(base.dat %>% 
-                           filter(group == species_names$group[species_names$species==SP[i]]) %>%
-                           mutate(Species= SP.all.common.names$common.name[which(SP.all.common.names$species==SP[i])], 
-                                  PISCO.Classcode = SP[i], Count= 0, Size.cm=NA)) #,size_class=NA) 
+                  filter(group == species_names$group[species_names$species==SP[i]]) %>%
+                  mutate(Species= SP.all.common.names$common.name[which(SP.all.common.names$species==SP[i])], 
+                         PISCO.Classcode = SP[i], Count= 0, Size.cm=NA)) #,size_class=NA) 
     }
   dat.long <- rbind(dat.long, temp)
   }
@@ -230,9 +230,7 @@ dat.swath <- dat.swath %>% mutate(zone=ifelse(year==2015 & is.na(zone)==T,5,zone
 dat.swath <- dat.swath %>% filter(site != "")
 dat.swath <- dat.swath %>% filter(!group =="MISSING")
 
-
 ##### lost reas some where before here ############
-
 
 dat.swath.base <- dat.swath %>% as.data.frame()
 dat.swath.base$site <- as.character(dat.swath.base$site)

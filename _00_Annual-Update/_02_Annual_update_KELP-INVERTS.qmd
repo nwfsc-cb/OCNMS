@@ -39,8 +39,9 @@ rm(list = ls())
 library(here)
 repo_dir = here::here()
 home_dir = paste0(repo_dir,"/_00_Annual-Update/")
+fig_dir = paste0(home_dir,"figures/")
 setwd(home_dir) # set home dir to annual update folder
-data_year = 2025
+data_year = 2026
 source("settings.r")
 source("R-functions-ocnms.r")
 
@@ -71,19 +72,12 @@ This chunk will load the species codes and run the update files to turn the raw 
 Errors below are likely due to a new species being added. You may need to update the codes file for fish, kelp, or swath. 
 
 ```{r update-data, message=FALSE, echo=FALSE, warning=FALSE}
-## download data
-swath_id = year_dir$id[grep("NWFSC_SWATH_ALLYEARS_data", year_dir$name)]
-
-# output file names
-# swath_out = paste0(data_dir,'NWFSC_SWATH_ALLYEARS_data_',data_year,'.xlsm')
-
-# download
-# drive_download( as_id(swath_id) , path = swath_out , overwrite = TRUE)
 
 # convert to csv by hand. the xlsx has loading problems ########################
 # size column goes to T/F for some reason
 
-swathxl = data.frame(read.csv(paste0(data_dir,'NWFSC_SWATH_ALLYEARS_data_',data_year,'.csv')))
+swathxl = data.frame(read.csv(paste0(data_dir,
+                    'NWFSC_SWATH_ALLYEARS_data_',data_year,'.csv')))
 
   # inverts and algae ####
   print("Loading inverts & algae")
@@ -245,7 +239,7 @@ nereo_tat
 
 Essentially total canopy kelp stipe counts at all sites.  Bit odd and not used because of difference in *Macro* and *Nero* stipes. 
 
-```{r nero-macro , fig.height=3.5, fig.width=5}
+```{r nero-macro , fig.height=3.5, fig.width=5, eval=FALSE}
 kelp_year_site_area <- 
   readRDS(  paste0(data_dir,"Summarized_Data_Kelp_year_site_area_zone_spp.rds") )
 
@@ -1573,7 +1567,7 @@ Imports data file from other R file. Plot just kelp canopy. Add to ggarrange bel
 
 canopy = readRDS( paste0(home_dir, "Data_Kelp_Canopy_Long.rds") )
 
-year.range = min(canopy$year):last.year
+year.range = min(canopy$year):data_year
 
 canopy$species = factor(canopy$species, levels = c('Total','Macrocystis','Nereocystis'))
 
@@ -1583,7 +1577,9 @@ canopy.kelp <- ggplot( canopy %>% filter(., site == 'Coastwide') %>% filter(., y
                 geom_line() +
                 xlab("") +
                #scale_x_continuous(breaks=seq(2015,last.year,2)) +
-                scale_x_continuous(breaks=seq(1990,last.year,5), minor_breaks = year.range) +
+                scale_x_continuous( limits = c(1990,data_year),
+                                    breaks=seq(1990,data_year,5), 
+                                    minor_breaks = year.range) +
                 scale_y_continuous("Canopy area (ha)") +
                 scale_color_manual(values = site.col$col[c(5,1,2,3)],
                                    labels = c('Total', 

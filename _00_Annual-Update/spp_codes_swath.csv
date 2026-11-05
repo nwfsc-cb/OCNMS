@@ -1,5 +1,6 @@
 species,common.name,group,functional_group,spp,taxa,group_1,group_2
 AGAFIM,Agarum fimbriatum,Algae,understory,Agarum fibriatum,NA,NA,NA
+AGACLA,,Algae,,,,,
 ALAMAR,"Alaria marginata, Alaria",Algae,understory,Alaria marginata,NA,NA,NA
 ANTSPP,"Anthopleura spp., unidentified anemone",Invert,small_anemone,Anthopleura spp.,NA,NA,NA
 ASTSPP,unknown seastar,Invert,seastar,Asteroides,NA,NA,NA
@@ -97,3 +98,4 @@ CRAARB,"Craniella arb, grey tennis ball sponge",Invert,sponge,Craniella arb,spon
 STYFOR,Stylasterias forreri,Invert,large_sea_star,Stylasterias forreri,Stylasterias,large_sea_star,large_sea_star
 STYMON,"Styela montereyensis, stalked tunicate",Invert,tunicate,Styela montereyensis,tunicate,tunicate,tunicate
 CALANN,"Calliostoma annulatum, purple-ring topsnail",Invert,snail,Calliostoma annulatum,shelled gastropod,mollusk,shelled_mollusk
+HEDSES,,Algae,,,,,

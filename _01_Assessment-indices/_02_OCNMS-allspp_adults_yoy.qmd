@@ -123,22 +123,7 @@ The estimated recruitment trend for (1) the black rockfish and yellowtail rockfi
 #| messange: false
 #| warning: false
 
-  #### READ IN WASHINGTON MARINE SHORELINES (FROM http://www.ecy.wa.gov/services/gis/data/data.htm
-  
-  #base.dir <- getwd()
-#   gis.dir<- "/Users/ole.shelton/GitHub/OCNMS/Data/PG Shore shore_thematic_UTM10/"
-#   setwd(gis.dir)
-#   # shore.poly	<-	readShapePoly("shore_thematic_UTM10.shp")
-#   
-#   shore.poly	<-	readOGR(dsn=".","shore_thematic_UTM10")
-#   shore		<-	data.frame(shore.poly)
-# 
-#   shore.dat	<-	 as(shore.poly,"data.frame")
-#   shore.dat$NEW	<- 1:nrow(shore.dat)
-#   shore.poly@data$id 	= rownames(shore.poly@data)
-#   shore.points		<-	fortify(shore.poly,region="id")
-#   shore.df			  <- merge(shore.points,shore.poly@data,by="id")
-#   write.csv(shore.df,file="shore df.csv",row.names=F)
+  #### READ IN WASHINGTON MARINE SHORELINES (FROM 
   shore.df        <- read.csv("../Data/PG Shore shore_thematic_UTM10/shore df.csv")
   
   # setwd(base.dir)
