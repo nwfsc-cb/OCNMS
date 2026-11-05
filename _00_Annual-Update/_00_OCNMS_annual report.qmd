@@ -54,23 +54,37 @@ fish = readRDS( paste0(data_dir,'Fish_2015-',data_year,'.rds' ))
 swath = readRDS( paste0(data_dir,'Swath_2015-',data_year,'.rds' ))
 # upc = readRDS( paste0(data_dir,'UPC_2015-',data_year,'.rds' ))
 
-```
-
-```{r fish-summaries}
-
-fish_total_taxa = length(unique(fish$species))
-fish_year_taxa = length(unique(fish$species[fish$Count>0 &
-                                            fish$year==data_year]))
-
+algae = swath[swath$group=='Algae',]
+invert = swath[swath$group=='Invert',]
 
 ```
 
+```{r data-sum1}
+# fish
+fish_taxa_total = length(unique(fish$species))
+fish_taxa_year = length(unique(fish$species[fish$Count>0 & fish$year==data_year]))
+fish_transects_total = nrow(fish)
+fish_transects_year = nrow(fish[fish$year==data_year,])
+# algae
+algae_taxa_total = length(unique(algae$species))
+algae_taxa_year = length(unique(algae$species[algae$Count>0 & algae$year==data_year]))
+algae_transects_total = nrow(algae)
+algae_transects_year = nrow(algae[algae$year==data_year,])
+# invert
+invert_taxa_total = length(unique(invert$species))
+invert_taxa_year = length(unique(invert$species[invert$Count>0 & invert$year==data_year]))
+invert_transects_total = nrow(invert)
+invert_transects_year = nrow(invert[invert$year==data_year,])
+
+```
 
 # Introduction
 
-Divers observed `r fish_year_taxa` in `r data_year` with a total of `r fish_total_taxa` recorded over the full survey from 2015-`r data_year`.
+Divers from the Northwest Fisheries Science Center (NWFSC) and the National Marine Sanctuaries (NMS) have conducted kelp-forest dive surveys in Olympic Coast National Marine Sanctuary (OCNMS) since 2015 (with the exception of 2020 due to COVID restrictions). Divers from the University of Washington and California State University Monterey Bay have participated as reciprocity divers. 
 
-# Data description
+In `r data_year`, divers completed `r fish_transects_year` fish transects, `r invert_transects_year` invertebrate transects, and `r algae_transects_year` across five (5) sites ([Fig. @fig-site-map]). Divers recorded `r fish_taxa_year`, `r invert_taxa_year`, and `r algae_taxa_year` taxa of fish, invertebrates, and algae along these transects. To date (2015-`r data_year`), the survey has recorded `r fish_taxa_total`, `r invert_taxa_total`, and `r algae_taxa_total` taxa for fish, invertebrates, and algae.
+
+# Methods
 
 Divers on SCUBA conducted in situ surveys to count fish at each site along benthic belt transects (30 m by 2 m) following procedures modified from @malone2022large. Transects were conducted within or directly adjacent to canopy kelp beds (consisting of giant *Macrocystis pyrifera* or bull *Nereocystis luetkeana* kelps). In 2015 surveyed at 10 sites and conducted four (4) transects per site at 5 m depth ([Fig. @fig-site-map], [@shelton2018predictable]). From 2016 on, we surveyed at five (5) sites ([Fig. @fig-site-map]), sampling at two (2) locations within each site separated by \>100 m, and 2 depths within each location (5 and 10 m) Our goal was to complete six (6) replicate transects at each year-site-depth combination [@tolimieri2023changes].
 
@@ -125,8 +139,6 @@ site_map	<-	ggplot()+theme_bw() +
 site_map
 ```
 
-
-
 During each fish transect, we counted and estimated the size (total length to nearest cm) of all fishes \>5 cm total length; the exception was rockfishes *Sebastes* spp., for which we estimated sizes of all individuals. Rockfishes $\leq$ 10 cm were considered young-of-year. Divers also estimated horizontal visibility on each transect by determining the distance at which the lead diver could distinguish their buddy's extended fingers. Transects with visibility less than 2 m were excluded from analyses.
 
 ## Rockfish young-of-year
@@ -144,5 +156,53 @@ As noted above, it is difficult to visually distinguish many rockfish species wh
 \(5\) Unidentified individuals were categorized as juvenile rockfishes
 
 The estimated recruitment trend for (1) the black rockfish and yellowtail rockfish complex (BYT complex), is presented here.
+
+# Results or some other title
+
+## Fish
+
+```{r tab-fish-effort}
+#| echo: false
+#| messange: false
+#| warning: false
+#| tbl-cap: "Number of fish transects completed by year across 10 sites in 2015 and five sites from 2016 to the current year."
+
+# select 1spp just to get transect counts
+# data are expanded to include zeros
+xfish = fish[fish$species=='SECA',]
+tab_fish = xfish %>% group_by(year, site) %>% 
+  summarize(N = n()) %>% 
+  pivot_wider(id_cols='site', names_from = year, values_from = N) %>%
+  rename(Site = site)
+
+flextable(tab_fish) %>% autofit() %>% fontsize(size = 10, part = "all")
+ 
+```
+```{r tab-fish-species}
+#| echo: false
+#| messange: false
+#| warning: false
+#| tbl-cap: !expr cap_text
+
+cap_text = paste0("Number of fish species observed by year across 10 sites in 2015 and five sites from 2016 to the current year. The survey observed a total of ", fish_taxa_year, " taxa in ", data_year, ". Total fish species observed across all years was ", fish_taxa_total,".")
+
+# select 1spp just to get transect counts
+# data are expanded to include zeros
+fish$n = ifelse(fish$Count==0,0,1)
+nspp = fish %>% group_by(year, site, species) %>% 
+  summarize(n = sum(n)) %>%
+  filter(n>0) %>% mutate(n = 1) %>%
+  group_by(year,site) %>%
+  summarize(Taxa = sum(n)) %>% 
+  pivot_wider(id_cols='site', names_from = year, values_from = Taxa) %>%
+  rename(Site = site)
+
+flextable(nspp) %>% autofit() %>% fontsize(size = 10, part = "all")
+ 
+```
+
+
+
+
 
 
