@@ -18,8 +18,8 @@ library(lemon)
 library(ggpubr)
 library(tidyr)
 library(tinytex) # for pdf output
-library(googledrive)
-library(googlesheets4)
+# library(googledrive)
+# library(googlesheets4)
 
 # spp codes ####################################################################
 
@@ -67,12 +67,12 @@ invert.depth = 5
 depth.labs = c('5-m','10-m')
 names(depth.labs) = c(5,10)
 
-# Google drive information #####################################################
-
-gDrive_loc = '0B19J8gHIuD3vc3BGWXh1UGkxVHc'
-# list of folders by year
-year_folders = drive_ls(path = as_id(gDrive_loc) )
-year_name = paste0(data_year, " Data")
-# get this year's file id
-year_id = year_folders$id[match(year_name,year_folders$name)]
-year_dir = drive_ls(path = as_id(year_id) ) 
+# # Google drive information #####################################################
+# 
+# gDrive_loc = '0B19J8gHIuD3vc3BGWXh1UGkxVHc'
+# # list of folders by year
+# year_folders = drive_ls(path = as_id(gDrive_loc) )
+# year_name = paste0(data_year, " Data")
+# # get this year's file id
+# year_id = year_folders$id[match(year_name,year_folders$name)]
+# year_dir = drive_ls(path = as_id(year_id) ) 

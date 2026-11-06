@@ -241,7 +241,52 @@ invert = swath[swath$group=='Invert',]
 
 
 
+################################################################################
+# SITE MAP #####################################################################
+################################################################################
 
 
+#### READ IN WASHINGTON MARINE SHORELINES (FROM 
+shore.df <- read.csv("Data/PG Shore shore_thematic_UTM10/shore df.csv")
+
+PROJ <- "+proj=utm +zone=10 +datum=NAD83 +units=m +no_defs+ellps=GRS80+towgs84=0,0,0"
+
+temp <- vect(cbind(shore.df$long,shore.df$lat),crs=PROJ)
+temp2 <- project(temp,"+proj=longlat +datum=WGS84")
+shore.df[,c("lon2","lat2")] <- geom(temp2)[,c("x","y")]
+
+loc <-  read.csv( "Data/Survey locations.csv",fileEncoding="latin1")
+# update years
+loc$type[loc$type == '2015-22'] <- paste0('2015-',data_year)
+loc <- loc %>% filter(type %in% c("2015 only",paste0('2015-',data_year)))
+loc$nudge_x = 0.09
+loc$nudge_x[loc$Site =="Pt. of the Arches"] = 0.12
+loc$nudge_x[loc$Site =="Tatoosh Is."] = -0.08
+loc$nudge_x[loc$Site =="Chibahdehl"] = 0.08
+loc$nudge_x[loc$Site =="Neah Bay"] = 0.08
+loc$nudge_y = 0
+loc$nudge_y[loc$Site =="Chibahdehl"] = 0.01
+x.lim =c(-124.85,-124.3)
+y.lim =c(47.65,48.4)
+
+ggplot()+theme_bw() +
+  theme(legend.key =  element_rect(fill = "white", colour = "white"),
+        panel.border = element_rect(fill = NA, colour = "black",size=1.5)) +
+  geom_polygon(data=shore.df[shore.df$POLYTYPE == "Land" | shore.df$POLYTYPE == "Island" ,],
+               aes(lon2,lat2,group=group),fill=grey(0.7),color=NA)+
+  geom_point(data= loc %>% filter(type %in% c(paste0('2015-',data_year),"2015 only")),aes(x=lon,y=lat,color=type)) +
+  scale_color_discrete("Survey")+
+  geom_text(data= loc %>% filter(type %in% c(paste0('2015-',data_year),"2015 only")),
+            aes(label=Site,x=lon,y=lat),size=2.5,
+            #check_overlap = TRUE,
+            nudge_x=loc$nudge_x,
+            nudge_y=loc$nudge_y
+  ) +
+  xlab("Longitude") +
+  ylab("Latitude") +
+  coord_fixed(ratio=1.3,xlim =x.lim,ylim=y.lim) +
+  theme(axis.text.x = element_text(angle=90))
+
+ggsave(paste0(fig_dir,"site-map.png"), width=5, height=5)
 
 
