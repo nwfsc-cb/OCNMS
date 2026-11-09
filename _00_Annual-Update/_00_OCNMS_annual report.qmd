@@ -251,19 +251,54 @@ paste0(fig_dir, "urchin-by-site.png")
 
 ### Urchin trends
 
-```{r fig-x}
+```{r fig-tot-urchins}
 #| echo: false
 #| messange: false
 #| warning: false
 #| tbl-cap: !expr cap_text
 
-cap_text = paste0("Abundance of sea urchins by site from 2015-", data_year, ".")
+cap_text = paste0("Abundance of all sea urchins by site from 2015-", data_year, ".")
 
 knitr::include_graphics( paste0(fig_dir, "urchin-by-site.png"))
 
 ```
 
+```{r fig-urchins-by-spp}
+#| echo: false
+#| messange: false
+#| warning: false
+#| tbl-cap: !expr cap_text
+
+cap_text = paste0("Abundance of sea urchins by species and site from 2015-", data_year, ".")
+
+knitr::include_graphics( paste0(fig_dir, 'urchin-spp-by-year.png'))
+```
+
+```{r fig-urchins-by-spp-site-zone}
+#| echo: false
+#| messange: false
+#| warning: false
+#| tbl-cap: !expr cap_text
+
+cap_text = paste0("Abundance of sea urchins by species, site, and depth zone from 2015-", data_year, ".")
+
+knitr::include_graphics( paste0(fig_dir, "urchin-spp-site-zone.png"))
+```
+
 ### Seastars
+
+```{r fig-seastars}
+#| echo: false
+#| messange: false
+#| warning: false
+#| tbl-cap: !expr cap_text
+
+cap_text = paste0("Abundance of sea stars by species, site, and depth zone from 2015-", data_year, ".")
+
+knitr::include_graphics( paste0(fig_dir, "stars-by-year.png"))
+```
+
+
 
 #### Pycnopodia
 
@@ -280,7 +315,7 @@ knitr::include_graphics( paste0(fig_dir, "pycno-total-coaswide.png"))
 ```
 
 
-#### Pycnopodia
+
 
 
 

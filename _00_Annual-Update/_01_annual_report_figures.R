@@ -317,7 +317,7 @@ urchin_mean <- invert_transect %>% filter(grp2=="URCHIN") %>%
             N =length(year),
             SE= SD/sqrt(N) ) 
 
-#### Urchins, by site ####
+#### Total urchins, by site ####
 
 ggplot() +
   geom_point(data=urchin_mean,aes(x=year,y=mean.density,color=site)) +
@@ -334,6 +334,110 @@ ggplot() +
   theme(legend.position.inside = c(0.2, 0.8))
 
 ggsave(paste0(fig_dir, "urchin-by-site.png"), width=3.5, height=2.5)
+
+#### Urchins by species ####
+
+urchin_year <-  invert_transect %>% filter(grp2=="URCHIN") %>% 
+  group_by(site,year,taxa) %>%
+  summarise(Mean=mean(density, na.rm = TRUE),
+            SD=sd(density),
+            N=length(density),
+            SE=SD/sqrt(N),
+            SE_var=SE^2)  %>%
+  group_by(year,taxa) %>%
+  summarise(grand_sum = sum(Mean, na.rm = TRUE),
+            N=length(Mean),
+            grand_mean = mean(Mean),
+            grand_sum_var = sum(SE_var, na.rm = TRUE), 
+            grand_SE = sqrt(grand_sum_var / N^2))
+urchin_year$taxa[urchin_year$taxa == 'purple urchin'] <- 'Purple urchin'
+urchin_year$taxa[urchin_year$taxa == 'red urchin'] <- 'Red urchin'
+urchin_year$taxa[urchin_year$taxa == 'green urchin'] <- 'Green urchin'
+
+urchin_year$taxa = factor(urchin_year$taxa , levels = c('Purple urchin','Red urchin','Green urchin'))
+
+urchin.plot <- ggplot(urchin_year, aes(x = year, y=grand_mean, color=taxa)) +
+  geom_point() + 
+  geom_line() + 
+  geom_errorbar(data=urchin_year, 
+                aes(x=year, ymin=grand_mean-grand_SE ,
+                    ymax=grand_mean+grand_SE , color=taxa),width=0) +
+  scale_color_manual(values = site.col$col[c(4,3,2)]) +
+  scale_x_continuous("", breaks=seq(2015,last.year,2)) +
+  scale_y_continuous(expression("No m"^-2), limits=c(0,5)) +
+  theme_bw()+ theme_nt +
+  theme(legend.position='inside') + 
+  theme(legend.position.inside = c(0.2, 0.8))
+
+urchin.plot
+ggsave(paste0(fig_dir, 'urchin-spp-by-year.png'), width=3.5, height=2.5)
+
+
+#### Urchins by spp, site and depth zone ####
+
+urchin_zone <- invert_transect %>% filter(grp2=="URCHIN") %>%
+  group_by(year,site,transect,observer,area,zone,grp2) %>%
+  summarise(tot.density = sum(density, na.rm = TRUE)) %>% 
+  group_by(year,site,zone,grp2) %>%
+  summarise(mean.density=mean(tot.density, na.rm = TRUE), 
+            SD = sd(tot.density), 
+            N =length(year),
+            SE= SD/sqrt(N) ) 
+
+ggplot() +
+  # geom_point(data= urchin1,aes(x=year,y=mean.density,color=site)) +
+  geom_point(data=urchin_zone,aes(x=year,y=mean.density,color=site)) +
+  geom_line(data= urchin_zone,
+            aes(x=year,y=mean.density,color=site)) +
+  geom_errorbar(data=urchin_zone,
+                aes(x=year,ymin=mean.density-SE,ymax=mean.density+SE,color=site),width=0) +
+  facet_grid(rows="zone", labeller = labeller(zone=depth.labs )) +
+  scale_x_continuous(breaks=seq(2015,last.year,2)) +
+  scale_y_continuous(expression("Urchin density (m"^-2*")")) +
+  # scale_color_viridis_d(option="plasma",end=0.75)+
+  scale_color_manual(values = site.col$col)+
+  theme_bw()+ theme_nt + xlab("") + 
+  theme(legend.position='inside') + 
+  theme(legend.position.inside = c(0.3, 0.85))
+
+ggsave(paste0(fig_dir, "urchin-spp-site-zone.png"), width = 3.5, height=3.5)
+
+
+### Seastars ###########################################################
+
+#### by spp and depth zone ####
+star_spp <-  invert_transect %>% filter(grp2=="STAR") %>% filter(taxa != 'sea_star_YOY') %>%
+  group_by(site,year,species) %>%
+  summarise(Mean=mean(density, na.rm = TRUE),
+            SD=sd(density),
+            N=length(density),
+            SE=SD/sqrt(N),
+            SE_var=SE^2)  %>%
+  group_by(year,species) %>%
+  summarise(grand_sum = sum(Mean, na.rm = TRUE),
+            N=length(Mean),
+            grand_mean = mean(Mean),
+            grand_sum_var = sum(SE_var, na.rm = TRUE), 
+            grand_SE = sqrt(grand_sum_var / N^2))
+star_spp$spp = swath_codes$spp[ match(star_spp$species, swath_codes$species)]
+
+
+star.col = RColorBrewer::brewer.pal(n = 12, name ="Paired")[c(2,4,6,10,12,7,8)]
+
+#####
+stars1 <- ggplot() +
+  geom_point(data = star_spp, aes(x=year,y=grand_mean,color=spp)) +
+  geom_line( data = star_spp, aes(x=year,y=grand_mean,color=spp)) +
+  geom_errorbar(data=star_spp,aes(x=year,ymin=grand_mean-grand_SE,
+                                   ymax=grand_mean+grand_SE,color=spp),width=0) +
+  scale_x_continuous(breaks=seq(2015,last.year,2)) +
+  xlab("") +
+  scale_y_continuous(expression("Sea stars m"^-2) ) + 
+  theme_bw()+ theme_nt  
+
+stars1
+
+ggsave(paste0(fig_dir, "stars-by-year.png"), width=6.5, height = 3)
 
 ################################################################################
 # SITE MAP #####################################################################
