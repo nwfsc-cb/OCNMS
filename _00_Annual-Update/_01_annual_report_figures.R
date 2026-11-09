@@ -1,23 +1,70 @@
+# libraries ####################################################################
+rm(list=ls())
 library(here)
-repo_dir = here::here()
-home_dir = paste0(repo_dir,"/_00_Annual-Update/")
-fig_dir = paste0(home_dir,'figures/')
-setwd(home_dir) # set home dir to annual update folder
-source("settings.r")
-source("R-functions-ocnms.r")
-theme_nt = readRDS('theme_nt.rds')
-fish_codes = data.frame(read.csv("Data/spp_codes_fish.csv", header = TRUE))
-kelp_codes = data.frame(read.csv("Data/spp_codes_kelp.csv", header = TRUE))
-swath_codes = data.frame(read.csv("Data/spp_codes_swath.csv", header = TRUE))
+library(tidyverse)
+library(stringr)
+library(RColorBrewer)
+library(readxl)
+library(lubridate)
+library(ggplot2)
+library(stringr)
+library(maps)
+library(mapdata)
+library(mapproj)
 
 # set year #####################################################################
 data_year = 2026
 
+# set directories ##############################################################
+repo_dir = here::here()
+home_dir = paste0(repo_dir,"/_00_Annual-Update/")
+fig_dir = paste0(home_dir,'figures/')
+# data_dir = paste0(repo_dir,"/Data/")
+data_dir = paste0(repo_dir,"/Data/",data_year,"/")
+
+setwd(home_dir) # set home dir to annual update folder
+
+# common plotting theme ########################################################
+theme_nt   <-   theme(legend.title=element_blank(),
+                      legend.background = element_blank(),
+                      axis.title = element_text(size=8),
+                      axis.text.x = element_text(size=8),
+                      strip.background = element_blank(),
+                      legend.text = element_text(size = 8),
+                      legend.key.size = unit(0.25,'lines')
+)
+
+plot_colors = c(RColorBrewer::brewer.pal(n = 12, name ="Paired"),"black")
+
+# more plotting stuff ##########################################################
+pch = c(8, 21, 22, 23, 24, 4, 25, 26, 27,1,2 )
+col = RColorBrewer::brewer.pal(n = 12, name = "Paired")[c(2,4,6,10,12,7,8,3,5,1,9)]
+year.pch = data.frame(cbind(years, pch, col))
+
+sites = c("Neah Bay","Tatoosh Island","Cape Alava","Cape Johnson","Destruction Island")
+col = RColorBrewer::brewer.pal(n = 12, name = "Paired")[c(2,4,6, 10,12)]
+site.col = data.frame(cbind(sites,col))
+colnames(site.col) <- c('site', 'col')
+
+kelp.depth = 5
+fish.depth = c(5,10)
+invert.depth = 5
+# set for labelling plots below
+depth.labs = c('5-m','10-m')
+names(depth.labs) = c(5,10)
+
+# species codes ################################################################
+fish_codes = data.frame(read.csv(paste0(repo_dir,"/Data/spp_codes_fish.csv"), header = TRUE))
+kelp_codes = data.frame(read.csv(paste0(repo_dir,"/Data/spp_codes_kelp.csv"), header = TRUE))
+swath_codes = data.frame(read.csv(paste0(repo_dir,"/Data/spp_codes_swath.csv"), header = TRUE))
+
 ################################################################################
 # FISH FIGURES #################################################################
 ################################################################################
+
 fish_transect = data.frame(read.csv(
   paste0(data_dir,'Summarized_Data_Fish_by_Transect.csv'), header = T))
+
 ## data prep ###################################################################
 ### adults
 fish_taxa_Year_site <-  fish_transect %>% group_by(site,year,taxa) %>%
@@ -105,6 +152,7 @@ ggplot(fish_ys , aes(x = year, y = Mean, color = site)) +
   theme(legend.position = c(0.7, 0.1))
 
 ggsave(paste0(fig_dir,"fish-by-site.png"), width=5, height = 6)
+
 ## Recruits data prep ##########################################################
 
 fish_taxa_year <-  fish_transect %>% group_by(site,year,taxa) %>%
@@ -134,8 +182,8 @@ ggplot(fish_taxa_year %>% filter(taxa %in% SP.yoy$taxa) %>% left_join(.,SP.yoy))
   scale_color_manual(values=SP.yoy$col)+
   ylab(expression("Rockfish juveniles per 120 m"^3)) +
   xlab("") +
-  theme_bw() + theme_nt 
-  # theme(legend.position = 'inside', legend.position.inside =  c(0.7, 0.8) )
+  theme_bw() + theme_nt +
+  theme(legend.position = 'inside', legend.position.inside =  c(0.7, 0.8) )
 
 ggsave(paste0(fig_dir,'fish-recruits-coastwide.png'), width= 5, height=2.5)
 
@@ -157,7 +205,7 @@ ggplot(yoy_ys , aes(x = year, y = Mean, color = site)) +
   theme_bw() + theme_nt + 
   theme(  legend.position = c(0.85, 0.2) )
 
-ggsave(paste0(fig_dir,'fish-recruits-by-site.png'), width= 5, height=6)
+ggsave(paste0(fig_dir,'fish-recruits-by-site.png'), width= 5, height=5)
 
 ################################################################################
 # SWATH: ALGAE & INVERTS ######################################################
@@ -201,12 +249,13 @@ ggplot(big3) +
   geom_line(aes(x=year,y=mean.density,color=species)) +
   geom_errorbar(aes(x=year,ymin=mean.density-SE,ymax=mean.density+SE,
                     color=species), width=0) +
-  scale_x_continuous(breaks=seq(2015,last.year,2)) +
+  scale_x_continuous(breaks=seq(2015,data_year,2)) +
   xlab("")+
   scale_y_continuous(expression("Stipes m"^-2)) +
   scale_color_manual(values = site.col$col)+
   theme_bw()+ theme_nt + 
   theme(strip.text.y = element_text(face='italic'))
+
 ggsave(paste0(fig_dir,'kelp-coastwide.png'), width=5, height = 2.5)
 
 ## Algae by site and zone ######################################################
@@ -226,7 +275,7 @@ ggplot(big3) +
                 width=0) +
   facet_grid(species ~ zone,scales="free_y", labeller = labeller(zone=depth.labs ,
                                                                  species=kelp.labs)) +
-  scale_x_continuous(breaks=seq(2015,last.year,2)) +
+  scale_x_continuous(breaks=seq(2015,data_year,2)) +
   xlab("")+
   scale_y_continuous(expression("Stipes m"^-2)) +
   scale_color_manual(values = site.col$col)+
@@ -237,6 +286,7 @@ ggsave(paste0(fig_dir,'kelp-by-site-zone.png'),width=5, height=5)
 
 
 ## INVERT FIGURES ##############################################################
+
 ## data prep ####
 
 dat.invert = swath[swath$group=='Invert',]
@@ -264,17 +314,6 @@ invert_transect <- dat.invert %>%
 saveRDS(invert_transect, file=paste0(data_dir , "Summarized_Data_Inverts_by_Transect.rds") )
 write.csv(invert_transect,paste0(data_dir , "Summarized_Data_Inverts_by_Transect.csv"), row.names = F )
 
-# Aggregate up to the area level (within year, site, zone) -- treat transects as replicates
-invert_area <- invert_transect %>% 
-  group_by(year,site,species,zone,area,taxa) %>%
-  summarise(mean.density=mean(density), 
-            SD = sd(density), 
-            N =length(year),
-            SE= SD/sqrt(N) ) 
-
-
-
-
 ### Pycnopodia #################################################################
 
 #### total observed, all sites ####
@@ -284,16 +323,35 @@ pycnos = invert_transect %>%
   summarise(no = sum(total.count))
 
 ggplot(pycnos, aes(year, no)) +
-  ylab("Total observed across five sites")+
-  scale_x_continuous(breaks=2015:data_year) +
+  ylab("Total observed coastwide")+
+  scale_x_continuous(breaks=seq(2015,data_year,5),
+                     minor_breaks = seq(2015,data_year,1)) +
   geom_line() + geom_point()+theme_bw()
 
 ggsave(paste0(fig_dir, "pycno-total-coaswide.png"), width = 3.5, height=2.5)
 
 p_out = pycnos %>% rename(index = no) %>%
-  mutate(timeseries="Pycnopodia", metric = "Total observed per 5 sites")
+  mutate(timeseries="Pycnopodia", metric = "Total observed coastwide")
 
 write.csv(p_out, '~/GitHub/NMS-condition-reports/data/ocnms-dive-total-pycno.csv', row.names = F)
+
+#### total observed, all sites ####
+pycnos2 = invert_transect %>% 
+  group_by(year, site) %>% 
+  filter(., taxa == 'Pycnopodia') %>%
+  summarise(no = sum(total.count))
+
+ggplot(pycnos2, aes(year, no, color=site)) +
+  ylab("Total observed")+
+  scale_x_continuous(breaks=seq(2015,data_year,5),
+                     minor_breaks = seq(2015,data_year,1)) +
+  geom_line() + geom_point()+  theme_bw() + theme_nt + 
+  theme(  legend.position = c(0.2, 0.8) ) + xlab("")
+
+ggsave(paste0(fig_dir, "pycno-total-site.png"), width = 3.5, height=2.5)
+
+p_out = pycnos %>% rename(index = no) %>%
+  mutate(timeseries="Pycnopodia", metric = "Total observed coastwide")
 
 ### Urchins ####################################################################
 
@@ -326,7 +384,7 @@ ggplot() +
   geom_errorbar(data=urchin_mean,
                 aes(x=year,ymin=mean.density-SE,ymax=mean.density+SE,color=site),
                 width=0) +
-  scale_x_continuous(breaks=seq(2015,last.year,2)) +
+  scale_x_continuous(breaks=seq(2015,data_year,2)) +
   scale_y_continuous(expression("Urchin density (m"^-2*")")) +
   scale_color_manual(values = site.col$col) +
   theme_bw()+ theme_nt + xlab("") +
@@ -363,7 +421,7 @@ urchin.plot <- ggplot(urchin_year, aes(x = year, y=grand_mean, color=taxa)) +
                 aes(x=year, ymin=grand_mean-grand_SE ,
                     ymax=grand_mean+grand_SE , color=taxa),width=0) +
   scale_color_manual(values = site.col$col[c(4,3,2)]) +
-  scale_x_continuous("", breaks=seq(2015,last.year,2)) +
+  scale_x_continuous("", breaks=seq(2015,data_year,2)) +
   scale_y_continuous(expression("No m"^-2), limits=c(0,5)) +
   theme_bw()+ theme_nt +
   theme(legend.position='inside') + 
@@ -392,7 +450,7 @@ ggplot() +
   geom_errorbar(data=urchin_zone,
                 aes(x=year,ymin=mean.density-SE,ymax=mean.density+SE,color=site),width=0) +
   facet_grid(rows="zone", labeller = labeller(zone=depth.labs )) +
-  scale_x_continuous(breaks=seq(2015,last.year,2)) +
+  scale_x_continuous(breaks=seq(2015,data_year,2)) +
   scale_y_continuous(expression("Urchin density (m"^-2*")")) +
   # scale_color_viridis_d(option="plasma",end=0.75)+
   scale_color_manual(values = site.col$col)+
@@ -405,7 +463,7 @@ ggsave(paste0(fig_dir, "urchin-spp-site-zone.png"), width = 3.5, height=3.5)
 
 ### Seastars ###########################################################
 
-#### by spp and depth zone ####
+#### by spp by year ####
 star_spp <-  invert_transect %>% filter(grp2=="STAR") %>% filter(taxa != 'sea_star_YOY') %>%
   group_by(site,year,species) %>%
   summarise(Mean=mean(density, na.rm = TRUE),
@@ -421,19 +479,16 @@ star_spp <-  invert_transect %>% filter(grp2=="STAR") %>% filter(taxa != 'sea_st
             grand_SE = sqrt(grand_sum_var / N^2))
 star_spp$spp = swath_codes$spp[ match(star_spp$species, swath_codes$species)]
 
-
-star.col = RColorBrewer::brewer.pal(n = 12, name ="Paired")[c(2,4,6,10,12,7,8)]
-
-#####
 stars1 <- ggplot() +
   geom_point(data = star_spp, aes(x=year,y=grand_mean,color=spp)) +
   geom_line( data = star_spp, aes(x=year,y=grand_mean,color=spp)) +
   geom_errorbar(data=star_spp,aes(x=year,ymin=grand_mean-grand_SE,
                                    ymax=grand_mean+grand_SE,color=spp),width=0) +
-  scale_x_continuous(breaks=seq(2015,last.year,2)) +
-  xlab("") +
+  scale_x_continuous(breaks=seq(2015,data_year,2)) +
+  scale_color_manual(values=plot_colors) +
   scale_y_continuous(expression("Sea stars m"^-2) ) + 
-  theme_bw()+ theme_nt  
+  theme_bw()+ theme_nt +   xlab("") +
+  theme(legend.text = element_text(face='italic'))
 
 stars1
 
@@ -445,7 +500,7 @@ ggsave(paste0(fig_dir, "stars-by-year.png"), width=6.5, height = 3)
 
 
 #### READ IN WASHINGTON MARINE SHORELINES (FROM 
-shore.df <- read.csv("Data/PG Shore shore_thematic_UTM10/shore df.csv")
+shore.df <- read.csv( paste0(repo_dir,"/Data/PG Shore shore_thematic_UTM10/shore df.csv"))
 
 PROJ <- "+proj=utm +zone=10 +datum=NAD83 +units=m +no_defs+ellps=GRS80+towgs84=0,0,0"
 
@@ -453,7 +508,7 @@ temp <- vect(cbind(shore.df$long,shore.df$lat),crs=PROJ)
 temp2 <- project(temp,"+proj=longlat +datum=WGS84")
 shore.df[,c("lon2","lat2")] <- geom(temp2)[,c("x","y")]
 
-loc <-  read.csv( "Data/Survey locations.csv",fileEncoding="latin1")
+loc <-  read.csv( paste0(repo_dir,"/Data/Survey locations.csv"),fileEncoding="latin1")
 # update years
 loc$type[loc$type == '2015-22'] <- paste0('2015-',data_year)
 loc <- loc %>% filter(type %in% c("2015 only",paste0('2015-',data_year)))

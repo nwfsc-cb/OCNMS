@@ -1,13 +1,13 @@
 # settings #####################################################################
-
+# common settings across files #################################################
 min.vis = 2
 last.year = data_year
 years = 2015:data_year
 
 ##### knitr stuff and libraries ####
 # tools in use 
+library(tidyverse)
 library(knitr)
-library(dplyr)
 library(stringr)
 library(RColorBrewer)
 library(readxl)
@@ -18,20 +18,17 @@ library(lemon)
 library(ggpubr)
 library(tidyr)
 library(tinytex) # for pdf output
-# library(googledrive)
-# library(googlesheets4)
 
 # spp codes ####################################################################
 
-fish_codes = data.frame(read.csv("spp_codes_fish.csv", header = TRUE))
-kelp_codes = data.frame(read.csv("spp_codes_kelp.csv", header = TRUE))
-swath_codes = data.frame(read.csv("spp_codes_swath.csv", header = TRUE))
+fish_codes = data.frame(read.csv(paste0(repo_dir,"/Data/spp_codes_fish.csv"), header = TRUE))
+kelp_codes = data.frame(read.csv(paste0(repo_dir,"/Data/spp_codes_kelp.csv"), header = TRUE))
+swath_codes = data.frame(read.csv(paste0(repo_dir,"/Data/spp_codes_swath.csv"), header = TRUE))
 
 # directories ##################################################################
 
 source_dir = paste0(home_dir)
 fig_dir = paste0(home_dir,"/figures/")
-# data_dir = paste0(home_dir,"/data/")
 data_dir = paste0(repo_dir, "/Data/",data_year,"/")
 results_dir = paste0(home_dir,"/results/")
 other_dir = paste0(home_dir,"/other/")
@@ -67,12 +64,3 @@ invert.depth = 5
 depth.labs = c('5-m','10-m')
 names(depth.labs) = c(5,10)
 
-# # Google drive information #####################################################
-# 
-# gDrive_loc = '0B19J8gHIuD3vc3BGWXh1UGkxVHc'
-# # list of folders by year
-# year_folders = drive_ls(path = as_id(gDrive_loc) )
-# year_name = paste0(data_year, " Data")
-# # get this year's file id
-# year_id = year_folders$id[match(year_name,year_folders$name)]
-# year_dir = drive_ls(path = as_id(year_id) ) 
