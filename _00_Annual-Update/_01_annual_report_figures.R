@@ -160,13 +160,17 @@ ggplot(yoy_ys , aes(x = year, y = Mean, color = site)) +
 ggsave(paste0(fig_dir,'fish-recruits-by-site.png'), width= 5, height=6)
 
 ################################################################################
-# ALGAE FIGURES ################################################################
+# SWATH: ALGAE & INVERTS ######################################################
 ################################################################################
 swath0 = readRDS( paste0(data_dir,'Swath_2015-',data_year,'.rds' ))
+sites = c("Neah Bay","Tatoosh Island","Cape Alava","Cape Johnson","Destruction Island")
 swath <- swath0 %>% filter(site %in% sites)
 swath$site <- factor(swath$site,levels=sites)
 algae = swath[swath$group=='Algae',]
-## algae data prep ##############################################################
+
+## ALGAE FIGURES ###############################################################
+### algae data prep ####
+
 kelp_transect <- algae %>% group_by(year,site,transect,zone,area,species) %>%
   summarise(total.count=sum(Count, na.rm = TRUE),
             total.area=sum(Transect.area, na.rm = TRUE)) %>% 
@@ -231,15 +235,105 @@ ggplot(big3) +
 
 ggsave(paste0(fig_dir,'kelp-by-site-zone.png'),width=5, height=5)
 
-################################################################################
-# INVERT FIGURES ###############################################################
-################################################################################
-invert = swath[swath$group=='Invert',]
+
+## INVERT FIGURES ##############################################################
+## data prep ####
+
+dat.invert = swath[swath$group=='Invert',]
+# set proper site order
+dat.invert$site = factor(dat.invert$site, levels = sites)
+dat.invert$taxa = swath_codes$taxa[ match(dat.invert$species, swath_codes$species) ]
+
+# add a column to sum urchins and seastars
+u = grep('urchin', dat.invert$taxa)
+dat.invert$grp2 = 'no'
+dat.invert$grp2[u] <- 'URCHIN'
+s = grep('star', dat.invert$taxa)
+dat.invert$grp2[s] = 'STAR'
+dat.invert$grp2[dat.invert$taxa %in% c('Pisaster','Pycnopodia')] <- 'STAR'
+
+### Summarize by transect ####
+
+# Aggregate up to the transect level (within year, site, area, zone)
+invert_transect <- dat.invert %>% 
+  group_by(year,site,transect,observer,species,zone,area,taxa,grp2) %>%
+  summarise(total.count=sum(Count, na.rm = TRUE),
+            total.area=sum(Transect.area, na.rm = TRUE)) %>% 
+  mutate(density = total.count / total.area )
+
+saveRDS(invert_transect, file=paste0(data_dir , "Summarized_Data_Inverts_by_Transect.rds") )
+write.csv(invert_transect,paste0(data_dir , "Summarized_Data_Inverts_by_Transect.csv"), row.names = F )
+
+# Aggregate up to the area level (within year, site, zone) -- treat transects as replicates
+invert_area <- invert_transect %>% 
+  group_by(year,site,species,zone,area,taxa) %>%
+  summarise(mean.density=mean(density), 
+            SD = sd(density), 
+            N =length(year),
+            SE= SD/sqrt(N) ) 
 
 
 
 
+### Pycnopodia #################################################################
 
+#### total observed, all sites ####
+pycnos = invert_transect %>% 
+  group_by(year) %>% 
+  filter(., taxa == 'Pycnopodia') %>%
+  summarise(no = sum(total.count))
+
+ggplot(pycnos, aes(year, no)) +
+  ylab("Total observed across five sites")+
+  scale_x_continuous(breaks=2015:data_year) +
+  geom_line() + geom_point()+theme_bw()
+
+ggsave(paste0(fig_dir, "pycno-total-coaswide.png"), width = 3.5, height=2.5)
+
+p_out = pycnos %>% rename(index = no) %>%
+  mutate(timeseries="Pycnopodia", metric = "Total observed per 5 sites")
+
+write.csv(p_out, '~/GitHub/NMS-condition-reports/data/ocnms-dive-total-pycno.csv', row.names = F)
+
+### Urchins ####################################################################
+
+#### additional data prep ####
+
+urchin1 <- invert_transect %>% filter(grp2=="URCHIN") %>%
+  group_by(year,site,transect,observer, area,grp2) %>%
+  summarise(tot.density = sum(density, na.rm = TRUE)) %>% 
+  group_by(year,site,area,grp2) %>%
+  summarise(mean.density=mean(tot.density, na.rm = TRUE), 
+            SD = sd(tot.density), 
+            N =length(year),
+            SE= SD/sqrt(N) ) 
+
+urchin_mean <- invert_transect %>% filter(grp2=="URCHIN") %>%
+  group_by(year,site,transect,observer,area,grp2) %>%
+  summarise(tot.density = sum(density, na.rm = TRUE)) %>% 
+  group_by(year,site,grp2) %>%
+  summarise(mean.density=mean(tot.density, na.rm = TRUE), 
+            SD = sd(tot.density), 
+            N =length(year),
+            SE= SD/sqrt(N) ) 
+
+#### Urchins, by site ####
+
+ggplot() +
+  geom_point(data=urchin_mean,aes(x=year,y=mean.density,color=site)) +
+  geom_line(data= urchin_mean,
+            aes(x=year,y=mean.density,color=site)) +
+  geom_errorbar(data=urchin_mean,
+                aes(x=year,ymin=mean.density-SE,ymax=mean.density+SE,color=site),
+                width=0) +
+  scale_x_continuous(breaks=seq(2015,last.year,2)) +
+  scale_y_continuous(expression("Urchin density (m"^-2*")")) +
+  scale_color_manual(values = site.col$col) +
+  theme_bw()+ theme_nt + xlab("") +
+  theme(legend.position='inside') + 
+  theme(legend.position.inside = c(0.2, 0.8))
+
+ggsave(paste0(fig_dir, "urchin-by-site.png"), width=3.5, height=2.5)
 
 ################################################################################
 # SITE MAP #####################################################################

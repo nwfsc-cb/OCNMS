@@ -123,7 +123,6 @@ Divers on SCUBA conducted in situ surveys to count fish at each site along benth
 #| warning: false
 #| fig-cap: "Dive survey locations along the coast of Washington state."
 
-
 knitr::include_graphics( paste0(fig_dir,"site-map.png"))
 
 ```
@@ -237,12 +236,57 @@ knitr::include_graphics( paste0(fig_dir,"fish-recruits-by-site.png"))
 
 ## Invertebrates
 
+```{r fig-x}
+#| echo: false
+#| messange: false
+#| warning: false
+#| tbl-cap: !expr cap_text
+
+cap_text = paste0("xxx 2015-", data_year, " xxx.")
+
+knitr::include_graphics( paste0(fig_dir,"xxx.png"))
+
+```
+paste0(fig_dir, "urchin-by-site.png")
+
+### Urchin trends
+
+```{r fig-x}
+#| echo: false
+#| messange: false
+#| warning: false
+#| tbl-cap: !expr cap_text
+
+cap_text = paste0("Abundance of sea urchins by site from 2015-", data_year, ".")
+
+knitr::include_graphics( paste0(fig_dir, "urchin-by-site.png"))
+
+```
+
+### Seastars
+
+#### Pycnopodia
+
+```{r fig-pycno-total}
+#| echo: false
+#| messange: false
+#| warning: false
+#| tbl-cap: !expr cap_text
+
+cap_text = paste0("Total number of Pycnopodia observed across five sites from  2015-", data_year, ".")
+
+knitr::include_graphics( paste0(fig_dir, "pycno-total-coaswide.png"))
+
+```
+
+
+#### Pycnopodia
 
 
 
 ## Algae
 
-```{r fig-big3-year, fig.width=5, fig.height=2.5}
+```{r fig-urchins-by-site, fig.width=5, fig.height=2.5}
 #| echo: false
 #| messange: false
 #| warning: false

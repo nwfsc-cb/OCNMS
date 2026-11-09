@@ -17,8 +17,7 @@ To update fish data to the most recent year, you will need:
 
 - update_swath_fish.R
 
-in the 'update-data' chunk. The update is done automatically within this RMD, but you will need to check that the trigger is turned on in the if statement in the 
-in the 'update-data' is "if(1==1)". 
+in the 'update-data' chunk. The update is done automatically within this RMD, but you will need to check that the trigger is turned on in the if statement in the in the 'update-data' is "if(1==1)". 
 
 You will also need to have:
 
@@ -71,37 +70,6 @@ The xlsx version of the file is used to pull the species codes: fish_codes, swat
 HOWEVER, at present read_xlsx incorrectly loads the data files because the SIDE/AREA column has both numbers and letters. read_xlsx turns these into NAs. This change messes up the transect area calculations and doubles the estimated densities...incorrectly of course. I haven't figured out how to fix that yet.*Might be fixed*
 
 Processed data are saved to: "~/GitHub/OCNMS/Data/2024/" or whatever the current data_year is. 
-
-```{r download-data-from-google-drive, eval=FALSE, warning=FALSE}
-
-# # Pull data from google drive ##################################################
-# # main google drive
-# gDrive_loc = '0B19J8gHIuD3vc3BGWXh1UGkxVHc'
-# # list of folders by year
-# year_folders = drive_ls(path = as_id(gDrive_loc) )
-# year_name = paste0(data_year, " Data")
-# # get this year's file id
-# year_id = year_folders$id[match(year_name,year_folders$name)]
-# year_dir = drive_ls(path = as_id(year_id) ) 
-# # get file ids
-# fish_id = year_dir$id[grep("NWFSC_FISH_ALLYEARS_data", year_dir$name)]
-# swath_id = year_dir$id[grep("NWFSC_SWATH_ALLYEARS_data", year_dir$name)]
-# upc_id = year_dir$id[grep("NWFSC_UPC_ALLYEARS_data", year_dir$name)]
-# 
-# # output file names
-# fish_out = paste0(data_dir,'NWFSC_FISH_ALLYEARS_data_',data_year,'.xlsm')
-# # download
-# drive_download( as_id(fish_id) , path = fish_out, overwrite = TRUE)
-# 
-# # convert to csv
-# fishxl = data.frame(read_xlsx(paste0(data_dir,'NWFSC_FISH_ALLYEARS_data_',data_year,'.xlsm'),
-#                    sheet = 'DATA'))
-# fishxl = fishxl %>% dplyr::select(!Cntrl.a)
-# 
-# write.csv(fishxl, paste0(data_dir,'NWFSC_FISH_ALLYEARS_data_',data_year,'.csv'), row.names = F)
-
-```
-
 
 ## Bring in data and species codes
 
