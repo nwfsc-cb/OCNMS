@@ -80,6 +80,7 @@ fish_taxa_year <-fish_taxa_Year_site %>% group_by(year,taxa) %>%
             grand_mean= grand_sum / N,
             grand_sum_var =sum(SE_var, na.rm = TRUE), 
             grand_SE = sqrt(grand_sum_var / N^2))
+
 fish.col = c(RColorBrewer::brewer.pal(n = 12, name = "Paired"))
 
 fish.taxa <- c("OPEL", "Lingcod",     fish.col[10],

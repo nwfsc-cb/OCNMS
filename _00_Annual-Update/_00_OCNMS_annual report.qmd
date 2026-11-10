@@ -1,6 +1,7 @@
 ---
 title: "OCNMS Dive Survey Annual Report"
-date: sys.date()
+  date: today
+  date-format: "YYYY-MM-DD"
 format: pdf
 fontsize: 11pt
 editor: source
@@ -8,7 +9,7 @@ editor: source
 
 ```{r SETUP, include=FALSE}
 #| echo: false
-#| messange: false
+#| message: false
 #| warning: false
 
 rm(list = ls()) # clean up
@@ -32,7 +33,7 @@ data_dir = paste0(repo_dir,"/Data/",data_year,"/")
 fig_dir = paste0(home_dir,"/figures/")
 
 # source(paste0(home_dir,"settings.r"))
-
+`%notin%` <- Negate(`%in%`)
 # knitr options ####
 
 knitr::opts_chunk$set(
@@ -49,12 +50,34 @@ knitr::opts_chunk$set(
   fig.align='center'
 )
 
+# special functions ####
+
+## write statement on change in abundance for a species ####
+
+get_delta <- function(dfile, taxa, cname = 'black rockfish', 
+                      mean='grand_mean',se = 'grand_SE'){
+  
+  df1 = filter(dfile, taxa==taxa & year == data_year)# this year
+  df2 = filter(dfile, taxa==taxa & year == data_year-1)# last year
+  deltaSPP = df1$grand_mean-df2$grand_mean # change
+
+  if(deltaSPP > 0){dspp = "increased"}else{dspp = "decreased"}
+  dtext = paste0("The abundance of ", cname, dspp," from ", 
+                      round(df2$grand_mean,1)," (\u00B1 ",round(df2$grand_SE,1),
+                    " se) 120 m\u207B\u00B3 in ", data_year-1, " to ", 
+                      round(df1$grand_mean,1)," (\u00B1 ",round(df$grand_SE,1),
+                    " se) 120 m\u207B\u00B3 in ", data_year)
+  return(dtext)
+  }
+
 ```
 
 ```{r import-data}
 sites = c("Neah Bay","Tatoosh Island","Cape Alava","Cape Johnson","Destruction Island")
 
 # fish
+fish_transect = data.frame(read.csv(
+  paste0(data_dir,'Summarized_Data_Fish_by_Transect.csv'), header = T))
 ## raw file for dates
 xfish = data.frame(read.csv(
     paste0(data_dir,"NWFSC_FISH_ALLYEARS_data_",data_year,".csv"), header=T))
@@ -82,7 +105,6 @@ swath_codes = data.frame(read.csv(paste0(repo_dir,"/Data/spp_codes_swath.csv"), 
 # theme_nt = readRDS('theme_nt.rds')
 ```
 
-**Need to fix all these**
 
 ```{r data-sum1}
 # fish
@@ -95,19 +117,16 @@ fish_taxa_year = length(unique(fish$species[fish$Count>0 & fish$year==data_year]
 fish1 = fish[fish$species=="OPEL",]
 fish_transects_total = nrow(fish1)
 fish_transects_year = nrow(fish1[fish1$year==data_year,])
-# subset for visibility
+## subset for visibility ####
 fish2m = fish_transect[fish_transect$species=="OPEL",]
 fish_transects_total2m = nrow(fish2m)
 fish_transects_year2m = nrow(fish2m[fish2m$year==data_year,])
-
-
-# algae
+# kelp ####
 algae_taxa_total = length(unique(algae$species))
 algae_taxa_year = length(unique(algae$species[algae$Count>0 & algae$year==data_year]))
-
 algae_transects_total = nrow(algae[algae$species=="NERLUE",])
 algae_transects_year = nrow(algae[algae$year==data_year & algae$species=="NERLUE",])
-# invert
+# invert ####
 invert_taxa_total = length(unique(invert$species))
 invert_taxa_year = length(unique(invert$species[invert$Count>0 & invert$year==data_year]))
 invert_transects_total = nrow(invert[invert$species=="PYCHEL",])
@@ -120,13 +139,31 @@ zfish  = xfish %>% filter(YEAR == data_year) %>%
 
 date_min = min(zfish$date)
 date_max = max(zfish$date)
+
+# divers all years
+divers_fish1 = unique(fish$observer)
+divers_swath1 = unique(swath$observer)
+#divers_upc1 = unique(upc$observer)
+
+divers1 = unique(c(divers_fish1, divers_swath1))# , divers_upc1))
+divers1 = divers1[divers1 %notin% c('KA','JS','NT','KF','GW', 'not noted')]
+
+# divers this year
+
+divers_fish2 = unique(fish$observer[fish$year==data_year])
+divers_swath2 = unique(swath$observer[swath$year==data_year])
+# ivers_upc2 = unique(upc$observer[upc$year==data_year])
+
+divers2 = unique(c(divers_fish2, divers_swath2)) #, divers_upc2))
+divers2 = divers2[divers2 %notin% c('KA','JS','NT','KF','GW','not noted')]
+
 ```
 
 # Introduction
 
 Divers from the Northwest Fisheries Science Center (NWFSC) and the National Marine Sanctuaries (NMS) have conducted kelp-forest dive surveys in Olympic Coast National Marine Sanctuary (OCNMS) since 2015 (with the exception of 2020 due to COVID restrictions). Divers from the University of Washington and California State University Monterey Bay have participated as reciprocity divers. Surveys are completed at the end of July to beginning of August. In `r data_year`, surveys were competed between `r date_min` and `r date_max`.
 
-In `r data_year`, divers completed `r fish_transects_year` fish transects, `r invert_transects_year` invertebrate transects, and `r algae_transects_year` across five (5) sites ([Fig. @fig-site-map]). After subsetting the data for visibility (>2m), there were `r fish_transects_year2m` usable transects in `r data_year`. Divers recorded `r fish_taxa_year`, `r invert_taxa_year`, and `r algae_taxa_year` taxa of fish, invertebrates, and algae along these transects. To date (2015-`r data_year`), the survey has recorded `r fish_taxa_total`, `r invert_taxa_total`, and `r algae_taxa_total` taxa for fish, invertebrates, and algae.
+In `r data_year`, divers completed `r fish_transects_year` fish transects, `r invert_transects_year` invertebrate transects, and `r algae_transects_year` across five (5) sites ([Fig. @fig-site-map]). After filtering the data for visibility (>2m), there were `r fish_transects_year2m` usable fish transects in `r data_year`. Divers recorded `r fish_taxa_year`, `r invert_taxa_year`, and `r algae_taxa_year` taxa of fish, invertebrates, and algae along these transects. To date (2015-`r data_year`), the survey has recorded `r fish_taxa_total`, `r invert_taxa_total`, and `r algae_taxa_total` taxa for fish, invertebrates, and algae.
 
 # Methods
 
@@ -134,9 +171,9 @@ Divers on SCUBA conducted in situ surveys to count fish at each site along benth
 
 ```{r fig-site-map}
 #| echo: false
-#| messange: false
+#| message: false
 #| warning: false
-#| fig-cap: "Dive survey locations along the coast of Washington state."
+#| fig-cap: "Dive survey locations in Olympic Coast National Marine Sanctuary along the coast of Washington State."
 
 knitr::include_graphics( paste0(fig_dir,"site-map.png"))
 
@@ -144,13 +181,21 @@ knitr::include_graphics( paste0(fig_dir,"site-map.png"))
 
 During each fish transect, we counted and estimated the size (total length to nearest cm) of all fishes \>5 cm total length; the exception was rockfishes *Sebastes* spp., for which we estimated sizes of all individuals. Rockfishes $\leq$ 10 cm were considered young-of-year. Divers also estimated horizontal visibility on each transect by determining the distance at which the lead diver could distinguish their buddy's extended fingers. Transects with visibility less than 2 m were excluded from analyses.
 
+## Divers / Data collectors
+
+Many divers have contributed to the survey over the years. They include:
+
+Dive team in `r data_year`: `r knitr::combine_words(divers2)`
+
+Dive team members : `r knitr::combine_words(divers1)`
+
 # Results or some other title
 
 ## Fish
 
 ```{r tab-fish-effort}
 #| echo: false
-#| messange: false
+#| message: false
 #| warning: false
 #| tbl-cap: "Number of fish transects completed by year across 10 sites in 2015 and five sites from 2016 to the current year."
 
@@ -168,9 +213,12 @@ flextable(tab_fish) %>% autofit() %>%
   fit_to_width(max_width = 6.5, unit = "in")
  
 ```
+
+
+
 ```{r tab-fish-species}
 #| echo: false
-#| messange: false
+#| message: false
 #| warning: false
 #| tbl-cap: "Number of fish taxa observed by year across 10 sites"
 
@@ -192,13 +240,52 @@ flextable(nspp) %>% autofit() %>% fontsize(size = 10, part = "all") %>%
 
 ### Adult fishes
 
+```{r fish-text}
+#| echo: false
+#| message: false
+#| warning: false
+
+fish_taxa_Year_site <-  fish_transect %>% group_by(site,year,taxa) %>%
+  summarise(Mean=mean(Count, na.rm = TRUE),
+            SD=sd(Count),
+            N=length(Count),
+            SE=SD/sqrt(N),
+            SE_var=SE^2)
+
+fish_taxa_year <-fish_taxa_Year_site %>% group_by(year,taxa) %>%
+  summarise(grand_sum=sum(Mean, na.rm = TRUE),
+            N=length(Mean),
+            grand_mean= grand_sum / N,
+            grand_sum_var =sum(SE_var, na.rm = TRUE), 
+            grand_SE = sqrt(grand_sum_var / N^2))
+
+# black1 = fish_taxa_year %>% filter(taxa=="SEME" & year == data_year)# this year
+# 
+# black2 = fish_taxa_year %>% filter(taxa=="SEME" & year == data_year-1)# last year
+# 
+# deltaBlack = black1$grand_mean-black2$grand_mean # change
+# 
+# if(deltaBlack > 0){change_black = "increased"}else{change_black = "decreased"}
+# text_black = paste0("The abundance of black rockfish ",change_black," from ", 
+#                       round(black2$grand_mean,1)," (\u00B1 ",round(black2$grand_SE,1),
+#                     " se) 120 m\u207B\u00B3 in ", data_year-1, " to ", 
+#                       round(black1$grand_mean,1)," (\u00B1 ",round(black1$grand_SE,1),
+#                     " se) 120 m\u207B\u00B3 in ", data_year)
+
+text_black <- get_delta(fish_taxa_year,taxa="SEME")
+
+
+```
+
+Black rockfish (*Sebastes melanostictus*) is the most commonly observed species in the dive survey (@fig-fish-year). `r text_black`. Greenlings are typically the second most observed taxa; these are primarily kelp greenlings *Hexagrammos decagrammus*, although the various species are lumped in Figure -@fig-fish-year.
+
 ```{r fig-fish-year}
 #| echo: false
-#| messange: false
+#| message: false
 #| warning: false
 #| fig.cap: !expr cap_text
 
-cap_text = paste0("Number of fish per 120 m^3 for 2015-", data_year, " coastwide. Note the scale of the y-axis.")
+cap_text = paste0("Number of fish per 120 m^3 for 2015-", data_year, " coastwide. Note the scale of the y-axis. RF = rockfish.")
 
 knitr::include_graphics( paste0(fig_dir,"fish-coastwide.png"))
 
@@ -206,7 +293,7 @@ knitr::include_graphics( paste0(fig_dir,"fish-coastwide.png"))
 
 ```{r fig-fish-site-year}
 #| echo: false
-#| messange: false
+#| message: false
 #| warning: false
 #| fig.cap: !expr cap_text
 
@@ -232,7 +319,7 @@ It is difficult to visually distinguish many rockfish species when they are smal
 
 ```{r fig-YOY, fig.width=3.2, fig.height=2}
 #| echo: false
-#| messange: false
+#| message: false
 #| warning: false
 #| fig.cap: !expr cap_text
 
@@ -244,7 +331,7 @@ knitr::include_graphics( paste0(fig_dir,"fish-recruits-coastwide.png"))
 
 ```{r fig-YOY-site-year, fig.width=5, fig.height=6}
 #| echo: false
-#| messange: false
+#| message: false
 #| warning: false
 #| fig.cap: !expr cap_text
 
@@ -257,21 +344,21 @@ knitr::include_graphics( paste0(fig_dir,"fish-recruits-by-site.png"))
 
 ```{r tab-invert-effort}
 #| echo: false
-#| messange: false
+#| message: false
 #| warning: false
 #| tbl-cap: "Number of kelp transects completed by year across 10 sites in 2015 and five sites from 2016 to the current year."
 
 # select 1spp just to get transect counts
 # data are expanded to include zeros
-# don't use a rockfish because of YOY designaitons
-xinvert = dat.invert[dat.invert$species=='PYCHEL',] 
+
+xinvert = invert[invert$species=='PYCHEL',] 
 tab_invert = xinvert  %>% group_by(year, site) %>% 
   summarize(N = n()) %>% 
   pivot_wider(id_cols='site', names_from = year, values_from = N) %>%
   rename(Site = site)
 
-flextable(tab_invert) %>% autofit() %>% fontsize(size = 10, part = "all")
- 
+flextable(tab_invert) %>% autofit() %>% fontsize(size = 10, part = "all") %>%
+ fit_to_width(max_width = 6.5, unit = "in")
 ```
 
 
@@ -281,7 +368,7 @@ flextable(tab_invert) %>% autofit() %>% fontsize(size = 10, part = "all")
 
 ```{r fig-tot-urchins}
 #| echo: false
-#| messange: false
+#| message: false
 #| warning: false
 #| tbl-cap: !expr cap_text
 
@@ -293,7 +380,7 @@ knitr::include_graphics( paste0(fig_dir, "urchin-by-site.png"))
 
 ```{r fig-urchins-by-spp}
 #| echo: false
-#| messange: false
+#| message: false
 #| warning: false
 #| tbl-cap: !expr cap_text
 
@@ -304,7 +391,7 @@ knitr::include_graphics( paste0(fig_dir, 'urchin-spp-by-year.png'))
 
 ```{r fig-urchins-by-spp-site-zone}
 #| echo: false
-#| messange: false
+#| message: false
 #| warning: false
 #| tbl-cap: !expr cap_text
 
@@ -319,7 +406,7 @@ knitr::include_graphics( paste0(fig_dir, "urchin-spp-site-zone.png"))
 
 ```{r fig-seastars}
 #| echo: false
-#| messange: false
+#| message: false
 #| warning: false
 #| tbl-cap: !expr cap_text
 
@@ -333,7 +420,7 @@ knitr::include_graphics( paste0(fig_dir, "stars-by-year.png"))
 
 ```{r fig-pycno-total}
 #| echo: false
-#| messange: false
+#| message: false
 #| warning: false
 #| tbl-cap: !expr cap_text
 
@@ -345,7 +432,7 @@ knitr::include_graphics( paste0(fig_dir, "pycno-total-coaswide.png"))
 
 ```{r fig-pycno-site}
 #| echo: false
-#| messange: false
+#| message: false
 #| warning: false
 #| tbl-cap: !expr cap_text
 
@@ -362,28 +449,28 @@ knitr::include_graphics( paste0(fig_dir, "pycno-total-site.png"))
 
 ```{r tab-kelp-effort}
 #| echo: false
-#| messange: false
+#| message: false
 #| warning: false
 #| tbl-cap: "Number of kelp transects completed by year across 10 sites in 2015 and five sites from 2016 to the current year."
 
 # select 1spp just to get transect counts
 # data are expanded to include zeros
-# don't use a rockfish because of YOY designaitons
+# don't use a rockfish because YOY designations increase the transect count artificially
 xalgae = algae[algae$species=='NERLUE',] 
 tab_algae = xalgae %>% group_by(year, site) %>% 
   summarize(N = n()) %>% 
   pivot_wider(id_cols='site', names_from = year, values_from = N) %>%
   rename(Site = site)
 
-flextable(tab_algae) %>% autofit() %>% fontsize(size = 10, part = "all")
- 
+flextable(tab_algae) %>% autofit() %>% fontsize(size = 10, part = "all") %>%
+ fit_to_width(max_width = 6.5, unit = "in")
 ```
 
 
 
 ```{r fig-urchins-by-site, fig.width=5, fig.height=2.5}
 #| echo: false
-#| messange: false
+#| message: false
 #| warning: false
 #| tbl-cap: !expr cap_text
 
@@ -396,7 +483,7 @@ knitr::include_graphics( paste0(fig_dir,"kelp-coastwide.png"))
 
 ```{r fig-big3-site-zone}
 #| echo: false
-#| messange: false
+#| message: false
 #| warning: false
 #| tbl-cap: !expr cap_text
 
