@@ -52,23 +52,24 @@ knitr::opts_chunk$set(
 
 # special functions ####
 
-## write statement on change in abundance for a species ####
-
-get_delta <- function(dfile, taxa, cname = 'black rockfish', 
-                      mean='grand_mean',se = 'grand_SE'){
+get_delta <- function(dfile, xtaxa, cname, mean='grand_mean',se = 'grand_SE'){
   
-  df1 = filter(dfile, taxa==taxa & year == data_year)# this year
-  df2 = filter(dfile, taxa==taxa & year == data_year-1)# last year
-  deltaSPP = df1$grand_mean-df2$grand_mean # change
-
-  if(deltaSPP > 0){dspp = "increased"}else{dspp = "decreased"}
+  df1 = filter(dfile, taxa==xtaxa & year == data_year)# this year
+  df2 = filter(dfile, taxa==xtaxa & year == data_year-1)# last year
+  
+  deltaSPP = df1[,mean] - df2[,mean] # change
+  #deltaSPP
+  if(deltaSPP > 0){dspp = " increased"}else{dspp = " decreased"}
   dtext = paste0("The abundance of ", cname, dspp," from ", 
-                      round(df2$grand_mean,1)," (\u00B1 ",round(df2$grand_SE,1),
+                      round(df2[,mean],1)," (\u00B1 ",round(df2[,se],1),
                     " se) 120 m\u207B\u00B3 in ", data_year-1, " to ", 
-                      round(df1$grand_mean,1)," (\u00B1 ",round(df$grand_SE,1),
+                      round(df1[,mean],1)," (\u00B1 ",round(df1[,se],1),
                     " se) 120 m\u207B\u00B3 in ", data_year)
   return(dtext)
   }
+## write statement on change in abundance for a species ####
+
+
 
 ```
 
@@ -259,21 +260,7 @@ fish_taxa_year <-fish_taxa_Year_site %>% group_by(year,taxa) %>%
             grand_sum_var =sum(SE_var, na.rm = TRUE), 
             grand_SE = sqrt(grand_sum_var / N^2))
 
-# black1 = fish_taxa_year %>% filter(taxa=="SEME" & year == data_year)# this year
-# 
-# black2 = fish_taxa_year %>% filter(taxa=="SEME" & year == data_year-1)# last year
-# 
-# deltaBlack = black1$grand_mean-black2$grand_mean # change
-# 
-# if(deltaBlack > 0){change_black = "increased"}else{change_black = "decreased"}
-# text_black = paste0("The abundance of black rockfish ",change_black," from ", 
-#                       round(black2$grand_mean,1)," (\u00B1 ",round(black2$grand_SE,1),
-#                     " se) 120 m\u207B\u00B3 in ", data_year-1, " to ", 
-#                       round(black1$grand_mean,1)," (\u00B1 ",round(black1$grand_SE,1),
-#                     " se) 120 m\u207B\u00B3 in ", data_year)
-
-text_black <- get_delta(fish_taxa_year,taxa="SEME")
-
+text_black <- get_delta(dfile=fish_taxa_year, xtaxa="SEME", cname='black rockfish')
 
 ```
 
