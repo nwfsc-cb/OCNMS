@@ -1,5 +1,7 @@
 get_delta <- function(dfile, xtaxa, cname, mean='grand_mean',se = 'grand_SE'){
   
+  z = grep('taxa', colnames(dfile))
+  if(length(z)==0){dfile$taxa = dfile$species}
   df1 = filter(dfile, taxa==xtaxa & year == data_year)# this year
   df2 = filter(dfile, taxa==xtaxa & year == data_year-1)# last year
   

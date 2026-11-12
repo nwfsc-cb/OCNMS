@@ -435,6 +435,52 @@ flextable(nspp_i) %>% autofit() %>%
 
 ### Urchin trends
 
+```{r prep-urchins}
+tot_urchin_taxa_Year_site <-  invert %>% 
+  filter(species %in% c('STRPUR','MESFRA','STRDRO')) %>%
+  group_by(site,year) %>%
+  summarise(Mean=mean(Count, na.rm = TRUE),
+            SD=sd(Count),
+            N=length(Count),
+            SE=SD/sqrt(N),
+            SE_var=SE^2)
+
+tot_urchin_taxa_year <-tot_urchin_taxa_Year_site %>% 
+  group_by(year) %>%
+  summarise(grand_sum=sum(Mean, na.rm = TRUE),
+            N=length(Mean),
+            xmean = mean(Mean),
+            grand_mean= grand_sum / N,
+            grand_sum_var =sum(SE_var, na.rm = TRUE), 
+            grand_SE = sqrt(grand_sum_var / N^2)) %>%
+  mutate(taxa='urchin')
+
+text_urchin <- get_delta(dfile=tot_urchin_taxa_year, xtaxa="urchin", cname='total urchins')
+
+# by spp
+urchin_taxa_Year_site <-  invert %>% 
+  filter(species %in% c('STRPUR','MESFRA','STRDRO')) %>%
+  group_by(site,year,species) %>%
+  summarise(Mean=mean(Count, na.rm = TRUE),
+            SD=sd(Count),
+            N=length(Count),
+            SE=SD/sqrt(N),
+            SE_var=SE^2)
+
+urchin_taxa_year <-urchin_taxa_Year_site %>% group_by(year,species) %>%
+  summarise(grand_sum=sum(Mean, na.rm = TRUE),
+            N=length(Mean),
+            grand_mean= grand_sum / N,
+            grand_sum_var =sum(SE_var, na.rm = TRUE), 
+            grand_SE = sqrt(grand_sum_var / N^2)) %>%
+  mutate(grand_mean = grand_mean)
+
+text_purple <- get_delta(dfile=urchin_taxa_year, xtaxa="STRPUR", cname='purple urchins')
+
+```
+*this text does not match the figure*
+`r text_urchin` (@fig-tot-urchins). `r text_purple`. 
+
 ```{r fig-tot-urchins}
 #| echo: false
 #| message: false
@@ -443,9 +489,14 @@ flextable(nspp_i) %>% autofit() %>%
 
 cap_text = paste0("Abundance of all sea urchins by site from 2015-", data_year, ".")
 
-knitr::include_graphics( paste0(fig_dir, "urchin-by-site.png"))
+
+
+# knitr::include_graphics( paste0(fig_dir, "urchin-by-site.png"))
 
 ```
+*this text does not match the figure*
+
+Purple urchins (*Strongylocentrotus purpuratus*) are the most commonly observed urchin in the dive survey (@fig-urchins-by-spp). `r text_purple`. Red urchins are typically the second most observed taxa.
 
 ```{r fig-urchins-by-spp}
 #| echo: false
