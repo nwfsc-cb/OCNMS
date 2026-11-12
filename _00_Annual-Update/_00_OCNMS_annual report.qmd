@@ -1,9 +1,21 @@
 ---
 title: "OCNMS Dive Survey Annual Report"
-  date: today
-  date-format: "YYYY-MM-DD"
-format: pdf
+author: "Nick Tolimieri"
+date: " `r Sys.Date()` "
+format:
+  pdf:
+    toc: false
+    fig-pos: H
+    fig-align: center
+    geometry:
+      - top=1in
+      - bottom=1in
+      - left=1in
+      - right=1in
+      - heightrounded
 fontsize: 11pt
+# bibliography: references.bib
+# csl: "oecologia.csl"
 editor: source
 ---
 
@@ -67,7 +79,11 @@ get_delta <- function(dfile, xtaxa, cname, mean='grand_mean',se = 'grand_SE'){
                     " se) 120 m\u207B\u00B3 in ", data_year)
   return(dtext)
   }
-## write statement on change in abundance for a species ####
+# species codes ################################################################
+fish_codes = data.frame(read.csv(paste0(repo_dir,"/Data/spp_codes_fish.csv"), header = TRUE))
+kelp_codes = data.frame(read.csv(paste0(repo_dir,"/Data/spp_codes_kelp.csv"), header = TRUE))
+swath_codes = data.frame(read.csv(paste0(repo_dir,"/Data/spp_codes_swath.csv"), header = TRUE))
+
 
 
 
@@ -186,15 +202,14 @@ During each fish transect, we counted and estimated the size (total length to ne
 
 Many divers have contributed to the survey over the years. They include:
 
-Dive team in `r data_year`: `r knitr::combine_words(divers2)`
+_Dive team_ in `r data_year`: `r knitr::combine_words(divers2)`
 
-Dive team members : `r knitr::combine_words(divers1)`
+_Dive team members:_ `r knitr::combine_words(divers1)`
 
 # Results or some other title
 
 ## Fish
-
-```{r tab-fish-effort}
+```{r prep-fish-effort}
 #| echo: false
 #| message: false
 #| warning: false
@@ -209,24 +224,44 @@ tab_fish = xfish %>% group_by(year, site) %>%
   pivot_wider(id_cols='site', names_from = year, values_from = N) %>%
   rename(Site = site)
 
+sum(tab_fish[,ncol(tab_fish)], na.rm=T)
+
+```
+
+@tab-fish-effort shows the number of transects completed at each site. Divers target 12 transects per site (3 transects x 2 locations x 2 depths), but are often able to complete additional transects on a dive. In `r data_year` divers completed `r min(tab_fish[,ncol(tab_fish)], na.rm=T)`-`r max(tab_fish[,ncol(tab_fish)], na.rm=T)` 
+for at total of `r sum(tab_fish[,ncol(tab_fish)], na.rm=T)` transects across all sites.
+
+
+```{r tab-fish-effort}
+#| echo: false
+#| message: false
+#| warning: false
+#| tbl-cap: "Number of fish transects completed by year across 10 sites in 2015 and five sites from 2016 to the current year. Note the survey design changed in 2016 with more effort at fewer sites."
+
 flextable(tab_fish) %>% autofit() %>% 
   fontsize(size = 10, part = "all") %>%
   fit_to_width(max_width = 6.5, unit = "in")
  
 ```
 
-
-
-```{r tab-fish-species}
+```{r prep-fish-species}
 #| echo: false
 #| message: false
 #| warning: false
 #| tbl-cap: "Number of fish taxa observed by year across 10 sites"
 
-# select 1spp just to get transect counts
-# data are expanded to include zeros
-fish$n = ifelse(fish$Count==0,0,1)
-nspp = fish %>% group_by(year, site, species) %>% 
+# total observed
+tspp_names = unique(fish$species[fish$Count>0])
+tspp_names = tspp_names[tspp_names %notin% c('RYOY', 'UNID','BAITBALL','SEBYT')]
+Nspp = length(tspp_names)
+tspp_names = unique(fish$species[fish$Count>0 & fish$year==data_year])
+tspp_names = tspp_names[tspp_names %notin% c('RYOY', 'UNID','BAITBALL','SEBYT')]
+Yspp = length(tspp_names)
+
+# species observed by site and year 
+nspp = fish %>% 
+  group_by(year, site, species) %>% 
+  mutate(n=sum(Count)) %>%
   summarize(n = sum(n)) %>%
   filter(n>0) %>% mutate(n = 1) %>%
   group_by(year,site) %>%
@@ -234,10 +269,66 @@ nspp = fish %>% group_by(year, site, species) %>%
   pivot_wider(id_cols='site', names_from = year, values_from = Taxa) %>%
   rename(Site = site)
 
-flextable(nspp) %>% autofit() %>% fontsize(size = 10, part = "all") %>%
+# sites with most species
+xspp = max(nspp[,ncol(nspp)], na.rm=T)
+xsites = nspp %>% select(Site, as.character(data_year))
+xsites = na.omit(xsites[xsites[,2]==xspp,'Site']  )
+if(nrow(xsites)==1){Xsites = xsites}
+if(nrow(xsites>1)){Xsites = knitr::combine_words(xsites)}
+  
+```
+
+@tab-fish-spp shows the number of species observed at completed at each site. In `r data_year` divers recorded between `r min(nspp[,ncol(nspp)], na.rm=T)`-`r max(nspp[,ncol(nspp)], na.rm=T)`. The highest number of species was observed at `r Xsites`.
+
+-Species/taxa observed in `r data_year`: `r Yspp`
+-Total species/taxa observed to date: `r Nspp`
+
+```{r tab-fish-spp}
+#| echo: false
+#| message: false
+#| warning: false
+#| tbl-cap: "Number of fish taxa observed by year across 10 sites."
+
+flextable(nspp) %>% autofit() %>% 
+  fontsize(size = 10, part = "all") %>%
   fit_to_width(max_width = 6.5, unit = "in")
  
 ```
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+#| tbl-cap: "List of taxa or species observed across all sites and years. Note young-of-year (YOY) rockfish (aka recruits) are listed separately from adults. As a result, the total taxa/species shown is higher than reported in the text above where adults and recruits are combined. Taxa/species are listed in order of abunanace."
+
+Yfish = fish %>% 
+  group_by(year, species) %>% 
+  summarise(Total = sum(Count)) %>% 
+  filter(Total > 0)
+
+# total observed across all years
+Tfish = Yfish %>% 
+  group_by(species) %>%
+  summarise(Total = sum(Total))
+# add in common names and correct species names
+Tfish$Species = fish_codes$spp.name[ match(Tfish$species, fish_codes$species) ]
+Tfish$`Common name` = fish_codes$common.name[ match(Tfish$species, fish_codes$species) ]
+
+Tfish = Tfish[ order(Tfish$Total, decreasing=TRUE),]
+
+spptab2 = Tfish %>% select(Species, `Common name`, Total) %>% 
+  flextable() %>% autofit() %>%
+  fontsize(size = 10, part = "all") %>%
+  italic(j="Species") %>%
+  line_spacing(space = 1, part = "all") %>%
+  fit_to_width(max_width = 5.5, unit = "in") 
+  
+spptab2
+
+```
+
+
+
 
 ### Adult fishes
 
@@ -480,5 +571,9 @@ knitr::include_graphics( paste0(fig_dir,'kelp-by-site-zone.png') )
 
 
 ```
+
+# Discussion
+
+# Literature Cited
 
 
