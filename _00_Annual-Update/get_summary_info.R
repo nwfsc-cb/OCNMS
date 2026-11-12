@@ -1,5 +1,12 @@
 get_summary_info <- function(dfile, spp_codes){
   
+  # total spp across years
+  tspp_names1 = unique(dfile$species[dfile$Count>0])
+  TotSpp = length(tspp_names1)
+  # total spp, current year
+  tspp_names2 = unique(dfile$species[dfile$Count>0 & dfile$year==data_year])
+  YrSpp = length(tspp_names2)
+  
   # species observed by site and year 
   nspp = dfile%>% 
     group_by(year, site, species) %>% 
@@ -48,6 +55,7 @@ get_summary_info <- function(dfile, spp_codes){
   
   if(spp_yr_nm==Tspp$cn[1]){text1 = " also "}else{text1=" "}
   
-  df_out = list(xsites = zsites, Tspp = Tspp, Yspp=Yspp,maxspp = xspp, nspp = nspp,spp_yr_no=spp_yr_no, spp_yr_nm=spp_yr_nm)
+  df_out = list(TotSpp = TotSpp, YrSpp = YrSpp,xsites = zsites, Tspp = Tspp, 
+                Yspp=Yspp, maxspp = zspp, nspp = nspp,spp_yr_no=spp_yr_no, spp_yr_nm=spp_yr_nm)
   return(df_out)
 } #end function

@@ -206,8 +206,6 @@ tab_fish = xfish %>% group_by(year, site) %>%
 
 ```
 
-**need to fix table referencing; insert fake table?**
-
 Divers target 12 transects per site (3 transects x 2 locations x 2 depths), but are often able to complete additional transects on a dive (@tbl-fish-effort). In `r data_year` divers completed `r min(tab_fish[,ncol(tab_fish)], na.rm=T)`-`r max(tab_fish[,ncol(tab_fish)], na.rm=T)` 
 for a total of `r sum(tab_fish[,ncol(tab_fish)], na.rm=T)` transects across all sites. Note, the analysts typically remove transects with visibility below 2.0 m for any investigation.
 
@@ -234,16 +232,20 @@ flextable(tab_fish) %>% autofit() %>%
 #| tbl-cap: "Number of fish taxa observed by year across 10 sites"
 
 # total observed
-tspp_names = unique(fish$species[fish$Count>0])
-tspp_names = tspp_names[tspp_names %notin% c('RYOY', 'UNID','BAITBALL','SEBYT')]
-Nspp = length(tspp_names)
-tspp_names = unique(fish$species[fish$Count>0 & fish$year==data_year])
-tspp_names = tspp_names[tspp_names %notin% c('RYOY', 'UNID','BAITBALL','SEBYT',"SEBSPP")]
-Yspp = length(tspp_names)
+# Xtspp_names = unique(fish$species[fish$Count>0])
+# tspp_names = tspp_names[tspp_names %notin% c('RYOY', 'UNID','BAITBALL','SEBYT')]
+# # total across years
+# ToTsppFish = length(tspp_names)
+# tspp_names = unique(fish$species[fish$Count>0 & fish$year==data_year])
+# tspp_names = tspp_names[tspp_names %notin% ]
+# tpta; year
+fish_summary = fish[ fish$species %notin% c('RYOY','UNID','BAITBALL','SEBYT',"SEBSPP"),]
 
 # get summary info fish ####
-fish_info = get_summary_info(dfile=fish, spp_codes=fish_codes)
+fish_info = get_summary_info(dfile=fish_summary, spp_codes=fish_codes)
 # rename here for shofter names in text
+TotSpp = fish_info$TotSpp
+YrSpp = fish_info$YrSpp
 nspp = fish_info$nspp
 Tspp = fish_info$Tspp
 Yspp = fish_info$Yspp
@@ -252,13 +254,9 @@ maxspp = fish_info$xspp
 nspp = fish_info$nspp
 spp_yr_no =fish_info$spp_yr_no
 spp_yr_nm =fish_info$spp_yr_nm
-
 ```
 
-@tbl-fish-spp shows the number of species observed at completed at each site. In `r data_year` divers recorded between `r min(nspp[,ncol(nspp)], na.rm=T)`-`r max(nspp[,ncol(nspp)], na.rm=T)`. The highest number of species was observed at `r xsites`.
-
-*Species/taxa observed in `r data_year`:* `r Yspp`
-*Total species/taxa observed to date:* `r Nspp`
+@tbl-fish-spp shows the number of species observed at completed at each site. In `r data_year` divers recorded between `r min(nspp[,ncol(nspp)], na.rm=T)`-`r max(nspp[,ncol(nspp)], na.rm=T)`. The highest number of species was observed at `r xsites`. Across all sites, divers recorded `r YrSpp` in `data_year` and `r TotSpp` across all sites and years. 
 
 ```{r tbl-fish-spp}
 #| echo: false
@@ -273,9 +271,10 @@ flextable(nspp) %>% autofit() %>%
   padding(padding = 0)
   
 ```
+
 ### Adult fishes
 
-Across all years, divers recorded `r nrow(Tspp)` adult fish taxa (@tbl-spp2). The most common species was `r Tspp$cn[1]` `r Tspp$Species[1]` with `r Tspp$Total[1]` counted to date.  The second most common species was `r Tspp$cn[2]` `r Tspp$species[2]`  `r Tspp$Total[2]`individuals observed by divers. In `r data_year` `r spp_yr_nm` was`text1`the most commonly recorded species with`r spp_yr_no` across the five sites.
+Divers recorded `r nrow(Tspp)` adult fish taxa (@tbl-spp2). The most common species was `r Tspp$cn[1]` `r Tspp$Species[1]` with `r Tspp$Total[1]` counted to date.  The second most common species was `r Tspp$cn[2]` `r Tspp$species[2]`  `r Tspp$Total[2]`individuals observed by divers. In `r data_year` `r spp_yr_nm` was`text1`the most commonly recorded species with`r spp_yr_no` across the five sites.
 
 ```{r tbl-spp2}
 #| echo: false
@@ -383,26 +382,6 @@ knitr::include_graphics( paste0(fig_dir,"fish-recruits-by-site.png"))
 
 ## Invertebrates
 
-
-```{r prep-inverts}
-#| message: false
-
-invert_info = get_summary_info(dfile=invert, spp_codes=swath_codes)
-# rename here for shofter names in text
-nspp_i =invert_info$nspp
-Tsppn_i = invert_info$Tspp
-Ysppn_i = invert_info$Yspp
-xsites_i = invert_info$xsites
-maxspp_i = invert_info$xspp
-spp_yr_no_i = invert_info$spp_yr_no
-spp_yr_nm_i = invert_info$spp_yr_nm
-```
-
-@tbl-invert-spp shows the number of invertebratespecies observed at completed at each site. In `r data_year` divers recorded between `r min(nsppnspp_i[,ncol(nsppnspp_i)], na.rm=T)`-`r max(nsppnspp_i[,ncol(nsppnspp_i)], na.rm=T)`. The highest number of species was observed at `r Xsitesnspp_i`.
-
-*Species/taxa observed in `r data_year`:* `r Yspp`
-*Total species/taxa observed to date:* `r Nspp`
-
 ```{r tbl-invert-effort}
 #| echo: false
 #| message: false
@@ -422,8 +401,37 @@ flextable(tab_invert) %>% autofit() %>% fontsize(size = 10, part = "all") %>%
  fit_to_width(max_width = 6.5, unit = "in")
 ```
 
+```{r prep-invert-spp}
+#| message: false
 
+invert_info = get_summary_info(dfile=invert, spp_codes=swath_codes)
+# rename here for shorter names in text
+YrSpp_i = invert_info$YrSpp
+TotSpp_i= invert_info$TotSpp
+nspp_i = invert_info$nspp
+Tsppn_i = invert_info$Tspp
+Ysppn_i = invert_info$Yspp
+xsites_i = invert_info$xsites
+maxspp_i = invert_info$xspp
+spp_yr_no_i = invert_info$spp_yr_no
+spp_yr_nm_i = invert_info$spp_yr_nm
+```
 
+@tbl-invert-spp shows the number of taxa observed at completed at each site. In `r data_year` divers recorded between `r min(nspp_i[,ncol(nspp_i)], na.rm=T)`-`r max(nspp_i[,ncol(nspp_i)], na.rm=T)`. The highest number of taxa was observed at `r xsites_i`. In `data_year` the survey encountered `r YrSpp_i` taxa out of `r TotSpp_i` seen across all years.
+
+```{r tbl-invert-spp}
+#| echo: false
+#| message: false
+#| warning: false
+#| tbl-cap: "Number of invertebrate taxa observed on transects by site in each year."
+
+flextable(nspp_i) %>% autofit() %>% 
+  fontsize(size = 10, part = "all") %>%
+  fit_to_width(max_width = 6, unit = "in") %>%
+  line_spacing(space=1, part='body') %>%
+  padding(padding = 0)
+  
+```
 
 ### Urchin trends
 
@@ -504,24 +512,23 @@ knitr::include_graphics( paste0(fig_dir, "pycno-total-site.png"))
 ```
 
 
-
-
 ## Algae
 
 ```{r prep-kelp-inf0}
+
 kelp_info = get_summary_info(dfile=algae, spp_codes=kelp_codes)
 # rename here for shofter names in text
-nspp = kelp_info$nspp
-Tspp = kelp_info$Tspp
-Yspp = kelp_info$Yspp
-Xsites = kelp_info$Xsites
-maxspp = kelp_info$xspp
-spp_yr_no = kelp_info$spp_yr_no
-spp_yr_nm = kelp_info$spp_yr_nm
+nspp_k = kelp_info$nspp
+Tspp_k = kelp_info$Tspp
+Yspp_k = kelp_info$Yspp
+xsites_k = kelp_info$xsites
+maxspp_k = kelp_info$xspp
+spp_yr_no_k = kelp_info$spp_yr_no
+spp_yr_nm_k = kelp_info$spp_yr_nm
 ```
 
 
-```
+
 
 
 
@@ -544,9 +551,26 @@ flextable(tab_algae) %>% autofit() %>% fontsize(size = 10, part = "all") %>%
  fit_to_width(max_width = 6.5, unit = "in")
 ```
 
+@tbl-invert-spp shows the number of species observed at completed at each site. In `r data_year` divers recorded between `r min(nspp_k[,ncol(nspp_k)], na.rm=T)`-`r max(nspp_k[,ncol(nspp_k)], na.rm=T)`. The highest number of species was observed at `r xsites_k`.
 
+*Species/taxa observed in `r data_year`:* `r Yspp_k`
+*Total species/taxa observed to date:* `r Nspp_k`
 
-```{r fig-urchins-by-site, fig.width=5, fig.height=2.5}
+```{r tbl-invert-spp}
+#| echo: false
+#| message: false
+#| warning: false
+#| tbl-cap: "Number of kelp taxa observed on transects by year across sites."
+
+flextable(nspp_k) %>% autofit() %>% 
+  fontsize(size = 10, part = "all") %>%
+  fit_to_width(max_width = 6, unit = "in") %>%
+  line_spacing(space=1, part='body') %>%
+  padding(padding = 0)
+  
+```
+
+```{r fig-kelp-by-site, fig.width=5, fig.height=2.5}
 #| echo: false
 #| message: false
 #| warning: false
