@@ -32,6 +32,7 @@ survey_year = 2026
 work_dir <- paste0(home_dir, "/_01_Assessment-indices/")
 data_dir =  paste0(home_dir,'/Data/',survey_year,'/')
 fig_dir =   paste0(work_dir,'figures/')
+data_out = paste0(work_dir,'data_out/')
 
 # knitr options ####
 knitr::opts_chunk$set(
@@ -95,8 +96,6 @@ VIS_LIM <- 2
 dat.yoy <- dat.yoy %>% filter(vis_m >= VIS_LIM)
 
 ```
-
-
 
 # Data description
 
@@ -294,15 +293,23 @@ Nearly all small rockfish fall into the 4 to 7 cm length range and all are consi
 #| warning: false
 #| fig-cap: "Time-series of estimated young-of-year rockfish density on the Washington coast. Black points show means and standard errors for individual sites. Blue points show coastwide density estimates, interquartile range and 95\\% intervals for each year. Note y-axis is square root."
 
-SPPz = unique(dat.yoy$complex)
+# get just yoy
+# dat.yoy <- dat.yoy %>% filter(size_class=='small')
+# calculate total yoy
+dat.tot = dat.yoy %>% 
+  group_by(year, site,area, zone, transect, observer,vis_m)  %>%
+  summarise(Count = sum(Count)) %>%
+  mutate(complex="TotYOY")
+
+dat.yoy1 = full_join(dat.yoy,dat.tot)
+SPPz = unique(dat.yoy1$complex)
 SPPz
+
 # GENERATE INDEXES BY SITE and AMONG SITES
-dat.yoy.summary0 <- dat.yoy %>% filter(size_class=='small')
 
 # dat.yoy.summary %>% distinct(species,year,size_class)
-  
 # summarize using means and standard errors
-dat.yoy.summary <- dat.yoy.summary0 %>%
+dat.yoy.summary <- dat.yoy1 %>%
                     group_by(year,site, complex) %>% 
                     summarise(Mean=mean(Count),
                               VAR = var(Count),
@@ -370,6 +377,7 @@ df_yoy$complex[df_yoy$complex=='SEMY'] <- "Deacon RF"
 df_yoy$complex[df_yoy$complex=='SENE'] <- "China RF"
 df_yoy$complex[df_yoy$complex=='RYOY'] <- "Rockfish spp"
 df_yoy$complex[df_yoy$complex=='CQB'] <- "Copper & Quillback RF"
+df_yoy$complex[df_yoy$complex=='TotYOY'] <- "Total rockfish YOY"
 
 dat.yoy.summary$complex[dat.yoy.summary$complex=='YTB'] <- "Yellowtail & Black RF"
 dat.yoy.summary$complex[dat.yoy.summary$complex=='SEPI'] <- "Canary RF"
@@ -377,10 +385,11 @@ dat.yoy.summary$complex[dat.yoy.summary$complex=='SEMY'] <- "Deacon RF"
 dat.yoy.summary$complex[dat.yoy.summary$complex=='SENE'] <- "China RF"
 dat.yoy.summary$complex[dat.yoy.summary$complex=='RYOY'] <- "Rockfish spp"
 dat.yoy.summary$complex[dat.yoy.summary$complex=='CQB'] <- "Copper & Quillback RF"
+dat.yoy.summary$complex[dat.yoy.summary$complex=='TotYOY'] <- "Total rockfish YOY"
 
-df_yoy$complex = factor(df_yoy$complex, levels = c('Yellowtail & Black RF','Canary RF','Deacon RF','Copper & Quillback RF','China RF','Rockfish spp')) 
+df_yoy$complex = factor(df_yoy$complex, levels = c('Yellowtail & Black RF','Canary RF','Deacon RF','Copper & Quillback RF','China RF','Rockfish spp',"Total rockfish YOY")) 
 
-dat.yoy.summary$complex = factor(dat.yoy.summary$complex, levels = c('Yellowtail & Black RF','Canary RF','Deacon RF','Copper & Quillback RF','China RF','Rockfish spp')) 
+dat.yoy.summary$complex = factor(dat.yoy.summary$complex, levels = c('Yellowtail & Black RF','Canary RF','Deacon RF','Copper & Quillback RF','China RF','Rockfish spp',"Total rockfish YOY")) 
 
 ## Make yoy rockfish time-series plots
  yoy.ts <- ggplot() + 
@@ -402,7 +411,7 @@ dat.yoy.summary$complex = factor(dat.yoy.summary$complex, levels = c('Yellowtail
                    breaks=c(0,1,5,10,25,50,100),
                    labels=c("0","1","5","10","25","50","100")) +
    xlab("Year") +
-   facet_wrap(facets="complex", scale='free_y', ncol=1) + 
+   facet_wrap(facets="complex",  scale='free_y', ncol=1) + 
    #geom_hline(yintercept=0,color="red")+
    theme_bw()
 
@@ -410,19 +419,21 @@ yoy.ts
 
 ggsave( paste0(fig_dir, "ocnms-rockfish-yoy-modeled.png"), units='in',
         width = 3.5, height = 8)
-ggsave( "~/GitHub/ESR-rockfish-yoy/figures/ocnms-rockfish-yoy-modeled.png",
-        units='in', width = 3.5, height = 8) 
-  
-# # save out ####
-dat.yoy.sites = dat.yoy.summary
 
-write.csv(df_yoy, "~/GitHub/ESR-rockfish-yoy/data/ocnms-rockfish-yoy.r")
+# fix some names
+df_out = df_yoy %>% 
+  rename(index = grand.mean,
+         timeseries = complex) %>% 
+  mutate(metric = "No per 120 m^3")
 
-write.csv(df_yoy, paste0(work_dir, "Estimated-YOY-trend-coast-", 
+write.csv(df_out, "~/GitHub/ESR-rockfish-yoy/data/RFYOY-OCNMS-recruits.csv", row.names = F)
+write.csv(df_out, "~/GitHub/ESR-rockfish-yoy/data-esr-timeseries/RFYOY-OCNMS-recruits.csv", row.names = F)
+
+write.csv(df_out, paste0(data_out, "Estimated-YOY-trend-coast-", 
                             Sys.Date(),".csv"), row.names = F)
 
-write.csv(dat.yoy.sites, paste0(work_dir, "Estimated-YOY-trend-sites-",
-                                Sys.Date(),".csv"), row.names = F)
+write.csv(dat.yoy.summary, paste0(data_out, "Estimated-YOY-trend-sites-",
+                                 Sys.Date(),".csv"), row.names = F)
 
 
 ```
